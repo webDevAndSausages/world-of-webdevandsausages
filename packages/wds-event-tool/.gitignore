@@ -1,0 +1,10 @@
+
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+.idea/
+*.iml
+build/
+.DS_Store
+firebaseServiceAccountKey.json
+/out
