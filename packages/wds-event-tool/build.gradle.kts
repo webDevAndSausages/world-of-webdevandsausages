@@ -6,6 +6,8 @@ val http4kVersion = "3.103.2"
 val log4jVersion = "2.10.0"
 val jacksonVersion = "2.9.6"
 val firebaseVersion = "6.6.0"
+val flywayCoreVersion = "5.2.4"
+val postgresqlDriverVersion = "42.2.5"
 
 plugins {
     kotlin("jvm") version "1.3.10"
@@ -30,6 +32,10 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
+    implementation("org.flywaydb:flyway-core:$flywayCoreVersion")
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation( "org.postgresql:postgresql:$postgresqlDriverVersion")
+
 
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testImplementation("io.mockk:mockk:1.8.13.kotlin13")
