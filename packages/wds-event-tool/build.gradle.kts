@@ -1,5 +1,17 @@
+import com.rohanprabhu.gradle.plugins.kdjooq.generator
+import com.rohanprabhu.gradle.plugins.kdjooq.jdbc
+import com.rohanprabhu.gradle.plugins.kdjooq.jooqCodegenConfiguration
+import org.gradle.api.internal.initialization.ClassLoaderIds.buildScript
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.net.URI
+import org.jooq.util.jaxb.Database
+import org.jooq.util.jaxb.ForcedType
+import org.jooq.util.jaxb.Target
+import org.jooq.util.jaxb.Configuration
+import org.jooq.util.jaxb.Generate
+import org.jooq.util.jaxb.Generator
+import org.jooq.util.jaxb.Jdbc
+import org.jooq.util.jaxb.Strategy
+import org.jooq.util.postgres.PostgresDatabase
 
 val kotlinVersion = "1.3.11"
 val http4kVersion = "3.103.2"
@@ -8,14 +20,30 @@ val jacksonVersion = "2.9.6"
 val firebaseVersion = "6.6.0"
 val flywayCoreVersion = "5.2.4"
 val postgresqlDriverVersion = "42.2.5"
+val jooqVersion = "3.10.1"
 
 plugins {
     kotlin("jvm") version "1.3.10"
+    id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
 }
 
 repositories {
     mavenCentral()
     jcenter()
+}
+
+buildscript {
+    val kotlinVersion = "1.3.11"
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
+    }
 }
 
 dependencies {
@@ -33,19 +61,68 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
     implementation("org.flywaydb:flyway-core:$flywayCoreVersion")
-    // https://mvnrepository.com/artifact/org.postgresql/postgresql
-    implementation( "org.postgresql:postgresql:$postgresqlDriverVersion")
-
+    implementation("org.postgresql:postgresql:$postgresqlDriverVersion")
+    implementation("org.jooq", "jooq", jooqVersion)
 
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testImplementation("io.mockk:mockk:1.8.13.kotlin13")
+    jooqGeneratorRuntime("org.postgresql:postgresql:$postgresqlDriverVersion")
 }
-
 /*
 tasks.test {
     useJUnitPlatform()
 }
 */
+
+val jooqConfig = Configuration()
+    .withJdbc(
+        Jdbc()
+            .withDriver("org.postgresql.Driver")
+            .withUsername("wds")
+            .withPassword("password")
+            .withUrl("jdbc:postgresql://localhost:5433/wds_db")
+            .withSchema("public")
+    )
+    .withGenerator(
+        Generator()
+            .withName("org.jooq.util.DefaultGenerator")
+            .withStrategy(Strategy().withName("org.jooq.util.DefaultGeneratorStrategy"))
+            .withDatabase(
+                Database()
+                    .withName("org.jooq.util.postgres.PostgresDatabase")
+                    .withInputSchema("public")
+                    .withForcedTypes(
+                        ForcedType()
+                            .withName("varchar")
+                            .withExpression(".*")
+                            .withTypes("JSONB?"),
+                        ForcedType()
+                            .withName("varchar")
+                            .withExpression(".*")
+                            .withTypes("INET")
+                    )
+            )
+            .withGenerate(
+                Generate()
+                              .withRelations(true)
+                              .withDeprecated(true)
+                              .withRecords(true)
+                              .withDaos(true)
+                              .withInterfaces(true)
+                              .withImmutablePojos(true)
+                              .withFluentSetters(true)
+            )
+            .withTarget(Target()
+                            .withPackageName("meta")
+                            .withDirectory("src/main/kotlin/org/webdevandsausages/events/jooq")
+            )
+    )
+
+jooqGenerator {
+    configuration("meta", project.java.sourceSets.getByName("main")) {
+        configuration = jooqConfig
+    }
+}
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions.jvmTarget = "1.8"
