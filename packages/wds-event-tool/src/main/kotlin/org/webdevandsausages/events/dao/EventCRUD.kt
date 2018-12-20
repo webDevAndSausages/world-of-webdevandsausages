@@ -23,7 +23,7 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
 
         val jdbcMapper = JdbcMapperFactory
             .newInstance()
-            .addKeys(Participant.PARTICIPANT.ID.name)
+            .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
         return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
