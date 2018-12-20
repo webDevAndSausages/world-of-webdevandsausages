@@ -6,5 +6,5 @@ INSERT INTO "public"."participant" ("id", "first_name", "last_name", "email", "a
 INSERT INTO "public"."participant" ("id", "first_name", "last_name", "email", "affiliation", "verification_token", "order_number", "event_id", "status") VALUES (DEFAULT, 'John3', 'Smith', 'john@smith.com', 'test', '1234', 1000, 2, 'REGISTERED');
 INSERT INTO "public"."participant" ("id", "first_name", "last_name", "email", "affiliation", "verification_token", "order_number", "event_id", "status") VALUES (DEFAULT, 'John4', 'Smith', 'john@smith.com', 'test', '1234', 2000, 2, 'REGISTERED');
 INSERT INTO "public"."participant" ("id", "first_name", "last_name", "email", "affiliation", "verification_token", "order_number", "event_id", "status") VALUES (DEFAULT, 'John5', 'Smith', 'john@smith.com', 'test', '1234', 3000, 2, 'REGISTERED');
-INSERT INTO "public"."participant" ("id", "first_name", "last_name", "email", "affiliation", "verification_token", "order_number", "event_id", "status") VALUES (DEFAULT, 'John6', 'Smith', 'john@smith.com', 'test', '1234', 1000, 1, 'REGISTERED');
+INSERT INTO "public"."participant" ("id", "first_name", "last_name", "email", "affiliation", "verification_token", "order_number", "event_id", "status") VALUES (DEFAULT, 'John6', 'Smith', 'john@smith.com', 'test', '1234', 3000, 1, 'REGISTERED');
 
