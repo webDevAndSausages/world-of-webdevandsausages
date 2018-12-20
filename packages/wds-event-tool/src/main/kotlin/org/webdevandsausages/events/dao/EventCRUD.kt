@@ -8,7 +8,7 @@ import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.EventDto
-import java.util.stream.Collectors
+import kotlin.streams.toList
 
 object EventCRUD: EventDao(local.jooqConfiguration) {
     /**
@@ -26,6 +26,6 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
             .addKeys(Participant.PARTICIPANT.ID.name)
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-        return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.collect(Collectors.toList())
+        return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
     }
 }
