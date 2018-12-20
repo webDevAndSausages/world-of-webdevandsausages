@@ -23,7 +23,7 @@ val postgresqlDriverVersion = "42.2.5"
 val jooqVersion = "3.10.1"
 
 plugins {
-    kotlin("jvm") version "1.3.10"
+    kotlin("jvm") version "1.3.11"
     id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
 }
 
@@ -57,6 +57,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonVersion")
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
