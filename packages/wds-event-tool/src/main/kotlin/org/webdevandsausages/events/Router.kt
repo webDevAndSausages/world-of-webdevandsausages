@@ -16,9 +16,7 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.webdevandsausages.events.controllers.GetEventsController
 import org.webdevandsausages.events.dto.EventDto
-import org.webdevandsausages.events.services.EventService
 import org.webdevandsausages.events.utils.WDSJackson.auto
-import org.webdevandsausages.events.utils.toJson
 
 class Router(
     val getEvents: GetEventsController
@@ -34,7 +32,6 @@ class Router(
 
     private fun getRoutes() = listOf(
         "/{any:.*}" bind Method.OPTIONS to ok(),
-        "/api/old-events" bind GET to handleGetEvents(),
         "/api/events" bind GET to handleGetEvents()
     )
 

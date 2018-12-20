@@ -8,5 +8,9 @@ interface GetEventsController {
 }
 
 class GetEventsControllerImpl(val eventService: EventService) : GetEventsController {
-    override fun invoke(): List<EventDto>? = eventService.getEvents()
+    override fun invoke(): List<EventDto>?{
+        val events = eventService.getEvents()
+        println(events)
+        return events
+    }
 }
