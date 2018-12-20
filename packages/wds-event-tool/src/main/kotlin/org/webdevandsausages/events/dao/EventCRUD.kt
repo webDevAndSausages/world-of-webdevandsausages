@@ -19,11 +19,19 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
     /**
      * Custom method with custom query + mapper
      */
-    fun findAllWithParticipants(): List<EventDto>? {
-        val resultSet = db.select().from(Event.EVENT).leftJoin(Participant.PARTICIPANT)
-            .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
-            .orderBy(Event.EVENT.ID) // This is a crucial step to prevent simpleflatmapper creating duplicates // Check: https://www.petrikainulainen.net/programming/jooq/jooq-tips-implementing-a-read-only-one-to-many-relationship/
-            .fetchResultSet()
+    fun findAllWithParticipants(status: String?): List<EventDto>? {
+        val resultSet = db.use { ctx ->
+            ctx.select()
+                .from(Event.EVENT)
+                .leftJoin(Participant.PARTICIPANT)
+                .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
+                .apply {
+                    if (status != null)
+                        where(hasStatus(status))
+                }
+                .orderBy(Event.EVENT.ID) // This is a crucial step to prevent simpleflatmapper creating duplicates // Check: https://www.petrikainulainen.net/programming/jooq/jooq-tips-implementing-a-read-only-one-to-many-relationship/
+                .fetchResultSet()
+        }
 
         val jdbcMapper = mapperInstance
             .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)

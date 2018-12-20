@@ -21,6 +21,7 @@ import org.http4k.lens.Path
 import org.http4k.lens.long
 import org.http4k.format.Jackson
 import org.http4k.contract.OpenApi
+import org.http4k.lens.Query
 import org.http4k.routing.RoutingHttpHandler
 import org.webdevandsausages.events.controllers.GetCurrentEventController
 import org.webdevandsausages.events.controllers.GetEventByIdController
@@ -33,6 +34,11 @@ class Router(
     val getCurrentEvent: GetCurrentEventController,
     val getEventById: GetEventByIdController
     ) {
+
+    companion object {
+        val idParam = Path.long().of("id")
+        val optionalStatusQuery = Query.optional("status")
+    }
 
     operator fun invoke(): RoutingHttpHandler {
         return DebuggingFilters
@@ -52,11 +58,12 @@ class Router(
 
         "/api/1.0/events"
                 meta {
-                    summary = "Get all events and participants"
+                    summary = "Get all events and participants, with option to filter by status"
+                    queries += optionalStatusQuery
                 } bindContract GET to handleGetEvents(),
 
         "/api/1.0/events" /
-                Path.long().of("id")
+                idParam
                 meta {
                     summary = "Get event by id"
                 } bindContract GET to ::handleGetEventById,
@@ -73,9 +80,11 @@ class Router(
     private val EventsLens = Body.auto<EventsResponse>().toLens()
     data class EventsResponse(val events: List<EventDto>?)
 
-    private fun handleGetEvents() = { req: Request ->
+    private fun handleGetEvents(): HttpHandler = { req: Request ->
+        // TODO: takeUnless { does not match status enum }
+        val status = optionalStatusQuery(req)
         EventsLens(
-            EventsResponse(getEvents()),
+            EventsResponse(getEvents(status)),
             Response(Status.OK)
         )
     }
@@ -83,7 +92,7 @@ class Router(
     private val EventLens = Body.auto<EventResponse>().toLens()
     data class EventResponse(val currentEvent: EventDto?)
 
-    private fun handleGetCurrentEvent() = { req: Request ->
+    private fun handleGetCurrentEvent() = { _: Request ->
         EventLens(
             EventResponse(getCurrentEvent()),
             Response(Status.OK)
@@ -91,7 +100,7 @@ class Router(
     }
 
     private fun handleGetEventById(id: Long): HttpHandler =
-        { req: Request ->
+        { _: Request ->
             EventLens(
                 EventResponse(getEventById(id)),
                 Response(Status.OK)

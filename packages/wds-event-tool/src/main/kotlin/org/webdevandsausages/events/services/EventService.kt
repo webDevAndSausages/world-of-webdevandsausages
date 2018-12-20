@@ -4,8 +4,8 @@ import org.webdevandsausages.events.dto.EventDto
 
 
 object EventService {
-    fun getEvents(): List<EventDto>? {
-        return EventCRUD.findAllWithParticipants()
+    fun getEvents(status: String?): List<EventDto>? {
+        return EventCRUD.findAllWithParticipants(status)
     }
     fun getEventByIdOrLatest(id: Long? = null): EventDto? {
         return EventCRUD.findEventByIdOrLatest(id)

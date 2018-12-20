@@ -4,12 +4,12 @@ import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.services.EventService
 
 interface GetEventsController {
-    operator fun invoke(): List<EventDto>?
+    operator fun invoke(status: String?): List<EventDto>?
 }
 
 class GetEventsControllerImpl(val eventService: EventService) : GetEventsController {
-    override fun invoke(): List<EventDto>?{
-        return eventService.getEvents()
+    override fun invoke(status: String?): List<EventDto>?{
+        return eventService.getEvents(status)
     }
 }
 
