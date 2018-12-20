@@ -7,4 +7,7 @@ object EventService {
     fun getEvents(): List<EventDto>? {
         return EventCRUD.findAllWithParticipants()
     }
+    fun getEventByIdOrLatest(id: Long? = null): EventDto? {
+        return EventCRUD.findEventByIdOrLatest(id)
+    }
 }

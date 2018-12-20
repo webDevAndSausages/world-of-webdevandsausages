@@ -8,6 +8,9 @@ import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
+import org.webdevandsausages.events.controllers.GetCurrentEventControllerImpl
+import org.webdevandsausages.events.controllers.GetEventByIdController
+import org.webdevandsausages.events.controllers.GetEventByIdControllerImpl
 import org.webdevandsausages.events.controllers.GetEventsControllerImpl
 import org.webdevandsausages.events.services.EventService
 import org.webdevandsausages.events.services.FirebaseService
@@ -24,7 +27,11 @@ fun startApp(config: AppConfig): Http4kServer {
     val flyway = Flyway.configure().dataSource(config.db.url, config.db.user, config.db.password).load()
     flyway.migrate()
     logger.info("Starting server...")
-    val app = Router(GetEventsControllerImpl(EventService))()
+    val app = Router(
+        GetEventsControllerImpl(EventService),
+        GetCurrentEventControllerImpl(EventService),
+        GetEventByIdControllerImpl(EventService)
+    )()
     val server = app.asServer(Jetty(config.port)).start()
     logger.info("Server started on port ${config.port}")
     return server
