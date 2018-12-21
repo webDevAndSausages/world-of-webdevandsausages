@@ -19,7 +19,9 @@ interface GetCurrentEventController {
 
 class GetCurrentEventControllerImpl(val eventService: EventService) : GetCurrentEventController {
     override fun invoke(): EventDto? {
-        return eventService.getEventByIdOrLatest()
+        val data = eventService.getEventByIdOrLatest()
+        // TODO: check if VISIBLE and registration_opens >= now, then change status to OPEN
+        return data
     }
 }
 

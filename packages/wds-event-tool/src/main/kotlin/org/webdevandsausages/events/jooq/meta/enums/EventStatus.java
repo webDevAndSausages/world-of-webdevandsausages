@@ -4,12 +4,13 @@
 package meta.enums;
 
 
+import javax.annotation.Generated;
+
 import meta.Public;
+
 import org.jooq.Catalog;
 import org.jooq.EnumType;
 import org.jooq.Schema;
-
-import javax.annotation.Generated;
 
 
 /**

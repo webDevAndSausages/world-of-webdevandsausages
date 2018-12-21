@@ -41,14 +41,15 @@ create type event_status as enum (
 );
 
 create table event (
-  id               bigserial primary key,
-  name             varchar(255)  not null,
-  contact          varchar(255),
-  date             timestamp     not null,
-  details          varchar(1024) not null,
-  location         varchar(255)  not null,
-  status           event_status  not null,
-  max_participants integer       not null
+  id                  bigserial primary key,
+  name                varchar(255)  not null,
+  contact             varchar(255),
+  date                timestamp     not null,
+  details             varchar(1024) not null,
+  location            varchar(255)  not null,
+  status              event_status  not null,
+  max_participants    integer       not null,
+  registration_opens  timestamp     not null
 );
 
 /**

@@ -64,4 +64,9 @@ public interface IEvent extends Serializable {
      * Getter for <code>public.event.max_participants</code>.
      */
     public Integer getMaxParticipants();
+
+    /**
+     * Getter for <code>public.event.registration_opens</code>.
+     */
+    public Timestamp getRegistrationOpens();
 }

@@ -83,7 +83,7 @@ val jooqConfig = Configuration()
             .withDriver("org.postgresql.Driver")
             .withUsername("wds")
             .withPassword("password")
-            .withUrl("jdbc:postgresql://localhost:5433/wds_db")
+            .withUrl("jdbc:postgresql://localhost:45433/wds_db")
             .withSchema("public")
     )
     .withGenerator(

@@ -25,7 +25,7 @@ import meta.tables.interfaces.IEvent;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event implements IEvent {
 
-    private static final long serialVersionUID = 410271045;
+    private static final long serialVersionUID = -58014759;
 
     private final Long        id;
     private final String      name;
@@ -35,6 +35,7 @@ public class Event implements IEvent {
     private final String      location;
     private final EventStatus status;
     private final Integer     maxParticipants;
+    private final Timestamp   registrationOpens;
 
     public Event(Event value) {
         this.id = value.id;
@@ -45,6 +46,7 @@ public class Event implements IEvent {
         this.location = value.location;
         this.status = value.status;
         this.maxParticipants = value.maxParticipants;
+        this.registrationOpens = value.registrationOpens;
     }
 
     public Event(
@@ -55,7 +57,8 @@ public class Event implements IEvent {
         String      details,
         String      location,
         EventStatus status,
-        Integer     maxParticipants
+        Integer     maxParticipants,
+        Timestamp   registrationOpens
     ) {
         this.id = id;
         this.name = name;
@@ -65,6 +68,7 @@ public class Event implements IEvent {
         this.location = location;
         this.status = status;
         this.maxParticipants = maxParticipants;
+        this.registrationOpens = registrationOpens;
     }
 
     @Override
@@ -108,6 +112,11 @@ public class Event implements IEvent {
     }
 
     @Override
+    public Timestamp getRegistrationOpens() {
+        return this.registrationOpens;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Event (");
 
@@ -119,6 +128,7 @@ public class Event implements IEvent {
         sb.append(", ").append(location);
         sb.append(", ").append(status);
         sb.append(", ").append(maxParticipants);
+        sb.append(", ").append(registrationOpens);
 
         sb.append(")");
         return sb.toString();

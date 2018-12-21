@@ -114,4 +114,11 @@ public class EventDao extends DAOImpl<EventRecord, meta.tables.pojos.Event, Long
     public List<meta.tables.pojos.Event> fetchByMaxParticipants(Integer... values) {
         return fetch(Event.EVENT.MAX_PARTICIPANTS, values);
     }
+
+    /**
+     * Fetch records that have <code>registration_opens IN (values)</code>
+     */
+    public List<meta.tables.pojos.Event> fetchByRegistrationOpens(Timestamp... values) {
+        return fetch(Event.EVENT.REGISTRATION_OPENS, values);
+    }
 }

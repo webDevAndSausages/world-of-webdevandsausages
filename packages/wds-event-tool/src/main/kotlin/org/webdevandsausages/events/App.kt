@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.controllers.GetCurrentEventControllerImpl
-import org.webdevandsausages.events.controllers.GetEventByIdController
 import org.webdevandsausages.events.controllers.GetEventByIdControllerImpl
 import org.webdevandsausages.events.controllers.GetEventsControllerImpl
 import org.webdevandsausages.events.services.EventService
-import org.webdevandsausages.events.services.FirebaseService
 
 fun main(args: Array<String>) {
     val server = startApp(local)

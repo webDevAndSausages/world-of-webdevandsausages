@@ -1,5 +1,6 @@
 package org.webdevandsausages.events
 
+import meta.enums.EventStatus
 import org.http4k.contract.ApiInfo
 import org.http4k.contract.bindContract
 import org.http4k.contract.contract
@@ -81,8 +82,7 @@ class Router(
     data class EventsResponse(val events: List<EventDto>?)
 
     private fun handleGetEvents(): HttpHandler = { req: Request ->
-        // TODO: takeUnless { does not match status enum }
-        val status = optionalStatusQuery(req)
+        val status = optionalStatusQuery(req).takeIf { v -> EventStatus.values().filter { e -> e.name == v}.isNotEmpty() }
         EventsLens(
             EventsResponse(getEvents(status)),
             Response(Status.OK)

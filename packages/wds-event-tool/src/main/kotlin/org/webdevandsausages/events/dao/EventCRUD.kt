@@ -1,9 +1,10 @@
 package org.webdevandsausages.events.dao
 
+import meta.enums.EventStatus
 import meta.tables.Event
 import meta.tables.Participant
 import meta.tables.daos.EventDao
-import org.jooq.LikeEscapeStep
+import org.jooq.Condition
 import org.jooq.impl.DSL
 import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
@@ -27,7 +28,7 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
                 .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
                 .apply {
                     if (status != null)
-                        where(hasStatus(status))
+                        where(hasStatus(EventStatus.valueOf(status)))
                 }
                 .orderBy(Event.EVENT.ID) // This is a crucial step to prevent simpleflatmapper creating duplicates // Check: https://www.petrikainulainen.net/programming/jooq/jooq-tips-implementing-a-read-only-one-to-many-relationship/
                 .fetchResultSet()
@@ -40,7 +41,7 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
         return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
     }
 
-    private fun hasStatus(value: String): LikeEscapeStep = Event.EVENT.STATUS.like(value)
+    private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)
 
     fun findEventByIdOrLatest(id: Long? = null): EventDto? {
         val resultSet = db.use { ctx ->
@@ -51,11 +52,11 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
                 .apply {
                     when(id) {
                         is Long -> where(Event.EVENT.ID.eq(id))
-                        else -> where(hasStatus("OPEN"))
-                            .or(hasStatus("VISIBLE"))
-                            .or(hasStatus("OPEN_WITH_WAITLIST"))
-                            .or(hasStatus("OPEN_FULL"))
-                            .or(hasStatus("CLOSED_WITH_FEEDBACK"))
+                        else -> where(hasStatus(EventStatus.OPEN))
+                            .or(hasStatus(EventStatus.VISIBLE))
+                            .or(hasStatus(EventStatus.OPEN_WITH_WAITLIST))
+                            .or(hasStatus(EventStatus.OPEN_FULL))
+                            .or(hasStatus(EventStatus.CLOSED_WITH_FEEDBACK))
                     }
                 }
                 .fetchResultSet()

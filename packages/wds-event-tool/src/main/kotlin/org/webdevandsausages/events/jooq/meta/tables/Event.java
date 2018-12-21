@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event extends TableImpl<EventRecord> {
 
-    private static final long serialVersionUID = -741173856;
+    private static final long serialVersionUID = -970401125;
 
     /**
      * The reference instance of <code>public.event</code>
@@ -95,6 +95,11 @@ public class Event extends TableImpl<EventRecord> {
      * The column <code>public.event.max_participants</code>.
      */
     public final TableField<EventRecord, Integer> MAX_PARTICIPANTS = createField("max_participants", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>public.event.registration_opens</code>.
+     */
+    public final TableField<EventRecord, Timestamp> REGISTRATION_OPENS = createField("registration_opens", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * Create a <code>public.event</code> table reference
