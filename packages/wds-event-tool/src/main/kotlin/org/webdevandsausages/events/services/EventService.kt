@@ -21,5 +21,6 @@ object EventService {
 val EventStatus.isVisibleStatus get() = this == EventStatus.VISIBLE
 val EventStatus.isOpenRegistrationStatus get() = this == EventStatus.OPEN || this == EventStatus.OPEN_WITH_WAITLIST
 val EventStatus.isOpenFeedbackStatus get() = this == EventStatus.CLOSED_WITH_FEEDBACK
+val EventService.field get() = Event.EVENT
 
 
