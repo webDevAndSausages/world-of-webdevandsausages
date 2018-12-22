@@ -82,7 +82,11 @@ class Router(
     data class EventsResponse(val events: List<EventDto>?)
 
     private fun handleGetEvents(): HttpHandler = { req: Request ->
-        val status = optionalStatusQuery(req).takeIf { v -> EventStatus.values().filter { e -> e.name == v}.isNotEmpty() }
+        val status = optionalStatusQuery(req).takeIf {
+                v -> EventStatus.values()
+            .filter { e ->
+                e.name == v?.toUpperCase()}.isNotEmpty()
+        }
         EventsLens(
             EventsResponse(getEvents(status)),
             Response(Status.OK)

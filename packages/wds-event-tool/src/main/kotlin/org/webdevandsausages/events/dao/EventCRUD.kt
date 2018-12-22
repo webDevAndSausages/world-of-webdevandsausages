@@ -1,16 +1,21 @@
 package org.webdevandsausages.events.dao
 
+import meta.Tables.EVENT
 import meta.enums.EventStatus
 import meta.tables.Event
 import meta.tables.Participant
 import meta.tables.daos.EventDao
+import meta.tables.records.EventRecord
 import org.jooq.Condition
+import org.jooq.TableField
 import org.jooq.impl.DSL
 import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.EventDto
 import kotlin.streams.toList
+
+typealias EventUpdates= List<Pair<TableField<EventRecord, Any>, Any>>
 
 object EventCRUD: EventDao(local.jooqConfiguration) {
 
@@ -28,7 +33,7 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
                 .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
                 .apply {
                     if (status != null)
-                        where(hasStatus(EventStatus.valueOf(status)))
+                        where(hasStatus(EventStatus.valueOf(status.toUpperCase())))
                 }
                 .orderBy(Event.EVENT.ID) // This is a crucial step to prevent simpleflatmapper creating duplicates // Check: https://www.petrikainulainen.net/programming/jooq/jooq-tips-implementing-a-read-only-one-to-many-relationship/
                 .fetchResultSet()
@@ -66,5 +71,22 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
         return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull()
+    }
+
+    // can handle an arbitrary number of updates
+    fun updateEvent(id: Long?, updates: EventUpdates) {
+        return  db.use { ctx ->
+                    ctx
+                        .update(Event.EVENT)
+                        .set(updates[0].first, updates[0].second)
+                        .apply {
+                            updates.drop(1).forEach {
+                                set(it.first, it.second)
+                            }
+
+                        }
+                        .where(Event.EVENT.ID.eq(id))
+                        .execute()
+        }
     }
 }

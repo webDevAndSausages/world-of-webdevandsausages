@@ -1,7 +1,16 @@
 package org.webdevandsausages.events.controllers
 
+import meta.enums.EventStatus
+import org.slf4j.Logger
+import org.webdevandsausages.events.dao.EventUpdates
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.services.EventService
+import org.webdevandsausages.events.services.field
+import org.webdevandsausages.events.services.isOpenFeedbackStatus
+import org.webdevandsausages.events.services.isOpenRegistrationStatus
+import org.webdevandsausages.events.services.isVisibleStatus
+import org.webdevandsausages.events.utils.hasPassed
+import org.webdevandsausages.events.utils.threeDaysLater
 
 interface GetEventsController {
     operator fun invoke(status: String?): List<EventDto>?
@@ -17,11 +26,54 @@ interface GetCurrentEventController {
     operator fun invoke(): EventDto?
 }
 
-class GetCurrentEventControllerImpl(val eventService: EventService) : GetCurrentEventController {
+/**
+ * GetCurrentEventController should handle following updates
+ *  1. If the event has begin, close registration
+ *  2. If the event has happened, open feedback
+ *  3. If the event happened three days ago, close feedback
+ */
+
+class GetCurrentEventControllerImpl(val eventService: EventService, val logger: Logger) : GetCurrentEventController {
+
+    @Suppress("UNCHECKED_CAST")
+    private fun openEvent(data: EventDto): EventDto? {
+        logger.info("Opening event ${data.event.name}")
+        eventService.updateEvent(
+            data.event.id,
+            listOf(Pair(eventService.field.STATUS, EventStatus.OPEN)) as EventUpdates)
+        return eventService.getEventByIdOrLatest()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun closeRegistration(data: EventDto): EventDto? {
+        logger.info("Closing registration for event ${data.event.name}")
+        eventService.updateEvent(
+            data.event.id,
+            listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
+        return eventService.getEventByIdOrLatest()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun closeFeedback(data: EventDto): EventDto? {
+        logger.info("Closing feedback for event ${data.event.name}")
+        eventService.updateEvent(
+            data.event.id,
+            listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
+        return eventService.getEventByIdOrLatest()
+    }
+
     override fun invoke(): EventDto? {
-        val data = eventService.getEventByIdOrLatest()
-        // TODO: check if VISIBLE and registration_opens >= now, then change status to OPEN
-        return data
+        val data = eventService.getEventByIdOrLatest() ?: return null
+        val status = data.event.status
+        val registrationOpens = data.event.registrationOpens
+        val date = data.event.date
+
+        return when {
+            status.isVisibleStatus && registrationOpens.hasPassed -> openEvent(data)
+            status.isOpenRegistrationStatus && date.hasPassed -> closeRegistration(data)
+            status.isOpenFeedbackStatus && date.threeDaysLater -> closeFeedback(data)
+            else -> data
+        }
     }
 }
 
