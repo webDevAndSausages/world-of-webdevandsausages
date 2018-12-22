@@ -1,6 +1,5 @@
 package org.webdevandsausages.events.dao
 
-import meta.Tables.EVENT
 import meta.enums.EventStatus
 import meta.tables.Event
 import meta.tables.Participant

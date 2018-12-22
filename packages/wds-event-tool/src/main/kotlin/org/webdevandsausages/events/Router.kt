@@ -10,6 +10,7 @@ import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.OPTIONS
 import org.http4k.core.Method.GET
+import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -22,22 +23,28 @@ import org.http4k.lens.Path
 import org.http4k.lens.long
 import org.http4k.format.Jackson
 import org.http4k.contract.OpenApi
+import org.http4k.core.Method
 import org.http4k.lens.Query
 import org.http4k.routing.RoutingHttpHandler
+import org.webdevandsausages.events.controllers.CreateRegistrationController
 import org.webdevandsausages.events.controllers.GetCurrentEventController
 import org.webdevandsausages.events.controllers.GetEventByIdController
 import org.webdevandsausages.events.controllers.GetEventsController
-import org.webdevandsausages.events.dto.EventDto
+import org.webdevandsausages.events.dto.EventOutDto
+import org.webdevandsausages.events.dto.EventsOutDto
+import org.webdevandsausages.events.dto.RegistrationInDto
+import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 class Router(
     val getEvents: GetEventsController,
     val getCurrentEvent: GetCurrentEventController,
-    val getEventById: GetEventByIdController
+    val getEventById: GetEventByIdController,
+    val createRegistration: CreateRegistrationController
     ) {
 
     companion object {
-        val idParam = Path.long().of("id")
+        val eventIdParam = Path.long().of("id")
         val optionalStatusQuery = Query.optional("status")
     }
 
@@ -63,11 +70,18 @@ class Router(
                     queries += optionalStatusQuery
                 } bindContract GET to handleGetEvents(),
 
-        "/api/1.0/events" /
-                idParam
+        "/api/1.0/events" / eventIdParam
                 meta {
                     summary = "Get event by id"
                 } bindContract GET to ::handleGetEventById,
+
+        "/api/1.0/events" / eventIdParam / "registrations"
+            meta {
+            summary = "Register user"
+            receiving(registrationRequestLens)
+            returning("User has been registered to the event" to Status.OK)
+
+        } bindContract POST to ::handleRegistration,
 
         "/api/1.0/events/latest"
                 meta {
@@ -78,8 +92,7 @@ class Router(
 
     private fun ok() = { _: Request -> Response(OK) }
 
-    private val EventsLens = Body.auto<EventsResponse>().toLens()
-    data class EventsResponse(val events: List<EventDto>?)
+    private val EventsLens = Body.auto<EventsOutDto>().toLens()
 
     private fun handleGetEvents(): HttpHandler = { req: Request ->
         val status = optionalStatusQuery(req).takeIf {
@@ -88,17 +101,16 @@ class Router(
                 e.name == v?.toUpperCase()}.isNotEmpty()
         }
         EventsLens(
-            EventsResponse(getEvents(status)),
+            EventsOutDto(getEvents(status)),
             Response(Status.OK)
         )
     }
 
-    private val EventLens = Body.auto<EventResponse>().toLens()
-    data class EventResponse(val currentEvent: EventDto?)
+    private val EventLens = Body.auto<EventOutDto>().toLens()
 
     private fun handleGetCurrentEvent() = { _: Request ->
         EventLens(
-            EventResponse(getCurrentEvent()),
+            EventOutDto(getCurrentEvent()),
             Response(Status.OK)
         )
     }
@@ -106,10 +118,23 @@ class Router(
     private fun handleGetEventById(id: Long): HttpHandler =
         { _: Request ->
             EventLens(
-                EventResponse(getEventById(id)),
+                EventOutDto(getEventById(id)),
                 Response(Status.OK)
              )
         }
 
+    private val registrationRequestLens = Body.auto<RegistrationInDto>().toLens()
+    private val registrationResponseLens = Body.auto<RegistrationOutDto>().toLens()
 
+    private fun handleRegistration(id: Long, _unusedButNeeded: String): HttpHandler = { req: Request ->
+        // TODO: Validate body
+        val registration = registrationRequestLens(req).apply {
+            eventId = id
+        }
+        createRegistration(registration)?.let {
+            registrationResponseLens(
+                RegistrationOutDto(it),
+                Response(Status.OK))
+        } ?: Response(Status.NOT_FOUND)
+    }
 }
