@@ -1,6 +1,6 @@
 package org.webdevandsausages.events.services
 
-import java.util.*
+import java.util.Random
 
 object RandomTokenService {
     fun getWordPair(): String {

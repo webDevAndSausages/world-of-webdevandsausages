@@ -78,6 +78,9 @@ dependencies {
     implementation("org.jooq", "jooq", jooqVersion)
     implementation("org.simpleflatmapper", "sfm-jooq", "6.0.13")
     jooqGeneratorRuntime("org.postgresql:postgresql:$postgresqlDriverVersion")
+    /* Arrow */
+    implementation("io.arrow-kt:arrow-core:0.8.1")
+
     /* tests */
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testImplementation("io.mockk:mockk:1.8.13.kotlin13")

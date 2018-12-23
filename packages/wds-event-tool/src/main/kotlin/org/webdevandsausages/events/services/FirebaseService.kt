@@ -8,10 +8,8 @@ import com.google.firebase.cloud.FirestoreClient
 import org.slf4j.Logger
 import org.webdevandsausages.events.models.Event
 import org.slf4j.LoggerFactory
-import org.webdevandsausages.events.models.Registration
 import java.io.InputStream
-import java.util.*
-import kotlin.text.Typography.registered
+import java.util.Date
 
 fun String.asResourceStream(): InputStream? = Thread.currentThread().contextClassLoader.getResourceAsStream(this)
 

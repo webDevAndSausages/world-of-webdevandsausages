@@ -10,9 +10,16 @@ import org.webdevandsausages.events.services.RandomTokenService
 import org.webdevandsausages.events.services.RegistrationService
 import org.webdevandsausages.events.services.isOpenRegistrationStatus
 import org.webdevandsausages.events.utils.prettified
+import arrow.core.*
+
+sealed class EventError {
+    object NotFound : EventError()
+    object AlreadyRegistered : EventError()
+}
+
 
 interface CreateRegistrationController {
-    operator fun invoke(registration: RegistrationInDto): ParticipantDto?
+    operator fun invoke(registration: RegistrationInDto): Either<out EventError, out ParticipantDto?>
 }
 
 class CreateRegistrationControllerImpl(
@@ -22,20 +29,21 @@ class CreateRegistrationControllerImpl(
     val emailService: EmailService,
     val logger: Logger
   ) : CreateRegistrationController {
-    override fun invoke(registration: RegistrationInDto): ParticipantDto? {
-        // TODO: handle error cases
+    override fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?> {
         val eventData: EventDto? = eventService.getByIdOrLatest(registration.eventId)
+
         if (eventData == null || !eventData.event.status.isOpenRegistrationStatus) {
-            println("handle invalid or nonexistent event")
+            return Either.left(EventError.NotFound)
         } else if (eventData.participants.find { it.email == registration.email} != null) {
-            println("handle already registered")
+            return Either.left(EventError.AlreadyRegistered)
         }
+
         val token = getVerificationToken()
         val lastNumber = eventData?.participants?.maxBy { it.orderNumber }?.orderNumber ?: 0
         val registrationWithToken = registration.copy(registrationToken = token, orderNumber = lastNumber + 1000)
         val result = registrationService.create(registrationWithToken)
 
-        if (result != null && eventData != null) {
+        if (result != null) {
             val sponsor = if (eventData.event.sponsor != null) eventData.event.sponsor else "Anonymous"
             val emailData = mapOf(
                 "action" to "registered",
@@ -53,7 +61,7 @@ class CreateRegistrationControllerImpl(
                 emailData
             )
         }
-        return result
+        return Either.right(result)
     }
 
     fun getVerificationToken(): String {

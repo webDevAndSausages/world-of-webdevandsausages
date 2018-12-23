@@ -1,5 +1,6 @@
 package org.webdevandsausages.events
 
+import arrow.core.Either
 import meta.enums.EventStatus
 import org.http4k.contract.ApiInfo
 import org.http4k.contract.bindContract
@@ -23,13 +24,15 @@ import org.http4k.lens.Path
 import org.http4k.lens.long
 import org.http4k.format.Jackson
 import org.http4k.contract.OpenApi
-import org.http4k.core.Method
 import org.http4k.lens.Query
 import org.http4k.routing.RoutingHttpHandler
 import org.webdevandsausages.events.controllers.CreateRegistrationController
+import org.webdevandsausages.events.controllers.EventError
 import org.webdevandsausages.events.controllers.GetCurrentEventController
 import org.webdevandsausages.events.controllers.GetEventByIdController
 import org.webdevandsausages.events.controllers.GetEventsController
+import org.webdevandsausages.events.dto.ErrorCode
+import org.webdevandsausages.events.dto.ErrorOutDto
 import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.dto.EventsOutDto
 import org.webdevandsausages.events.dto.RegistrationInDto
@@ -79,7 +82,9 @@ class Router(
             meta {
             summary = "Register user"
             receiving(registrationRequestLens)
-            returning("User has been registered to the event" to Status.OK)
+            returning("User has been registered to the event." to Status.OK)
+            returning("The event is closed or non-existent." to Status.BAD_REQUEST)
+            returning("The email is already registered." to Status.BAD_REQUEST)
 
         } bindContract POST to ::handleRegistration,
 
@@ -91,6 +96,12 @@ class Router(
     )
 
     private fun ok() = { _: Request -> Response(OK) }
+
+    private val errorResponseLens = Body.auto<ErrorOutDto>().toLens()
+
+    private fun handleErrorResponse(message: String, code: ErrorCode, status: Status): Response {
+        return errorResponseLens(ErrorOutDto(message, code), Response(status))
+    }
 
     private val EventsLens = Body.auto<EventsOutDto>().toLens()
 
@@ -132,9 +143,23 @@ class Router(
             eventId = id
         }
         createRegistration(registration)?.let {
-            registrationResponseLens(
-                RegistrationOutDto(it),
-                Response(Status.OK))
-        } ?: Response(Status.NOT_FOUND)
+            when(it) {
+                is Either.Left -> when (it.a){
+                    is EventError.NotFound ->
+                        handleErrorResponse(
+                            "The event is closed or non-existent.",
+                            ErrorCode.EVENT_CLOSED_OR_MISSING,
+                            Status.BAD_REQUEST)
+                    is EventError.AlreadyRegistered ->
+                        handleErrorResponse(
+                            "The email is already registered.",
+                            ErrorCode.ALREADY_REGISTERED,
+                            Status.BAD_REQUEST)
+                }
+                is Either.Right -> registrationResponseLens(
+                    RegistrationOutDto(it.b),
+                    Response(Status.OK))
+            }
+        }
     }
 }
