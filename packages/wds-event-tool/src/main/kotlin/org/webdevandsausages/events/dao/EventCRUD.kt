@@ -1,5 +1,9 @@
 package org.webdevandsausages.events.dao
 
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.Some
+import arrow.core.toOption
 import meta.enums.EventStatus
 import meta.tables.Event
 import meta.tables.Participant
@@ -47,7 +51,7 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
 
     private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)
 
-    fun findByIdOrLatest(id: Long? = null): EventDto? {
+    fun findByIdOrLatest(id: Long? = null): Option<EventDto> {
         val resultSet = db.use { ctx ->
             ctx.select()
                 .from(Event.EVENT)
@@ -69,12 +73,12 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
             .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-        return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull()
+        return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull().toOption()
     }
 
     // can handle an arbitrary number of updates
-    fun update(id: Long?, updates: EventUpdates) {
-        return db.use { ctx ->
+    fun update(id: Long?, updates: EventUpdates): Option<Int> {
+        val result = db.use { ctx ->
                     ctx
                         .update(Event.EVENT)
                         .set(updates[0].first, updates[0].second)
@@ -87,5 +91,6 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
                         .where(Event.EVENT.ID.eq(id))
                         .execute()
         }
+        return if (result == 1) Some(1) else None
     }
 }

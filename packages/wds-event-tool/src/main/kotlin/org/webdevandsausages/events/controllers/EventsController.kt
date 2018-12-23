@@ -1,5 +1,6 @@
 package org.webdevandsausages.events.controllers
 
+import arrow.core.Either
 import meta.enums.EventStatus
 import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventUpdates
@@ -23,7 +24,7 @@ class GetEventsControllerImpl(val eventService: EventService) : GetEventsControl
 }
 
 interface GetCurrentEventController {
-    operator fun invoke(): EventDto?
+    operator fun invoke(): Either<EventError, EventDto>
 }
 
 /**
@@ -36,53 +37,68 @@ interface GetCurrentEventController {
 class GetCurrentEventControllerImpl(val eventService: EventService, val logger: Logger) : GetCurrentEventController {
 
     @Suppress("UNCHECKED_CAST")
-    private fun openEvent(data: EventDto): EventDto? {
+    private fun openEvent(data: EventDto): Either<EventError, EventDto> {
         logger.info("Opening event ${data.event.name}")
         eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.OPEN)) as EventUpdates)
-        return eventService.getByIdOrLatest()
+        return complete()
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun closeRegistration(data: EventDto): EventDto? {
+    private fun closeRegistration(data: EventDto): Either<EventError, EventDto> {
         logger.info("Closing registration for event ${data.event.name}")
         eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
-        return eventService.getByIdOrLatest()
+        return complete()
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun closeFeedback(data: EventDto): EventDto? {
+    private fun closeFeedback(data: EventDto): Either<EventError, EventDto> {
         logger.info("Closing feedback for event ${data.event.name}")
         eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
-        return eventService.getByIdOrLatest()
+        return complete()
     }
 
-    override fun invoke(): EventDto? {
-        val data = eventService.getByIdOrLatest() ?: return null
-        val status = data.event.status
-        val registrationOpens = data.event.registrationOpens
-        val date = data.event.date
+    private fun complete(): Either<EventError, EventDto> = eventService.getByIdOrLatest().fold({
+            Either.Left(EventError.NotFound)
+        }, {
+            Either.Right(it)
+        })
 
-        return when {
-            status.isVisibleStatus && registrationOpens.hasPassed -> openEvent(data)
-            status.isOpenRegistrationStatus && date.hasPassed -> closeRegistration(data)
-            status.isOpenFeedbackStatus && date.threeDaysLater -> closeFeedback(data)
-            else -> data
-        }
+    override fun invoke(): Either<EventError, EventDto> {
+        val result = eventService.getByIdOrLatest()
+        return result.fold(
+            { Either.Left(EventError.NotFound) },
+            {
+                val status = it.event.status
+                val registrationOpens = it.event.registrationOpens
+                val date = it.event.date
+
+                return when {
+                    status.isVisibleStatus && registrationOpens.hasPassed -> openEvent(it)
+                    status.isOpenRegistrationStatus && date.hasPassed -> closeRegistration(it)
+                    status.isOpenFeedbackStatus && date.threeDaysLater -> closeFeedback(it)
+                    else -> Either.Right(it)
+                }
+            }
+          )
     }
 }
 
 interface GetEventByIdController {
-    operator fun invoke(eventId: Long): EventDto?
+    operator fun invoke(eventId: Long): Either<EventError, EventDto>
 }
 
 class GetEventByIdControllerImpl(val eventService: EventService) : GetEventByIdController {
-    override fun invoke(eventId: Long): EventDto? {
-        return eventService.getByIdOrLatest(eventId)
+    override fun invoke(eventId: Long): Either<EventError, EventDto> {
+        return eventService.getByIdOrLatest(eventId).fold({
+            Either.Left(EventError.NotFound)
+        }, {
+            Either.Right(it)
+        })
     }
 }

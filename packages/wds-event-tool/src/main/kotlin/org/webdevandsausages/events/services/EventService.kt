@@ -1,4 +1,5 @@
 package org.webdevandsausages.events.services
+import arrow.core.Option
 import meta.enums.EventStatus
 import meta.tables.Event
 import org.webdevandsausages.events.dao.EventCRUD
@@ -10,10 +11,10 @@ object EventService {
     fun getEvents(status: String?): List<EventDto>? {
         return EventCRUD.findAllWithParticipants(status)
     }
-    fun getByIdOrLatest(id: Long? = null): EventDto? {
+    fun getByIdOrLatest(id: Long? = null): Option<EventDto> {
         return EventCRUD.findByIdOrLatest(id)
     }
-    fun update(id: Long?, updates: EventUpdates) {
+    fun update(id: Long?, updates: EventUpdates): Option<Int> {
         return EventCRUD.update(id, updates)
     }
 }
