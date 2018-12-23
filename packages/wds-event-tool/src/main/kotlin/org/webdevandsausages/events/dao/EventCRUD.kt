@@ -47,7 +47,7 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
 
     private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)
 
-    fun findEventByIdOrLatest(id: Long? = null): EventDto? {
+    fun findByIdOrLatest(id: Long? = null): EventDto? {
         val resultSet = db.use { ctx ->
             ctx.select()
                 .from(Event.EVENT)
@@ -73,8 +73,8 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
     }
 
     // can handle an arbitrary number of updates
-    fun updateEvent(id: Long?, updates: EventUpdates) {
-        return  db.use { ctx ->
+    fun update(id: Long?, updates: EventUpdates) {
+        return db.use { ctx ->
                     ctx
                         .update(Event.EVENT)
                         .set(updates[0].first, updates[0].second)

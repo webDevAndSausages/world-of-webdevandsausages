@@ -8,5 +8,6 @@ val local = AppConfig(
         password = "password",
         driver = ""
     ),
-    port = 5000
+    port = 5000,
+    secrets = null
 )

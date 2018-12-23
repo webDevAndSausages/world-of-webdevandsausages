@@ -9,5 +9,6 @@ data class RegistrationInDto(
     val affiliation: String,
     val email: String,
     val registrationToken: String = "-",
+    val orderNumber: Int = 0,
     val status: ParticipantStatus = ParticipantStatus.REGISTERED
 )

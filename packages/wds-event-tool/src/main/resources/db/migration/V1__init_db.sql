@@ -43,6 +43,7 @@ create type event_status as enum (
 create table event (
   id                  bigserial primary key,
   name                varchar(255)  not null,
+  sponsor             varchar(255),
   contact             varchar(255),
   date                timestamp     not null,
   details             varchar(1024) not null,

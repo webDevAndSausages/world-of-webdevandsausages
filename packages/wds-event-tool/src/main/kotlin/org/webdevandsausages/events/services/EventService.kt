@@ -10,11 +10,11 @@ object EventService {
     fun getEvents(status: String?): List<EventDto>? {
         return EventCRUD.findAllWithParticipants(status)
     }
-    fun getEventByIdOrLatest(id: Long? = null): EventDto? {
-        return EventCRUD.findEventByIdOrLatest(id)
+    fun getByIdOrLatest(id: Long? = null): EventDto? {
+        return EventCRUD.findByIdOrLatest(id)
     }
-    fun updateEvent(id: Long?, updates: EventUpdates) {
-        return EventCRUD.updateEvent(id, updates)
+    fun update(id: Long?, updates: EventUpdates) {
+        return EventCRUD.update(id, updates)
     }
 }
 

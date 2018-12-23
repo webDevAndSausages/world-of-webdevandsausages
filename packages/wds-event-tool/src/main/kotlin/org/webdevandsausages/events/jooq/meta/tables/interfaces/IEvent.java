@@ -36,6 +36,11 @@ public interface IEvent extends Serializable {
     public String getName();
 
     /**
+     * Getter for <code>public.event.sponsor</code>.
+     */
+    public String getSponsor();
+
+    /**
      * Getter for <code>public.event.contact</code>.
      */
     public String getContact();

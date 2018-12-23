@@ -5,7 +5,10 @@ import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 
 object RegistrationService {
-    fun createRegistration(registration: RegistrationInDto): ParticipantDto? {
-        return ParticipantCRUD.createParticipant(registration)
+    fun create(registration: RegistrationInDto): ParticipantDto? {
+        return ParticipantCRUD.create(registration)
+    }
+    fun getByToken(token: String): ParticipantDto? {
+        return ParticipantCRUD.findByToken(token)
     }
 }

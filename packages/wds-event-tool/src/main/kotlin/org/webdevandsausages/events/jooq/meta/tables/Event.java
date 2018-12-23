@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event extends TableImpl<EventRecord> {
 
-    private static final long serialVersionUID = -970401125;
+    private static final long serialVersionUID = -712931553;
 
     /**
      * The reference instance of <code>public.event</code>
@@ -65,6 +65,11 @@ public class Event extends TableImpl<EventRecord> {
      * The column <code>public.event.name</code>.
      */
     public final TableField<EventRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
+     * The column <code>public.event.sponsor</code>.
+     */
+    public final TableField<EventRecord, String> SPONSOR = createField("sponsor", org.jooq.impl.SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>public.event.contact</code>.

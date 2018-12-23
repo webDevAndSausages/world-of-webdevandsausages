@@ -38,32 +38,32 @@ class GetCurrentEventControllerImpl(val eventService: EventService, val logger: 
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): EventDto? {
         logger.info("Opening event ${data.event.name}")
-        eventService.updateEvent(
+        eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.OPEN)) as EventUpdates)
-        return eventService.getEventByIdOrLatest()
+        return eventService.getByIdOrLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun closeRegistration(data: EventDto): EventDto? {
         logger.info("Closing registration for event ${data.event.name}")
-        eventService.updateEvent(
+        eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
-        return eventService.getEventByIdOrLatest()
+        return eventService.getByIdOrLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun closeFeedback(data: EventDto): EventDto? {
         logger.info("Closing feedback for event ${data.event.name}")
-        eventService.updateEvent(
+        eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
-        return eventService.getEventByIdOrLatest()
+        return eventService.getByIdOrLatest()
     }
 
     override fun invoke(): EventDto? {
-        val data = eventService.getEventByIdOrLatest() ?: return null
+        val data = eventService.getByIdOrLatest() ?: return null
         val status = data.event.status
         val registrationOpens = data.event.registrationOpens
         val date = data.event.date
@@ -83,6 +83,6 @@ interface GetEventByIdController {
 
 class GetEventByIdControllerImpl(val eventService: EventService) : GetEventByIdController {
     override fun invoke(eventId: Long): EventDto? {
-        return eventService.getEventByIdOrLatest(eventId)
+        return eventService.getByIdOrLatest(eventId)
     }
 }

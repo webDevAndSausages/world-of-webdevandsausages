@@ -47,29 +47,40 @@ buildscript {
 }
 
 dependencies {
+    /* kotlin */
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    /* http4k */
     implementation("org.http4k:http4k-core:$http4kVersion")
     implementation("org.http4k:http4k-contract:$http4kVersion")
     implementation("org.http4k:http4k-server-jetty:$http4kVersion")
     implementation("org.http4k:http4k-format-jackson:$http4kVersion")
     implementation("org.http4k:http4k-client-apache:$http4kVersion")
+    /* log4 */
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
+    /* jackson */
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonVersion")
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+
+    /* firebase */
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
+    /* sendgrid */
+    implementation("com.sendgrid:sendgrid-java:4.3.0")
+    /* db & jooq */
     implementation("org.flywaydb:flyway-core:$flywayCoreVersion")
     implementation("org.postgresql:postgresql:$postgresqlDriverVersion")
     implementation("org.jooq", "jooq", jooqVersion)
     implementation("org.simpleflatmapper", "sfm-jooq", "6.0.13")
-
+    jooqGeneratorRuntime("org.postgresql:postgresql:$postgresqlDriverVersion")
+    /* tests */
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testImplementation("io.mockk:mockk:1.8.13.kotlin13")
-    jooqGeneratorRuntime("org.postgresql:postgresql:$postgresqlDriverVersion")
 }
 /*
 tasks.test {

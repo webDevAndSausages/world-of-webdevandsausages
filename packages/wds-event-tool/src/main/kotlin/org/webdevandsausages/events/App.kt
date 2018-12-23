@@ -8,11 +8,11 @@ import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
-import org.webdevandsausages.events.controllers.CreateRegistrationController
 import org.webdevandsausages.events.controllers.CreateRegistrationControllerImpl
 import org.webdevandsausages.events.controllers.GetCurrentEventControllerImpl
 import org.webdevandsausages.events.controllers.GetEventByIdControllerImpl
 import org.webdevandsausages.events.controllers.GetEventsControllerImpl
+import org.webdevandsausages.events.services.EmailService
 import org.webdevandsausages.events.services.EventService
 import org.webdevandsausages.events.services.RandomTokenService
 import org.webdevandsausages.events.services.RegistrationService
@@ -33,7 +33,13 @@ fun startApp(config: AppConfig): Http4kServer {
         GetEventsControllerImpl(EventService),
         GetCurrentEventControllerImpl(EventService, logger),
         GetEventByIdControllerImpl(EventService),
-        CreateRegistrationControllerImpl(RegistrationService, RandomTokenService, logger)
+        CreateRegistrationControllerImpl(
+            EventService,
+            RegistrationService,
+            RandomTokenService,
+            EmailService(config.secrets),
+            logger
+        )
     )()
     val server = app.asServer(Jetty(config.port)).start()
     logger.info("Server started on port ${config.port}")

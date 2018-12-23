@@ -74,6 +74,13 @@ public class EventDao extends DAOImpl<EventRecord, meta.tables.pojos.Event, Long
     }
 
     /**
+     * Fetch records that have <code>sponsor IN (values)</code>
+     */
+    public List<meta.tables.pojos.Event> fetchBySponsor(String... values) {
+        return fetch(Event.EVENT.SPONSOR, values);
+    }
+
+    /**
      * Fetch records that have <code>contact IN (values)</code>
      */
     public List<meta.tables.pojos.Event> fetchByContact(String... values) {

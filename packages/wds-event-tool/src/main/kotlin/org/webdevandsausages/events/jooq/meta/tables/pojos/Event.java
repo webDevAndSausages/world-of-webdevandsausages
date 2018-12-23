@@ -25,10 +25,11 @@ import meta.tables.interfaces.IEvent;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event implements IEvent {
 
-    private static final long serialVersionUID = -58014759;
+    private static final long serialVersionUID = -415271780;
 
     private final Long        id;
     private final String      name;
+    private final String      sponsor;
     private final String      contact;
     private final Timestamp   date;
     private final String      details;
@@ -40,6 +41,7 @@ public class Event implements IEvent {
     public Event(Event value) {
         this.id = value.id;
         this.name = value.name;
+        this.sponsor = value.sponsor;
         this.contact = value.contact;
         this.date = value.date;
         this.details = value.details;
@@ -52,6 +54,7 @@ public class Event implements IEvent {
     public Event(
         Long        id,
         String      name,
+        String      sponsor,
         String      contact,
         Timestamp   date,
         String      details,
@@ -62,6 +65,7 @@ public class Event implements IEvent {
     ) {
         this.id = id;
         this.name = name;
+        this.sponsor = sponsor;
         this.contact = contact;
         this.date = date;
         this.details = details;
@@ -79,6 +83,11 @@ public class Event implements IEvent {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getSponsor() {
+        return this.sponsor;
     }
 
     @Override
@@ -122,6 +131,7 @@ public class Event implements IEvent {
 
         sb.append(id);
         sb.append(", ").append(name);
+        sb.append(", ").append(sponsor);
         sb.append(", ").append(contact);
         sb.append(", ").append(date);
         sb.append(", ").append(details);
