@@ -21,6 +21,7 @@ val firebaseVersion = "6.6.0"
 val flywayCoreVersion = "5.2.4"
 val postgresqlDriverVersion = "42.2.5"
 val jooqVersion = "3.10.1"
+val arrowVersion = "0.8.1"
 
 plugins {
     kotlin("jvm") version "1.3.11"
@@ -79,7 +80,8 @@ dependencies {
     implementation("org.simpleflatmapper", "sfm-jooq", "6.0.13")
     jooqGeneratorRuntime("org.postgresql:postgresql:$postgresqlDriverVersion")
     /* Arrow */
-    implementation("io.arrow-kt:arrow-core:0.8.1")
+    implementation("io.arrow-kt:arrow-core:$arrowVersion")
+    implementation("io.arrow-kt:arrow-data:$arrowVersion")
 
     /* tests */
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")

@@ -19,7 +19,9 @@ import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.handleErrorResponse
+import org.webdevandsausages.events.utils.Read
 import org.webdevandsausages.events.utils.WDSJackson.auto
+import org.webdevandsausages.events.utils.parse
 
 object PostRegistration {
     private val registrationRequestLens = Body.auto<RegistrationInDto>().toLens()
@@ -31,34 +33,45 @@ object PostRegistration {
         handleErrorResponse: handleErrorResponse): ContractRoute {
 
         fun handleRegistration(id: Long, _unusedButNeeded: String): HttpHandler = { req: Request ->
-            // TODO: Validate body
+
             val registration = registrationRequestLens(req).apply {
                 eventId = id
             }
-            createRegistration(registration).let {
-                when(it) {
-                    is Either.Left -> when (it.a){
-                        is EventError.NotFound ->
-                            handleErrorResponse(
-                                "The event is closed or non-existent.",
-                                ErrorCode.EVENT_CLOSED_OR_MISSING,
-                                Status.BAD_REQUEST)
-                        is EventError.AlreadyRegistered ->
-                            handleErrorResponse(
-                                "The email is already registered.",
-                                ErrorCode.ALREADY_REGISTERED,
-                                Status.BAD_REQUEST)
-                        is EventError.DatabaseError ->
-                            handleErrorResponse(
-                                "A database error occurred.",
-                                ErrorCode.DATABASE_ERROR,
-                                Status.INTERNAL_SERVER_ERROR)
+            val validation = parse(Read.emailRead, registration.email)
+            validation.fold(
+                {
+                    handleErrorResponse(
+                        "The email address is not valid",
+                        ErrorCode.INVALID_EMAIL,
+                        Status.UNPROCESSABLE_ENTITY)
+                },
+                {
+                    createRegistration(registration).let {
+                        when(it) {
+                            is Either.Left -> when (it.a){
+                                is EventError.NotFound ->
+                                    handleErrorResponse(
+                                        "The event is closed or non-existent.",
+                                        ErrorCode.EVENT_CLOSED_OR_MISSING,
+                                        Status.BAD_REQUEST)
+                                is EventError.AlreadyRegistered ->
+                                    handleErrorResponse(
+                                        "The email is already registered.",
+                                        ErrorCode.ALREADY_REGISTERED,
+                                        Status.BAD_REQUEST)
+                                is EventError.DatabaseError ->
+                                    handleErrorResponse(
+                                        "A database error occurred.",
+                                        ErrorCode.DATABASE_ERROR,
+                                        Status.INTERNAL_SERVER_ERROR)
+                            }
+                            is Either.Right -> registrationResponseLens(
+                                RegistrationOutDto(it.b),
+                                Response(Status.OK))
+                        }
                     }
-                    is Either.Right -> registrationResponseLens(
-                        RegistrationOutDto(it.b),
-                        Response(Status.OK))
-                }
-            }
+                })
+
         }
 
         return "/api/1.0/events" / eventIdParam / "registrations" meta {
