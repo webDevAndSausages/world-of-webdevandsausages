@@ -18,7 +18,7 @@ interface GetEventsController {
 }
 
 class GetEventsControllerImpl(val eventService: EventService) : GetEventsController {
-    override fun invoke(status: String?): List<EventDto>?{
+    override fun invoke(status: String?): List<EventDto>? {
         return eventService.getEvents(status)
     }
 }
@@ -84,8 +84,8 @@ class GetCurrentEventControllerImpl(val eventService: EventService, val logger: 
                     status.isOpenFeedbackStatus && date.threeDaysLater -> closeFeedback(it)
                     else -> Either.Right(it)
                 }
-            }
-          )
+              }
+            )
     }
 }
 

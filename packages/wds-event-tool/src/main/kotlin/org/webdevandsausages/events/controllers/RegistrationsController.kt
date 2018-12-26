@@ -10,14 +10,16 @@ import org.webdevandsausages.events.services.RandomTokenService
 import org.webdevandsausages.events.services.RegistrationService
 import org.webdevandsausages.events.services.isOpenRegistrationStatus
 import org.webdevandsausages.events.utils.prettified
-import arrow.core.*
+import arrow.core.Option
+import arrow.core.None
+import arrow.core.Some
+import arrow.core.Either
 
 sealed class EventError {
     object NotFound : EventError()
     object AlreadyRegistered : EventError()
     object DatabaseError : EventError()
 }
-
 
 interface CreateRegistrationController {
     operator fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?>
@@ -29,15 +31,15 @@ class CreateRegistrationControllerImpl(
     val randomTokenService: RandomTokenService,
     val emailService: EmailService,
     val logger: Logger
-  ) : CreateRegistrationController {
+) : CreateRegistrationController {
     override fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?> {
         val eventData: Option<EventDto> = eventService.getByIdOrLatest(registration.eventId)
 
-        return when(eventData) {
+        return when (eventData) {
             is None -> Either.left(EventError.NotFound)
             is Some -> when {
                     !eventData.t.event.status.isOpenRegistrationStatus -> Either.left(EventError.NotFound)
-                    eventData.t.participants.find { it.email == registration.email} != null -> Either.left(EventError.AlreadyRegistered)
+                    eventData.t.participants.find { it.email == registration.email } != null -> Either.left(EventError.AlreadyRegistered)
                     else -> {
                         val event = eventData.t.event
                         val token = getVerificationToken()
@@ -53,7 +55,7 @@ class CreateRegistrationControllerImpl(
                                 "location" to event.location,
                                 "token" to result.t.verificationToken,
                                 "sponsor" to sponsor
-                                                 )
+                                 )
 
                             emailService.sendMail(
                                 result.t.email,
@@ -61,9 +63,9 @@ class CreateRegistrationControllerImpl(
                                 "Web Dev & Sausages Registration",
                                 "d-91e5bf696190444d94f13e564fee4426",
                                 emailData
-                                                 )
+                            )
                         }
-                        return when(result) {
+                        return when (result) {
                             is Some -> Either.Right(result.t)
                             is None -> Either.Left(EventError.DatabaseError)
                         }
@@ -76,7 +78,7 @@ class CreateRegistrationControllerImpl(
         var token: String?
         do {
             token = randomTokenService.getWordPair()
-        } while(token !is String || registrationService.getByToken(token) != null)
+        } while (token !is String || registrationService.getByToken(token).isDefined())
         return token
     }
 }

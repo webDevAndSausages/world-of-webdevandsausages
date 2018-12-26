@@ -27,11 +27,11 @@ object GetCurrentEvent {
                         "The event is closed or non-existent.",
                         ErrorCode.EVENT_CLOSED_OR_MISSING,
                         Status.NOT_FOUND
-                                                         )
+                        )
                     is Either.Right -> EventLens(
                         EventOutDto(it.b),
                         Response(Status.OK)
-                                                         )
+                        )
                 }
             }
         }

@@ -3,6 +3,8 @@ package org.webdevandsausages.events.dao
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
+import arrow.core.Try
+import arrow.core.getOrDefault
 import arrow.core.toOption
 import meta.enums.EventStatus
 import meta.tables.Event
@@ -18,9 +20,9 @@ import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.EventDto
 import kotlin.streams.toList
 
-typealias EventUpdates= List<Pair<TableField<EventRecord, Any>, Any>>
+typealias EventUpdates = List<Pair<TableField<EventRecord, Any>, Any>>
 
-object EventCRUD: EventDao(local.jooqConfiguration) {
+object EventCRUD : EventDao(local.jooqConfiguration) {
 
     val db = DSL.using(configuration())
     val mapperInstance = JdbcMapperFactory.newInstance()
@@ -46,51 +48,57 @@ object EventCRUD: EventDao(local.jooqConfiguration) {
             .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-        return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
+        return Try {
+            jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
+        }.getOrDefault { emptyList() }
     }
 
     private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)
 
     fun findByIdOrLatest(id: Long? = null): Option<EventDto> {
-        val resultSet = db.use { ctx ->
-            ctx.select()
-                .from(Event.EVENT)
-                .leftJoin(Participant.PARTICIPANT)
-                .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
-                .apply {
-                    when(id) {
-                        is Long -> where(Event.EVENT.ID.eq(id))
-                        else -> where(hasStatus(EventStatus.OPEN))
-                            .or(hasStatus(EventStatus.VISIBLE))
-                            .or(hasStatus(EventStatus.OPEN_WITH_WAITLIST))
-                            .or(hasStatus(EventStatus.OPEN_FULL))
-                            .or(hasStatus(EventStatus.CLOSED_WITH_FEEDBACK))
+        return Try {
+            val resultSet = db.use { ctx ->
+                ctx.select()
+                    .from(Event.EVENT)
+                    .leftJoin(Participant.PARTICIPANT)
+                    .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
+                    .apply {
+                        when (id) {
+                            is Long -> where(Event.EVENT.ID.eq(id))
+                            else -> where(hasStatus(EventStatus.OPEN))
+                                .or(hasStatus(EventStatus.VISIBLE))
+                                .or(hasStatus(EventStatus.OPEN_WITH_WAITLIST))
+                                .or(hasStatus(EventStatus.OPEN_FULL))
+                                .or(hasStatus(EventStatus.CLOSED_WITH_FEEDBACK))
+                        }
                     }
-                }
-                .fetchResultSet()
-        }
-        val jdbcMapper = mapperInstance
-            .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
-            .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
+                    .fetchResultSet()
+            }
+            val jdbcMapper = mapperInstance
+                .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
+                .newMapper(object :
+                    TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-        return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull().toOption()
+            jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull()
+        }.getOrDefault { null }.toOption()
     }
 
     // can handle an arbitrary number of updates
     fun update(id: Long?, updates: EventUpdates): Option<Int> {
-        val result = db.use { ctx ->
-                    ctx
-                        .update(Event.EVENT)
-                        .set(updates[0].first, updates[0].second)
-                        .apply {
-                            updates.drop(1).forEach {
-                                set(it.first, it.second)
-                            }
-
+        val result = Try {
+            db.use { ctx ->
+                ctx
+                    .update(Event.EVENT)
+                    .set(updates[0].first, updates[0].second)
+                    .apply {
+                        updates.drop(1).forEach {
+                            set(it.first, it.second)
                         }
-                        .where(Event.EVENT.ID.eq(id))
-                        .execute()
-        }
+                    }
+                    .where(Event.EVENT.ID.eq(id))
+                    .execute()
+            }
+        }.getOrDefault { 0 }
         return if (result == 1) Some(1) else None
     }
 }

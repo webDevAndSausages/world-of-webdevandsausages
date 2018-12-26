@@ -8,4 +8,4 @@ data class ParticipantDto(
     val verificationToken: String,
     val status: ParticipantStatus,
     val orderNumber: Int
- )
+)

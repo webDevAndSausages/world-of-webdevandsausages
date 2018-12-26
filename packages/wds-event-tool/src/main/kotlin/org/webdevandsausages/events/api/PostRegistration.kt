@@ -30,7 +30,8 @@ object PostRegistration {
 
     fun route(
         createRegistration: CreateRegistrationController,
-        handleErrorResponse: handleErrorResponse): ContractRoute {
+        handleErrorResponse: handleErrorResponse
+    ): ContractRoute {
 
         fun handleRegistration(id: Long, _unusedButNeeded: String): HttpHandler = { req: Request ->
 
@@ -47,13 +48,13 @@ object PostRegistration {
                 },
                 {
                     createRegistration(registration).let {
-                        when(it) {
-                            is Either.Left -> when (it.a){
+                        when (it) {
+                            is Either.Left -> when (it.a) {
                                 is EventError.NotFound ->
                                     handleErrorResponse(
                                         "The event is closed or non-existent.",
                                         ErrorCode.EVENT_CLOSED_OR_MISSING,
-                                        Status.BAD_REQUEST)
+                                        Status.NOT_FOUND)
                                 is EventError.AlreadyRegistered ->
                                     handleErrorResponse(
                                         "The email is already registered.",
@@ -67,21 +68,20 @@ object PostRegistration {
                             }
                             is Either.Right -> registrationResponseLens(
                                 RegistrationOutDto(it.b),
-                                Response(Status.OK))
+                                Response(Status.CREATED))
                         }
                     }
                 })
-
         }
 
         return "/api/1.0/events" / eventIdParam / "registrations" meta {
             summary = "Register user"
             receiving(registrationRequestLens)
-            returning("User has been registered to the event." to Status.OK)
-            returning("The event is closed or non-existent." to Status.BAD_REQUEST)
+            returning("User has been registered to the event." to Status.CREATED)
+            returning("The event is closed or non-existent." to Status.NOT_FOUND)
             returning("The email is already registered." to Status.BAD_REQUEST)
             returning("A database error occurred." to Status.INTERNAL_SERVER_ERROR)
-
+            returning("The email address is not valid" to Status.UNPROCESSABLE_ENTITY)
         } bindContract Method.POST to ::handleRegistration
     }
 }

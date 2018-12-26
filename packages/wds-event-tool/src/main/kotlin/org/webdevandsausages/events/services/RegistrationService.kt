@@ -9,7 +9,8 @@ object RegistrationService {
     fun create(registration: RegistrationInDto): Option<ParticipantDto> {
         return ParticipantCRUD.create(registration)
     }
-    fun getByToken(token: String): ParticipantDto? {
+
+    fun getByToken(token: String): Option<ParticipantDto> {
         return ParticipantCRUD.findByToken(token)
     }
 }

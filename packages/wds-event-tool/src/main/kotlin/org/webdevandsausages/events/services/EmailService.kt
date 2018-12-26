@@ -1,6 +1,7 @@
 package org.webdevandsausages.events.services
 
-import com.sendgrid.*
+import com.sendgrid.Request
+import com.sendgrid.Method
 import com.sendgrid.Email
 import com.sendgrid.Personalization
 import com.sendgrid.Mail
@@ -8,7 +9,6 @@ import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.Secrets
 import com.sendgrid.SendGrid
 import org.slf4j.Logger
-
 
 class EmailService(private val secrets: Secrets?) {
     private val logger: Logger = LoggerFactory.getLogger("email service")
@@ -58,7 +58,7 @@ class EmailService(private val secrets: Secrets?) {
             try {
                 val res = sg.api(request)
                 logger.info("response ${res.statusCode}")
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 logger.error("Sending of email failed: ${e.message}")
             }
         }

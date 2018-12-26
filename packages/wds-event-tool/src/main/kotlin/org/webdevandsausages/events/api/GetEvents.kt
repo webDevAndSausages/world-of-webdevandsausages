@@ -24,7 +24,7 @@ object GetEvents {
             val status = Router.optionalStatusQuery(req).takeIf {
                     v -> EventStatus.values()
                 .filter { e ->
-                    e.name == v?.toUpperCase()}.isNotEmpty()
+                    e.name == v?.toUpperCase() }.isNotEmpty()
             }
             EventsLens(
                 EventsOutDto(getEvents(status)),

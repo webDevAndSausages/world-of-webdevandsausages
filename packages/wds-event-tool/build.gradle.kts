@@ -26,6 +26,7 @@ val arrowVersion = "0.8.1"
 plugins {
     kotlin("jvm") version "1.3.11"
     id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
+    id("org.jmailen.kotlinter") version "1.20.1"
 }
 
 repositories {
@@ -82,16 +83,18 @@ dependencies {
     /* Arrow */
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
     implementation("io.arrow-kt:arrow-data:$arrowVersion")
+    // in future use IO and monads for effects?
+    // implementation("io.arrow-kt:arrow-effects:$arrowVersion")
+    // implementation("io.arrow-kt:arrow-effects-instances:$arrowVersion")
+    // implementation("io.arrow-kt:arrow-instances-core:$arrowVersion")
+    // implementation("io.arrow-kt:arrow-instances-data:$arrowVersion")
+    // implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
 
     /* tests */
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
+    testImplementation("io.kotlintest:kotlintest-assertions-arrow:3.1.11")
     testImplementation("io.mockk:mockk:1.8.13.kotlin13")
 }
-/*
-tasks.test {
-    useJUnitPlatform()
-}
-*/
 
 val jooqConfig = Configuration()
     .withJdbc(
@@ -142,6 +145,11 @@ jooqGenerator {
         configuration = jooqConfig
     }
 }
+
+val test by tasks.getting(Test::class) {
+    useJUnitPlatform { }
+}
+
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions.jvmTarget = "1.8"

@@ -12,4 +12,3 @@ inline val Timestamp?.threeDaysLater get() =
 
 inline val Timestamp?.prettified: String get() =
     SimpleDateFormat("EEE, d MMM yyyy, hh:mm aaa").format(this?.toInstant()?.toEpochMilli())
-

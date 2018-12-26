@@ -38,7 +38,7 @@ class Router(
     val getCurrentEvent: GetCurrentEventController,
     val getEventById: GetEventByIdController,
     val createRegistration: CreateRegistrationController
-    ) {
+) {
 
     companion object {
         val eventIdParam = Path.long().of("id")
@@ -55,7 +55,7 @@ class Router(
                 OpenApi(ApiInfo("Event tool api", "v1.0"), Jackson),
                 "/api-docs",
                 *getRoutes().toTypedArray())
-             )
+                )
     }
 
     private fun getRoutes() = listOf(
