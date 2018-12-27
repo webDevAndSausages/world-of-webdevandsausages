@@ -29,10 +29,10 @@ object GetEvents {
             EventsLens(
                 EventsOutDto(getEvents(status)),
                 Response(Status.OK)
-                      )
+                )
         }
 
-        return "/api/1.0/events" meta {
+        return "events" meta {
             summary = "Get all events and participants, with option to filter by status"
             queries += Router.optionalStatusQuery
         } bindContract GET to handleGetEvents()

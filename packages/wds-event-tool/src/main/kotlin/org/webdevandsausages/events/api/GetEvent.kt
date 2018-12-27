@@ -31,16 +31,16 @@ object GetEvent {
                             "The event does not exist.",
                             ErrorCode.NOT_FOUND,
                             Status.NOT_FOUND
-                                                             )
+                            )
                         is Either.Right -> EventLens(
                             EventOutDto(it.b),
                             Response(Status.OK)
-                                                    )
+                            )
                     }
                 }
             }
 
-        return "/api/1.0/events" / Router.eventIdParam meta {
+        return "events" / Router.eventIdParam meta {
                 summary = "Get event by id"
                 returning("Event found" to Status.OK)
                 returning("The event does not exist." to Status.NOT_FOUND)

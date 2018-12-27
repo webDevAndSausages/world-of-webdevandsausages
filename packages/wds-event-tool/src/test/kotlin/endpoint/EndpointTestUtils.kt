@@ -10,6 +10,7 @@ fun getRouterToTest() = Router(
     getEvents = mockk(relaxed = true),
     getCurrentEvent = mockk(relaxed = true),
     getEventById = mockk(relaxed = true),
+    getRegistration = mockk(relaxed = true),
     createRegistration = mockk(relaxed = true)
   )
 

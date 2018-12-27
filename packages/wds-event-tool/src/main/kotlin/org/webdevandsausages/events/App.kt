@@ -12,6 +12,7 @@ import org.webdevandsausages.events.controllers.CreateRegistrationControllerImpl
 import org.webdevandsausages.events.controllers.GetCurrentEventControllerImpl
 import org.webdevandsausages.events.controllers.GetEventByIdControllerImpl
 import org.webdevandsausages.events.controllers.GetEventsControllerImpl
+import org.webdevandsausages.events.controllers.GetRegistrationControllerImpl
 import org.webdevandsausages.events.services.EmailService
 import org.webdevandsausages.events.services.EventService
 import org.webdevandsausages.events.services.RandomTokenService
@@ -33,6 +34,7 @@ fun startApp(config: AppConfig): Http4kServer {
         GetEventsControllerImpl(EventService),
         GetCurrentEventControllerImpl(EventService, logger),
         GetEventByIdControllerImpl(EventService),
+        GetRegistrationControllerImpl(EventService, RegistrationService),
         CreateRegistrationControllerImpl(
             EventService,
             RegistrationService,

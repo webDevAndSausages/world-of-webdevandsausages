@@ -14,7 +14,7 @@ import org.intellij.lang.annotations.Language
 import org.webdevandsausages.events.controllers.EventError
 import org.webdevandsausages.events.dto.ParticipantDto
 
-class RegistrationEndpointTest : StringSpec() {
+class PostRegistrationEndpointTest : StringSpec() {
     lateinit var router: Router
 
     override fun beforeTest(description: Description) {

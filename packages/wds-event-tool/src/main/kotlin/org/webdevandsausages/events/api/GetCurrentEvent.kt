@@ -36,7 +36,7 @@ object GetCurrentEvent {
             }
         }
 
-        return "/api/1.0/events/current" meta {
+        return "events/current" meta {
             summary = "Get latest publishable event"
             returning("Latest event found." to Status.OK)
             returning("The event is closed or non-existent." to Status.NOT_FOUND)

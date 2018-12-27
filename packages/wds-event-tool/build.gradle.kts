@@ -22,6 +22,7 @@ val flywayCoreVersion = "5.2.4"
 val postgresqlDriverVersion = "42.2.5"
 val jooqVersion = "3.10.1"
 val arrowVersion = "0.8.1"
+val mockkVersion = "1.8.13.kotlin13"
 
 plugins {
     kotlin("jvm") version "1.3.11"
@@ -58,6 +59,7 @@ dependencies {
     implementation("org.http4k:http4k-server-jetty:$http4kVersion")
     implementation("org.http4k:http4k-format-jackson:$http4kVersion")
     implementation("org.http4k:http4k-client-apache:$http4kVersion")
+    implementation("org.http4k:http4k-template-handlebars:$http4kVersion")
     /* log4 */
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
@@ -83,7 +85,7 @@ dependencies {
     /* Arrow */
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
     implementation("io.arrow-kt:arrow-data:$arrowVersion")
-    // in future use IO and monads for effects?
+    // use IO monads in future?
     // implementation("io.arrow-kt:arrow-effects:$arrowVersion")
     // implementation("io.arrow-kt:arrow-effects-instances:$arrowVersion")
     // implementation("io.arrow-kt:arrow-instances-core:$arrowVersion")
@@ -93,7 +95,8 @@ dependencies {
     /* tests */
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testImplementation("io.kotlintest:kotlintest-assertions-arrow:3.1.11")
-    testImplementation("io.mockk:mockk:1.8.13.kotlin13")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.mockk:mockk-dsl:$mockkVersion")
 }
 
 val jooqConfig = Configuration()

@@ -50,7 +50,7 @@ object FirebaseService {
                     registrationOpens = it["registrationOpens"] as Date,
                     registrationCloses = it["registrationCloses"] as Date,
                     feedback = it["feedback"] as List<String>
-                 )
+                    )
             }
         } catch (e: Exception) {
             logger?.error("Firebase failed to return events: ${e.message}")

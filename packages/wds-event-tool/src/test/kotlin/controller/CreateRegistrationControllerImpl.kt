@@ -1,6 +1,7 @@
 package controller
 
 import arrow.core.Left
+import arrow.core.None
 import arrow.core.Option
 import arrow.core.Right
 import io.kotlintest.Description
@@ -10,8 +11,12 @@ import io.kotlintest.assertions.arrow.either.beLeft
 import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
+import io.mockk.spyk
 import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
@@ -68,10 +73,11 @@ class CreateRegistrationControllerImplImplTest : StringSpec() {
    )
 
     init {
-        "registration happy case" {
+        "happy case registration with REGISTERED status" {
             every { unit.eventService.getByIdOrLatest(any()) } returns Option(dbEvent)
             every { unit.randomTokenService.getWordPair() } returns "silly-token"
-            every { unit.registrationService.create(any()) } returns Option(dbRegistration)
+            val slot = slot<RegistrationInDto>()
+            every { unit.registrationService.create(capture(slot)) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
                 resultingEither.shouldBeRight()
@@ -87,6 +93,77 @@ class CreateRegistrationControllerImplImplTest : StringSpec() {
                          )
                     )
                )
+                slot.captured.shouldBe(
+                    RegistrationInDto(
+                        eventId=null,
+                        firstName="Joe",
+                        lastName="Schmo",
+                        affiliation="Acme",
+                        email="joe.schmo@mail.com",
+                        registrationToken="silly-token",
+                        orderNumber=1000,
+                        status=ParticipantStatus.REGISTERED
+                     )
+                  )
+            }
+        }
+
+        "should register with WAITING_LIST status if maxParticipants is reached" {
+            var fullEvent = EventDto(
+                event = Event(
+                    1,
+                    "Vol 10",
+                    "Acme",
+                    "Joe",
+                    Timestamp.valueOf(LocalDateTime.now().plusDays(4)),
+                    "Great presentations",
+                    "Tampere center",
+                    EventStatus.OPEN_WITH_WAITLIST,
+                    1,
+                    Timestamp.valueOf(LocalDateTime.now().plusDays(-2))
+                 ),
+                 participants = listOf(
+                    Participant(
+                        1,
+                        "Bill",
+                        "Knox",
+                        "billy@mail.com",
+                        "Acme",
+                        "silly-token",
+                        1000,
+                        1,
+                        ParticipantStatus.REGISTERED)
+                 )
+            )
+            every { unit.eventService.getByIdOrLatest(any()) } returns Option(fullEvent)
+            every { unit.randomTokenService.getWordPair() } returns "silly-token"
+            val slot2 = slot<RegistrationInDto>()
+            val registration = dbRegistration.copy(status = ParticipantStatus.WAIT_LISTED)
+            every { unit.registrationService.create(capture(slot2)) } returns Option(registration)
+            val resultingEither = unit(newRegistration)
+            assertSoftly {
+                resultingEither.shouldBeRight()
+                beRight(
+                    resultingEither.shouldBe(
+                        Right(ParticipantDto(
+                            email = "joe.schmo@mail.com",
+                            name = "Joe Schmo",
+                            verificationToken = "silly-token",
+                            status = ParticipantStatus.WAIT_LISTED,
+                            orderNumber = 1000
+                        ))))
+                slot2.captured.shouldBe(
+                    RegistrationInDto(
+                        eventId=null,
+                        firstName="Joe",
+                        lastName="Schmo",
+                        affiliation="Acme",
+                        email="joe.schmo@mail.com",
+                        registrationToken="silly-token",
+                        orderNumber=1000,
+                        status=ParticipantStatus.WAIT_LISTED
+                     )
+                  )
             }
         }
 
@@ -108,15 +185,17 @@ class CreateRegistrationControllerImplImplTest : StringSpec() {
                         )
             every { unit.eventService.getByIdOrLatest(any()) } returns Option(eventWithExisting)
             every { unit.randomTokenService.getWordPair() } returns "twofer-token"
-            every { unit.registrationService.create(any()) } returns Option(dbRegistration)
+            val spy = spyk(unit.registrationService)
+            every { spy.create(any()) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
                 resultingEither.isLeft().shouldBe(true)
                 beLeft(resultingEither.shouldBe(Left(EventError.AlreadyRegistered)))
+                verify { spy wasNot Called }
             }
         }
 
-        "should error if event is closed is already among participants" {
+        "should return NotFound error if event is closed" {
             var dbEvent = EventDto(
                 event = Event(
                     1,
@@ -133,12 +212,27 @@ class CreateRegistrationControllerImplImplTest : StringSpec() {
               )
             every { unit.eventService.getByIdOrLatest(any()) } returns Option(dbEvent)
             every { unit.randomTokenService.getWordPair() } returns "twofer-token"
-            every { unit.registrationService.create(any()) } returns Option(dbRegistration)
+            val spy = spyk(unit.registrationService)
+            every { spy.create(any()) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
                 resultingEither.isLeft().shouldBe(true)
                 beLeft(resultingEither.shouldBe(Left(EventError.NotFound))
                   )
+                verify { spy wasNot Called }
+            }
+        }
+
+        "should return NotFound if event does not exist" {
+            every { unit.eventService.getByIdOrLatest(any()) } returns None
+            every { unit.randomTokenService.getWordPair() } returns "twofer-token"
+            val spy = spyk(unit.registrationService)
+            every { spy.create(any()) } returns Option(dbRegistration)
+            val resultingEither = unit(newRegistration)
+            assertSoftly {
+                resultingEither.isLeft().shouldBe(true)
+                beLeft(resultingEither.shouldBe(Left(EventError.NotFound)))
+                verify { spy wasNot Called }
             }
         }
     }

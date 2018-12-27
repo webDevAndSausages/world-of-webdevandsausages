@@ -6,12 +6,18 @@ import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventUpdates
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.services.EventService
+import org.webdevandsausages.events.services.canRegister
 import org.webdevandsausages.events.services.field
 import org.webdevandsausages.events.services.isOpenFeedbackStatus
-import org.webdevandsausages.events.services.isOpenRegistrationStatus
 import org.webdevandsausages.events.services.isVisibleStatus
 import org.webdevandsausages.events.utils.hasPassed
 import org.webdevandsausages.events.utils.threeDaysLater
+
+sealed class EventError {
+    object NotFound : EventError()
+    object AlreadyRegistered : EventError()
+    object DatabaseError : EventError()
+}
 
 interface GetEventsController {
     operator fun invoke(status: String?): List<EventDto>?
@@ -42,7 +48,7 @@ class GetCurrentEventControllerImpl(val eventService: EventService, val logger: 
         eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.OPEN)) as EventUpdates)
-        return complete()
+        return getLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -51,7 +57,7 @@ class GetCurrentEventControllerImpl(val eventService: EventService, val logger: 
         eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
-        return complete()
+        return getLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -60,17 +66,17 @@ class GetCurrentEventControllerImpl(val eventService: EventService, val logger: 
         eventService.update(
             data.event.id,
             listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
-        return complete()
+        return getLatest()
     }
 
-    private fun complete(): Either<EventError, EventDto> = eventService.getByIdOrLatest().fold({
+    private fun getLatest(): Either<EventError, EventDto> = eventService.getByIdOrLatest().fold({
             Either.Left(EventError.NotFound)
         }, {
             Either.Right(it)
         })
 
     override fun invoke(): Either<EventError, EventDto> {
-        val result = eventService.getByIdOrLatest()
+        val result = getLatest()
         return result.fold(
             { Either.Left(EventError.NotFound) },
             {
@@ -80,11 +86,11 @@ class GetCurrentEventControllerImpl(val eventService: EventService, val logger: 
 
                 return when {
                     status.isVisibleStatus && registrationOpens.hasPassed -> openEvent(it)
-                    status.isOpenRegistrationStatus && date.hasPassed -> closeRegistration(it)
+                    status.canRegister && date.hasPassed -> closeRegistration(it)
                     status.isOpenFeedbackStatus && date.threeDaysLater -> closeFeedback(it)
                     else -> Either.Right(it)
                 }
-              }
+                }
             )
     }
 }

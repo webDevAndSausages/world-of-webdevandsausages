@@ -6,26 +6,18 @@ import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.EventUpdates
 import org.webdevandsausages.events.dto.EventDto
 
-sealed class UserRegistrationError {
-    object EmailAlreadyTaken : UserRegistrationError()
-    object UsernameAlreadyTaken : UserRegistrationError()
-}
-
 object EventService {
-    fun getEvents(status: String?): List<EventDto>? {
-        return EventCRUD.findAllWithParticipants(status)
-    }
+    fun getEvents(status: String?): List<EventDto>? = EventCRUD.findAllWithParticipants(status)
 
-    fun getByIdOrLatest(id: Long? = null): Option<EventDto> {
-        return EventCRUD.findByIdOrLatest(id)
-    }
+    fun getByIdOrLatest(id: Long? = null): Option<EventDto> = EventCRUD.findByIdOrLatest(id)
 
-    fun update(id: Long?, updates: EventUpdates): Option<Int> {
-        return EventCRUD.update(id, updates)
-    }
+    fun update(id: Long?, updates: EventUpdates): Option<Int> = EventCRUD.update(id, updates)
 }
 
 val EventStatus.isVisibleStatus get() = this == EventStatus.VISIBLE
-val EventStatus.isOpenRegistrationStatus get() = this == EventStatus.OPEN || this == EventStatus.OPEN_WITH_WAITLIST
+val EventStatus.isNotFull get() = this == EventStatus.OPEN
+val EventStatus.isWithWaitList get() = this == EventStatus.OPEN_WITH_WAITLIST
+val EventStatus.canRegister get() = this == EventStatus.OPEN || this == EventStatus.OPEN_WITH_WAITLIST
 val EventStatus.isOpenFeedbackStatus get() = this == EventStatus.CLOSED_WITH_FEEDBACK
+val EventStatus.isInvisible get() = this == EventStatus.PLANNING || this == EventStatus.CLOSED || this == EventStatus.CANCELLED
 val EventService.field get() = Event.EVENT

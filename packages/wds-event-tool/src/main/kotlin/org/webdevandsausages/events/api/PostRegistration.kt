@@ -13,6 +13,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.lens.Path
 import org.http4k.lens.long
+import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.controllers.CreateRegistrationController
 import org.webdevandsausages.events.controllers.EventError
 import org.webdevandsausages.events.dto.ErrorCode
@@ -25,7 +26,6 @@ import org.webdevandsausages.events.utils.parse
 
 object PostRegistration {
     private val registrationRequestLens = Body.auto<RegistrationInDto>().toLens()
-    private val registrationResponseLens = Body.auto<RegistrationOutDto>().toLens()
     private val eventIdParam = Path.long().of("id")
 
     fun route(
@@ -33,7 +33,8 @@ object PostRegistration {
         handleErrorResponse: handleErrorResponse
     ): ContractRoute {
 
-        fun handleRegistration(id: Long, _unusedButNeeded: String): HttpHandler = { req: Request ->
+        @Suppress("UNUSED_PARAMETER")
+        fun handleRegistration(id: Long, _p2: String): HttpHandler = { req: Request ->
 
             val registration = registrationRequestLens(req).apply {
                 eventId = id
@@ -66,7 +67,7 @@ object PostRegistration {
                                         ErrorCode.DATABASE_ERROR,
                                         Status.INTERNAL_SERVER_ERROR)
                             }
-                            is Either.Right -> registrationResponseLens(
+                            is Either.Right -> Router.registrationResponseLens(
                                 RegistrationOutDto(it.b),
                                 Response(Status.CREATED))
                         }
@@ -74,7 +75,7 @@ object PostRegistration {
                 })
         }
 
-        return "/api/1.0/events" / eventIdParam / "registrations" meta {
+        return "events" / eventIdParam / "registrations" meta {
             summary = "Register user"
             receiving(registrationRequestLens)
             returning("User has been registered to the event." to Status.CREATED)

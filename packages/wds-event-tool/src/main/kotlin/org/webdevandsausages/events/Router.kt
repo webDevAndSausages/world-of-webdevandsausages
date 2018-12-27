@@ -18,18 +18,27 @@ import org.http4k.lens.long
 import org.http4k.format.Jackson
 import org.http4k.contract.OpenApi
 import org.http4k.lens.Query
+import org.http4k.lens.string
+import org.http4k.routing.ResourceLoader
 import org.http4k.routing.RoutingHttpHandler
+import org.http4k.routing.bind
+import org.http4k.routing.routes
+import org.http4k.routing.static
 import org.webdevandsausages.events.api.GetCurrentEvent
 import org.webdevandsausages.events.api.GetEvent
 import org.webdevandsausages.events.api.GetEvents
+import org.webdevandsausages.events.api.GetRegistration
 import org.webdevandsausages.events.api.PostRegistration
 import org.webdevandsausages.events.controllers.CreateRegistrationController
 import org.webdevandsausages.events.controllers.GetCurrentEventController
 import org.webdevandsausages.events.controllers.GetEventByIdController
 import org.webdevandsausages.events.controllers.GetEventsController
+import org.webdevandsausages.events.controllers.GetRegistrationController
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
+import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.utils.WDSJackson.auto
+import org.http4k.core.HttpHandler
 
 typealias handleErrorResponse = (message: String, code: ErrorCode, status: Status) -> Response
 
@@ -37,12 +46,15 @@ class Router(
     val getEvents: GetEventsController,
     val getCurrentEvent: GetCurrentEventController,
     val getEventById: GetEventByIdController,
+    val getRegistration: GetRegistrationController,
     val createRegistration: CreateRegistrationController
 ) {
 
     companion object {
         val eventIdParam = Path.long().of("id")
         val optionalStatusQuery = Query.optional("status")
+        val verificationTokenParam = Path.string().of("verificationToken")
+        val registrationResponseLens = Body.auto<RegistrationOutDto>().toLens()
     }
 
     operator fun invoke(): RoutingHttpHandler {
@@ -50,19 +62,23 @@ class Router(
             .PrintRequestAndResponse()
             .then(ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive))
             .then(ServerFilters.CatchLensFailure)
-            .then(contract(
+            .then(routes(
+                "/api/1.0/" bind contract(
                 // Automatic Swagger
-                OpenApi(ApiInfo("Event tool api", "v1.0"), Jackson),
+                    OpenApi(ApiInfo("Event tool api", "v1.0"), Jackson),
                 "/api-docs",
-                *getRoutes().toTypedArray())
-                )
+                    *getApiRoutes().toTypedArray()
+                    ),
+                "/" bind static(ResourceLoader.Classpath("public"))
+             ))
     }
 
-    private fun getRoutes() = listOf(
+    private fun getApiRoutes() = listOf(
         "/{any:.*}" bindContract OPTIONS to ok(),
         GetEvents.route(getEvents),
         GetEvent.route(getEventById, handleErrorResponse),
         GetCurrentEvent.route(getCurrentEvent, handleErrorResponse),
+        GetRegistration.route(getRegistration, handleErrorResponse),
         PostRegistration.route(createRegistration, handleErrorResponse)
     )
 
