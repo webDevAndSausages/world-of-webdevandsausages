@@ -25,13 +25,12 @@ object FirebaseService {
 
     init {
         initializeApp(options)
-        db = FirestoreClient.getFirestore()
         logger = LoggerFactory.getLogger("firebase")
     }
 
     @Suppress("UNCHECKED_CAST")
     fun getAllEvents(): List<Event>? {
-        val eventsQuery = db?.collection("events")?.get()
+        val eventsQuery = FirestoreClient.getFirestore()?.collection("events")?.get()
         return try {
             eventsQuery?.get()?.documents?.toList()?.map {
                 // FIXME: why does deserialization fail if I just pass the class: it.toObject(Event::class.java)

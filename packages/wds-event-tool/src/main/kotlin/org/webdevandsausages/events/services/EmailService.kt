@@ -1,5 +1,7 @@
 package org.webdevandsausages.events.services
 
+import arrow.core.Try
+import arrow.core.getOrDefault
 import com.sendgrid.Request
 import com.sendgrid.Method
 import com.sendgrid.Email
@@ -13,12 +15,12 @@ import org.slf4j.Logger
 class EmailService(private val secrets: Secrets?) {
     private val logger: Logger = LoggerFactory.getLogger("email service")
 
-    private val sg: SendGrid? = try {
+    private val sg by lazy { Try {
         SendGrid(this.secrets?.sendgridApiKey)
-    } catch (e: Exception) {
-        logger.error("Could not initialize sendgrid: ${e.message}")
+    }.getOrDefault {
+        logger.error("Could not initialize sendgrid")
         null
-    }
+    }}
 
     fun sendMail(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) {
 
@@ -56,10 +58,10 @@ class EmailService(private val secrets: Secrets?) {
             }
 
             try {
-                val res = sg.api(request)
-                logger.info("response ${res.statusCode}")
+                val res = sg?.api(request)
+                logger.info("Sendgrid api response ${res?.statusCode}")
             } catch (e: Exception) {
-                logger.error("Sending of email failed: ${e.message}")
+                logger.error("Sending of email to sendgrid api failed: ${e.message}")
             }
         }
     }

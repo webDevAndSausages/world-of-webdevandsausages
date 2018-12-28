@@ -17,6 +17,8 @@ import arrow.core.Try
 import arrow.core.getOrDefault
 import arrow.core.right
 import meta.enums.ParticipantStatus
+import org.webdevandsausages.events.dto.getNextOrderNumber
+import org.webdevandsausages.events.dto.getNextOrderNumberInStatusGroup
 import org.webdevandsausages.events.dto.getPosition
 import org.webdevandsausages.events.services.canRegister
 import org.webdevandsausages.events.services.isInvisible
@@ -54,8 +56,8 @@ class CreateRegistrationControllerImpl(
                         // postgres trigger should flip status to full when limit is hit
                         val status = if (numRegistered < event.maxParticipants) ParticipantStatus.REGISTERED else ParticipantStatus.WAIT_LISTED
                         val token = getVerificationToken()
-                        val lastNumber = eventData.t.participants.filter { it.status == status }.maxBy { it.orderNumber }?.orderNumber ?: 0
-                        val registrationWithToken = registration.copy(registrationToken = token, orderNumber = lastNumber + 1000, status = status)
+                        val nextNumber = eventData.t.participants.getNextOrderNumber()
+                        val registrationWithToken = registration.copy(registrationToken = token, orderNumber = nextNumber, status = status)
                         val result = registrationService.create(registrationWithToken)
 
                         if (result is Some) {
@@ -78,7 +80,12 @@ class CreateRegistrationControllerImpl(
                             )
                         }
                         return when (result) {
-                            is Some -> Either.Right(result.t)
+                            is Some -> {
+                                val resultWithReadableOrderNumber = result.t.copy(
+                                    orderNumber = eventData.t.participants.getNextOrderNumberInStatusGroup(status)
+                                )
+                                Either.Right(resultWithReadableOrderNumber)
+                            }
                             is None -> Either.Left(EventError.DatabaseError)
                         }
                     }
@@ -101,7 +108,8 @@ interface GetRegistrationController {
 
 class GetRegistrationControllerImpl(
     val eventService: EventService,
-    val registrationService: RegistrationService
+    val registrationService: RegistrationService,
+    val logger: Logger
 ) : GetRegistrationController {
     private fun getParticipant(token: String, event: EventDto): Either<RegistrationError, ParticipantDto?> {
         val participantData = registrationService.getByToken(token)
@@ -109,6 +117,11 @@ class GetRegistrationControllerImpl(
             is None -> Either.left(RegistrationError.ParticipantNotFound)
             is Some -> participantData.t?.let {
                 val position = event.participants.getPosition(it.status, it.verificationToken)
+                // this shouldn't happen
+                if (position == -1) {
+                    logger.error("GET registration endpoint: Saved participant with token ${it.verificationToken} was not found from list of event participants.")
+                    return Either.left(RegistrationError.ParticipantNotFound)
+                }
                 it.copy(orderNumber = position)
             }.right()
         }
@@ -117,9 +130,9 @@ class GetRegistrationControllerImpl(
     override fun invoke(eventId: Long, verificationToken: String): Either<RegistrationError, ParticipantDto?> {
         val eventData = eventService.getByIdOrLatest(eventId)
         return when (eventData) {
-            is None -> return Either.left(RegistrationError.EventNotFound)
+            is None -> Either.left(RegistrationError.EventNotFound)
             is Some -> when {
-                eventData.t.event.status.isInvisible -> return Either.left(RegistrationError.EventClosed)
+                eventData.t.event.status.isInvisible -> Either.left(RegistrationError.EventClosed)
                 else -> getParticipant(verificationToken, eventData.t)
             }
         }

@@ -34,7 +34,7 @@ fun startApp(config: AppConfig): Http4kServer {
         GetEventsControllerImpl(EventService),
         GetCurrentEventControllerImpl(EventService, logger),
         GetEventByIdControllerImpl(EventService),
-        GetRegistrationControllerImpl(EventService, RegistrationService),
+        GetRegistrationControllerImpl(EventService, RegistrationService, logger),
         CreateRegistrationControllerImpl(
             EventService,
             RegistrationService,

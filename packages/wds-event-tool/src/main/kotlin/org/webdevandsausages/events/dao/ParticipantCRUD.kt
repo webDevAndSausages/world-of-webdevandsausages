@@ -52,9 +52,7 @@ object ParticipantCRUD : EventDao(local.jooqConfiguration) {
                     name = it.fullName,
                     verificationToken = it.verificationToken,
                     status = it.status,
-                    // usually the number should be a multiple of 1000, but if a
-                    // participant was inserted between, we round them to a reasonable order number
-                    orderNumber = Math.round((it.orderNumber / 1000).toDouble()).toInt()
+                    orderNumber = it.orderNumber
                     ).toOption()
             }
         }
