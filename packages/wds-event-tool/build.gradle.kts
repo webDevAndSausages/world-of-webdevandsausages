@@ -27,7 +27,7 @@ val mockkVersion = "1.8.13.kotlin13"
 plugins {
     kotlin("jvm") version "1.3.11"
     id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
-    id("org.jmailen.kotlinter") version "1.20.1"
+    // id("org.jmailen.kotlinter") version "1.20.1"
 }
 
 repositories {
@@ -153,7 +153,6 @@ jooqGenerator {
 val test by tasks.getting(Test::class) {
     useJUnitPlatform { }
 }
-
 
 val compileKotlin: KotlinCompile by tasks
 compileKotlin.kotlinOptions.jvmTarget = "1.8"

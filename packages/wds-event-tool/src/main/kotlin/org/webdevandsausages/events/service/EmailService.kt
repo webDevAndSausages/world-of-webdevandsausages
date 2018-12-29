@@ -22,7 +22,7 @@ class EmailService(private val secrets: Secrets?) {
     }.getOrDefault {
         logger.error("Could not initialize sendgrid")
         null
-    }}
+    } }
 
     fun sendMail(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) =
         GlobalScope.launch {

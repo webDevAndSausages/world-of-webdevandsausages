@@ -69,7 +69,7 @@ class Router(
                     *getApiRoutes().toTypedArray()
                     ),
                 "/" bind static(ResourceLoader.Classpath("public"))
-             ))
+                ))
     }
 
     private fun getApiRoutes() = listOf(

@@ -36,7 +36,7 @@ class CreateRegistrationServiceImplTest : StringSpec() {
         unit = CreateRegistrationServiceImpl(
            emailService = mockk(relaxed = true),
            eventCRUD = mockk(relaxed = true),
-           randomWordUtil = mockk(relaxed = true),
+           randomWordsUtil = mockk(relaxed = true),
            logger = mockk(relaxed = true),
            participantCRUD = mockk(relaxed = true)
         )
@@ -95,14 +95,14 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                )
                 slot.captured.shouldBe(
                     RegistrationInDto(
-                        eventId=null,
-                        firstName="Joe",
-                        lastName="Schmo",
-                        affiliation="Acme",
-                        email="joe.schmo@mail.com",
-                        registrationToken="silly-token",
-                        orderNumber=1000,
-                        status=ParticipantStatus.REGISTERED
+                        eventId = null,
+                        firstName = "Joe",
+                        lastName = "Schmo",
+                        affiliation = "Acme",
+                        email = "joe.schmo@mail.com",
+                        registrationToken = "silly-token",
+                        orderNumber = 1000,
+                        status = ParticipantStatus.REGISTERED
                      )
                   )
             }
@@ -154,14 +154,14 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                         ))))
                 slot2.captured.shouldBe(
                     RegistrationInDto(
-                        eventId=null,
-                        firstName="Joe",
-                        lastName="Schmo",
-                        affiliation="Acme",
-                        email="joe.schmo@mail.com",
-                        registrationToken="silly-token",
-                        orderNumber=3000,
-                        status=ParticipantStatus.WAIT_LISTED
+                        eventId = null,
+                        firstName = "Joe",
+                        lastName = "Schmo",
+                        affiliation = "Acme",
+                        email = "joe.schmo@mail.com",
+                        registrationToken = "silly-token",
+                        orderNumber = 3000,
+                        status = ParticipantStatus.WAIT_LISTED
                      )
                   )
             }

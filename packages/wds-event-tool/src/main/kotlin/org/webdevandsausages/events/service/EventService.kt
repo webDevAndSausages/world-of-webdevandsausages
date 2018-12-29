@@ -17,7 +17,7 @@ sealed class EventError {
 }
 
 interface GetEventsService {
-    operator fun invoke(status: String?): List<EventDto>?
+    operator fun invoke(status: String?): List<EventDto>?q
 }
 
 class GetEventsServiceImpl(val eventCRUD: EventCRUD) : GetEventsService {

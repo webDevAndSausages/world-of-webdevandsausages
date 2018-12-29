@@ -34,7 +34,7 @@ interface CreateRegistrationService {
 class CreateRegistrationServiceImpl(
     val eventCRUD: EventCRUD,
     val participantCRUD: ParticipantCRUD,
-    val randomWordUtil: RandomWordsUtil,
+    val randomWordsUtil: RandomWordsUtil,
     val emailService: EmailService,
     val logger: Logger
 ) : CreateRegistrationService {
@@ -92,7 +92,7 @@ class CreateRegistrationServiceImpl(
     fun getVerificationToken(): String {
         var token: String?
         do {
-            token = Try { randomWordUtil.getWordPair() }.getOrDefault { null }
+            token = Try { randomWordsUtil.getWordPair() }.getOrDefault { null }
         } while (token !is String || participantCRUD.findByToken(token).isDefined())
         return token
     }

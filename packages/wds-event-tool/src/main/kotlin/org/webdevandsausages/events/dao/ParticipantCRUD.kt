@@ -11,6 +11,8 @@ import org.jooq.impl.DSL
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object ParticipantCRUD : EventDao(local.jooqConfiguration) {
 
@@ -51,8 +53,10 @@ object ParticipantCRUD : EventDao(local.jooqConfiguration) {
                     email = it.email,
                     name = it.fullName,
                     verificationToken = it.verificationToken,
+                    affiliation = it.affiliation,
                     status = it.status,
-                    orderNumber = it.orderNumber
+                    orderNumber = it.orderNumber,
+                    insertedOn = LocalDate.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
                     ).toOption()
             }
         }
@@ -72,7 +76,8 @@ object ParticipantCRUD : EventDao(local.jooqConfiguration) {
                         name = it.fullName,
                         verificationToken = it.verificationToken,
                         status = it.status,
-                        orderNumber = it.orderNumber / 1000
+                        orderNumber = it.orderNumber / 1000,
+                        affiliation = it.affiliation
                         )
                 }
             }

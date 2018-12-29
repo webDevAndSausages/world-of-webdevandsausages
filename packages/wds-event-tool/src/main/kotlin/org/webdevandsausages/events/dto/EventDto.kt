@@ -14,7 +14,7 @@ data class EventDto(
 fun List<Participant>.getPosition(status: ParticipantStatus, verificationToken: String) = asSequence()
     .filter { p -> p.status == status }
     .sortedBy { p -> p.orderNumber }
-    .indexOfFirst { p -> p.verificationToken == verificationToken }.let { if (it > -1) it + 1 else -1}
+    .indexOfFirst { p -> p.verificationToken == verificationToken }.let { if (it > -1) it + 1 else -1 }
 
 // next number should be rounded down to thousandth if last number was odd, eg. 4001
 fun List<Participant>.getNextOrderNumber(): Int {
