@@ -27,9 +27,6 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
     val db = DSL.using(configuration())
     val mapperInstance = JdbcMapperFactory.newInstance()
 
-    /**
-     * Custom method with custom query + mapper
-     */
     fun findAllWithParticipants(status: String?): List<EventDto>? {
         val resultSet = db.use { ctx ->
             ctx.select()
@@ -100,5 +97,3 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
         return if (result == 1) Some(1) else None
     }
 }
-
-val EventCRUD.field get() = Event.EVENT

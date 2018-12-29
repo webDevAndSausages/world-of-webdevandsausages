@@ -19,6 +19,7 @@ import io.mockk.verify
 import io.mockk.spyk
 import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
+import meta.tables.daos.EventDao
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
 import org.webdevandsausages.events.service.EventError
@@ -35,10 +36,11 @@ class CreateRegistrationServiceImplTest : StringSpec() {
     override fun beforeTest(description: Description) {
         unit = CreateRegistrationServiceImpl(
            emailService = mockk(relaxed = true),
-           eventCRUD = mockk(relaxed = true),
+           eventRepository = mockk(relaxed = true),
            randomWordsUtil = mockk(relaxed = true),
            logger = mockk(relaxed = true),
-           participantCRUD = mockk(relaxed = true)
+           participantRepository = mockk(relaxed = true),
+           firebaseService = mockk(relaxed = true)
         )
     }
 
@@ -74,10 +76,10 @@ class CreateRegistrationServiceImplTest : StringSpec() {
 
     init {
         "happy case registration with REGISTERED status" {
-            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(dbEvent)
-            every { unit.randomWordUtil.getWordPair() } returns "silly-token"
+            every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(dbEvent)
+            every { unit.randomWordsUtil.getWordPair() } returns "silly-token"
             val slot = slot<RegistrationInDto>()
-            every { unit.participantCRUD.create(capture(slot)) } returns Option(dbRegistration)
+            every { unit.participantRepository.create(capture(slot)) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
                 resultingEither.shouldBeRight()
@@ -135,11 +137,11 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                         ParticipantStatus.REGISTERED)
                  )
             )
-            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(fullEvent)
-            every { unit.randomWordUtil.getWordPair() } returns "silly-token"
+            every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(fullEvent)
+            every { unit.randomWordsUtil.getWordPair() } returns "silly-token"
             val slot2 = slot<RegistrationInDto>()
             val registration = dbRegistration.copy(status = ParticipantStatus.WAIT_LISTED)
-            every { unit.participantCRUD.create(capture(slot2)) } returns Option(registration)
+            every { unit.participantRepository.create(capture(slot2)) } returns Option(registration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
                 resultingEither.shouldBeRight()
@@ -183,9 +185,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                                )
                              )
                         )
-            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(eventWithExisting)
-            every { unit.randomWordUtil.getWordPair() } returns "twofer-token"
-            val spy = spyk(unit.participantCRUD)
+            every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(eventWithExisting)
+            every { unit.randomWordsUtil.getWordPair() } returns "twofer-token"
+            val spy = spyk(unit.participantRepository)
             every { spy.create(any()) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
@@ -210,9 +212,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                     Timestamp.valueOf(LocalDateTime.now().plusDays(-2))
                  )
               )
-            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(dbEvent)
-            every { unit.randomWordUtil.getWordPair() } returns "twofer-token"
-            val spy = spyk(unit.participantCRUD)
+            every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(dbEvent)
+            every { unit.randomWordsUtil.getWordPair() } returns "twofer-token"
+            val spy = spyk(unit.participantRepository)
             every { spy.create(any()) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
@@ -224,9 +226,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
         }
 
         "should return NotFound if event does not exist" {
-            every { unit.eventCRUD.findByIdOrLatest(any()) } returns None
-            every { unit.randomWordUtil.getWordPair() } returns "twofer-token"
-            val spy = spyk(unit.participantCRUD)
+            every { unit.eventRepository.findByIdOrLatest(any()) } returns None
+            every { unit.randomWordsUtil.getWordPair() } returns "twofer-token"
+            val spy = spyk(unit.participantRepository)
             every { spy.create(any()) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {

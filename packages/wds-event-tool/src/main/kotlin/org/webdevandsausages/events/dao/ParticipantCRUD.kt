@@ -11,8 +11,8 @@ import org.jooq.impl.DSL
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
 
 object ParticipantCRUD : EventDao(local.jooqConfiguration) {
 
@@ -45,7 +45,7 @@ object ParticipantCRUD : EventDao(local.jooqConfiguration) {
                         eventId,
                         status
                         )
-                    .returning(FIRST_NAME, LAST_NAME, EMAIL, VERIFICATION_TOKEN, STATUS, ORDER_NUMBER)
+                    .returning(FIRST_NAME, LAST_NAME, EMAIL, AFFILIATION, VERIFICATION_TOKEN, STATUS, ORDER_NUMBER)
                     .fetchOne()
             }.let {
                 println(it)
@@ -55,8 +55,8 @@ object ParticipantCRUD : EventDao(local.jooqConfiguration) {
                     verificationToken = it.verificationToken,
                     affiliation = it.affiliation,
                     status = it.status,
-                    orderNumber = it.orderNumber,
-                    insertedOn = LocalDate.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                    orderNumber = it.orderNumber
+                    // TODO: created_on col from table
                     ).toOption()
             }
         }
@@ -78,7 +78,7 @@ object ParticipantCRUD : EventDao(local.jooqConfiguration) {
                         status = it.status,
                         orderNumber = it.orderNumber / 1000,
                         affiliation = it.affiliation
-                        )
+                      )
                 }
             }
         }.getOrDefault { null }.toOption()

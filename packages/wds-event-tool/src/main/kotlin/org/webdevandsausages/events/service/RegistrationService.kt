@@ -13,8 +13,8 @@ import arrow.core.Try
 import arrow.core.getOrDefault
 import arrow.core.right
 import meta.enums.ParticipantStatus
-import org.webdevandsausages.events.dao.EventCRUD
-import org.webdevandsausages.events.dao.ParticipantCRUD
+import org.webdevandsausages.events.dao.EventRepository
+import org.webdevandsausages.events.dao.ParticipantRepository
 import org.webdevandsausages.events.dto.getNextOrderNumber
 import org.webdevandsausages.events.dto.getNextOrderNumberInStatusGroup
 import org.webdevandsausages.events.dto.getPosition
@@ -32,14 +32,15 @@ interface CreateRegistrationService {
 }
 
 class CreateRegistrationServiceImpl(
-    val eventCRUD: EventCRUD,
-    val participantCRUD: ParticipantCRUD,
+    val eventRepository: EventRepository,
+    val participantRepository: ParticipantRepository,
     val randomWordsUtil: RandomWordsUtil,
     val emailService: EmailService,
+    val firebaseService: FirebaseService,
     val logger: Logger
 ) : CreateRegistrationService {
     override fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?> {
-        val eventData: Option<EventDto> = eventCRUD.findByIdOrLatest(registration.eventId)
+        val eventData: Option<EventDto> = eventRepository.findByIdOrLatest(registration.eventId)
 
         return when (eventData) {
             is None -> Either.left(EventError.NotFound)
@@ -54,7 +55,7 @@ class CreateRegistrationServiceImpl(
                         val token = getVerificationToken()
                         val nextNumber = eventData.t.participants.getNextOrderNumber()
                         val registrationWithToken = registration.copy(registrationToken = token, orderNumber = nextNumber, status = status)
-                        val result = participantCRUD.create(registrationWithToken)
+                        val result = participantRepository.create(registrationWithToken)
 
                         if (result is Some) {
                             val sponsor = if (event.sponsor != null) event.sponsor else "Anonymous"
@@ -74,6 +75,11 @@ class CreateRegistrationServiceImpl(
                                 "d-91e5bf696190444d94f13e564fee4426",
                                 emailData
                             )
+
+                            logger.info("Dispatching participant to firebase mailing list")
+                            if (registration.subscribe != null && registration.subscribe) {
+                                firebaseService.upsertParticipantToMailingList(result.t)
+                            }
                         }
                         return when (result) {
                             is Some -> {
@@ -93,7 +99,7 @@ class CreateRegistrationServiceImpl(
         var token: String?
         do {
             token = Try { randomWordsUtil.getWordPair() }.getOrDefault { null }
-        } while (token !is String || participantCRUD.findByToken(token).isDefined())
+        } while (token !is String ||participantRepository.findByToken(token).isDefined())
         return token
     }
 }
@@ -103,12 +109,12 @@ interface GetRegistrationService {
 }
 
 class GetRegistrationServiceImpl(
-    val eventCRUD: EventCRUD,
-    val participantCRUD: ParticipantCRUD,
+    val eventRepository: EventRepository,
+    val participantRepository: ParticipantRepository,
     val logger: Logger
 ) : GetRegistrationService {
     private fun getParticipant(token: String, event: EventDto): Either<RegistrationError, ParticipantDto?> {
-        val participantData = participantCRUD.findByToken(token)
+        val participantData = participantRepository.findByToken(token)
         return when (participantData) {
             is None -> Either.left(RegistrationError.ParticipantNotFound)
             is Some -> participantData.t.let {
@@ -124,7 +130,7 @@ class GetRegistrationServiceImpl(
     }
 
     override fun invoke(eventId: Long, verificationToken: String): Either<RegistrationError, ParticipantDto?> {
-        val eventData = eventCRUD.findByIdOrLatest(eventId)
+        val eventData = eventRepository.findByIdOrLatest(eventId)
         return when (eventData) {
             is None -> Either.left(RegistrationError.EventNotFound)
             is Some -> when {

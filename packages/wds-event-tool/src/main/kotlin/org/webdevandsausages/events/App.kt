@@ -9,9 +9,12 @@ import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dao.EventCRUD
+import org.webdevandsausages.events.dao.EventRepository
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.dao.ParticipantCRUD
+import org.webdevandsausages.events.dao.ParticipantRepository
 import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
+import org.webdevandsausages.events.service.FirebaseService
 import org.webdevandsausages.events.service.GetCurrentEventServiceImpl
 import org.webdevandsausages.events.service.GetEventByIdServiceImpl
 import org.webdevandsausages.events.service.GetEventsServiceImpl
@@ -31,15 +34,16 @@ fun startApp(config: AppConfig): Http4kServer {
     flyway.migrate()
     logger.info("Starting server...")
     val app = Router(
-        GetEventsServiceImpl(EventCRUD),
-        GetCurrentEventServiceImpl(EventCRUD, logger),
-        GetEventByIdServiceImpl(EventCRUD),
-        GetRegistrationServiceImpl(EventCRUD, ParticipantCRUD, logger),
+        GetEventsServiceImpl(EventRepository),
+        GetCurrentEventServiceImpl(EventRepository, logger),
+        GetEventByIdServiceImpl(EventRepository),
+        GetRegistrationServiceImpl(EventRepository, ParticipantRepository, logger),
         CreateRegistrationServiceImpl(
-            EventCRUD,
-            ParticipantCRUD,
+            EventRepository,
+            ParticipantRepository,
             RandomWordsUtil,
             EmailService(config.secrets),
+            FirebaseService,
             logger
         )
     )()

@@ -6,9 +6,10 @@ data class RegistrationInDto(
     var eventId: Long? = null,
     val firstName: String?,
     val lastName: String?,
-    val affiliation: String?,
+    var affiliation: String?,
     val email: String,
-    val registrationToken: String = "-",
-    val orderNumber: Int = 0,
-    val status: ParticipantStatus = ParticipantStatus.REGISTERED
+    var registrationToken: String = "-",
+    var orderNumber: Int = 0,
+    var status: ParticipantStatus = ParticipantStatus.REGISTERED,
+    val subscribe: Boolean? = true
 )

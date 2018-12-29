@@ -39,6 +39,8 @@ class GetRegistrationEndpointTest : StringSpec() {
 
             val resp = router()(request)
 
+            println(resp)
+
             @Language("JSON")
             val expectedResponseBody = """
                 {
@@ -47,7 +49,9 @@ class GetRegistrationEndpointTest : StringSpec() {
                       "name": "Joe Schmo",
                       "verificationToken": "my-token",
                       "status": "REGISTERED",
-                      "orderNumber": 10
+                      "orderNumber": 10,
+                      "insertedOn": null,
+                      "affiliation": null
                   }
                 }
           """.trimIndent()

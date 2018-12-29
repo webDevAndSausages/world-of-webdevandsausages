@@ -3,7 +3,7 @@ package org.webdevandsausages.events.service
 import arrow.core.Either
 import meta.enums.EventStatus
 import org.slf4j.Logger
-import org.webdevandsausages.events.dao.EventCRUD
+import org.webdevandsausages.events.dao.EventRepository
 import org.webdevandsausages.events.dao.EventUpdates
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dao.field
@@ -17,12 +17,12 @@ sealed class EventError {
 }
 
 interface GetEventsService {
-    operator fun invoke(status: String?): List<EventDto>?q
+    operator fun invoke(status: String?): List<EventDto>?
 }
 
-class GetEventsServiceImpl(val eventCRUD: EventCRUD) : GetEventsService {
+class GetEventsServiceImpl(val eventRepository: EventRepository) : GetEventsService {
     override fun invoke(status: String?): List<EventDto>? {
-        return eventCRUD.findAllWithParticipants(status)
+        return eventRepository.findAllWithParticipants(status)
     }
 }
 
@@ -37,36 +37,36 @@ interface GetCurrentEventService {
  *  3. If the event happened three days ago, close feedback
  */
 
-class GetCurrentEventServiceImpl(val eventCRUD: EventCRUD, val logger: Logger) : GetCurrentEventService {
+class GetCurrentEventServiceImpl(val eventRepository: EventRepository, val logger: Logger) : GetCurrentEventService {
 
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): Either<EventError, EventDto> {
         logger.info("Opening event ${data.event.name}")
-        EventCRUD.update(
+        eventRepository.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.OPEN)) as EventUpdates)
+            listOf(Pair(eventRepository.field.STATUS, EventStatus.OPEN)) as EventUpdates)
         return getLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun closeRegistration(data: EventDto): Either<EventError, EventDto> {
         logger.info("Closing registration for event ${data.event.name}")
-        eventCRUD.update(
+        eventRepository.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
+            listOf(Pair(eventRepository.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
         return getLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun closeFeedback(data: EventDto): Either<EventError, EventDto> {
         logger.info("Closing feedback for event ${data.event.name}")
-        eventCRUD.update(
+        eventRepository.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
+            listOf(Pair(eventRepository.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
         return getLatest()
     }
 
-    private fun getLatest(): Either<EventError, EventDto> = eventCRUD.findByIdOrLatest().fold({
+    private fun getLatest(): Either<EventError, EventDto> = eventRepository.findByIdOrLatest().fold({
             Either.Left(EventError.NotFound)
         }, {
             Either.Right(it)
@@ -96,9 +96,9 @@ interface GetEventByIdService {
     operator fun invoke(eventId: Long): Either<EventError, EventDto>
 }
 
-class GetEventByIdServiceImpl(val eventCRUD: EventCRUD) : GetEventByIdService {
+class GetEventByIdServiceImpl(val eventRepository: EventRepository) : GetEventByIdService {
     override fun invoke(eventId: Long): Either<EventError, EventDto> {
-        return eventCRUD.findByIdOrLatest(eventId).fold({
+        return eventRepository.findByIdOrLatest(eventId).fold({
             Either.Left(EventError.NotFound)
         }, {
             Either.Right(it)
