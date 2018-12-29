@@ -4,15 +4,15 @@ import arrow.core.Either
 import io.kotlintest.Description
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import org.webdevandsausages.events.Router
 import io.mockk.every
 import meta.enums.ParticipantStatus
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.intellij.lang.annotations.Language
-import org.webdevandsausages.events.service.EventError
+import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ParticipantDto
+import org.webdevandsausages.events.error.EventError
 
 class PostRegistrationEndpointTest : StringSpec() {
     lateinit var router: Router

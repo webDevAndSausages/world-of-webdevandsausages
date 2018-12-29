@@ -24,38 +24,21 @@ import org.webdevandsausages.events.dto.getNextOrderNumber
 import org.webdevandsausages.events.dto.getNextOrderNumberInStatusGroup
 import org.webdevandsausages.events.dto.getPosition
 import org.webdevandsausages.events.dto.hasWaitListedParticipants
+import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.error.RegistrationCancellationError
+import org.webdevandsausages.events.error.RegistrationError
 import org.webdevandsausages.events.utils.RandomWordsUtil
 import org.webdevandsausages.events.utils.prettified
 
-sealed class RegistrationError {
-    object EventNotFound : RegistrationError()
-    object DatabaseError : RegistrationError()
-    object EventClosed : RegistrationError()
-    object ParticipantNotFound : RegistrationError()
-}
-
-sealed class RegistrationCancellationError {
-    object EventNotFound : RegistrationCancellationError()
-    object DatabaseError : RegistrationCancellationError()
-    object EventClosed : RegistrationCancellationError()
-    object ParticipantNotFound : RegistrationCancellationError()
-    object ParticipantAlreadyCancelled: RegistrationCancellationError()
-    object ShouldNeverHappen: RegistrationCancellationError()
-}
-
-interface CreateRegistrationService {
-    operator fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?>
-}
-
-class CreateRegistrationServiceImpl(
+class CreateRegistrationService(
     val eventRepository: EventRepository,
     val participantRepository: ParticipantRepository,
     val randomWordsUtil: RandomWordsUtil,
     val emailService: EmailService,
     val firebaseService: FirebaseService,
     val logger: Logger
-) : CreateRegistrationService {
-    override fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?> {
+) {
+    operator fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?> {
         val eventData: Option<EventDto> = eventRepository.findByIdOrLatest(registration.eventId)
 
         return when (eventData) {
@@ -120,15 +103,11 @@ class CreateRegistrationServiceImpl(
     }
 }
 
-interface GetRegistrationService {
-    operator fun invoke(eventId: Long, verificationToken: String): Either<RegistrationError, ParticipantDto?>
-}
-
-class GetRegistrationServiceImpl(
+class GetRegistrationService(
     val eventRepository: EventRepository,
     val participantRepository: ParticipantRepository,
     val logger: Logger
-) : GetRegistrationService {
+) {
     private fun getParticipant(token: String, event: EventDto): Either<RegistrationError, ParticipantDto?> {
         val participantData = participantRepository.findByToken(token)
         return when (participantData) {
@@ -145,7 +124,7 @@ class GetRegistrationServiceImpl(
         }
     }
 
-    override fun invoke(eventId: Long, verificationToken: String): Either<RegistrationError, ParticipantDto?> {
+    operator fun invoke(eventId: Long, verificationToken: String): Either<RegistrationError, ParticipantDto?> {
         val eventData = eventRepository.findByIdOrLatest(eventId)
         return when (eventData) {
             is None -> Either.left(RegistrationError.EventNotFound)
@@ -157,13 +136,8 @@ class GetRegistrationServiceImpl(
     }
 }
 
-interface CancelRegistrationService {
-    operator fun invoke(cancelRegistration: CancelRegistrationInDto): Either<RegistrationCancellationError, Participant?>
-}
-
-class CancelRegistrationServiceImpl :
-    CancelRegistrationService {
-    override fun invoke(cancelRegistration: CancelRegistrationInDto): Either<RegistrationCancellationError, Participant?> {
+class CancelRegistrationService {
+    operator fun invoke(cancelRegistration: CancelRegistrationInDto): Either<RegistrationCancellationError, Participant?> {
         val event = EventCRUD.findByParticipantToken(cancelRegistration.registrationToken)
 
         return when (event) {

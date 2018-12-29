@@ -6,8 +6,8 @@ import arrow.core.Option
 import arrow.core.Right
 import io.kotlintest.Description
 import io.kotlintest.assertSoftly
-import io.kotlintest.assertions.arrow.either.beRight
 import io.kotlintest.assertions.arrow.either.beLeft
+import io.kotlintest.assertions.arrow.either.beRight
 import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -15,26 +15,25 @@ import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import io.mockk.verify
 import io.mockk.spyk
+import io.mockk.verify
 import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
-import meta.tables.daos.EventDao
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
-import org.webdevandsausages.events.service.EventError
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
-import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
+import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.service.CreateRegistrationService
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
 class CreateRegistrationServiceImplTest : StringSpec() {
-    lateinit var unit: CreateRegistrationServiceImpl
+    lateinit var unit: CreateRegistrationService
 
     override fun beforeTest(description: Description) {
-        unit = CreateRegistrationServiceImpl(
+        unit = CreateRegistrationService(
            emailService = mockk(relaxed = true),
            eventRepository = mockk(relaxed = true),
            randomWordsUtil = mockk(relaxed = true),

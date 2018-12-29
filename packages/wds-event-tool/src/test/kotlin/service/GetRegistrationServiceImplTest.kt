@@ -16,12 +16,12 @@ import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
-import org.webdevandsausages.events.service.GetRegistrationServiceImpl
+import org.webdevandsausages.events.service.GetRegistrationService
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
 class GetRegistrationServiceImplTest : StringSpec() {
-    lateinit var unit: GetRegistrationServiceImpl
+    lateinit var unit: GetRegistrationService
 
     private var participantList = mutableListOf<Participant>()
 
@@ -60,7 +60,7 @@ class GetRegistrationServiceImplTest : StringSpec() {
     }
 
     override fun beforeTest(description: Description) {
-        unit = GetRegistrationServiceImpl(
+        unit = GetRegistrationService(
             eventRepository = mockk(relaxed = true),
             participantRepository = mockk(relaxed = true),
             logger = mockk(relaxed = true)

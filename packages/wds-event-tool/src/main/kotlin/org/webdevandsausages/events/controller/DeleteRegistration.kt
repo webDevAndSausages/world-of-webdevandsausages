@@ -17,9 +17,9 @@ import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.CancelRegistrationInDto
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ParticipantDto
+import org.webdevandsausages.events.error.RegistrationCancellationError
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.CancelRegistrationService
-import org.webdevandsausages.events.service.RegistrationCancellationError
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object DeleteRegistration {

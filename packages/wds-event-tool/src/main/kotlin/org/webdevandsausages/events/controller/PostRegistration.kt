@@ -14,10 +14,10 @@ import org.http4k.core.Status
 import org.http4k.lens.Path
 import org.http4k.lens.long
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.service.EventError
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
+import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.utils.Read

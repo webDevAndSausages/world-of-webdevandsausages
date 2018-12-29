@@ -10,14 +10,14 @@ import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dao.EventRepository
 import org.webdevandsausages.events.dao.ParticipantRepository
-import org.webdevandsausages.events.service.CancelRegistrationServiceImpl
-import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
+import org.webdevandsausages.events.service.CancelRegistrationService
+import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.FirebaseService
-import org.webdevandsausages.events.service.GetCurrentEventServiceImpl
-import org.webdevandsausages.events.service.GetEventByIdServiceImpl
-import org.webdevandsausages.events.service.GetEventsServiceImpl
-import org.webdevandsausages.events.service.GetRegistrationServiceImpl
+import org.webdevandsausages.events.service.GetCurrentEventService
+import org.webdevandsausages.events.service.GetEventByIdService
+import org.webdevandsausages.events.service.GetEventsService
+import org.webdevandsausages.events.service.GetRegistrationService
 import org.webdevandsausages.events.utils.RandomWordsUtil
 
 fun main(args: Array<String>) {
@@ -33,11 +33,11 @@ fun startApp(config: AppConfig): Http4kServer {
     flyway.migrate()
     logger.info("Starting server...")
     val app = Router(
-        GetEventsServiceImpl(EventRepository),
-        GetCurrentEventServiceImpl(EventRepository, logger),
-        GetEventByIdServiceImpl(EventRepository),
-        GetRegistrationServiceImpl(EventRepository, ParticipantRepository, logger),
-        CreateRegistrationServiceImpl(
+        GetEventsService(EventRepository),
+        GetCurrentEventService(EventRepository, logger),
+        GetEventByIdService(EventRepository),
+        GetRegistrationService(EventRepository, ParticipantRepository, logger),
+        CreateRegistrationService(
             EventRepository,
             ParticipantRepository,
             RandomWordsUtil,
@@ -45,7 +45,7 @@ fun startApp(config: AppConfig): Http4kServer {
             FirebaseService,
             logger
         ),
-        CancelRegistrationServiceImpl()
+        CancelRegistrationService()
     )()
     val server = app.asServer(Jetty(config.port)).start()
     logger.info("Server started on port ${config.port}")
