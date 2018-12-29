@@ -96,4 +96,16 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
         }.getOrDefault { 0 }
         return if (result == 1) Some(1) else None
     }
+
+    fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use {
+            ctx ->
+        val event = ctx.select()
+            .from(Event.EVENT)
+            .join(Participant.PARTICIPANT).on(Participant.PARTICIPANT.EVENT_ID.eq(Event.EVENT.ID))
+            .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken)).fetchAny().into(meta.tables.pojos.Event::class.java).toOption()
+        when (event) {
+            is Some -> findByIdOrLatest(event.t.id)
+            is None -> Option.empty()
+        }
+    }
 }

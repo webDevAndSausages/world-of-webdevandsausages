@@ -11,8 +11,9 @@ fun getRouterToTest() = Router(
     getCurrentEvent = mockk(relaxed = true),
     getEventById = mockk(relaxed = true),
     getRegistration = mockk(relaxed = true),
-    createRegistration = mockk(relaxed = true)
-  )
+    createRegistration = mockk(relaxed = true),
+    cancelRegistration = mockk(relaxed = true)
+)
 
 fun Response.expectJsonResponse(expectedBody: String? = null) {
     this.header("Content-Type").shouldBe("application/json; charset=utf-8")

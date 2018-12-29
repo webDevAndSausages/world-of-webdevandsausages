@@ -1,6 +1,7 @@
 package org.webdevandsausages.events
 
 import org.http4k.contract.ApiInfo
+import org.http4k.contract.OpenApi
 import org.http4k.contract.bindContract
 import org.http4k.contract.contract
 import org.http4k.core.Body
@@ -13,17 +14,17 @@ import org.http4k.core.then
 import org.http4k.filter.CorsPolicy
 import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ServerFilters
-import org.http4k.lens.Path
-import org.http4k.lens.long
 import org.http4k.format.Jackson
-import org.http4k.contract.OpenApi
+import org.http4k.lens.Path
 import org.http4k.lens.Query
+import org.http4k.lens.long
 import org.http4k.lens.string
 import org.http4k.routing.ResourceLoader
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
+import org.webdevandsausages.events.controller.DeleteRegistration
 import org.webdevandsausages.events.controller.GetCurrentEvent
 import org.webdevandsausages.events.controller.GetEvent
 import org.webdevandsausages.events.controller.GetEvents
@@ -31,7 +32,9 @@ import org.webdevandsausages.events.controller.GetRegistration
 import org.webdevandsausages.events.controller.PostRegistration
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
+import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
+import org.webdevandsausages.events.service.CancelRegistrationService
 import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.service.GetCurrentEventService
 import org.webdevandsausages.events.service.GetEventByIdService
@@ -46,7 +49,8 @@ class Router(
     val getCurrentEvent: GetCurrentEventService,
     val getEventById: GetEventByIdService,
     val getRegistration: GetRegistrationService,
-    val createRegistration: CreateRegistrationService
+    val createRegistration: CreateRegistrationService,
+    val cancelRegistration: CancelRegistrationService
 ) {
 
     companion object {
@@ -54,6 +58,7 @@ class Router(
         val optionalStatusQuery = Query.optional("status")
         val verificationTokenParam = Path.string().of("verificationToken")
         val registrationResponseLens = Body.auto<RegistrationOutDto>().toLens()
+        val cancelRegistrationResponseLens = Body.auto<ParticipantDto>().toLens()
     }
 
     operator fun invoke(): RoutingHttpHandler {
@@ -78,7 +83,8 @@ class Router(
         GetEvent.route(getEventById, handleErrorResponse),
         GetCurrentEvent.route(getCurrentEvent, handleErrorResponse),
         GetRegistration.route(getRegistration, handleErrorResponse),
-        PostRegistration.route(createRegistration, handleErrorResponse)
+        PostRegistration.route(createRegistration, handleErrorResponse),
+        DeleteRegistration.route(cancelRegistration, handleErrorResponse)
     )
 
     private fun ok() = { _: Request -> Response(OK) }

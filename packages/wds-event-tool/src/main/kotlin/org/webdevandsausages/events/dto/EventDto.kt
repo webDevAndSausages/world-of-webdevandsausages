@@ -23,3 +23,6 @@ fun List<Participant>.getNextOrderNumber(): Int {
 }
 
 fun List<Participant>.getNextOrderNumberInStatusGroup(status: ParticipantStatus): Int = filter { it.status == status }.size + 1
+
+val EventDto.hasWaitListedParticipants: Boolean
+    get() = participants.any { it.status == ParticipantStatus.WAIT_LISTED }
