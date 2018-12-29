@@ -9,16 +9,16 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.webdevandsausages.events.service.GetEventsController
 import org.webdevandsausages.events.dto.EventsOutDto
 import org.webdevandsausages.events.utils.WDSJackson.auto
 import org.http4k.core.Method.GET
 import org.webdevandsausages.events.Router
+import org.webdevandsausages.events.service.GetEventsService
 
 object GetEvents {
     private val EventsLens = Body.auto<EventsOutDto>().toLens()
 
-    fun route(getEvents: GetEventsController): ContractRoute {
+    fun route(getEvents: GetEventsService): ContractRoute {
 
         fun handleGetEvents(): HttpHandler = { req: Request ->
             val status = Router.optionalStatusQuery(req).takeIf {

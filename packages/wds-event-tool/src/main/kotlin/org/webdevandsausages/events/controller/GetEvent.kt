@@ -12,16 +12,16 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.service.GetEventByIdController
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.handleErrorResponse
+import org.webdevandsausages.events.service.GetEventByIdService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object GetEvent {
     private val EventLens = Body.auto<EventOutDto>().toLens()
 
-    fun route(getEventById: GetEventByIdController, handleErrorResponse: handleErrorResponse): ContractRoute {
+    fun route(getEventById: GetEventByIdService, handleErrorResponse: handleErrorResponse): ContractRoute {
 
         fun handleGetEventById(id: Long): HttpHandler =
             { _: Request ->

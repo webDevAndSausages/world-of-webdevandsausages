@@ -16,28 +16,28 @@ sealed class EventError {
     object DatabaseError : EventError()
 }
 
-interface GetEventsController {
+interface GetEventsService {
     operator fun invoke(status: String?): List<EventDto>?
 }
 
-class GetEventsControllerImpl(val eventCRUD: EventCRUD) : GetEventsController {
+class GetEventsServiceImpl(val eventCRUD: EventCRUD) : GetEventsService {
     override fun invoke(status: String?): List<EventDto>? {
         return eventCRUD.findAllWithParticipants(status)
     }
 }
 
-interface GetCurrentEventController {
+interface GetCurrentEventService {
     operator fun invoke(): Either<EventError, EventDto>
 }
 
 /**
- * GetCurrentEventController should handle following updates
+ * GetCurrentEventService should handle following updates
  *  1. If the event has begin, close registration
  *  2. If the event has happened, open feedback
  *  3. If the event happened three days ago, close feedback
  */
 
-class GetCurrentEventControllerImpl(val eventCRUD: EventCRUD, val logger: Logger) : GetCurrentEventController {
+class GetCurrentEventServiceImpl(val eventCRUD: EventCRUD, val logger: Logger) : GetCurrentEventService {
 
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): Either<EventError, EventDto> {
@@ -92,11 +92,11 @@ class GetCurrentEventControllerImpl(val eventCRUD: EventCRUD, val logger: Logger
     }
 }
 
-interface GetEventByIdController {
+interface GetEventByIdService {
     operator fun invoke(eventId: Long): Either<EventError, EventDto>
 }
 
-class GetEventByIdControllerImpl(val eventCRUD: EventCRUD) : GetEventByIdController {
+class GetEventByIdServiceImpl(val eventCRUD: EventCRUD) : GetEventByIdService {
     override fun invoke(eventId: Long): Either<EventError, EventDto> {
         return eventCRUD.findByIdOrLatest(eventId).fold({
             Either.Left(EventError.NotFound)

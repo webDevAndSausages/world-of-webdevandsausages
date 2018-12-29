@@ -11,14 +11,14 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.service.GetRegistrationController
 import org.webdevandsausages.events.service.RegistrationError
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.handleErrorResponse
+import org.webdevandsausages.events.service.GetRegistrationService
 
 object GetRegistration {
-    fun route(getRegistration: GetRegistrationController, handleErrorResponse: handleErrorResponse): ContractRoute {
+    fun route(getRegistration: GetRegistrationService, handleErrorResponse: handleErrorResponse): ContractRoute {
 
         @Suppress("UNUSED_PARAMETER")
         fun handleGetRegistrationByToken(eventId: Long, _p2: String, verificationToken: String): HttpHandler =

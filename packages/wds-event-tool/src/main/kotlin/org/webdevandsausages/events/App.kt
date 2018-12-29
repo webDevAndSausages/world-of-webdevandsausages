@@ -8,14 +8,14 @@ import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
-import org.webdevandsausages.events.service.CreateRegistrationControllerImpl
-import org.webdevandsausages.events.service.GetCurrentEventControllerImpl
-import org.webdevandsausages.events.service.GetEventByIdControllerImpl
-import org.webdevandsausages.events.service.GetEventsControllerImpl
-import org.webdevandsausages.events.service.GetRegistrationControllerImpl
 import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.dao.ParticipantCRUD
+import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
+import org.webdevandsausages.events.service.GetCurrentEventServiceImpl
+import org.webdevandsausages.events.service.GetEventByIdServiceImpl
+import org.webdevandsausages.events.service.GetEventsServiceImpl
+import org.webdevandsausages.events.service.GetRegistrationServiceImpl
 import org.webdevandsausages.events.utils.RandomWordsUtil
 
 fun main(args: Array<String>) {
@@ -31,11 +31,11 @@ fun startApp(config: AppConfig): Http4kServer {
     flyway.migrate()
     logger.info("Starting server...")
     val app = Router(
-        GetEventsControllerImpl(EventCRUD),
-        GetCurrentEventControllerImpl(EventCRUD, logger),
-        GetEventByIdControllerImpl(EventCRUD),
-        GetRegistrationControllerImpl(EventCRUD, ParticipantCRUD, logger),
-        CreateRegistrationControllerImpl(
+        GetEventsServiceImpl(EventCRUD),
+        GetCurrentEventServiceImpl(EventCRUD, logger),
+        GetEventByIdServiceImpl(EventCRUD),
+        GetRegistrationServiceImpl(EventCRUD, ParticipantCRUD, logger),
+        CreateRegistrationServiceImpl(
             EventCRUD,
             ParticipantCRUD,
             RandomWordsUtil,

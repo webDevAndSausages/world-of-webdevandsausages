@@ -14,14 +14,14 @@ import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
-import org.webdevandsausages.events.service.GetRegistrationControllerImpl
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
+import org.webdevandsausages.events.service.GetRegistrationServiceImpl
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-class GetRegistrationControllerImplImplTest : StringSpec() {
-    lateinit var unit: GetRegistrationControllerImpl
+class GetRegistrationServiceImplTest : StringSpec() {
+    lateinit var unit: GetRegistrationServiceImpl
 
     private var participantList = mutableListOf<Participant>()
 
@@ -60,7 +60,7 @@ class GetRegistrationControllerImplImplTest : StringSpec() {
     }
 
     override fun beforeTest(description: Description) {
-        unit = GetRegistrationControllerImpl(
+        unit = GetRegistrationServiceImpl(
             eventCRUD = mockk(relaxed = true),
             participantCRUD = mockk(relaxed = true),
             logger = mockk(relaxed = true)

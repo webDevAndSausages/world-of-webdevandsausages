@@ -21,19 +21,19 @@ import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
-import org.webdevandsausages.events.service.CreateRegistrationControllerImpl
 import org.webdevandsausages.events.service.EventError
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
+import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-class CreateRegistrationControllerImplImplTest : StringSpec() {
-    lateinit var unit: CreateRegistrationControllerImpl
+class CreateRegistrationServiceImplTest : StringSpec() {
+    lateinit var unit: CreateRegistrationServiceImpl
 
     override fun beforeTest(description: Description) {
-        unit = CreateRegistrationControllerImpl(
+        unit = CreateRegistrationServiceImpl(
            emailService = mockk(relaxed = true),
            eventCRUD = mockk(relaxed = true),
            randomWordUtil = mockk(relaxed = true),

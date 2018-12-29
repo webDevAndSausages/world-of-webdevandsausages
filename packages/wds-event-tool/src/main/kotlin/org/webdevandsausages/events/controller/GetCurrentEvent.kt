@@ -9,16 +9,16 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.webdevandsausages.events.service.GetCurrentEventController
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.handleErrorResponse
+import org.webdevandsausages.events.service.GetCurrentEventService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object GetCurrentEvent {
     private val EventLens = Body.auto<EventOutDto>().toLens()
 
-    fun route(getCurrentEvent: GetCurrentEventController, handleErrorResponse: handleErrorResponse): ContractRoute {
+    fun route(getCurrentEvent: GetCurrentEventService, handleErrorResponse: handleErrorResponse): ContractRoute {
 
         fun handleGetCurrentEvent() = { _: Request ->
             getCurrentEvent().let {

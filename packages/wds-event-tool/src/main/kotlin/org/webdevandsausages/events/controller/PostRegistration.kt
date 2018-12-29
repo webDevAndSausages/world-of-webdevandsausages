@@ -14,12 +14,12 @@ import org.http4k.core.Status
 import org.http4k.lens.Path
 import org.http4k.lens.long
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.service.CreateRegistrationController
 import org.webdevandsausages.events.service.EventError
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.handleErrorResponse
+import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.utils.Read
 import org.webdevandsausages.events.utils.WDSJackson.auto
 import org.webdevandsausages.events.utils.parse
@@ -29,7 +29,7 @@ object PostRegistration {
     private val eventIdParam = Path.long().of("id")
 
     fun route(
-        createRegistration: CreateRegistrationController,
+        createRegistration: CreateRegistrationService,
         handleErrorResponse: handleErrorResponse
     ): ContractRoute {
 

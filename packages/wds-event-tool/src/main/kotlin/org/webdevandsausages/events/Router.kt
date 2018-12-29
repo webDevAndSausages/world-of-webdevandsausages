@@ -29,24 +29,24 @@ import org.webdevandsausages.events.controller.GetEvent
 import org.webdevandsausages.events.controller.GetEvents
 import org.webdevandsausages.events.controller.GetRegistration
 import org.webdevandsausages.events.controller.PostRegistration
-import org.webdevandsausages.events.service.CreateRegistrationController
-import org.webdevandsausages.events.service.GetCurrentEventController
-import org.webdevandsausages.events.service.GetEventByIdController
-import org.webdevandsausages.events.service.GetEventsController
-import org.webdevandsausages.events.service.GetRegistrationController
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
+import org.webdevandsausages.events.service.CreateRegistrationService
+import org.webdevandsausages.events.service.GetCurrentEventService
+import org.webdevandsausages.events.service.GetEventByIdService
+import org.webdevandsausages.events.service.GetEventsService
+import org.webdevandsausages.events.service.GetRegistrationService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 typealias handleErrorResponse = (message: String, code: ErrorCode, status: Status) -> Response
 
 class Router(
-    val getEvents: GetEventsController,
-    val getCurrentEvent: GetCurrentEventController,
-    val getEventById: GetEventByIdController,
-    val getRegistration: GetRegistrationController,
-    val createRegistration: CreateRegistrationController
+    val getEvents: GetEventsService,
+    val getCurrentEvent: GetCurrentEventService,
+    val getEventById: GetEventByIdService,
+    val getRegistration: GetRegistrationService,
+    val createRegistration: CreateRegistrationService
 ) {
 
     companion object {

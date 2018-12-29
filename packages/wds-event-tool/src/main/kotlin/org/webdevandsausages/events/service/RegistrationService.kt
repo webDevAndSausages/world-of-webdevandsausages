@@ -27,17 +27,17 @@ sealed class RegistrationError {
     object ParticipantNotFound : RegistrationError()
 }
 
-interface CreateRegistrationController {
+interface CreateRegistrationService {
     operator fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?>
 }
 
-class CreateRegistrationControllerImpl(
+class CreateRegistrationServiceImpl(
     val eventCRUD: EventCRUD,
     val participantCRUD: ParticipantCRUD,
     val randomWordUtil: RandomWordsUtil,
     val emailService: EmailService,
     val logger: Logger
-) : CreateRegistrationController {
+) : CreateRegistrationService {
     override fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?> {
         val eventData: Option<EventDto> = eventCRUD.findByIdOrLatest(registration.eventId)
 
@@ -98,15 +98,15 @@ class CreateRegistrationControllerImpl(
     }
 }
 
-interface GetRegistrationController {
+interface GetRegistrationService {
     operator fun invoke(eventId: Long, verificationToken: String): Either<RegistrationError, ParticipantDto?>
 }
 
-class GetRegistrationControllerImpl(
+class GetRegistrationServiceImpl(
     val eventCRUD: EventCRUD,
     val participantCRUD: ParticipantCRUD,
     val logger: Logger
-) : GetRegistrationController {
+) : GetRegistrationService {
     private fun getParticipant(token: String, event: EventDto): Either<RegistrationError, ParticipantDto?> {
         val participantData = participantCRUD.findByToken(token)
         return when (participantData) {
