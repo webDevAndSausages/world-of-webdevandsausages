@@ -24,21 +24,20 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
-import org.webdevandsausages.events.api.GetCurrentEvent
-import org.webdevandsausages.events.api.GetEvent
-import org.webdevandsausages.events.api.GetEvents
-import org.webdevandsausages.events.api.GetRegistration
-import org.webdevandsausages.events.api.PostRegistration
-import org.webdevandsausages.events.controllers.CreateRegistrationController
-import org.webdevandsausages.events.controllers.GetCurrentEventController
-import org.webdevandsausages.events.controllers.GetEventByIdController
-import org.webdevandsausages.events.controllers.GetEventsController
-import org.webdevandsausages.events.controllers.GetRegistrationController
+import org.webdevandsausages.events.controller.GetCurrentEvent
+import org.webdevandsausages.events.controller.GetEvent
+import org.webdevandsausages.events.controller.GetEvents
+import org.webdevandsausages.events.controller.GetRegistration
+import org.webdevandsausages.events.controller.PostRegistration
+import org.webdevandsausages.events.service.CreateRegistrationController
+import org.webdevandsausages.events.service.GetCurrentEventController
+import org.webdevandsausages.events.service.GetEventByIdController
+import org.webdevandsausages.events.service.GetEventsController
+import org.webdevandsausages.events.service.GetRegistrationController
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.utils.WDSJackson.auto
-import org.http4k.core.HttpHandler
 
 typealias handleErrorResponse = (message: String, code: ErrorCode, status: Status) -> Response
 

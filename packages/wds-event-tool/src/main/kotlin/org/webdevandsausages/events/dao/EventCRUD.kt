@@ -100,3 +100,5 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
         return if (result == 1) Some(1) else None
     }
 }
+
+val EventCRUD.field get() = Event.EVENT

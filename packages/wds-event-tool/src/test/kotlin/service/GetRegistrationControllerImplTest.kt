@@ -1,10 +1,9 @@
-package controller
+package service
 
 import arrow.core.Right
 import arrow.core.Some
 import io.kotlintest.Description
 import io.kotlintest.assertSoftly
-import io.kotlintest.assertions.arrow.either.beLeft
 import io.kotlintest.assertions.arrow.either.beRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -15,7 +14,7 @@ import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
-import org.webdevandsausages.events.controllers.GetRegistrationControllerImpl
+import org.webdevandsausages.events.service.GetRegistrationControllerImpl
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import java.sql.Timestamp
@@ -62,8 +61,8 @@ class GetRegistrationControllerImplImplTest : StringSpec() {
 
     override fun beforeTest(description: Description) {
         unit = GetRegistrationControllerImpl(
-            eventService = mockk(relaxed = true),
-            registrationService = mockk(relaxed = true),
+            eventCRUD = mockk(relaxed = true),
+            participantCRUD = mockk(relaxed = true),
             logger = mockk(relaxed = true)
             )
     }
@@ -71,8 +70,8 @@ class GetRegistrationControllerImplImplTest : StringSpec() {
     init {
         "happy case get registration by event id and participant token" {
             val slot = slot<String>()
-            every { unit.eventService.getByIdOrLatest(any()) } returns Some(dbEvent)
-            every { unit.registrationService.getByToken(capture(slot)) } returns Some(
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Some(dbEvent)
+            every { unit.participantCRUD.findByToken(capture(slot)) } returns Some(
                 ParticipantDto(
                     email = "first_7last_7@mail.com",
                     name = "first_7 last_7",
@@ -96,8 +95,8 @@ class GetRegistrationControllerImplImplTest : StringSpec() {
 
         "should return order number in own status group" {
             val slot = slot<String>()
-            every { unit.eventService.getByIdOrLatest(any()) } returns Some(dbEvent)
-            every { unit.registrationService.getByToken(capture(slot)) } returns Some(
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Some(dbEvent)
+            every { unit.participantCRUD.findByToken(capture(slot)) } returns Some(
                 ParticipantDto(
                     email = "first_11last_11@mail.com",
                     name = "first_11 last_11",

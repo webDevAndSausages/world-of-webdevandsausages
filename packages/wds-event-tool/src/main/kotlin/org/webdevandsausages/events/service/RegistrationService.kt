@@ -1,13 +1,9 @@
-package org.webdevandsausages.events.controllers
+package org.webdevandsausages.events.service
 
 import org.slf4j.Logger
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
-import org.webdevandsausages.events.services.EmailService
-import org.webdevandsausages.events.services.EventService
-import org.webdevandsausages.events.services.RandomTokenService
-import org.webdevandsausages.events.services.RegistrationService
 import org.webdevandsausages.events.utils.prettified
 import arrow.core.Option
 import arrow.core.None
@@ -17,12 +13,12 @@ import arrow.core.Try
 import arrow.core.getOrDefault
 import arrow.core.right
 import meta.enums.ParticipantStatus
+import org.webdevandsausages.events.dao.EventCRUD
+import org.webdevandsausages.events.dao.ParticipantCRUD
 import org.webdevandsausages.events.dto.getNextOrderNumber
 import org.webdevandsausages.events.dto.getNextOrderNumberInStatusGroup
 import org.webdevandsausages.events.dto.getPosition
-import org.webdevandsausages.events.services.canRegister
-import org.webdevandsausages.events.services.isInvisible
-import org.webdevandsausages.events.services.toText
+import org.webdevandsausages.events.utils.RandomWordsUtil
 
 sealed class RegistrationError {
     object EventNotFound : RegistrationError()
@@ -36,14 +32,14 @@ interface CreateRegistrationController {
 }
 
 class CreateRegistrationControllerImpl(
-    val eventService: EventService,
-    val registrationService: RegistrationService,
-    val randomTokenService: RandomTokenService,
+    val eventCRUD: EventCRUD,
+    val participantCRUD: ParticipantCRUD,
+    val randomWordUtil: RandomWordsUtil,
     val emailService: EmailService,
     val logger: Logger
 ) : CreateRegistrationController {
     override fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?> {
-        val eventData: Option<EventDto> = eventService.getByIdOrLatest(registration.eventId)
+        val eventData: Option<EventDto> = eventCRUD.findByIdOrLatest(registration.eventId)
 
         return when (eventData) {
             is None -> Either.left(EventError.NotFound)
@@ -58,7 +54,7 @@ class CreateRegistrationControllerImpl(
                         val token = getVerificationToken()
                         val nextNumber = eventData.t.participants.getNextOrderNumber()
                         val registrationWithToken = registration.copy(registrationToken = token, orderNumber = nextNumber, status = status)
-                        val result = registrationService.create(registrationWithToken)
+                        val result = participantCRUD.create(registrationWithToken)
 
                         if (result is Some) {
                             val sponsor = if (event.sponsor != null) event.sponsor else "Anonymous"
@@ -96,8 +92,8 @@ class CreateRegistrationControllerImpl(
     fun getVerificationToken(): String {
         var token: String?
         do {
-            token = Try { randomTokenService.getWordPair() }.getOrDefault { null }
-        } while (token !is String || registrationService.getByToken(token).isDefined())
+            token = Try { randomWordUtil.getWordPair() }.getOrDefault { null }
+        } while (token !is String || participantCRUD.findByToken(token).isDefined())
         return token
     }
 }
@@ -107,15 +103,15 @@ interface GetRegistrationController {
 }
 
 class GetRegistrationControllerImpl(
-    val eventService: EventService,
-    val registrationService: RegistrationService,
+    val eventCRUD: EventCRUD,
+    val participantCRUD: ParticipantCRUD,
     val logger: Logger
 ) : GetRegistrationController {
     private fun getParticipant(token: String, event: EventDto): Either<RegistrationError, ParticipantDto?> {
-        val participantData = registrationService.getByToken(token)
+        val participantData = participantCRUD.findByToken(token)
         return when (participantData) {
             is None -> Either.left(RegistrationError.ParticipantNotFound)
-            is Some -> participantData.t?.let {
+            is Some -> participantData.t.let {
                 val position = event.participants.getPosition(it.status, it.verificationToken)
                 // this shouldn't happen
                 if (position == -1) {
@@ -128,7 +124,7 @@ class GetRegistrationControllerImpl(
     }
 
     override fun invoke(eventId: Long, verificationToken: String): Either<RegistrationError, ParticipantDto?> {
-        val eventData = eventService.getByIdOrLatest(eventId)
+        val eventData = eventCRUD.findByIdOrLatest(eventId)
         return when (eventData) {
             is None -> Either.left(RegistrationError.EventNotFound)
             is Some -> when {
@@ -138,3 +134,5 @@ class GetRegistrationControllerImpl(
         }
     }
 }
+
+val ParticipantStatus.toText get() = this.name.toLowerCase().replace("_", " ")

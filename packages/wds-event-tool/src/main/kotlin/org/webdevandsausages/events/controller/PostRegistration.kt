@@ -1,4 +1,4 @@
-package org.webdevandsausages.events.api
+package org.webdevandsausages.events.controller
 
 import arrow.core.Either
 import org.http4k.contract.ContractRoute
@@ -14,8 +14,8 @@ import org.http4k.core.Status
 import org.http4k.lens.Path
 import org.http4k.lens.long
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.controllers.CreateRegistrationController
-import org.webdevandsausages.events.controllers.EventError
+import org.webdevandsausages.events.service.CreateRegistrationController
+import org.webdevandsausages.events.service.EventError
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.RegistrationOutDto

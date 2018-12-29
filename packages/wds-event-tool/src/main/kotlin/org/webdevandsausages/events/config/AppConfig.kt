@@ -9,7 +9,7 @@ import org.jooq.impl.DefaultConfiguration
 import org.jooq.impl.DefaultConnectionProvider
 import org.jooq.impl.ThreadLocalTransactionProvider
 import org.simpleflatmapper.jooq.SfmRecordMapperProvider
-import org.webdevandsausages.events.services.asResourceStream
+import org.webdevandsausages.events.service.asResourceStream
 import java.sql.DriverManager
 
 data class AppConfig(

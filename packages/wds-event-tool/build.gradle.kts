@@ -53,6 +53,7 @@ dependencies {
     /* kotlin */
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0")
     /* http4k */
     implementation("org.http4k:http4k-core:$http4kVersion")
     implementation("org.http4k:http4k-contract:$http4kVersion")

@@ -1,24 +1,21 @@
-package org.webdevandsausages.events.api
+package org.webdevandsausages.events.controller
 
 import arrow.core.Either
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.bindContract
 import org.http4k.contract.div
 import org.http4k.contract.meta
-import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.controllers.GetRegistrationController
-import org.webdevandsausages.events.controllers.RegistrationError
+import org.webdevandsausages.events.service.GetRegistrationController
+import org.webdevandsausages.events.service.RegistrationError
 import org.webdevandsausages.events.dto.ErrorCode
-import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.handleErrorResponse
-import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object GetRegistration {
     fun route(getRegistration: GetRegistrationController, handleErrorResponse: handleErrorResponse): ContractRoute {

@@ -1,15 +1,12 @@
-package org.webdevandsausages.events.controllers
+package org.webdevandsausages.events.service
 
 import arrow.core.Either
 import meta.enums.EventStatus
 import org.slf4j.Logger
+import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.EventUpdates
 import org.webdevandsausages.events.dto.EventDto
-import org.webdevandsausages.events.services.EventService
-import org.webdevandsausages.events.services.canRegister
-import org.webdevandsausages.events.services.field
-import org.webdevandsausages.events.services.isOpenFeedbackStatus
-import org.webdevandsausages.events.services.isVisibleStatus
+import org.webdevandsausages.events.dao.field
 import org.webdevandsausages.events.utils.hasPassed
 import org.webdevandsausages.events.utils.threeDaysLater
 
@@ -23,9 +20,9 @@ interface GetEventsController {
     operator fun invoke(status: String?): List<EventDto>?
 }
 
-class GetEventsControllerImpl(val eventService: EventService) : GetEventsController {
+class GetEventsControllerImpl(val eventCRUD: EventCRUD) : GetEventsController {
     override fun invoke(status: String?): List<EventDto>? {
-        return eventService.getEvents(status)
+        return eventCRUD.findAllWithParticipants(status)
     }
 }
 
@@ -40,36 +37,36 @@ interface GetCurrentEventController {
  *  3. If the event happened three days ago, close feedback
  */
 
-class GetCurrentEventControllerImpl(val eventService: EventService, val logger: Logger) : GetCurrentEventController {
+class GetCurrentEventControllerImpl(val eventCRUD: EventCRUD, val logger: Logger) : GetCurrentEventController {
 
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): Either<EventError, EventDto> {
         logger.info("Opening event ${data.event.name}")
-        eventService.update(
+        EventCRUD.update(
             data.event.id,
-            listOf(Pair(eventService.field.STATUS, EventStatus.OPEN)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.OPEN)) as EventUpdates)
         return getLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun closeRegistration(data: EventDto): Either<EventError, EventDto> {
         logger.info("Closing registration for event ${data.event.name}")
-        eventService.update(
+        eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
         return getLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun closeFeedback(data: EventDto): Either<EventError, EventDto> {
         logger.info("Closing feedback for event ${data.event.name}")
-        eventService.update(
+        eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventService.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
         return getLatest()
     }
 
-    private fun getLatest(): Either<EventError, EventDto> = eventService.getByIdOrLatest().fold({
+    private fun getLatest(): Either<EventError, EventDto> = eventCRUD.findByIdOrLatest().fold({
             Either.Left(EventError.NotFound)
         }, {
             Either.Right(it)
@@ -99,12 +96,19 @@ interface GetEventByIdController {
     operator fun invoke(eventId: Long): Either<EventError, EventDto>
 }
 
-class GetEventByIdControllerImpl(val eventService: EventService) : GetEventByIdController {
+class GetEventByIdControllerImpl(val eventCRUD: EventCRUD) : GetEventByIdController {
     override fun invoke(eventId: Long): Either<EventError, EventDto> {
-        return eventService.getByIdOrLatest(eventId).fold({
+        return eventCRUD.findByIdOrLatest(eventId).fold({
             Either.Left(EventError.NotFound)
         }, {
             Either.Right(it)
         })
     }
 }
+
+val EventStatus.isVisibleStatus get() = this == EventStatus.VISIBLE
+val EventStatus.isNotFull get() = this == EventStatus.OPEN
+val EventStatus.isWithWaitList get() = this == EventStatus.OPEN_WITH_WAITLIST
+val EventStatus.canRegister get() = this == EventStatus.OPEN || this == EventStatus.OPEN_WITH_WAITLIST
+val EventStatus.isOpenFeedbackStatus get() = this == EventStatus.CLOSED_WITH_FEEDBACK
+val EventStatus.isInvisible get() = this == EventStatus.PLANNING || this == EventStatus.CLOSED || this == EventStatus.CANCELLED

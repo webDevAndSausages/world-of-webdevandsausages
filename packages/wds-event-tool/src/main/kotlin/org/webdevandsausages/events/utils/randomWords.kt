@@ -1,8 +1,9 @@
-package org.webdevandsausages.events.services
+package org.webdevandsausages.events.utils
 
-import java.util.Random
+import org.webdevandsausages.events.service.asResourceStream
+import java.util.*
 
-object RandomTokenService {
+object RandomWordsUtil {
     fun getWordPair(): String {
         val random = Random()
         val stream = "words.txt".asResourceStream()

@@ -1,4 +1,4 @@
-package org.webdevandsausages.events.api
+package org.webdevandsausages.events.controller
 
 import meta.enums.EventStatus
 import org.http4k.contract.ContractRoute
@@ -9,7 +9,7 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.webdevandsausages.events.controllers.GetEventsController
+import org.webdevandsausages.events.service.GetEventsController
 import org.webdevandsausages.events.dto.EventsOutDto
 import org.webdevandsausages.events.utils.WDSJackson.auto
 import org.http4k.core.Method.GET

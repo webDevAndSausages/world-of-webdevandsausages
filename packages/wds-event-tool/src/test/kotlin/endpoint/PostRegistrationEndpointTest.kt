@@ -11,7 +11,7 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.intellij.lang.annotations.Language
-import org.webdevandsausages.events.controllers.EventError
+import org.webdevandsausages.events.service.EventError
 import org.webdevandsausages.events.dto.ParticipantDto
 
 class PostRegistrationEndpointTest : StringSpec() {
