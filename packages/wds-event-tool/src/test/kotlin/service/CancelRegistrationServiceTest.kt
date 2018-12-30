@@ -53,22 +53,22 @@ class CancelRegistrationServiceTest : StringSpec() {
         event = testEvent
     )
 
-    private val cancelledParticipant = Participant(
-        1L,
-        "Joe",
-        "Schmo",
-        "joe.schmo@mail.com",
-        "Google",
-        "silly-token",
-        1000,
-        1L,
-        ParticipantStatus.CANCELLED,
-        TIMESTAMP,
-        TIMESTAMP
-    )
-
     init {
         "Participant cancels registration when there is no waiting list" {
+            val cancelledParticipant = Participant(
+                1L,
+                "Joe",
+                "Schmo",
+                "joe.schmo@mail.com",
+                "Google",
+                "silly-token",
+                1000,
+                1L,
+                ParticipantStatus.CANCELLED,
+                TIMESTAMP,
+                TIMESTAMP
+            )
+
             dbEvent.participants = listOf(
                 Participant(
                     1L,
@@ -123,11 +123,195 @@ class CancelRegistrationServiceTest : StringSpec() {
         }
 
         "Participant cancels registration while participant is on the wait list himself" {
-            // TODO
+            val cancelledParticipant = Participant(
+                1L,
+                "Joe",
+                "Schmo",
+                "joe.schmo@mail.com",
+                "Google",
+                "silly-token",
+                1000,
+                1L,
+                ParticipantStatus.CANCELLED,
+                TIMESTAMP,
+                TIMESTAMP
+            )
+
+            dbEvent.participants = listOf(
+                Participant(
+                    1L,
+                    "Joe",
+                    "Schmo",
+                    "joe.schmo@mail.com",
+                    "Google",
+                    "silly-token",
+                    1000,
+                    1L,
+                    ParticipantStatus.WAIT_LISTED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    2L,
+                    "Ann",
+                    "Bann",
+                    "ann.bann@mail.com",
+                    "Yahoo",
+                    "fishy-token",
+                    2000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                )
+            )
+            every { unit.eventCRUD.findByParticipantToken("silly-token") } returns Option(dbEvent)
+            val slot = slot<ParticipantStatus>()
+            every { unit.participantCRUD.updateStatus(1L, capture(slot)) } returns Option(cancelledParticipant)
+            val resultingEither = unit("silly-token")
+            assertSoftly {
+                resultingEither.shouldBeRight()
+                beRight(
+                    resultingEither.shouldBe(
+                        Right(
+                            ParticipantDto(
+                                email = "joe.schmo@mail.com",
+                                name = "Joe Schmo",
+                                verificationToken = "silly-token",
+                                affiliation = "Google",
+                                status = ParticipantStatus.CANCELLED,
+                                orderNumber = 1000,
+                                insertedOn = TIMESTAMP.prettified
+                            )
+                        )
+                    )
+                )
+                slot.captured.shouldBe(ParticipantStatus.CANCELLED)
+            }
         }
 
         "Participant cancels registration while registered and there are people on the waiting list" {
-            // TODO
+            val cancelledParticipant = Participant(
+                1L,
+                "Joe",
+                "Schmo",
+                "joe.schmo@mail.com",
+                "Google",
+                "silly-token",
+                1000,
+                1L,
+                ParticipantStatus.CANCELLED,
+                TIMESTAMP,
+                TIMESTAMP
+            )
+
+            dbEvent.participants = listOf(
+                Participant(
+                    1L,
+                    "Joe",
+                    "Schmo",
+                    "joe.schmo@mail.com",
+                    "Google",
+                    "silly-token",
+                    1000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    2L,
+                    "Ann",
+                    "Bann",
+                    "ann.bann@mail.com",
+                    "Yahoo",
+                    "fishy-token",
+                    2000,
+                    1L,
+                    ParticipantStatus.WAIT_LISTED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    3L,
+                    "Willy",
+                    "Nilly",
+                    "willy.nilly@mail.com",
+                    "Kazaa",
+                    "cosher-token",
+                    3000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    4L,
+                    "John",
+                    "Schmon",
+                    "john.schmon@mail.com",
+                    "Apple",
+                    "strange-token",
+                    4000,
+                    1L,
+                    ParticipantStatus.WAIT_LISTED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    5L,
+                    "Gillian",
+                    "Schmillian",
+                    "gillian.schmillian@mail.com",
+                    "X-Filez",
+                    "supernatural-token",
+                    5000,
+                    1L,
+                    ParticipantStatus.WAIT_LISTED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    6L,
+                    "Ford",
+                    "Schmord",
+                    "ford.schmord@mail.com",
+                    "School of Ancient Arts",
+                    "indiana-token",
+                    6000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                )
+            )
+            every { unit.eventCRUD.findByParticipantToken("cosher-token") } returns Option(dbEvent)
+            val slot = slot<ParticipantStatus>()
+            val slot2 = slot<ParticipantStatus>()
+            every { unit.participantCRUD.updateStatus(3L, capture(slot)) } returns Option(cancelledParticipant)
+            every { unit.participantCRUD.updateStatus(2L, capture(slot2)) } returns Option(cancelledParticipant)
+            val resultingEither = unit("cosher-token")
+            assertSoftly {
+                resultingEither.shouldBeRight()
+                beRight(
+                    resultingEither.shouldBe(
+                        Right(
+                            ParticipantDto(
+                                email = "joe.schmo@mail.com",
+                                name = "Joe Schmo",
+                                verificationToken = "silly-token",
+                                affiliation = "Google",
+                                status = ParticipantStatus.CANCELLED,
+                                orderNumber = 1000,
+                                insertedOn = TIMESTAMP.prettified
+                            )
+                        )
+                    )
+                )
+                slot.captured.shouldBe(ParticipantStatus.CANCELLED)
+                // Participant ID 2 should be next in line
+                slot2.captured.shouldBe(ParticipantStatus.REGISTERED)
+            }
         }
 
         "Participant who is a ORGANIZER cancels registration and it should not affect waiting list" {

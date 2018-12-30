@@ -24,7 +24,6 @@ import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.error.RegistrationCancellationError
 import org.webdevandsausages.events.error.RegistrationError
 import org.webdevandsausages.events.utils.RandomWordsUtil
-import org.webdevandsausages.events.utils.prettified
 
 class CreateRegistrationService(
     val eventCRUD: EventCRUD,
@@ -40,53 +39,40 @@ class CreateRegistrationService(
         return when (eventData) {
             is None -> Either.left(EventError.NotFound)
             is Some -> when {
-                    !eventData.t.event.status.canRegister -> Either.left(EventError.NotFound)
-                    eventData.t.participants.find { it.email == registration.email && it.status != ParticipantStatus.CANCELLED } != null -> Either.left(EventError.AlreadyRegistered)
-                    else -> {
-                        val event = eventData.t.event
-                        val numRegistered = eventData.t.participants.size
-                        // postgres trigger should flip status to full when limit is hit
-                        val status = if (numRegistered < event.maxParticipants) ParticipantStatus.REGISTERED else ParticipantStatus.WAIT_LISTED
-                        val token = getVerificationToken()
-                        val nextNumber = eventData.t.participants.getNextOrderNumber()
-                        val registrationWithToken = registration.copy(registrationToken = token, orderNumber = nextNumber, status = status)
-                        val result = participantCRUD.create(registrationWithToken)
+                !eventData.t.event.status.canRegister -> Either.left(EventError.NotFound)
+                eventData.t.participants.find { it.email == registration.email && it.status != ParticipantStatus.CANCELLED } != null -> Either.left(
+                    EventError.AlreadyRegistered
+                )
+                else -> {
+                    val event = eventData.t.event
+                    val numRegistered = eventData.t.participants.size
+                    // postgres trigger should flip status to full when limit is hit
+                    val status =
+                        if (numRegistered < event.maxParticipants) ParticipantStatus.REGISTERED else ParticipantStatus.WAIT_LISTED
+                    val token = getVerificationToken()
+                    val nextNumber = eventData.t.participants.getNextOrderNumber()
+                    val registrationWithToken =
+                        registration.copy(registrationToken = token, orderNumber = nextNumber, status = status)
+                    val result = participantCRUD.create(registrationWithToken)
 
-                        if (result is Some) {
-                            val sponsor = if (event.sponsor != null) event.sponsor else "Anonymous"
-                            val emailData = mapOf(
-                                "action" to status.toText,
-                                "datetime" to event.date.prettified,
-                                "location" to event.location,
-                                "token" to result.t.verificationToken,
-                                "sponsor" to sponsor
-                                )
-
-                            logger.info("Dispatching registration email to ${result.t.email}")
-                            emailService.sendMail(
-                                result.t.email,
-                                result.t.name,
-                                "Web Dev & Sausages Registration",
-                                "d-91e5bf696190444d94f13e564fee4426",
-                                emailData
-                            )
-
-                            logger.info("Dispatching participant to firebase mailing list")
-                            if (registration.subscribe != null && registration.subscribe) {
-                                firebaseService.upsertParticipantToMailingList(result.t)
-                            }
-                        }
-                        return when (result) {
-                            is Some -> {
-                                val resultWithReadableOrderNumber = result.t.copy(
-                                    orderNumber = eventData.t.participants.getNextOrderNumberInStatusGroup(status)
-                                )
-                                Either.Right(resultWithReadableOrderNumber)
-                            }
-                            is None -> Either.Left(EventError.DatabaseError)
+                    if (result is Some) {
+                        emailService.sendRegistrationEmail(event, status, result.t)
+                        logger.info("Dispatching participant to firebase mailing list")
+                        if (registration.subscribe != null && registration.subscribe) {
+                            firebaseService.upsertParticipantToMailingList(result.t)
                         }
                     }
+                    return when (result) {
+                        is Some -> {
+                            val resultWithReadableOrderNumber = result.t.copy(
+                                orderNumber = eventData.t.participants.getNextOrderNumberInStatusGroup(status)
+                            )
+                            Either.Right(resultWithReadableOrderNumber)
+                        }
+                        is None -> Either.Left(EventError.DatabaseError)
+                    }
                 }
+            }
         }
     }
 
@@ -132,7 +118,11 @@ class GetRegistrationService(
     }
 }
 
-class CancelRegistrationService(val eventCRUD: EventCRUD, val participantCRUD: ParticipantCRUD, val emailService: EmailService) {
+class CancelRegistrationService(
+    val eventCRUD: EventCRUD,
+    val participantCRUD: ParticipantCRUD,
+    val emailService: EmailService
+) {
     operator fun invoke(token: String): Either<RegistrationCancellationError, ParticipantDto> {
         val event = eventCRUD.findByParticipantToken(token)
 
@@ -181,13 +171,26 @@ class CancelRegistrationService(val eventCRUD: EventCRUD, val participantCRUD: P
                     val nextOnWaitingList = waitListedParticipants.minBy { it.orderNumber }.toOption()
                     when (nextOnWaitingList) {
                         is Some -> {
-                            participantCRUD.updateStatus(
+                            val participantRegisteredFromWaitList = participantCRUD.updateStatus(
                                 nextOnWaitingList.t.id,
                                 ParticipantStatus.REGISTERED
                             )
-                            // TODO: Send cancel confirmation email
-                            // TODO: Send email to lucky one who got out of waiting list
-                            Either.right(ParticipantDto(updatedParticipant.t))
+                            emailService.sendCancelConfirmationEmail(event.t, ParticipantDto(updatedParticipant.t))
+                            when (participantRegisteredFromWaitList) {
+                                is Some -> {
+                                    emailService.sendRegistrationEmailForWaitListed(
+                                        event.t,
+                                        ParticipantDto(
+                                            participantRegisteredFromWaitList.t
+                                        )
+                                    )
+                                    Either.right(ParticipantDto(updatedParticipant.t))
+                                }
+                                is None -> {
+                                    // Probably some database error? Very unlikely to happen
+                                    Either.left(RegistrationCancellationError.DatabaseError)
+                                }
+                            }
                         }
                         is None ->
                             // We already checked that we have wait listed participants, so this should never happen
@@ -195,7 +198,7 @@ class CancelRegistrationService(val eventCRUD: EventCRUD, val participantCRUD: P
 
                     }
                 } else {
-                    // TODO: Send cancel confirmation email
+                    emailService.sendCancelConfirmationEmail(event.t, ParticipantDto(updatedParticipant.t))
                     Either.right(ParticipantDto(updatedParticipant.t))
                 }
             }
