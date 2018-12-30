@@ -45,7 +45,7 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
             .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-        return Try { jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList() }.getOrDefault { emptyList() }
+        return jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
     }
 
     private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)

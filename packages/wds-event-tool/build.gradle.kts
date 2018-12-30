@@ -87,11 +87,11 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
     implementation("io.arrow-kt:arrow-data:$arrowVersion")
     // use IO monads in future?
-    // implementation("io.arrow-kt:arrow-effects:$arrowVersion")
-    // implementation("io.arrow-kt:arrow-effects-instances:$arrowVersion")
-    // implementation("io.arrow-kt:arrow-instances-core:$arrowVersion")
-    // implementation("io.arrow-kt:arrow-instances-data:$arrowVersion")
-    // implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
+    implementation("io.arrow-kt:arrow-effects:$arrowVersion")
+    implementation("io.arrow-kt:arrow-effects-instances:$arrowVersion")
+    implementation("io.arrow-kt:arrow-instances-core:$arrowVersion")
+    implementation("io.arrow-kt:arrow-instances-data:$arrowVersion")
+    implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
 
     /* tests */
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")

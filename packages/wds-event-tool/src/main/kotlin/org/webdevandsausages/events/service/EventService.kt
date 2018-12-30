@@ -1,6 +1,13 @@
 package org.webdevandsausages.events.service
 
 import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
+import arrow.effects.IO
+import arrow.effects.fix
+import arrow.effects.instances.io.monad.monad
+import arrow.instances.either.monad.flatten
+import arrow.typeclasses.binding
 import meta.enums.EventStatus
 import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventRepository
@@ -16,13 +23,32 @@ sealed class EventError {
     object DatabaseError : EventError()
 }
 
-interface GetEventsService {
-    operator fun invoke(status: String?): List<EventDto>?
-}
+// attempt ensures that any errors are captured so unsafeRunSync can't lock
+fun<A> IO<Either<EventError, A>>.runWithError(logger: Logger): Either<EventError, A> = this.attempt()
+    .unsafeRunSync()
+    .fold({ error ->
+        logger.error("An error occurred fetching: ${error.message}")
+        EventError.DatabaseError.left()
+    }, { it -> it.right() })
+    .flatten()
 
-class GetEventsServiceImpl(val eventRepository: EventRepository) : GetEventsService {
-    override fun invoke(status: String?): List<EventDto>? {
-        return eventRepository.findAllWithParticipants(status)
+// fold the request into a command
+data class GetEventsCommand(val status: String?)
+typealias GetEvents = (status: String?) -> IO<List<EventDto>?>
+typealias EventListIO = IO<Either<EventError, List<EventDto>>>
+// this can be implemented with an object, which only needs to provide the getEvents dependency
+interface GetEventsService {
+    val getEvents: GetEvents
+
+    fun GetEventsCommand.execute(): EventListIO {
+        val cmd = this
+        return IO.monad().binding {
+            // here we can run multiple IOs, validation or any logic and flatter into one Either
+            // without nested maps / flatMap
+            getEvents(cmd.status).bind().let {
+                if (it is List) it.right() else emptyList<EventDto>().right()
+            }
+        }.fix()
     }
 }
 

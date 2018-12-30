@@ -15,7 +15,6 @@ import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
 import org.webdevandsausages.events.service.FirebaseService
 import org.webdevandsausages.events.service.GetCurrentEventServiceImpl
 import org.webdevandsausages.events.service.GetEventByIdServiceImpl
-import org.webdevandsausages.events.service.GetEventsServiceImpl
 import org.webdevandsausages.events.service.GetRegistrationServiceImpl
 import org.webdevandsausages.events.utils.RandomWordsUtil
 
@@ -32,7 +31,8 @@ fun startApp(config: AppConfig): Http4kServer {
     flyway.migrate()
     logger.info("Starting server...")
     val app = Router(
-        GetEventsServiceImpl(EventRepository),
+        logger,
+        EventRepository,
         GetCurrentEventServiceImpl(EventRepository, logger),
         GetEventByIdServiceImpl(EventRepository),
         GetRegistrationServiceImpl(EventRepository, ParticipantRepository, logger),

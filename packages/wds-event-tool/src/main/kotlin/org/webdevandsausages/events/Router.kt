@@ -24,11 +24,13 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
+import org.slf4j.Logger
 import org.webdevandsausages.events.controller.GetCurrentEvent
 import org.webdevandsausages.events.controller.GetEvent
 import org.webdevandsausages.events.controller.GetEvents
 import org.webdevandsausages.events.controller.GetRegistration
 import org.webdevandsausages.events.controller.PostRegistration
+import org.webdevandsausages.events.dao.EventRepository
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
@@ -42,7 +44,8 @@ import org.webdevandsausages.events.utils.WDSJackson.auto
 typealias handleErrorResponse = (message: String, code: ErrorCode, status: Status) -> Response
 
 class Router(
-    val getEvents: GetEventsService,
+    val logger: Logger,
+    val eventRepo: EventRepository,
     val getCurrentEvent: GetCurrentEventService,
     val getEventById: GetEventByIdService,
     val getRegistration: GetRegistrationService,
@@ -74,7 +77,7 @@ class Router(
 
     private fun getApiRoutes() = listOf(
         "/{any:.*}" bindContract OPTIONS to ok(),
-        GetEvents.route(getEvents),
+        GetEvents.route(eventRepo, logger, handleErrorResponse),
         GetEvent.route(getEventById, handleErrorResponse),
         GetCurrentEvent.route(getCurrentEvent, handleErrorResponse),
         GetRegistration.route(getRegistration, handleErrorResponse),
