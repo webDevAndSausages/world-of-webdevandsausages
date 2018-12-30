@@ -16,14 +16,12 @@ import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.EventRepository
 import org.webdevandsausages.events.dao.ParticipantCRUD
 import org.webdevandsausages.events.dao.ParticipantRepository
-import org.webdevandsausages.events.dto.CancelRegistrationInDto
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.getNextOrderNumber
 import org.webdevandsausages.events.dto.getNextOrderNumberInStatusGroup
 import org.webdevandsausages.events.dto.getPosition
-import org.webdevandsausages.events.dto.hasWaitListedParticipants
 import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.error.RegistrationCancellationError
 import org.webdevandsausages.events.error.RegistrationError
@@ -137,13 +135,13 @@ class GetRegistrationService(
 }
 
 class CancelRegistrationService {
-    operator fun invoke(cancelRegistration: CancelRegistrationInDto): Either<RegistrationCancellationError, Participant?> {
-        val event = EventCRUD.findByParticipantToken(cancelRegistration.registrationToken)
+    operator fun invoke(token: String): Either<RegistrationCancellationError, Participant?> {
+        val event = EventCRUD.findByParticipantToken(token)
 
         return when (event) {
             is Some -> {
                 val participant =
-                    event.t.participants.find { it.verificationToken == cancelRegistration.registrationToken }
+                    event.t.participants.find { it.verificationToken == token }
                 when (event.t.event.status) {
                     // Valid statuses for cancellation
                     EventStatus.OPEN_WITH_WAITLIST, EventStatus.OPEN_FULL, EventStatus.OPEN ->
@@ -174,11 +172,15 @@ class CancelRegistrationService {
 
         return when (updatedParticipant) {
             is Some -> {
-                if (event.t.hasWaitListedParticipants) {
+                val registeredParticipants =
+                    event.t.participants.filter { it.id != updatedParticipant.t.id && it.status == ParticipantStatus.REGISTERED }
+                val hasRoomForNextOnWaitList = registeredParticipants.size < event.t.event.maxParticipants
+                val waitListedParticipants =
+                    event.t.participants.filter { it.id != updatedParticipant.t.id && it.status == ParticipantStatus.WAIT_LISTED }
+                // Give a spot to next on waiting list if there's now room for new participants
+                if (waitListedParticipants.isNotEmpty() && hasRoomForNextOnWaitList) {
                     // if there are wait listed participants, change status and move next to registered from wait list
-                    val nextOnWaitingList =
-                        event.t.participants.filter { it.status == ParticipantStatus.WAIT_LISTED }
-                            .minBy { it.orderNumber }.toOption()
+                    val nextOnWaitingList = waitListedParticipants.minBy { it.orderNumber }.toOption()
                     when (nextOnWaitingList) {
                         is Some -> {
                             ParticipantCRUD.updateStatus(

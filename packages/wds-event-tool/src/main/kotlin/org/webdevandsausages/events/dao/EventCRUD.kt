@@ -99,7 +99,7 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
 
     fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use {
             ctx ->
-        val event = ctx.select()
+        val event = ctx.select(*Event.EVENT.fields())
             .from(Event.EVENT)
             .join(Participant.PARTICIPANT).on(Participant.PARTICIPANT.EVENT_ID.eq(Event.EVENT.ID))
             .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken)).fetchAny().into(meta.tables.pojos.Event::class.java).toOption()
