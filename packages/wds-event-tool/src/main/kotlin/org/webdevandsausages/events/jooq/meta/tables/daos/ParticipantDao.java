@@ -4,6 +4,7 @@
 package meta.tables.daos;
 
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Generated;
@@ -119,5 +120,19 @@ public class ParticipantDao extends DAOImpl<ParticipantRecord, meta.tables.pojos
      */
     public List<meta.tables.pojos.Participant> fetchByStatus(ParticipantStatus... values) {
         return fetch(Participant.PARTICIPANT.STATUS, values);
+    }
+
+    /**
+     * Fetch records that have <code>created_on IN (values)</code>
+     */
+    public List<meta.tables.pojos.Participant> fetchByCreatedOn(Timestamp... values) {
+        return fetch(Participant.PARTICIPANT.CREATED_ON, values);
+    }
+
+    /**
+     * Fetch records that have <code>updated_on IN (values)</code>
+     */
+    public List<meta.tables.pojos.Participant> fetchByUpdatedOn(Timestamp... values) {
+        return fetch(Participant.PARTICIPANT.UPDATED_ON, values);
     }
 }

@@ -99,7 +99,7 @@ class CreateRegistrationServiceImpl(
         var token: String?
         do {
             token = Try { randomWordsUtil.getWordPair() }.getOrDefault { null }
-        } while (token !is String ||participantRepository.findByToken(token).isDefined())
+        } while (token !is String || participantRepository.findByToken(token).isDefined())
         return token
     }
 }

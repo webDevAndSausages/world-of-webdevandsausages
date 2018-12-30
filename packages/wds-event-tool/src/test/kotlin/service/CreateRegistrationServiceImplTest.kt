@@ -19,7 +19,6 @@ import io.mockk.verify
 import io.mockk.spyk
 import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
-import meta.tables.daos.EventDao
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
 import org.webdevandsausages.events.service.EventError
@@ -27,6 +26,7 @@ import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
+import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
@@ -35,14 +35,16 @@ class CreateRegistrationServiceImplTest : StringSpec() {
 
     override fun beforeTest(description: Description) {
         unit = CreateRegistrationServiceImpl(
-           emailService = mockk(relaxed = true),
-           eventRepository = mockk(relaxed = true),
-           randomWordsUtil = mockk(relaxed = true),
-           logger = mockk(relaxed = true),
-           participantRepository = mockk(relaxed = true),
-           firebaseService = mockk(relaxed = true)
-        )
+               emailService = mockk(relaxed = true),
+               eventRepository = mockk(relaxed = true),
+               randomWordsUtil = mockk(relaxed = true),
+               logger = mockk(relaxed = true),
+               participantRepository = mockk(relaxed = true),
+               firebaseService = mockk(relaxed = true)
+               )
     }
+
+    private val TIMESTAMP = Timestamp.valueOf(LocalDateTime.now().minusDays(4))
 
     private val newRegistration = RegistrationInDto(
         email = "joe.schmo@mail.com",
@@ -62,7 +64,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
             "Tampere center",
             EventStatus.OPEN,
             80,
-            Timestamp.valueOf(LocalDateTime.now().plusDays(2))
+            Timestamp.valueOf(LocalDateTime.now().plusDays(2)),
+            TIMESTAMP,
+            TIMESTAMP
             )
       )
 
@@ -71,8 +75,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
         name = "Joe Schmo",
         orderNumber = 1000,
         status = ParticipantStatus.REGISTERED,
-        verificationToken = "silly-token"
-   )
+        verificationToken = "silly-token",
+        insertedOn = TIMESTAMP.prettified
+        )
 
     init {
         "happy case registration with REGISTERED status" {
@@ -90,10 +95,11 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                             name = "Joe Schmo",
                             verificationToken = "silly-token",
                             status = ParticipantStatus.REGISTERED,
-                            orderNumber = 1
+                            orderNumber = 1,
+                            insertedOn = TIMESTAMP.prettified
+                            )
                             )
                          )
-                    )
                )
                 slot.captured.shouldBe(
                     RegistrationInDto(
@@ -105,8 +111,8 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                         registrationToken = "silly-token",
                         orderNumber = 1000,
                         status = ParticipantStatus.REGISTERED
-                     )
-                  )
+                        )
+                    )
             }
         }
 
@@ -122,10 +128,12 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                     "Tampere center",
                     EventStatus.OPEN_WITH_WAITLIST,
                     1,
-                    Timestamp.valueOf(LocalDateTime.now().plusDays(-2))
-                 ),
-                 participants = listOf(
-                    Participant(
+                    Timestamp.valueOf(LocalDateTime.now().plusDays(-2)),
+                    TIMESTAMP,
+                    TIMESTAMP
+                    ),
+                participants = listOf(
+                     Participant(
                         1,
                         "Bill",
                         "Knox",
@@ -134,8 +142,10 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                         "silly-token",
                         2000,
                         1,
-                        ParticipantStatus.REGISTERED)
-                 )
+                        ParticipantStatus.REGISTERED,
+                        TIMESTAMP,
+                        TIMESTAMP
+                        ))
             )
             every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(fullEvent)
             every { unit.randomWordsUtil.getWordPair() } returns "silly-token"
@@ -152,8 +162,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                             name = "Joe Schmo",
                             verificationToken = "silly-token",
                             status = ParticipantStatus.WAIT_LISTED,
-                            orderNumber = 1
-                        ))))
+                            orderNumber = 1,
+                            insertedOn = TIMESTAMP.prettified
+                            ))))
                 slot2.captured.shouldBe(
                     RegistrationInDto(
                         eventId = null,
@@ -164,8 +175,8 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                         registrationToken = "silly-token",
                         orderNumber = 3000,
                         status = ParticipantStatus.WAIT_LISTED
-                     )
-                  )
+                        )
+                    )
             }
         }
 
@@ -181,10 +192,12 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                         "silly-token",
                         1000,
                         1,
-                        ParticipantStatus.REGISTERED
-                               )
-                             )
+                        ParticipantStatus.REGISTERED,
+                        TIMESTAMP,
+                        TIMESTAMP
                         )
+                    )
+                )
             every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(eventWithExisting)
             every { unit.randomWordsUtil.getWordPair() } returns "twofer-token"
             val spy = spyk(unit.participantRepository)
@@ -209,9 +222,11 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                     "Tampere center",
                     EventStatus.CLOSED,
                     80,
-                    Timestamp.valueOf(LocalDateTime.now().plusDays(-2))
-                 )
-              )
+                    Timestamp.valueOf(LocalDateTime.now().plusDays(-2)),
+                    TIMESTAMP,
+                    TIMESTAMP
+                    )
+                )
             every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(dbEvent)
             every { unit.randomWordsUtil.getWordPair() } returns "twofer-token"
             val spy = spyk(unit.participantRepository)
@@ -220,7 +235,7 @@ class CreateRegistrationServiceImplTest : StringSpec() {
             assertSoftly {
                 resultingEither.isLeft().shouldBe(true)
                 beLeft(resultingEither.shouldBe(Left(EventError.NotFound))
-                  )
+                    )
                 verify { spy wasNot Called }
             }
         }

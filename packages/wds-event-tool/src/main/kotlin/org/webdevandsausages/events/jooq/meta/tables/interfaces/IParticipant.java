@@ -5,6 +5,7 @@ package meta.tables.interfaces;
 
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.annotation.Generated;
 
@@ -68,4 +69,14 @@ public interface IParticipant extends Serializable {
      * Getter for <code>public.participant.status</code>.
      */
     public ParticipantStatus getStatus();
+
+    /**
+     * Getter for <code>public.participant.created_on</code>.
+     */
+    public Timestamp getCreatedOn();
+
+    /**
+     * Getter for <code>public.participant.updated_on</code>.
+     */
+    public Timestamp getUpdatedOn();
 }

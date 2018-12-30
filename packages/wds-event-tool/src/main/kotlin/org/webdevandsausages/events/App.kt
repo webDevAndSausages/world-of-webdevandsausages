@@ -8,10 +8,8 @@ import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
-import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.EventRepository
 import org.webdevandsausages.events.service.EmailService
-import org.webdevandsausages.events.dao.ParticipantCRUD
 import org.webdevandsausages.events.dao.ParticipantRepository
 import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
 import org.webdevandsausages.events.service.FirebaseService

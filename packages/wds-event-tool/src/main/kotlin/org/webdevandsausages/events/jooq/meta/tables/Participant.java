@@ -4,6 +4,7 @@
 package meta.tables;
 
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Participant extends TableImpl<ParticipantRecord> {
 
-    private static final long serialVersionUID = -525566259;
+    private static final long serialVersionUID = -875357330;
 
     /**
      * The reference instance of <code>public.participant</code>
@@ -100,6 +101,16 @@ public class Participant extends TableImpl<ParticipantRecord> {
      * The column <code>public.participant.status</code>.
      */
     public final TableField<ParticipantRecord, ParticipantStatus> STATUS = createField("status", org.jooq.util.postgres.PostgresDataType.VARCHAR.asEnumDataType(meta.enums.ParticipantStatus.class), this, "");
+
+    /**
+     * The column <code>public.participant.created_on</code>.
+     */
+    public final TableField<ParticipantRecord, Timestamp> CREATED_ON = createField("created_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+
+    /**
+     * The column <code>public.participant.updated_on</code>.
+     */
+    public final TableField<ParticipantRecord, Timestamp> UPDATED_ON = createField("updated_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
 
     /**
      * Create a <code>public.participant</code> table reference
