@@ -12,18 +12,17 @@ import meta.tables.Participant
 import meta.tables.daos.EventDao
 import meta.tables.records.EventRecord
 import org.jooq.Condition
+import org.jooq.Configuration
 import org.jooq.TableField
 import org.jooq.impl.DSL
 import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
-import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.EventDto
 import kotlin.streams.toList
 
 typealias EventUpdates = List<Pair<TableField<EventRecord, Any>, Any>>
 
-object EventCRUD : EventDao(local.jooqConfiguration) {
-
+class EventCRUD(configuration: Configuration) : EventDao(configuration) {
     val db = DSL.using(configuration())
     val mapperInstance = JdbcMapperFactory.newInstance()
 
@@ -109,3 +108,5 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
         }
     }
 }
+
+val EventCRUD.field get() = Event.EVENT

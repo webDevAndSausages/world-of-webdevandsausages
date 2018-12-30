@@ -8,8 +8,8 @@ import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
-import org.webdevandsausages.events.dao.EventRepository
-import org.webdevandsausages.events.dao.ParticipantRepository
+import org.webdevandsausages.events.dao.EventCRUD
+import org.webdevandsausages.events.dao.ParticipantCRUD
 import org.webdevandsausages.events.service.CancelRegistrationService
 import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.service.EmailService
@@ -32,20 +32,24 @@ fun startApp(config: AppConfig): Http4kServer {
     val flyway = Flyway.configure().dataSource(config.db.url, config.db.user, config.db.password).load()
     flyway.migrate()
     logger.info("Starting server...")
+    // Initialize CRUD instances
+    val eventCRUD = EventCRUD(local.jooqConfiguration)
+    val participantCRUD = ParticipantCRUD(local.jooqConfiguration)
+
     val app = Router(
-        GetEventsService(EventRepository),
-        GetCurrentEventService(EventRepository, logger),
-        GetEventByIdService(EventRepository),
-        GetRegistrationService(EventRepository, ParticipantRepository, logger),
+        GetEventsService(eventCRUD),
+        GetCurrentEventService(eventCRUD, logger),
+        GetEventByIdService(eventCRUD),
+        GetRegistrationService(eventCRUD, participantCRUD, logger),
         CreateRegistrationService(
-            EventRepository,
-            ParticipantRepository,
+            eventCRUD,
+            participantCRUD,
             RandomWordsUtil,
             EmailService(config.secrets),
             FirebaseService,
             logger
         ),
-        CancelRegistrationService()
+        CancelRegistrationService(eventCRUD, participantCRUD)
     )()
     val server = app.asServer(Jetty(config.port)).start()
     logger.info("Server started on port ${config.port}")

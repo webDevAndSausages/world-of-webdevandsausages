@@ -67,8 +67,8 @@ class GetRegistrationServiceTest : StringSpec() {
 
     override fun beforeTest(description: Description) {
         unit = GetRegistrationService(
-            eventRepository = mockk(relaxed = true),
-            participantRepository = mockk(relaxed = true),
+            eventCRUD = mockk(relaxed = true),
+            participantCRUD = mockk(relaxed = true),
             logger = mockk(relaxed = true)
             )
     }
@@ -76,8 +76,8 @@ class GetRegistrationServiceTest : StringSpec() {
     init {
         "happy case get registration by event id and participant token" {
             val slot = slot<String>()
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns Some(dbEvent)
-            every { unit.participantRepository.findByToken(capture(slot)) } returns Some(
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Some(dbEvent)
+            every { unit.participantCRUD.findByToken(capture(slot)) } returns Some(
                 ParticipantDto(
                     email = "first_7last_7@mail.com",
                     name = "first_7 last_7",
@@ -101,8 +101,8 @@ class GetRegistrationServiceTest : StringSpec() {
 
         "should return order number in own status group" {
             val slot = slot<String>()
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns Some(dbEvent)
-            every { unit.participantRepository.findByToken(capture(slot)) } returns Some(
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Some(dbEvent)
+            every { unit.participantCRUD.findByToken(capture(slot)) } returns Some(
                 ParticipantDto(
                     email = "first_11last_11@mail.com",
                     name = "first_11 last_11",

@@ -8,14 +8,14 @@ import meta.enums.ParticipantStatus
 import meta.tables.Participant
 import meta.tables.daos.ParticipantDao
 import meta.tables.records.ParticipantRecord
+import org.jooq.Configuration
 import org.jooq.impl.DSL
-import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.utils.getFullName
 import org.webdevandsausages.events.utils.prettified
 
-object ParticipantCRUD : ParticipantDao(local.jooqConfiguration) {
+class ParticipantCRUD(configuration: Configuration) : ParticipantDao(configuration) {
 
     fun db() = DSL.using(configuration())
 
