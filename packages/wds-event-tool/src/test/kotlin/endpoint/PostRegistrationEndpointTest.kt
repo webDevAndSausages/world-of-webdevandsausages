@@ -13,6 +13,10 @@ import org.intellij.lang.annotations.Language
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.utils.prettified
+import java.sql.Timestamp
+import java.time.LocalDateTime
+import kotlin.math.exp
 
 class PostRegistrationEndpointTest : StringSpec() {
     lateinit var router: Router
@@ -21,6 +25,8 @@ class PostRegistrationEndpointTest : StringSpec() {
         router = getRouterToTest()
     }
 
+    private val TIMESTAMP = Timestamp.valueOf(LocalDateTime.now().minusDays(4))
+
     @Language("JSON")
     private val okRequestBody =
         """
@@ -28,7 +34,8 @@ class PostRegistrationEndpointTest : StringSpec() {
                 "firstName": "Joe",
                 "lastName": "Schmo",
                 "email": "test@mail.com",
-                "affiliation": "Acme Oy"
+                "affiliation": "Acme Oy",
+                "subscribe": true
             }
         """.trimIndent()
 
@@ -40,9 +47,9 @@ class PostRegistrationEndpointTest : StringSpec() {
                     email = "test@mail.com",
                     verificationToken = "my-token",
                     orderNumber = 10,
-                    status = ParticipantStatus.REGISTERED
-                    )
-                )
+                    status = ParticipantStatus.REGISTERED,
+                    insertedOn = TIMESTAMP.prettified
+                    ))
 
             val request = Request(Method.POST, "/api/1.0/events/1/registrations").body(okRequestBody)
 
@@ -55,8 +62,10 @@ class PostRegistrationEndpointTest : StringSpec() {
                       "email": "test@mail.com",
                       "name": "Joe Schmo",
                       "verificationToken": "my-token",
+                      "affiliation": null,
                       "status": "REGISTERED",
-                      "orderNumber": 10
+                      "orderNumber": 10,
+                      "insertedOn": "${TIMESTAMP.prettified}"
                   }
                 }
           """.trimIndent()

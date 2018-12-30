@@ -9,6 +9,7 @@ import javax.annotation.Generated;
 import meta.routines.CheckIfMaxParticipantsChanged;
 import meta.routines.EventStatusPossiblyChanges;
 import meta.routines.UpdateEventStatus;
+import meta.routines.UpdateTimestamp;
 
 import org.jooq.Configuration;
 import org.jooq.Field;
@@ -76,5 +77,26 @@ public class Routines {
         UpdateEventStatus p = new UpdateEventStatus();
 
         p.execute(configuration);
+    }
+
+    /**
+     * @deprecated Unknown data type. Please define an explicit {@link org.jooq.Binding} to specify how this type should be handled.
+     */
+    @java.lang.Deprecated
+    public static Object updateTimestamp(Configuration configuration) {
+        UpdateTimestamp f = new UpdateTimestamp();
+
+        f.execute(configuration);
+        return f.getReturnValue();
+    }
+
+    /**
+     * @deprecated Unknown data type. Please define an explicit {@link org.jooq.Binding} to specify how this type should be handled.
+     */
+    @java.lang.Deprecated
+    public static Field<Object> updateTimestamp() {
+        UpdateTimestamp f = new UpdateTimestamp();
+
+        return f.asField();
     }
 }

@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event extends TableImpl<EventRecord> {
 
-    private static final long serialVersionUID = -712931553;
+    private static final long serialVersionUID = -881941140;
 
     /**
      * The reference instance of <code>public.event</code>
@@ -105,6 +105,16 @@ public class Event extends TableImpl<EventRecord> {
      * The column <code>public.event.registration_opens</code>.
      */
     public final TableField<EventRecord, Timestamp> REGISTRATION_OPENS = createField("registration_opens", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+
+    /**
+     * The column <code>public.event.created_on</code>.
+     */
+    public final TableField<EventRecord, Timestamp> CREATED_ON = createField("created_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+
+    /**
+     * The column <code>public.event.updated_on</code>.
+     */
+    public final TableField<EventRecord, Timestamp> UPDATED_ON = createField("updated_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>public.event</code> table reference

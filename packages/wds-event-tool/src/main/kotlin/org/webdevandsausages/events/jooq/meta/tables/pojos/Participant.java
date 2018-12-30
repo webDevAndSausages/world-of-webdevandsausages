@@ -4,6 +4,8 @@
 package meta.tables.pojos;
 
 
+import java.sql.Timestamp;
+
 import javax.annotation.Generated;
 
 import meta.enums.ParticipantStatus;
@@ -23,7 +25,7 @@ import meta.tables.interfaces.IParticipant;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Participant implements IParticipant {
 
-    private static final long serialVersionUID = 912912079;
+    private static final long serialVersionUID = -1237748856;
 
     private final Long              id;
     private final String            firstName;
@@ -34,6 +36,8 @@ public class Participant implements IParticipant {
     private final Integer           orderNumber;
     private final Long              eventId;
     private final ParticipantStatus status;
+    private final Timestamp         createdOn;
+    private final Timestamp         updatedOn;
 
     public Participant(Participant value) {
         this.id = value.id;
@@ -45,6 +49,8 @@ public class Participant implements IParticipant {
         this.orderNumber = value.orderNumber;
         this.eventId = value.eventId;
         this.status = value.status;
+        this.createdOn = value.createdOn;
+        this.updatedOn = value.updatedOn;
     }
 
     public Participant(
@@ -56,7 +62,9 @@ public class Participant implements IParticipant {
         String            verificationToken,
         Integer           orderNumber,
         Long              eventId,
-        ParticipantStatus status
+        ParticipantStatus status,
+        Timestamp         createdOn,
+        Timestamp         updatedOn
     ) {
         this.id = id;
         this.firstName = firstName;
@@ -67,6 +75,8 @@ public class Participant implements IParticipant {
         this.orderNumber = orderNumber;
         this.eventId = eventId;
         this.status = status;
+        this.createdOn = createdOn;
+        this.updatedOn = updatedOn;
     }
 
     @Override
@@ -115,6 +125,16 @@ public class Participant implements IParticipant {
     }
 
     @Override
+    public Timestamp getCreatedOn() {
+        return this.createdOn;
+    }
+
+    @Override
+    public Timestamp getUpdatedOn() {
+        return this.updatedOn;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Participant (");
 
@@ -127,6 +147,8 @@ public class Participant implements IParticipant {
         sb.append(", ").append(orderNumber);
         sb.append(", ").append(eventId);
         sb.append(", ").append(status);
+        sb.append(", ").append(createdOn);
+        sb.append(", ").append(updatedOn);
 
         sb.append(")");
         return sb.toString();

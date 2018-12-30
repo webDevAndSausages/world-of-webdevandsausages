@@ -74,4 +74,14 @@ public interface IEvent extends Serializable {
      * Getter for <code>public.event.registration_opens</code>.
      */
     public Timestamp getRegistrationOpens();
+
+    /**
+     * Getter for <code>public.event.created_on</code>.
+     */
+    public Timestamp getCreatedOn();
+
+    /**
+     * Getter for <code>public.event.updated_on</code>.
+     */
+    public Timestamp getUpdatedOn();
 }

@@ -13,6 +13,9 @@ import org.intellij.lang.annotations.Language
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.error.RegistrationError
+import org.webdevandsausages.events.utils.prettified
+import java.sql.Timestamp
+import java.time.LocalDateTime
 
 class GetRegistrationEndpointTest : StringSpec() {
     lateinit var router: Router
@@ -20,6 +23,8 @@ class GetRegistrationEndpointTest : StringSpec() {
     override fun beforeTest(description: Description) {
         router = getRouterToTest()
     }
+
+    private val TIMESTAMP = Timestamp.valueOf(LocalDateTime.now().minusDays(4))
 
     init {
         "should be called with id and token and return registered participant" {
@@ -31,15 +36,14 @@ class GetRegistrationEndpointTest : StringSpec() {
                     email = "test@mail.com",
                     verificationToken = "my-token",
                     orderNumber = 10,
-                    status = ParticipantStatus.REGISTERED
-                  )
-               )
+                    status = ParticipantStatus.REGISTERED,
+                    insertedOn = TIMESTAMP.prettified
+                    )
+                )
 
             val request = Request(Method.GET, "/api/1.0/events/1/registrations/my-token")
 
             val resp = router()(request)
-
-            println(resp)
 
             @Language("JSON")
             val expectedResponseBody = """
@@ -50,7 +54,7 @@ class GetRegistrationEndpointTest : StringSpec() {
                       "verificationToken": "my-token",
                       "status": "REGISTERED",
                       "orderNumber": 10,
-                      "insertedOn": null,
+                      "insertedOn": "${TIMESTAMP.prettified}",
                       "affiliation": null
                   }
                 }

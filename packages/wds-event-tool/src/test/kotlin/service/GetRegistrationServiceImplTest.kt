@@ -25,6 +25,8 @@ class GetRegistrationServiceImplTest : StringSpec() {
 
     private var participantList = mutableListOf<Participant>()
 
+    private val TIMESTAMP = Timestamp.valueOf(LocalDateTime.now().minusDays(4))
+
     private var dbEvent = EventDto(
         event = Event(
             1,
@@ -36,7 +38,9 @@ class GetRegistrationServiceImplTest : StringSpec() {
             "Tampere center",
             EventStatus.OPEN,
             10,
-            Timestamp.valueOf(LocalDateTime.now().plusDays(2))
+            Timestamp.valueOf(LocalDateTime.now().plusDays(2)),
+            TIMESTAMP,
+            TIMESTAMP
          ),
         participants = populateParticipants()
       )
@@ -53,7 +57,9 @@ class GetRegistrationServiceImplTest : StringSpec() {
                 "token_$n",
                 n * 1000,
                 1,
-                status
+                status,
+                TIMESTAMP,
+                TIMESTAMP
            ))
         }
         return participantList

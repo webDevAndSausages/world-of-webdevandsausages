@@ -25,7 +25,7 @@ import meta.tables.interfaces.IEvent;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event implements IEvent {
 
-    private static final long serialVersionUID = -415271780;
+    private static final long serialVersionUID = -678311983;
 
     private final Long        id;
     private final String      name;
@@ -37,6 +37,8 @@ public class Event implements IEvent {
     private final EventStatus status;
     private final Integer     maxParticipants;
     private final Timestamp   registrationOpens;
+    private final Timestamp   createdOn;
+    private final Timestamp   updatedOn;
 
     public Event(Event value) {
         this.id = value.id;
@@ -49,6 +51,8 @@ public class Event implements IEvent {
         this.status = value.status;
         this.maxParticipants = value.maxParticipants;
         this.registrationOpens = value.registrationOpens;
+        this.createdOn = value.createdOn;
+        this.updatedOn = value.updatedOn;
     }
 
     public Event(
@@ -61,7 +65,9 @@ public class Event implements IEvent {
         String      location,
         EventStatus status,
         Integer     maxParticipants,
-        Timestamp   registrationOpens
+        Timestamp   registrationOpens,
+        Timestamp   createdOn,
+        Timestamp   updatedOn
     ) {
         this.id = id;
         this.name = name;
@@ -73,6 +79,8 @@ public class Event implements IEvent {
         this.status = status;
         this.maxParticipants = maxParticipants;
         this.registrationOpens = registrationOpens;
+        this.createdOn = createdOn;
+        this.updatedOn = updatedOn;
     }
 
     @Override
@@ -126,6 +134,16 @@ public class Event implements IEvent {
     }
 
     @Override
+    public Timestamp getCreatedOn() {
+        return this.createdOn;
+    }
+
+    @Override
+    public Timestamp getUpdatedOn() {
+        return this.updatedOn;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Event (");
 
@@ -139,6 +157,8 @@ public class Event implements IEvent {
         sb.append(", ").append(status);
         sb.append(", ").append(maxParticipants);
         sb.append(", ").append(registrationOpens);
+        sb.append(", ").append(createdOn);
+        sb.append(", ").append(updatedOn);
 
         sb.append(")");
         return sb.toString();

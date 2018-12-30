@@ -50,11 +50,13 @@ create table event (
   location            varchar(255)  not null,
   status              event_status  not null,
   max_participants    integer       not null,
-  registration_opens  timestamp     not null
+  registration_opens  timestamp     not null,
+  created_on          timestamp     not null default current_timestamp,
+  updated_on          timestamp     not null default current_timestamp
 );
 
 /**
- * Participant status expanations:
+ * Participant status explanations:
  * ORGANIZER:
  *  - Registered, but not counted in max participants
  * REGISTERED:
@@ -80,7 +82,9 @@ create table participant (
   verification_token varchar(255)       not null,
   order_number       int                not null, /* Should be unique within event, do it in the code */
   event_id           bigserial          not null references event (id) on update cascade on delete restrict,
-  status             participant_status not null
+  status             participant_status not null,
+  created_on         timestamp          not null default current_timestamp,
+  updated_on         timestamp          not null default current_timestamp
 );
 
 /**
@@ -153,3 +157,25 @@ create trigger max_participants_changed
   on event
   for each row
 execute procedure check_if_max_participants_changed();
+
+create or replace function update_timestamp()
+returns trigger as
+$body$
+begin
+  new.updated_on = now();
+    return new;
+end
+$body$
+language plpgsql
+volatile
+cost 100;
+
+create trigger update_event_updatetime
+  before update on event
+  for each row
+execute procedure update_timestamp();
+
+create trigger update_participant_updatetime
+  before update on participant
+  for each row
+execute procedure update_timestamp();

@@ -128,4 +128,18 @@ public class EventDao extends DAOImpl<EventRecord, meta.tables.pojos.Event, Long
     public List<meta.tables.pojos.Event> fetchByRegistrationOpens(Timestamp... values) {
         return fetch(Event.EVENT.REGISTRATION_OPENS, values);
     }
+
+    /**
+     * Fetch records that have <code>created_on IN (values)</code>
+     */
+    public List<meta.tables.pojos.Event> fetchByCreatedOn(Timestamp... values) {
+        return fetch(Event.EVENT.CREATED_ON, values);
+    }
+
+    /**
+     * Fetch records that have <code>updated_on IN (values)</code>
+     */
+    public List<meta.tables.pojos.Event> fetchByUpdatedOn(Timestamp... values) {
+        return fetch(Event.EVENT.UPDATED_ON, values);
+    }
 }
