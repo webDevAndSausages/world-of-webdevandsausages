@@ -135,7 +135,7 @@ class GetRegistrationService(
 }
 
 class CancelRegistrationService {
-    operator fun invoke(token: String): Either<RegistrationCancellationError, Participant?> {
+    operator fun invoke(token: String): Either<RegistrationCancellationError, ParticipantDto> {
         val event = EventCRUD.findByParticipantToken(token)
 
         return when (event) {
@@ -167,7 +167,7 @@ class CancelRegistrationService {
     private fun updateStatusToCancelled(
         participant: Participant,
         event: Some<EventDto>
-    ): Either<RegistrationCancellationError, Participant?> {
+    ): Either<RegistrationCancellationError, ParticipantDto> {
         val updatedParticipant = ParticipantCRUD.updateStatus(participant.id, ParticipantStatus.CANCELLED)
 
         return when (updatedParticipant) {
@@ -189,7 +189,7 @@ class CancelRegistrationService {
                             )
                             // TODO: Send cancel confirmation email
                             // TODO: Send email to lucky one who got out of waiting list
-                            Either.right(updatedParticipant.t)
+                            Either.right(ParticipantDto(updatedParticipant.t))
                         }
                         is None ->
                             // We already checked that we have wait listed participants, so this should never happen
@@ -198,7 +198,7 @@ class CancelRegistrationService {
                     }
                 } else {
                     // TODO: Send cancel confirmation email
-                    Either.right(updatedParticipant.t)
+                    Either.right(ParticipantDto(updatedParticipant.t))
                 }
             }
             is None -> Either.left(RegistrationCancellationError.DatabaseError)

@@ -7,7 +7,8 @@ enum class ErrorCode {
     DATABASE_ERROR,
     INVALID_EMAIL,
     SHOULD_NEVER_HAPPEN,
-    ALREADY_CANCELLED
+    ALREADY_CANCELLED,
+    PARTICIPANT_NOT_FOUND
 }
 
 data class ErrorOutDto(val message: String, val code: ErrorCode)

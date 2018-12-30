@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dao.EventRepository
-import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.dao.ParticipantRepository
 import org.webdevandsausages.events.service.CancelRegistrationService
 import org.webdevandsausages.events.service.CreateRegistrationService

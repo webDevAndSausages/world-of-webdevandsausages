@@ -14,7 +14,6 @@ import org.http4k.lens.Path
 import org.http4k.lens.string
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ErrorCode
-import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.error.RegistrationCancellationError
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.CancelRegistrationService
@@ -42,7 +41,7 @@ object DeleteRegistration {
                         is RegistrationCancellationError.ParticipantNotFound ->
                             handleErrorResponse(
                                 "The participant was not found with provided token",
-                                ErrorCode.EVENT_CLOSED_OR_MISSING,
+                                ErrorCode.PARTICIPANT_NOT_FOUND,
                                 Status.NOT_FOUND
                             )
                         RegistrationCancellationError.DatabaseError ->
@@ -65,7 +64,7 @@ object DeleteRegistration {
                             )
                     }
                     is Either.Right -> Router.cancelRegistrationResponseLens(
-                        ParticipantDto(it.b),
+                        it.b,
                         Response(Status.OK)
                     )
                 }

@@ -26,7 +26,6 @@ import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.service.CreateRegistrationService
-import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
