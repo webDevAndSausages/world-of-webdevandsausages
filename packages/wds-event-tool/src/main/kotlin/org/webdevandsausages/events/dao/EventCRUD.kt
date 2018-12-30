@@ -44,7 +44,9 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
             .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-        return Try { jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList() }.getOrDefault { emptyList() }
+        return Try {
+            jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
+        }.getOrDefault { emptyList() }
     }
 
     private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)
@@ -71,7 +73,7 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
             val jdbcMapper = mapperInstance
                 .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
                 .newMapper(object :
-                    TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
+                               TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
             jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull()
         }.getOrDefault { null }.toOption()
@@ -96,12 +98,14 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
         return if (result == 1) Some(1) else None
     }
 
-    fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use {
-            ctx ->
+    fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use { ctx ->
         val event = ctx.select(*Event.EVENT.fields())
             .from(Event.EVENT)
             .join(Participant.PARTICIPANT).on(Participant.PARTICIPANT.EVENT_ID.eq(Event.EVENT.ID))
-            .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken)).fetchAny().into(meta.tables.pojos.Event::class.java).toOption()
+            .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
+            .fetchAny()
+            .into(meta.tables.pojos.Event::class.java)
+            .toOption()
         when (event) {
             is Some -> findByIdOrLatest(event.t.id)
             is None -> Option.empty()
