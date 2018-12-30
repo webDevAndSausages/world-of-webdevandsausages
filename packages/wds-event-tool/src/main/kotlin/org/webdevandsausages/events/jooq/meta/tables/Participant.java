@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Participant extends TableImpl<ParticipantRecord> {
 
-    private static final long serialVersionUID = -875357330;
+    private static final long serialVersionUID = -1833899100;
 
     /**
      * The reference instance of <code>public.participant</code>
@@ -105,12 +105,12 @@ public class Participant extends TableImpl<ParticipantRecord> {
     /**
      * The column <code>public.participant.created_on</code>.
      */
-    public final TableField<ParticipantRecord, Timestamp> CREATED_ON = createField("created_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<ParticipantRecord, Timestamp> CREATED_ON = createField("created_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * The column <code>public.participant.updated_on</code>.
      */
-    public final TableField<ParticipantRecord, Timestamp> UPDATED_ON = createField("updated_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<ParticipantRecord, Timestamp> UPDATED_ON = createField("updated_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>public.participant</code> table reference
