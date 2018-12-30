@@ -132,7 +132,7 @@ class GetRegistrationService(
     }
 }
 
-class CancelRegistrationService(val eventCRUD: EventCRUD, val participantCRUD: ParticipantCRUD) {
+class CancelRegistrationService(val eventCRUD: EventCRUD, val participantCRUD: ParticipantCRUD, val emailService: EmailService) {
     operator fun invoke(token: String): Either<RegistrationCancellationError, ParticipantDto> {
         val event = eventCRUD.findByParticipantToken(token)
 

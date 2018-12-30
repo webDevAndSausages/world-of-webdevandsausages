@@ -35,7 +35,7 @@ fun startApp(config: AppConfig): Http4kServer {
     // Initialize CRUD instances
     val eventCRUD = EventCRUD(local.jooqConfiguration)
     val participantCRUD = ParticipantCRUD(local.jooqConfiguration)
-
+    val emailService = EmailService(config.secrets)
     val app = Router(
         GetEventsService(eventCRUD),
         GetCurrentEventService(eventCRUD, logger),
@@ -45,11 +45,11 @@ fun startApp(config: AppConfig): Http4kServer {
             eventCRUD,
             participantCRUD,
             RandomWordsUtil,
-            EmailService(config.secrets),
+            emailService,
             FirebaseService,
             logger
         ),
-        CancelRegistrationService(eventCRUD, participantCRUD)
+        CancelRegistrationService(eventCRUD, participantCRUD, emailService)
     )()
     val server = app.asServer(Jetty(config.port)).start()
     logger.info("Server started on port ${config.port}")

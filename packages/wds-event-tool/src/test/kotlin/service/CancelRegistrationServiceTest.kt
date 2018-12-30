@@ -26,7 +26,11 @@ class CancelRegistrationServiceTest : StringSpec() {
     lateinit var unit: CancelRegistrationService
 
     override fun beforeTest(description: Description) {
-        unit = CancelRegistrationService(eventCRUD = mockk(relaxed = true), participantCRUD = mockk(relaxed = false))
+        unit = CancelRegistrationService(
+            eventCRUD = mockk(relaxed = true),
+            participantCRUD = mockk(relaxed = true),
+            emailService = mockk(relaxed = true)
+        )
     }
 
     private val TIMESTAMP = Timestamp.valueOf(LocalDateTime.now().minusDays(4))
@@ -116,6 +120,26 @@ class CancelRegistrationServiceTest : StringSpec() {
                 )
                 slot.captured.shouldBe(ParticipantStatus.CANCELLED)
             }
+        }
+
+        "Participant cancels registration while participant is on the wait list himself" {
+            // TODO
+        }
+
+        "Participant cancels registration while registered and there are people on the waiting list" {
+            // TODO
+        }
+
+        "Participant who is a ORGANIZER cancels registration and it should not affect waiting list" {
+            // TODO
+        }
+
+        "Participant who has already cancelled registration tries to cancel again" {
+            // TODO
+        }
+
+        "Participant tries cancellation with incorrect token" {
+            // TODO
         }
     }
 }
