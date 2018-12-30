@@ -3,6 +3,7 @@ package org.webdevandsausages.events.dto
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Participant
 import org.webdevandsausages.events.utils.getFullName
+import org.webdevandsausages.events.utils.prettified
 
 data class ParticipantDto(
     val email: String,
@@ -20,7 +21,7 @@ data class ParticipantDto(
         participant.status,
         participant.affiliation,
         participant.orderNumber,
-        null
+        participant.createdOn.prettified
     )
 }
 
