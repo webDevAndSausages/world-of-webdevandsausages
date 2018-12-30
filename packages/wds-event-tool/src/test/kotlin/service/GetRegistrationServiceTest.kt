@@ -20,7 +20,7 @@ import org.webdevandsausages.events.service.GetRegistrationService
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-class GetRegistrationServiceImplTest : StringSpec() {
+class GetRegistrationServiceTest : StringSpec() {
     lateinit var unit: GetRegistrationService
 
     private var participantList = mutableListOf<Participant>()

@@ -30,7 +30,7 @@ import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-class CreateRegistrationServiceImplTest : StringSpec() {
+class CreateRegistrationServiceTest : StringSpec() {
     lateinit var unit: CreateRegistrationService
 
     override fun beforeTest(description: Description) {
