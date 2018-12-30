@@ -198,6 +198,7 @@ class CancelRegistrationService(
 
                     }
                 } else {
+                    // TODO: Send cancel confirmation email
                     emailService.sendCancelConfirmationEmail(event.t, ParticipantDto(updatedParticipant.t))
                     Either.right(ParticipantDto(updatedParticipant.t))
                 }

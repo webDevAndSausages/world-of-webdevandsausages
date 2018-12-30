@@ -8,7 +8,9 @@ import io.kotlintest.assertions.arrow.either.beRight
 import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import meta.enums.EventStatus
@@ -191,16 +193,44 @@ class CancelRegistrationServiceTest : StringSpec() {
         }
 
         "Participant cancels registration while registered and there are people on the waiting list" {
-            val cancelledParticipant = Participant(
-                1L,
-                "Joe",
-                "Schmo",
-                "joe.schmo@mail.com",
-                "Google",
-                "silly-token",
-                1000,
+            val cancelledParticipant1 = Participant(
+                3L,
+                "Willy",
+                "Nilly",
+                "willy.nilly@mail.com",
+                "Kazaa",
+                "cosher-token",
+                3000,
                 1L,
                 ParticipantStatus.CANCELLED,
+                TIMESTAMP,
+                TIMESTAMP
+            )
+
+            val luckyParticipant1 = Participant(
+                2L,
+                "Ann",
+                "Bann",
+                "ann.bann@mail.com",
+                "Yahoo",
+                "fishy-token",
+                2000,
+                1L,
+                ParticipantStatus.REGISTERED,
+                TIMESTAMP,
+                TIMESTAMP
+            )
+
+            val luckyParticipant2 = Participant(
+                4L,
+                "John",
+                "Schmon",
+                "john.schmon@mail.com",
+                "Apple",
+                "strange-token",
+                4000,
+                1L,
+                ParticipantStatus.REGISTERED,
                 TIMESTAMP,
                 TIMESTAMP
             )
@@ -288,8 +318,17 @@ class CancelRegistrationServiceTest : StringSpec() {
             every { unit.eventCRUD.findByParticipantToken("cosher-token") } returns Option(dbEvent)
             val slot = slot<ParticipantStatus>()
             val slot2 = slot<ParticipantStatus>()
-            every { unit.participantCRUD.updateStatus(3L, capture(slot)) } returns Option(cancelledParticipant)
-            every { unit.participantCRUD.updateStatus(2L, capture(slot2)) } returns Option(cancelledParticipant)
+            val slot3 = slot<ParticipantDto>()
+            val slot4 = slot<ParticipantDto>()
+            every { unit.participantCRUD.updateStatus(3L, capture(slot)) } returns Option(cancelledParticipant1)
+            every { unit.participantCRUD.updateStatus(2L, capture(slot2)) } returns Option(luckyParticipant1)
+            every { unit.emailService.sendCancelConfirmationEmail(dbEvent, capture(slot3)) } just Runs
+            every { unit.emailService.sendRegistrationEmailForWaitListed(dbEvent, capture(slot4)) } just Runs
+
+            /**
+             * First test case here:
+             * Cancelling registration for Willy opens up a spot for Ann
+             */
             val resultingEither = unit("cosher-token")
             assertSoftly {
                 resultingEither.shouldBeRight()
@@ -297,12 +336,12 @@ class CancelRegistrationServiceTest : StringSpec() {
                     resultingEither.shouldBe(
                         Right(
                             ParticipantDto(
-                                email = "joe.schmo@mail.com",
-                                name = "Joe Schmo",
-                                verificationToken = "silly-token",
-                                affiliation = "Google",
+                                email = "willy.nilly@mail.com",
+                                name = "Willy Nilly",
+                                verificationToken = "cosher-token",
+                                affiliation = "Kazaa",
                                 status = ParticipantStatus.CANCELLED,
-                                orderNumber = 1000,
+                                orderNumber = 3000,
                                 insertedOn = TIMESTAMP.prettified
                             )
                         )
@@ -311,6 +350,179 @@ class CancelRegistrationServiceTest : StringSpec() {
                 slot.captured.shouldBe(ParticipantStatus.CANCELLED)
                 // Participant ID 2 should be next in line
                 slot2.captured.shouldBe(ParticipantStatus.REGISTERED)
+
+                // cancel confirmation email should have been sent to user id 3
+                slot3.captured.shouldBe(
+                    ParticipantDto(
+                        email = "willy.nilly@mail.com",
+                        name = "Willy Nilly",
+                        verificationToken = "cosher-token",
+                        affiliation = "Kazaa",
+                        status = ParticipantStatus.CANCELLED,
+                        orderNumber = 3000,
+                        insertedOn = TIMESTAMP.prettified
+                    )
+                )
+
+                // Lucky participant who just got registered should get a confirmation email
+                slot4.captured.shouldBe(
+                    ParticipantDto(
+                        email = "ann.bann@mail.com",
+                        name = "Ann Bann",
+                        verificationToken = "fishy-token",
+                        affiliation = "Yahoo",
+                        status = ParticipantStatus.REGISTERED,
+                        orderNumber = 2000,
+                        insertedOn = TIMESTAMP.prettified
+                    )
+                )
+            }
+
+            /**
+             * Second test case here:
+             * When just registered Ann decides to cancel it opens a spot for John
+             */
+
+            dbEvent.participants = listOf(
+                Participant(
+                    1L,
+                    "Joe",
+                    "Schmo",
+                    "joe.schmo@mail.com",
+                    "Google",
+                    "silly-token",
+                    1000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    2L,
+                    "Ann",
+                    "Bann",
+                    "ann.bann@mail.com",
+                    "Yahoo",
+                    "fishy-token",
+                    2000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    3L,
+                    "Willy",
+                    "Nilly",
+                    "willy.nilly@mail.com",
+                    "Kazaa",
+                    "cosher-token",
+                    3000,
+                    1L,
+                    ParticipantStatus.CANCELLED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    4L,
+                    "John",
+                    "Schmon",
+                    "john.schmon@mail.com",
+                    "Apple",
+                    "strange-token",
+                    4000,
+                    1L,
+                    ParticipantStatus.WAIT_LISTED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    5L,
+                    "Gillian",
+                    "Schmillian",
+                    "gillian.schmillian@mail.com",
+                    "X-Filez",
+                    "supernatural-token",
+                    5000,
+                    1L,
+                    ParticipantStatus.WAIT_LISTED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    6L,
+                    "Ford",
+                    "Schmord",
+                    "ford.schmord@mail.com",
+                    "School of Ancient Arts",
+                    "indiana-token",
+                    6000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                )
+            )
+
+            every { unit.eventCRUD.findByParticipantToken("fishy-token") } returns Option(dbEvent)
+            every { unit.participantCRUD.updateStatus(2L, capture(slot)) } returns Option(object : Participant(
+                luckyParticipant1
+            ) {
+                override fun getStatus(): ParticipantStatus {
+                    return ParticipantStatus.CANCELLED
+                }
+            })
+            every { unit.participantCRUD.updateStatus(4L, capture(slot2)) } returns Option(luckyParticipant2)
+            every { unit.emailService.sendCancelConfirmationEmail(dbEvent, capture(slot3)) } just Runs
+            every { unit.emailService.sendRegistrationEmailForWaitListed(dbEvent, capture(slot4)) } just Runs
+
+            val resultingEither2 = unit("fishy-token")
+            assertSoftly {
+                resultingEither2.shouldBeRight()
+                beRight(
+                    resultingEither2.shouldBe(
+                        Right(
+                            ParticipantDto(
+                                email = "ann.bann@mail.com",
+                                name = "Ann Bann",
+                                verificationToken = "fishy-token",
+                                affiliation = "Yahoo",
+                                status = ParticipantStatus.CANCELLED,
+                                orderNumber = 2000,
+                                insertedOn = TIMESTAMP.prettified
+                            )
+                        )
+                    )
+                )
+                slot.captured.shouldBe(ParticipantStatus.CANCELLED)
+                // Participant ID 4 should be next in line
+                slot2.captured.shouldBe(ParticipantStatus.REGISTERED)
+
+                // cancel confirmation email should have been sent to user id 2
+                slot3.captured.shouldBe(
+                    ParticipantDto(
+                        email = "ann.bann@mail.com",
+                        name = "Ann Bann",
+                        verificationToken = "fishy-token",
+                        affiliation = "Yahoo",
+                        status = ParticipantStatus.CANCELLED,
+                        orderNumber = 2000,
+                        insertedOn = TIMESTAMP.prettified
+                    )
+                )
+
+                // Second lucky participant who just got registered should get a confirmation email
+                slot4.captured.shouldBe(
+                    ParticipantDto(
+                        email = "john.schmon@mail.com",
+                        name = "John Schmon",
+                        verificationToken = "strange-token",
+                        affiliation = "Apple",
+                        status = ParticipantStatus.REGISTERED,
+                        orderNumber = 4000,
+                        insertedOn = TIMESTAMP.prettified
+                    )
+                )
             }
         }
 
