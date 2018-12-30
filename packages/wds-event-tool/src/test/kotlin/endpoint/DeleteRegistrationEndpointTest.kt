@@ -36,7 +36,8 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                     orderNumber = 10,
                     status = ParticipantStatus.CANCELLED,
                     insertedOn = TIMESTAMP.prettified
-                    ))
+                )
+            )
 
             val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
 
@@ -53,34 +54,10 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                   "orderNumber": 10,
                   "insertedOn": "${TIMESTAMP.prettified}"
                 }
-          """.trimIndent()
+            """.trimIndent()
             resp.status.shouldBe(Status.OK)
             resp.expectJsonResponse(expectedResponseBody)
         }
-
-        /* "should return 422 error for invalid email" {
-            @Language("JSON")
-            val requestBody = """
-                {
-                    "firstName": "Joe",
-                    "lastName": "Schmo",
-                    "email": "notvalidemail",
-                    "affiliation": "Acme Oy"
-                }
-            """.trimIndent()
-            val expectedResponseBody = """
-                {
-                  "message": "The email address is not valid",
-                  "code": "INVALID_EMAIL"
-                }
-          """.trimIndent()
-
-            val request = Request(Method.POST, "/api/1.0/events/1/registrations").body(requestBody)
-            val resp = router()(request)
-
-            resp.status.shouldBe(Status.UNPROCESSABLE_ENTITY)
-            resp.expectJsonResponse(expectedResponseBody)
-        } */
 
         "should return 404 for missing or closed event" {
             every { router.cancelRegistration(any()) } returns Either.left(RegistrationCancellationError.EventNotFound)
@@ -90,7 +67,7 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                   "message": "The event is closed or non-existent.",
                   "code": "EVENT_CLOSED_OR_MISSING"
                 }
-          """.trimIndent()
+            """.trimIndent()
 
             val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
 
@@ -108,7 +85,7 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                   "message": "The participant was not found with provided token",
                   "code": "PARTICIPANT_NOT_FOUND"
                 }
-          """.trimIndent()
+            """.trimIndent()
 
             val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
 
@@ -126,7 +103,7 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                   "message": "A database error occurred.",
                   "code": "DATABASE_ERROR"
                 }
-          """.trimIndent()
+            """.trimIndent()
 
             val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
 
@@ -144,7 +121,7 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                   "message": "Participant was already cancelled",
                   "code": "ALREADY_CANCELLED"
                 }
-          """.trimIndent()
+            """.trimIndent()
 
             val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
 
@@ -162,7 +139,7 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                   "message": "Something weird happened. Should never happen, lol",
                   "code": "SHOULD_NEVER_HAPPEN"
                 }
-          """.trimIndent()
+            """.trimIndent()
 
             val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
 
