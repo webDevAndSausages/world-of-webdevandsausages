@@ -1,10 +1,15 @@
 package service
 
+import arrow.core.Left
+import arrow.core.None
 import arrow.core.Option
 import arrow.core.Right
+import arrow.core.toOption
 import io.kotlintest.Description
 import io.kotlintest.assertSoftly
+import io.kotlintest.assertions.arrow.either.beLeft
 import io.kotlintest.assertions.arrow.either.beRight
+import io.kotlintest.assertions.arrow.either.shouldBeLeft
 import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -12,6 +17,7 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkClass
 import io.mockk.slot
 import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
@@ -19,6 +25,7 @@ import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
+import org.webdevandsausages.events.error.RegistrationCancellationError
 import org.webdevandsausages.events.service.CancelRegistrationService
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
@@ -527,15 +534,225 @@ class CancelRegistrationServiceTest : StringSpec() {
         }
 
         "Participant who is a ORGANIZER cancels registration and it should not affect waiting list" {
-            // TODO
+            val cancelledParticipant1 = Participant(
+                2L,
+                "Ann",
+                "Bann",
+                "ann.bann@mail.com",
+                "Yahoo",
+                "fishy-token",
+                2000,
+                1L,
+                ParticipantStatus.CANCELLED,
+                TIMESTAMP,
+                TIMESTAMP
+            )
+
+            dbEvent.participants = listOf(
+                Participant(
+                    1L,
+                    "Joe",
+                    "Schmo",
+                    "joe.schmo@mail.com",
+                    "Google",
+                    "silly-token",
+                    1000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    2L,
+                    "Ann",
+                    "Bann",
+                    "ann.bann@mail.com",
+                    "Yahoo",
+                    "fishy-token",
+                    2000,
+                    1L,
+                    ParticipantStatus.ORGANIZER,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    3L,
+                    "Willy",
+                    "Nilly",
+                    "willy.nilly@mail.com",
+                    "Kazaa",
+                    "cosher-token",
+                    3000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    4L,
+                    "John",
+                    "Schmon",
+                    "john.schmon@mail.com",
+                    "Apple",
+                    "strange-token",
+                    4000,
+                    1L,
+                    ParticipantStatus.WAIT_LISTED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    5L,
+                    "Gillian",
+                    "Schmillian",
+                    "gillian.schmillian@mail.com",
+                    "X-Filez",
+                    "supernatural-token",
+                    5000,
+                    1L,
+                    ParticipantStatus.WAIT_LISTED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    6L,
+                    "Ford",
+                    "Schmord",
+                    "ford.schmord@mail.com",
+                    "School of Ancient Arts",
+                    "indiana-token",
+                    6000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                )
+            )
+            every { unit.eventCRUD.findByParticipantToken("fishy-token") } returns Option(dbEvent)
+            val slot = slot<ParticipantStatus>()
+            val slot3 = slot<ParticipantDto>()
+            val slot4 = slot<ParticipantDto>()
+            every { unit.participantCRUD.updateStatus(any(), capture(slot)) } returns Option(cancelledParticipant1)
+            every { unit.emailService.sendCancelConfirmationEmail(dbEvent, capture(slot3)) } just Runs
+            every { unit.emailService.sendRegistrationEmailForWaitListed(dbEvent, capture(slot4)) } just Runs
+
+            /**
+             * Cancelling registration for organizer shouldn't affect waiting list
+             */
+            val resultingEither = unit("fishy-token")
+            assertSoftly {
+                resultingEither.shouldBeRight()
+                beRight(
+                    resultingEither.shouldBe(
+                        Right(
+                            ParticipantDto(
+                                email = "ann.bann@mail.com",
+                                name = "Ann Bann",
+                                verificationToken = "fishy-token",
+                                affiliation = "Yahoo",
+                                status = ParticipantStatus.CANCELLED,
+                                orderNumber = 2000,
+                                insertedOn = TIMESTAMP.prettified
+                            )
+                        )
+                    )
+                )
+                slot.captured.shouldBe(ParticipantStatus.CANCELLED)
+
+                // cancel confirmation email should have been sent to user id 2
+                slot3.captured.shouldBe(
+                    ParticipantDto(
+                        email = "ann.bann@mail.com",
+                        name = "Ann Bann",
+                        verificationToken = "fishy-token",
+                        affiliation = "Yahoo",
+                        status = ParticipantStatus.CANCELLED,
+                        orderNumber = 2000,
+                        insertedOn = TIMESTAMP.prettified
+                    )
+                )
+
+                // No people from waiting list should have been moved to registered after this cancellation
+                slot4.isCaptured.shouldBe(false)
+            }
         }
 
         "Participant who has already cancelled registration tries to cancel again" {
-            // TODO
+            val cancelledParticipant = Participant(
+                1L,
+                "Joe",
+                "Schmo",
+                "joe.schmo@mail.com",
+                "Google",
+                "silly-token",
+                1000,
+                1L,
+                ParticipantStatus.CANCELLED,
+                TIMESTAMP,
+                TIMESTAMP
+            )
+
+            dbEvent.participants = listOf(
+                Participant(
+                    1L,
+                    "Joe",
+                    "Schmo",
+                    "joe.schmo@mail.com",
+                    "Google",
+                    "silly-token",
+                    1000,
+                    1L,
+                    ParticipantStatus.CANCELLED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                ),
+                Participant(
+                    2L,
+                    "Ann",
+                    "Bann",
+                    "ann.bann@mail.com",
+                    "Yahoo",
+                    "fishy-token",
+                    2000,
+                    1L,
+                    ParticipantStatus.REGISTERED,
+                    TIMESTAMP,
+                    TIMESTAMP
+                )
+            )
+            every { unit.eventCRUD.findByParticipantToken("silly-token") } returns Option(dbEvent)
+            val slot = slot<ParticipantStatus>()
+            every { unit.participantCRUD.updateStatus(1L, capture(slot)) } returns Option(cancelledParticipant)
+            val resultingEither = unit("silly-token")
+            assertSoftly {
+                resultingEither.shouldBeLeft()
+                beLeft(
+                    resultingEither.shouldBe(
+                        Left(
+                            RegistrationCancellationError.ParticipantAlreadyCancelled
+                        )
+                    )
+                )
+                slot.isCaptured.shouldBe(false)
+            }
         }
 
         "Participant tries cancellation with incorrect token" {
-            // TODO
+            every { unit.eventCRUD.findByParticipantToken("incorrect-token") } returns None
+            val slot = slot<ParticipantStatus>()
+            every { unit.participantCRUD.updateStatus(1L, capture(slot)) } returns mockkClass(Participant::class).toOption()
+            val resultingEither = unit("incorrect-token")
+            assertSoftly {
+                resultingEither.shouldBeLeft()
+                beLeft(
+                    resultingEither.shouldBe(
+                        Left(
+                            RegistrationCancellationError.EventNotFound
+                        )
+                    )
+                )
+                slot.isCaptured.shouldBe(false)
+            }
         }
     }
 }
