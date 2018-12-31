@@ -1,0 +1,19 @@
+language: java
+install: true
+
+jdk:
+  - oraclejdk8
+
+before_cache:
+  - rm -f  $HOME/packages/wds-event-tool/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/packages/wds-event-tool/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/packages/wds-event-tool/.gradle/caches/
+    - $HOME/packages/wds-event-tool/.gradle/wrapper/
+
+before_install: cd packages/wds-event-tool
+
+script:
+  - ./gradlew build --scan -s
