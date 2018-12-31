@@ -6,8 +6,8 @@ import arrow.core.Option
 import arrow.core.Right
 import io.kotlintest.Description
 import io.kotlintest.assertSoftly
-import io.kotlintest.assertions.arrow.either.beRight
 import io.kotlintest.assertions.arrow.either.beLeft
+import io.kotlintest.assertions.arrow.either.beRight
 import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -15,31 +15,31 @@ import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import io.mockk.verify
 import io.mockk.spyk
+import io.mockk.verify
 import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
-import org.webdevandsausages.events.service.EventError
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
-import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
+import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-class CreateRegistrationServiceImplTest : StringSpec() {
-    lateinit var unit: CreateRegistrationServiceImpl
+class CreateRegistrationServiceTest : StringSpec() {
+    lateinit var unit: CreateRegistrationService
 
     override fun beforeTest(description: Description) {
-        unit = CreateRegistrationServiceImpl(
+        unit = CreateRegistrationService(
                emailService = mockk(relaxed = true),
-               eventRepository = mockk(relaxed = true),
+               eventCRUD = mockk(relaxed = true),
                randomWordsUtil = mockk(relaxed = true),
                logger = mockk(relaxed = true),
-               participantRepository = mockk(relaxed = true),
+               participantCRUD = mockk(relaxed = true),
                firebaseService = mockk(relaxed = true)
                )
     }
@@ -81,10 +81,10 @@ class CreateRegistrationServiceImplTest : StringSpec() {
 
     init {
         "happy case registration with REGISTERED status" {
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(dbEvent)
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(dbEvent)
             every { unit.randomWordsUtil.getWordPair() } returns "silly-token"
             val slot = slot<RegistrationInDto>()
-            every { unit.participantRepository.create(capture(slot)) } returns Option(dbRegistration)
+            every { unit.participantCRUD.create(capture(slot)) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
                 resultingEither.shouldBeRight()
@@ -147,11 +147,11 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                         TIMESTAMP
                         ))
             )
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(fullEvent)
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(fullEvent)
             every { unit.randomWordsUtil.getWordPair() } returns "silly-token"
             val slot2 = slot<RegistrationInDto>()
             val registration = dbRegistration.copy(status = ParticipantStatus.WAIT_LISTED)
-            every { unit.participantRepository.create(capture(slot2)) } returns Option(registration)
+            every { unit.participantCRUD.create(capture(slot2)) } returns Option(registration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
                 resultingEither.shouldBeRight()
@@ -198,9 +198,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                         )
                     )
                 )
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(eventWithExisting)
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(eventWithExisting)
             every { unit.randomWordsUtil.getWordPair() } returns "twofer-token"
-            val spy = spyk(unit.participantRepository)
+            val spy = spyk(unit.participantCRUD)
             every { spy.create(any()) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
@@ -227,9 +227,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
                     TIMESTAMP
                     )
                 )
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns Option(dbEvent)
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(dbEvent)
             every { unit.randomWordsUtil.getWordPair() } returns "twofer-token"
-            val spy = spyk(unit.participantRepository)
+            val spy = spyk(unit.participantCRUD)
             every { spy.create(any()) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {
@@ -241,9 +241,9 @@ class CreateRegistrationServiceImplTest : StringSpec() {
         }
 
         "should return NotFound if event does not exist" {
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns None
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns None
             every { unit.randomWordsUtil.getWordPair() } returns "twofer-token"
-            val spy = spyk(unit.participantRepository)
+            val spy = spyk(unit.participantCRUD)
             every { spy.create(any()) } returns Option(dbRegistration)
             val resultingEither = unit(newRegistration)
             assertSoftly {

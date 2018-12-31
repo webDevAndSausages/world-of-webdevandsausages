@@ -4,20 +4,22 @@ import arrow.core.Option
 import arrow.core.Try
 import arrow.core.getOrDefault
 import arrow.core.toOption
-import meta.tables.daos.EventDao
+import meta.enums.ParticipantStatus
 import meta.tables.Participant
+import meta.tables.daos.ParticipantDao
 import meta.tables.records.ParticipantRecord
+import org.jooq.Configuration
 import org.jooq.impl.DSL
-import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
+import org.webdevandsausages.events.utils.getFullName
 import org.webdevandsausages.events.utils.prettified
 
-object ParticipantCRUD : EventDao(local.jooqConfiguration) {
+class ParticipantCRUD(configuration: Configuration) : ParticipantDao(configuration) {
 
     fun db() = DSL.using(configuration())
 
-    val ParticipantRecord.fullName: String get() = "${firstName ?: "-"} ${lastName ?: ""}".trim()
+    val ParticipantRecord.fullName: String get() = getFullName(firstName, lastName)
 
     fun create(registration: RegistrationInDto): Option<ParticipantDto> {
         val (eventId, firstName, lastName, affiliation, email, verificationToken, orderNumber, status) = registration
@@ -81,4 +83,12 @@ object ParticipantCRUD : EventDao(local.jooqConfiguration) {
             }
         }.getOrDefault { null }.toOption()
     }
+
+    fun updateStatus(id: Long, status: ParticipantStatus): Option<meta.tables.pojos.Participant> = db().use { ctx ->
+        ctx.update(Participant.PARTICIPANT).set(Participant.PARTICIPANT.STATUS, status).where(
+            Participant
+                .PARTICIPANT.ID.eq(id)
+        ).returning().fetchOne().into(meta.tables.pojos.Participant::class.java).toOption()
+    }
+
 }

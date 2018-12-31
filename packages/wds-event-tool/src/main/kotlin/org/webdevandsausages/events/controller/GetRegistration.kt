@@ -11,9 +11,9 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.service.RegistrationError
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.RegistrationOutDto
+import org.webdevandsausages.events.error.RegistrationError
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.GetRegistrationService
 

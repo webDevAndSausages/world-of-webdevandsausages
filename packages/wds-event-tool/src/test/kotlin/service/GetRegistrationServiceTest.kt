@@ -16,12 +16,12 @@ import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
-import org.webdevandsausages.events.service.GetRegistrationServiceImpl
+import org.webdevandsausages.events.service.GetRegistrationService
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-class GetRegistrationServiceImplTest : StringSpec() {
-    lateinit var unit: GetRegistrationServiceImpl
+class GetRegistrationServiceTest : StringSpec() {
+    lateinit var unit: GetRegistrationService
 
     private var participantList = mutableListOf<Participant>()
 
@@ -66,9 +66,9 @@ class GetRegistrationServiceImplTest : StringSpec() {
     }
 
     override fun beforeTest(description: Description) {
-        unit = GetRegistrationServiceImpl(
-            eventRepository = mockk(relaxed = true),
-            participantRepository = mockk(relaxed = true),
+        unit = GetRegistrationService(
+            eventCRUD = mockk(relaxed = true),
+            participantCRUD = mockk(relaxed = true),
             logger = mockk(relaxed = true)
             )
     }
@@ -76,8 +76,8 @@ class GetRegistrationServiceImplTest : StringSpec() {
     init {
         "happy case get registration by event id and participant token" {
             val slot = slot<String>()
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns Some(dbEvent)
-            every { unit.participantRepository.findByToken(capture(slot)) } returns Some(
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Some(dbEvent)
+            every { unit.participantCRUD.findByToken(capture(slot)) } returns Some(
                 ParticipantDto(
                     email = "first_7last_7@mail.com",
                     name = "first_7 last_7",
@@ -101,8 +101,8 @@ class GetRegistrationServiceImplTest : StringSpec() {
 
         "should return order number in own status group" {
             val slot = slot<String>()
-            every { unit.eventRepository.findByIdOrLatest(any()) } returns Some(dbEvent)
-            every { unit.participantRepository.findByToken(capture(slot)) } returns Some(
+            every { unit.eventCRUD.findByIdOrLatest(any()) } returns Some(dbEvent)
+            every { unit.participantCRUD.findByToken(capture(slot)) } returns Some(
                 ParticipantDto(
                     email = "first_11last_11@mail.com",
                     name = "first_11 last_11",

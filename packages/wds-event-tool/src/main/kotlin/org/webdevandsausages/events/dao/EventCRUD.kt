@@ -12,18 +12,17 @@ import meta.tables.Participant
 import meta.tables.daos.EventDao
 import meta.tables.records.EventRecord
 import org.jooq.Condition
+import org.jooq.Configuration
 import org.jooq.TableField
 import org.jooq.impl.DSL
 import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
-import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dto.EventDto
 import kotlin.streams.toList
 
 typealias EventUpdates = List<Pair<TableField<EventRecord, Any>, Any>>
 
-object EventCRUD : EventDao(local.jooqConfiguration) {
-
+class EventCRUD(configuration: Configuration) : EventDao(configuration) {
     val db = DSL.using(configuration())
     val mapperInstance = JdbcMapperFactory.newInstance()
 
@@ -45,7 +44,9 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
             .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-        return Try { jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList() }.getOrDefault { emptyList() }
+        return Try {
+            jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
+        }.getOrDefault { emptyList() }
     }
 
     private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)
@@ -72,7 +73,7 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
             val jdbcMapper = mapperInstance
                 .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
                 .newMapper(object :
-                    TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
+                               TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
             jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull()
         }.getOrDefault { null }.toOption()
@@ -96,4 +97,20 @@ object EventCRUD : EventDao(local.jooqConfiguration) {
         }.getOrDefault { 0 }
         return if (result == 1) Some(1) else None
     }
+
+    fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use { ctx ->
+        val event = ctx.select(*Event.EVENT.fields())
+            .from(Event.EVENT)
+            .join(Participant.PARTICIPANT).on(Participant.PARTICIPANT.EVENT_ID.eq(Event.EVENT.ID))
+            .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
+            .fetchAny()
+            .into(meta.tables.pojos.Event::class.java)
+            .toOption()
+        when (event) {
+            is Some -> findByIdOrLatest(event.t.id)
+            is None -> Option.empty()
+        }
+    }
 }
+
+val EventCRUD.field get() = Event.EVENT

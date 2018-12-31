@@ -8,15 +8,16 @@ import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
-import org.webdevandsausages.events.dao.EventRepository
+import org.webdevandsausages.events.dao.EventCRUD
+import org.webdevandsausages.events.dao.ParticipantCRUD
+import org.webdevandsausages.events.service.CancelRegistrationService
+import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.service.EmailService
-import org.webdevandsausages.events.dao.ParticipantRepository
-import org.webdevandsausages.events.service.CreateRegistrationServiceImpl
 import org.webdevandsausages.events.service.FirebaseService
-import org.webdevandsausages.events.service.GetCurrentEventServiceImpl
-import org.webdevandsausages.events.service.GetEventByIdServiceImpl
-import org.webdevandsausages.events.service.GetEventsServiceImpl
-import org.webdevandsausages.events.service.GetRegistrationServiceImpl
+import org.webdevandsausages.events.service.GetCurrentEventService
+import org.webdevandsausages.events.service.GetEventByIdService
+import org.webdevandsausages.events.service.GetEventsService
+import org.webdevandsausages.events.service.GetRegistrationService
 import org.webdevandsausages.events.utils.RandomWordsUtil
 
 fun main(args: Array<String>) {
@@ -31,19 +32,24 @@ fun startApp(config: AppConfig): Http4kServer {
     val flyway = Flyway.configure().dataSource(config.db.url, config.db.user, config.db.password).load()
     flyway.migrate()
     logger.info("Starting server...")
+    // Initialize CRUD instances
+    val eventCRUD = EventCRUD(local.jooqConfiguration)
+    val participantCRUD = ParticipantCRUD(local.jooqConfiguration)
+    val emailService = EmailService(config.secrets)
     val app = Router(
-        GetEventsServiceImpl(EventRepository),
-        GetCurrentEventServiceImpl(EventRepository, logger),
-        GetEventByIdServiceImpl(EventRepository),
-        GetRegistrationServiceImpl(EventRepository, ParticipantRepository, logger),
-        CreateRegistrationServiceImpl(
-            EventRepository,
-            ParticipantRepository,
+        GetEventsService(eventCRUD),
+        GetCurrentEventService(eventCRUD, logger),
+        GetEventByIdService(eventCRUD),
+        GetRegistrationService(eventCRUD, participantCRUD, logger),
+        CreateRegistrationService(
+            eventCRUD,
+            participantCRUD,
             RandomWordsUtil,
-            EmailService(config.secrets),
+            emailService,
             FirebaseService,
             logger
-        )
+        ),
+        CancelRegistrationService(eventCRUD, participantCRUD, emailService)
     )()
     val server = app.asServer(Jetty(config.port)).start()
     logger.info("Server started on port ${config.port}")

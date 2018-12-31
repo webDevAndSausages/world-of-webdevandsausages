@@ -2,27 +2,34 @@ package org.webdevandsausages.events.service
 
 import arrow.core.Try
 import arrow.core.getOrDefault
-import com.sendgrid.Request
-import com.sendgrid.Method
 import com.sendgrid.Email
-import com.sendgrid.Personalization
 import com.sendgrid.Mail
-import org.slf4j.LoggerFactory
-import org.webdevandsausages.events.config.Secrets
+import com.sendgrid.Method
+import com.sendgrid.Personalization
+import com.sendgrid.Request
 import com.sendgrid.SendGrid
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import meta.enums.ParticipantStatus
+import meta.tables.pojos.Event
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.webdevandsausages.events.config.Secrets
+import org.webdevandsausages.events.dto.EventDto
+import org.webdevandsausages.events.dto.ParticipantDto
+import org.webdevandsausages.events.utils.prettified
 
 class EmailService(private val secrets: Secrets?) {
     private val logger: Logger = LoggerFactory.getLogger("email service")
 
-    private val sg by lazy { Try {
-        SendGrid(this.secrets?.sendgridApiKey)
-    }.getOrDefault {
-        logger.error("Could not initialize sendgrid")
-        null
-    } }
+    private val sg by lazy {
+        Try {
+            SendGrid(this.secrets?.sendgridApiKey)
+        }.getOrDefault {
+            logger.error("Could not initialize sendgrid")
+            null
+        }
+    }
 
     fun sendMail(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) =
         GlobalScope.launch {
@@ -67,4 +74,39 @@ class EmailService(private val secrets: Secrets?) {
                 }
             }
         }
+
+    fun sendRegistrationEmail(event: Event, status: ParticipantStatus, participantDto: ParticipantDto) {
+        val sponsor = if (event.sponsor != null) event.sponsor else "Anonymous"
+        val emailData = mapOf(
+            "action" to status.toText,
+            "datetime" to event.date.prettified,
+            "location" to event.location,
+            "token" to participantDto.verificationToken,
+            "sponsor" to sponsor
+        )
+
+        logger.info("Dispatching registration email to ${participantDto.email}")
+        sendMail(
+            participantDto.email,
+            participantDto.name,
+            "Web Dev & Sausages Registration",
+            "d-91e5bf696190444d94f13e564fee4426",
+            emailData
+        )
+
     }
+
+    /**
+     * Send confirmation email for the participant who just cancelled
+     */
+    fun sendCancelConfirmationEmail(event: EventDto, participantDto: ParticipantDto) {
+        TODO("not implemented")
+    }
+
+    /**
+     * Send confirmation email for the lucky one on the waiting list who just got registered after someone cancelled
+     */
+    fun sendRegistrationEmailForWaitListed(event: EventDto, participantDto: ParticipantDto) {
+        TODO("not implemented")
+    }
+}

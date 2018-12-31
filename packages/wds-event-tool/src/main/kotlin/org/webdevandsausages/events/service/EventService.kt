@@ -3,31 +3,18 @@ package org.webdevandsausages.events.service
 import arrow.core.Either
 import meta.enums.EventStatus
 import org.slf4j.Logger
-import org.webdevandsausages.events.dao.EventRepository
+import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.EventUpdates
-import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dao.field
+import org.webdevandsausages.events.dto.EventDto
+import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.utils.hasPassed
 import org.webdevandsausages.events.utils.threeDaysLater
 
-sealed class EventError {
-    object NotFound : EventError()
-    object AlreadyRegistered : EventError()
-    object DatabaseError : EventError()
-}
-
-interface GetEventsService {
-    operator fun invoke(status: String?): List<EventDto>?
-}
-
-class GetEventsServiceImpl(val eventRepository: EventRepository) : GetEventsService {
-    override fun invoke(status: String?): List<EventDto>? {
+class GetEventsService(val eventRepository: EventCRUD) {
+    operator fun invoke(status: String?): List<EventDto>? {
         return eventRepository.findAllWithParticipants(status)
     }
-}
-
-interface GetCurrentEventService {
-    operator fun invoke(): Either<EventError, EventDto>
 }
 
 /**
@@ -37,42 +24,42 @@ interface GetCurrentEventService {
  *  3. If the event happened three days ago, close feedback
  */
 
-class GetCurrentEventServiceImpl(val eventRepository: EventRepository, val logger: Logger) : GetCurrentEventService {
+class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
 
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): Either<EventError, EventDto> {
         logger.info("Opening event ${data.event.name}")
-        eventRepository.update(
+        eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventRepository.field.STATUS, EventStatus.OPEN)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.OPEN)) as EventUpdates)
         return getLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun closeRegistration(data: EventDto): Either<EventError, EventDto> {
         logger.info("Closing registration for event ${data.event.name}")
-        eventRepository.update(
+        eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventRepository.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
         return getLatest()
     }
 
     @Suppress("UNCHECKED_CAST")
     private fun closeFeedback(data: EventDto): Either<EventError, EventDto> {
         logger.info("Closing feedback for event ${data.event.name}")
-        eventRepository.update(
+        eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventRepository.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
         return getLatest()
     }
 
-    private fun getLatest(): Either<EventError, EventDto> = eventRepository.findByIdOrLatest().fold({
+    private fun getLatest(): Either<EventError, EventDto> = eventCRUD.findByIdOrLatest().fold({
             Either.Left(EventError.NotFound)
         }, {
             Either.Right(it)
         })
 
-    override fun invoke(): Either<EventError, EventDto> {
+    operator fun invoke(): Either<EventError, EventDto> {
         val result = getLatest()
         return result.fold(
             { Either.Left(EventError.NotFound) },
@@ -92,12 +79,8 @@ class GetCurrentEventServiceImpl(val eventRepository: EventRepository, val logge
     }
 }
 
-interface GetEventByIdService {
-    operator fun invoke(eventId: Long): Either<EventError, EventDto>
-}
-
-class GetEventByIdServiceImpl(val eventRepository: EventRepository) : GetEventByIdService {
-    override fun invoke(eventId: Long): Either<EventError, EventDto> {
+class GetEventByIdService(val eventRepository: EventCRUD) {
+    operator fun invoke(eventId: Long): Either<EventError, EventDto> {
         return eventRepository.findByIdOrLatest(eventId).fold({
             Either.Left(EventError.NotFound)
         }, {
