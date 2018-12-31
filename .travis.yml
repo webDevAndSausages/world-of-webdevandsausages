@@ -16,4 +16,4 @@ cache:
 before_install: cd packages/wds-event-tool
 
 script:
-  - ./gradlew build --scan -s
+  - ./gradlew build -x jooq-codegen-meta
