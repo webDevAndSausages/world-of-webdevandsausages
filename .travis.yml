@@ -1,5 +1,4 @@
 language: java
-install: true
 
 jdk:
   - oraclejdk8
@@ -13,7 +12,8 @@ cache:
     - $HOME/packages/wds-event-tool/.gradle/caches/
     - $HOME/packages/wds-event-tool/.gradle/wrapper/
 
-before_install: cd packages/wds-event-tool
+before_script:
+  - cd packages/wds-event-tool
 
 script:
-  - ./gradlew build -x jooq-codegen-meta -x clean
+  - ./gradlew build -x jooq-codegen-meta
