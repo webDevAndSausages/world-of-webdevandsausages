@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/webDevAndSausages/world-of-webdevandsausages.svg?branch=master)](https://travis-ci.org/webDevAndSausages/world-of-webdevandsausages)
+
 # `webdevandsausages.org`
 
 ## Who are we
