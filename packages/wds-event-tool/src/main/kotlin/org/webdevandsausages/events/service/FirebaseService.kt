@@ -3,8 +3,8 @@ package org.webdevandsausages.events.service
 import arrow.core.Try
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.cloud.firestore.SetOptions
-import com.google.firebase.FirebaseOptions
 import com.google.firebase.FirebaseApp.initializeApp
+import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.FirestoreClient
 import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.dto.ParticipantDto
@@ -13,7 +13,7 @@ import java.io.InputStream
 
 fun String.asResourceStream(): InputStream? = Thread.currentThread().contextClassLoader.getResourceAsStream(this)
 
-object FirebaseService {
+class FirebaseService {
     val logger = LoggerFactory.getLogger("firebase")
 
     init {

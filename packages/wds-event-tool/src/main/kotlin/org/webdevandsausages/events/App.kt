@@ -36,6 +36,7 @@ fun startApp(config: AppConfig): Http4kServer {
     val eventCRUD = EventCRUD(local.jooqConfiguration)
     val participantCRUD = ParticipantCRUD(local.jooqConfiguration)
     val emailService = EmailService(config.secrets)
+    val firebaseService = FirebaseService()
     val app = Router(
         GetEventsService(eventCRUD),
         GetCurrentEventService(eventCRUD, logger),
@@ -46,7 +47,7 @@ fun startApp(config: AppConfig): Http4kServer {
             participantCRUD,
             RandomWordsUtil,
             emailService,
-            FirebaseService,
+            firebaseService,
             logger
         ),
         CancelRegistrationService(eventCRUD, participantCRUD, emailService)
