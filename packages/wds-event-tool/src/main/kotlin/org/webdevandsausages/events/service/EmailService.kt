@@ -99,14 +99,43 @@ class EmailService(private val secrets: Secrets?) {
     /**
      * Send confirmation email for the participant who just cancelled
      */
-    fun sendCancelConfirmationEmail(event: EventDto, participantDto: ParticipantDto) {
-        TODO("not implemented")
+    fun sendCancelConfirmationEmail(eventDto: EventDto, participantDto: ParticipantDto) {
+        val sponsor = if (eventDto.event.sponsor != null) eventDto.event.sponsor else "Anonymous"
+        val emailData = mapOf(
+            "datetime" to eventDto.event.date.prettified,
+            "location" to eventDto.event.location,
+            "sponsor" to sponsor
+        )
+
+        logger.info("Dispatching cancellation email to ${participantDto.email}")
+        sendMail(
+            participantDto.email,
+            participantDto.name,
+            "Web Dev & Sausages Registration",
+            "d-831c9bf56bcf4401893121910f177f0a",
+            emailData
+        )
     }
 
     /**
      * Send confirmation email for the lucky one on the waiting list who just got registered after someone cancelled
      */
-    fun sendRegistrationEmailForWaitListed(event: EventDto, participantDto: ParticipantDto) {
-        TODO("not implemented")
+    fun sendRegistrationEmailForWaitListed(eventDto: EventDto, participantDto: ParticipantDto) {
+        val sponsor = if (eventDto.event.sponsor != null) eventDto.event.sponsor else "Anonymous"
+        val emailData = mapOf(
+            "datetime" to eventDto.event.date.prettified,
+            "location" to eventDto.event.location,
+            "token" to participantDto.verificationToken,
+            "sponsor" to sponsor
+        )
+
+        logger.info("Dispatching confirmation email (upgraded from waiting list to registered) to ${participantDto.email}")
+        sendMail(
+            participantDto.email,
+            participantDto.name,
+            "Web Dev & Sausages Registration",
+            "d-f7fd0df79d1e49d39e177d599b0411e7",
+            emailData
+        )
     }
 }
