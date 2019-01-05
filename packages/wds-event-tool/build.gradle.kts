@@ -28,6 +28,16 @@ plugins {
     kotlin("jvm") version "1.3.11"
     id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
     // id("org.jmailen.kotlinter") version "1.20.1"
+    java
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+task("execute", JavaExec::class) {
+    main = "org.webdevandsausages.events.AppKt"
+    classpath = java.sourceSets["main"].runtimeClasspath
 }
 
 repositories {
@@ -106,7 +116,7 @@ val jooqConfig = Configuration()
             .withDriver("org.postgresql.Driver")
             .withUsername("wds")
             .withPassword("password")
-            .withUrl("jdbc:postgresql://localhost:45433/wds_db")
+            .withUrl(System.getenv("DB_URL") ?: "jdbc:postgresql://localhost:45433/wds_db")
             .withSchema("public")
     )
     .withGenerator(
