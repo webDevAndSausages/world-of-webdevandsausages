@@ -1,0 +1,45 @@
+---
+
+- name: Set logging
+  become: yes
+  ufw:
+    logging: on
+
+# ufw supports connection rate limiting, which is useful for protecting
+# against brute-force login attacks. ufw will deny connections if an IP
+# address has attempted to initiate 6 or more connections in the last
+# 30 seconds. See  http://www.debian-administration.org/articles/187
+# for details. Typical usage is:
+- name: Set throttle limit
+  become: yes
+  ufw:
+    rule: limit
+    port: ssh
+    proto: tcp
+
+# Allow OpenSSH. (Note that as ufw manages its own state, simply removing
+# a rule=allow task can leave those ports exposed. Either use delete=yes
+# or a separate state=reset task)
+- name: Allow OpenSSH
+  become: yes
+  ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Deny everything and enable UFW
+  become: yes
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: Allow all access to port 80
+  become: yes
+  ufw:
+    rule: allow
+    port: 80
+
+- name: Allow all access to port 443
+  become: yes
+  ufw:
+    rule: allow
+    port: 443

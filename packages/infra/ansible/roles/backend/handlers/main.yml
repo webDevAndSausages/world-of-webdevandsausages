@@ -1,0 +1,7 @@
+---
+
+- name: Reload Nginx
+  service: name=nginx state=reloaded
+
+- name: Ensure docker daemon is running
+  service: name=docker state=started

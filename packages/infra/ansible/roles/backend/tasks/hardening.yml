@@ -1,0 +1,13 @@
+---
+
+- name: Hardening Nginx
+  include_role:
+    name: dev-sec.nginx-hardening
+  tags:
+    - nginx-hardening
+
+- name: Hardening OS
+  include_role:
+    name: dev-sec.os-hardening
+  tags:
+    - os-hardening
