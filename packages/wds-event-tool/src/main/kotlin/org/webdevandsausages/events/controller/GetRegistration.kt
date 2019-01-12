@@ -14,39 +14,19 @@ import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.error.RegistrationError
+import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.GetRegistrationService
 
 object GetRegistration {
-    fun route(getRegistration: GetRegistrationService, handleErrorResponse: handleErrorResponse): ContractRoute {
+    fun route(getRegistration: GetRegistrationService): ContractRoute {
 
         @Suppress("UNUSED_PARAMETER")
         fun handleGetRegistrationByToken(eventId: Long, _p2: String, verificationToken: String): HttpHandler =
             { _: Request ->
                 getRegistration(eventId, verificationToken).let {
                     when (it) {
-                        is Either.Left -> when (it.a) {
-                            is RegistrationError.EventNotFound ->
-                                handleErrorResponse(
-                                    "The event does not exist.",
-                                    ErrorCode.NOT_FOUND,
-                                    Status.NOT_FOUND)
-                            is RegistrationError.ParticipantNotFound ->
-                                handleErrorResponse(
-                                    "The participant was not found with that token.",
-                                    ErrorCode.NOT_FOUND,
-                                    Status.NOT_FOUND)
-                            is RegistrationError.EventClosed ->
-                                handleErrorResponse(
-                                    "The event is closed.",
-                                    ErrorCode.EVENT_CLOSED_OR_MISSING,
-                                    Status.GONE)
-                            is RegistrationError.DatabaseError ->
-                                handleErrorResponse(
-                                    "A database error occurred.",
-                                    ErrorCode.DATABASE_ERROR,
-                                    Status.INTERNAL_SERVER_ERROR)
-                        }
+                        is Either.Left -> it.a.toResponse()
                         is Either.Right -> Router.registrationResponseLens(
                             RegistrationOutDto(it.b),
                             Response(Status.OK)

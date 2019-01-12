@@ -15,9 +15,10 @@ import org.http4k.lens.Path
 import org.http4k.lens.long
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ErrorCode
+import org.webdevandsausages.events.dto.ErrorOutDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
-import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.utils.Read
@@ -28,10 +29,7 @@ object PostRegistration {
     private val registrationRequestLens = Body.auto<RegistrationInDto>().toLens()
     private val eventIdParam = Path.long().of("id")
 
-    fun route(
-        createRegistration: CreateRegistrationService,
-        handleErrorResponse: handleErrorResponse
-    ): ContractRoute {
+    fun route(createRegistration: CreateRegistrationService): ContractRoute {
 
         @Suppress("UNUSED_PARAMETER")
         fun handleRegistration(id: Long, _p2: String): HttpHandler = { req: Request ->
@@ -42,33 +40,18 @@ object PostRegistration {
             val validation = parse(Read.emailRead, registration.email)
             validation.fold(
                 {
-                    handleErrorResponse(
-                        "The email address is not valid",
-                        ErrorCode.INVALID_EMAIL,
-                        Status.UNPROCESSABLE_ENTITY)
+                    Router.errorResponseLens(
+                        ErrorOutDto("The email address is not valid",
+                        ErrorCode.INVALID_EMAIL),
+                        Response(Status.UNPROCESSABLE_ENTITY)
+                    )
                 },
                 {
-                    createRegistration(registration).let {
-                        when (it) {
-                            is Either.Left -> when (it.a) {
-                                is EventError.NotFound ->
-                                    handleErrorResponse(
-                                        "The event is closed or non-existent.",
-                                        ErrorCode.EVENT_CLOSED_OR_MISSING,
-                                        Status.NOT_FOUND)
-                                is EventError.AlreadyRegistered ->
-                                    handleErrorResponse(
-                                        "The email is already registered.",
-                                        ErrorCode.ALREADY_REGISTERED,
-                                        Status.BAD_REQUEST)
-                                is EventError.DatabaseError ->
-                                    handleErrorResponse(
-                                        "A database error occurred.",
-                                        ErrorCode.DATABASE_ERROR,
-                                        Status.INTERNAL_SERVER_ERROR)
-                            }
+                    createRegistration(registration).let { reg ->
+                        when (reg) {
+                            is Either.Left -> reg.a.toResponse()
                             is Either.Right -> Router.registrationResponseLens(
-                                RegistrationOutDto(it.b),
+                                RegistrationOutDto(reg.b),
                                 Response(Status.CREATED))
                         }
                     }

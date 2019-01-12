@@ -11,6 +11,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.EventOutDto
+import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.GetCurrentEventService
 import org.webdevandsausages.events.utils.WDSJackson.auto
@@ -18,16 +19,12 @@ import org.webdevandsausages.events.utils.WDSJackson.auto
 object GetCurrentEvent {
     private val EventLens = Body.auto<EventOutDto>().toLens()
 
-    fun route(getCurrentEvent: GetCurrentEventService, handleErrorResponse: handleErrorResponse): ContractRoute {
+    fun route(getCurrentEvent: GetCurrentEventService): ContractRoute {
 
         fun handleGetCurrentEvent() = { _: Request ->
             getCurrentEvent().let {
                 when (it) {
-                    is Either.Left -> handleErrorResponse(
-                        "The event is closed or non-existent.",
-                        ErrorCode.EVENT_CLOSED_OR_MISSING,
-                        Status.NOT_FOUND
-                        )
+                    is Either.Left -> it.a.toResponse()
                     is Either.Right -> EventLens(
                         EventOutDto(it.b),
                         Response(Status.OK)

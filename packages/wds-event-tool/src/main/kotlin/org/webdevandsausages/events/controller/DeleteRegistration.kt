@@ -15,54 +15,21 @@ import org.http4k.lens.string
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.error.RegistrationCancellationError
+import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.CancelRegistrationService
 
 object DeleteRegistration {
     private val registrationToken = Path.string().of("token")
 
-    fun route(
-        deleteRegistration: CancelRegistrationService,
-        handleErrorResponse: handleErrorResponse
-    ): ContractRoute {
+    fun route(deleteRegistration: CancelRegistrationService): ContractRoute {
 
         @Suppress("UNUSED_PARAMETER")
-        fun handleCancellation(token: String): HttpHandler = { req: Request ->
+        fun handleCancellation(token: String): HttpHandler = { _: Request ->
 
             deleteRegistration(token).let {
                 when (it) {
-                    is Either.Left -> when (it.a) {
-                        is RegistrationCancellationError.EventNotFound, RegistrationCancellationError.EventClosed ->
-                            handleErrorResponse(
-                                "The event is closed or non-existent.",
-                                ErrorCode.EVENT_CLOSED_OR_MISSING,
-                                Status.NOT_FOUND
-                            )
-                        is RegistrationCancellationError.ParticipantNotFound ->
-                            handleErrorResponse(
-                                "The participant was not found with provided token",
-                                ErrorCode.PARTICIPANT_NOT_FOUND,
-                                Status.NOT_FOUND
-                            )
-                        RegistrationCancellationError.DatabaseError ->
-                            handleErrorResponse(
-                                "A database error occurred.",
-                                ErrorCode.DATABASE_ERROR,
-                                Status.INTERNAL_SERVER_ERROR
-                            )
-                        RegistrationCancellationError.ParticipantAlreadyCancelled ->
-                            handleErrorResponse(
-                                "Participant was already cancelled",
-                                ErrorCode.ALREADY_CANCELLED,
-                                Status.UNPROCESSABLE_ENTITY
-                            )
-                        RegistrationCancellationError.ShouldNeverHappen ->
-                            handleErrorResponse(
-                                "Something weird happened. Should never happen, lol",
-                                ErrorCode.SHOULD_NEVER_HAPPEN,
-                                Status.INTERNAL_SERVER_ERROR
-                            )
-                    }
+                    is Either.Left -> it.a.toResponse()
                     is Either.Right -> Router.cancelRegistrationResponseLens(
                         it.b,
                         Response(Status.OK)

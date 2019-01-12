@@ -53,18 +53,9 @@ class Router(
     val cancelRegistration: CancelRegistrationService
 ) {
 
-    companion object {
-        val eventIdParam = Path.long().of("id")
-        val optionalStatusQuery = Query.optional("status")
-        val verificationTokenParam = Path.string().of("verificationToken")
-        val registrationResponseLens = Body.auto<RegistrationOutDto>().toLens()
-        val cancelRegistrationResponseLens = Body.auto<ParticipantDto>().toLens()
-    }
-
     operator fun invoke(): RoutingHttpHandler {
         return DebuggingFilters
             .PrintRequestAndResponse()
-            .then(ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive))
             .then(ServerFilters.CatchLensFailure)
             .then(routes(
                 "/api/1.0/" bind contract(
@@ -80,18 +71,21 @@ class Router(
     private fun getApiRoutes() = listOf(
         "/{any:.*}" bindContract OPTIONS to ok(),
         GetEvents.route(getEvents),
-        GetEvent.route(getEventById, handleErrorResponse),
-        GetCurrentEvent.route(getCurrentEvent, handleErrorResponse),
-        GetRegistration.route(getRegistration, handleErrorResponse),
-        PostRegistration.route(createRegistration, handleErrorResponse),
-        DeleteRegistration.route(cancelRegistration, handleErrorResponse)
+        GetEvent.route(getEventById),
+        GetCurrentEvent.route(getCurrentEvent),
+        GetRegistration.route(getRegistration),
+        PostRegistration.route(createRegistration),
+        DeleteRegistration.route(cancelRegistration)
     )
 
     private fun ok() = { _: Request -> Response(OK) }
 
-    private val errorResponseLens = Body.auto<ErrorOutDto>().toLens()
-
-    val handleErrorResponse = fun (message: String, code: ErrorCode, status: Status): Response {
-        return errorResponseLens(ErrorOutDto(message, code), Response(status))
+    companion object {
+        val eventIdParam = Path.long().of("id")
+        val optionalStatusQuery = Query.optional("status")
+        val verificationTokenParam = Path.string().of("verificationToken")
+        val registrationResponseLens = Body.auto<RegistrationOutDto>().toLens()
+        val cancelRegistrationResponseLens = Body.auto<ParticipantDto>().toLens()
+        val errorResponseLens = Body.auto<ErrorOutDto>().toLens()
     }
 }

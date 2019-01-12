@@ -14,6 +14,7 @@ import org.http4k.core.Status
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.EventOutDto
+import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.GetEventByIdService
 import org.webdevandsausages.events.utils.WDSJackson.auto
@@ -21,17 +22,13 @@ import org.webdevandsausages.events.utils.WDSJackson.auto
 object GetEvent {
     private val EventLens = Body.auto<EventOutDto>().toLens()
 
-    fun route(getEventById: GetEventByIdService, handleErrorResponse: handleErrorResponse): ContractRoute {
+    fun route(getEventById: GetEventByIdService): ContractRoute {
 
         fun handleGetEventById(id: Long): HttpHandler =
             { _: Request ->
                 getEventById(id).let {
                     when (it) {
-                        is Either.Left -> handleErrorResponse(
-                            "The event does not exist.",
-                            ErrorCode.NOT_FOUND,
-                            Status.NOT_FOUND
-                            )
+                        is Either.Left -> it.a.toResponse()
                         is Either.Right -> EventLens(
                             EventOutDto(it.b),
                             Response(Status.OK)
