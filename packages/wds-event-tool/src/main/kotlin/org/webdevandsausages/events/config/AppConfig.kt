@@ -41,4 +41,4 @@ data class DbConfig(
     val password: String
 )
 
-data class Secrets(val sendgridApiKey: String)
+data class Secrets(val sendgridApiKey: String, val WDSApiKey: String?)

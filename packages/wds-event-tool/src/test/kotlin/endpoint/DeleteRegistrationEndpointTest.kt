@@ -1,6 +1,7 @@
 package endpoint
 
 import arrow.core.Either
+import com.sun.xml.internal.ws.api.message.Headers
 import io.kotlintest.Description
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -39,9 +40,9 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                 )
             )
 
-            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
+            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token").withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             @Language("JSON")
             val expectedResponseBody = """
@@ -69,9 +70,9 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                 }
             """.trimIndent()
 
-            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
+            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token").withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.NOT_FOUND)
             resp.expectJsonResponse(expectedResponseBody)
@@ -87,9 +88,9 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                 }
             """.trimIndent()
 
-            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
+            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token").withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.NOT_FOUND)
             resp.expectJsonResponse(expectedResponseBody)
@@ -105,9 +106,9 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                 }
             """.trimIndent()
 
-            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
+            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token").withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.INTERNAL_SERVER_ERROR)
             resp.expectJsonResponse(expectedResponseBody)
@@ -123,9 +124,9 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                 }
             """.trimIndent()
 
-            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
+            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token").withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.UNPROCESSABLE_ENTITY)
             resp.expectJsonResponse(expectedResponseBody)
@@ -141,9 +142,9 @@ class DeleteRegistrationEndpointTest : StringSpec() {
                 }
             """.trimIndent()
 
-            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token")
+            val request = Request(Method.DELETE, "/api/1.0/events/registrations/my-token").withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.INTERNAL_SERVER_ERROR)
             resp.expectJsonResponse(expectedResponseBody)

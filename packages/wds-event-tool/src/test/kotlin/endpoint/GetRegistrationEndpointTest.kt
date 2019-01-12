@@ -41,9 +41,9 @@ class GetRegistrationEndpointTest : StringSpec() {
                     )
                 )
 
-            val request = Request(Method.GET, "/api/1.0/events/1/registrations/my-token")
+            val request = Request(Method.GET, "/api/1.0/events/1/registrations/my-token").withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             @Language("JSON")
             val expectedResponseBody = """
@@ -68,8 +68,8 @@ class GetRegistrationEndpointTest : StringSpec() {
         "should return 404 for missing participant" {
             every { router.getRegistration(any(), any()) } returns Either.left(RegistrationError.ParticipantNotFound)
 
-            val request = Request(Method.GET, "/api/1.0/events/1/registrations/my-missing-token")
-            val resp = router()(request)
+            val request = Request(Method.GET, "/api/1.0/events/1/registrations/my-missing-token").withApiKey()
+            val resp = router(null)(request)
 
             @Language("JSON")
             val expectedResponseBody = """
@@ -85,8 +85,8 @@ class GetRegistrationEndpointTest : StringSpec() {
         "should return 404 for missing event" {
             every { router.getRegistration(any(), any()) } returns Either.left(RegistrationError.EventNotFound)
 
-            val request = Request(Method.GET, "/api/1.0/events/10/registrations/my-token")
-            val resp = router()(request)
+            val request = Request(Method.GET, "/api/1.0/events/10/registrations/my-token").withApiKey()
+            val resp = router(null)(request)
 
             @Language("JSON")
             val expectedResponseBody = """
@@ -102,8 +102,8 @@ class GetRegistrationEndpointTest : StringSpec() {
         "should return 410 for closed event" {
             every { router.getRegistration(any(), any()) } returns Either.left(RegistrationError.EventClosed)
 
-            val request = Request(Method.GET, "/api/1.0/events/10/registrations/my-token")
-            val resp = router()(request)
+            val request = Request(Method.GET, "/api/1.0/events/10/registrations/my-token").withApiKey()
+            val resp = router(null)(request)
 
             @Language("JSON")
             val expectedResponseBody = """
@@ -119,8 +119,8 @@ class GetRegistrationEndpointTest : StringSpec() {
         "should return 500 for a db error" {
             every { router.getRegistration(any(), any()) } returns Either.left(RegistrationError.DatabaseError)
 
-            val request = Request(Method.GET, "/api/1.0/events/10/registrations/my-token")
-            val resp = router()(request)
+            val request = Request(Method.GET, "/api/1.0/events/10/registrations/my-token").withApiKey()
+            val resp = router(null)(request)
 
             @Language("JSON")
             val expectedResponseBody = """

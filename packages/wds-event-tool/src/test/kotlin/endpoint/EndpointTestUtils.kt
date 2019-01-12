@@ -2,6 +2,7 @@ package endpoint
 
 import io.kotlintest.shouldBe
 import io.mockk.mockk
+import org.http4k.core.Request
 import org.http4k.core.Response
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.utils.toJsonTree
@@ -21,3 +22,5 @@ fun Response.expectJsonResponse(expectedBody: String? = null) {
         this.bodyString().toJsonTree().shouldBe(expectedBody.toJsonTree())
     }
 }
+
+fun Request.withApiKey() = this.header("wds-key", "wds-secret")

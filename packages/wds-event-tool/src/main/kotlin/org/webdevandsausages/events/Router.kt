@@ -1,6 +1,7 @@
 package org.webdevandsausages.events
 
 import org.http4k.contract.ApiInfo
+import org.http4k.contract.ApiKey
 import org.http4k.contract.OpenApi
 import org.http4k.contract.bindContract
 import org.http4k.contract.contract
@@ -15,6 +16,7 @@ import org.http4k.filter.CorsPolicy
 import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ServerFilters
 import org.http4k.format.Jackson
+import org.http4k.lens.Header
 import org.http4k.lens.Path
 import org.http4k.lens.Query
 import org.http4k.lens.long
@@ -24,6 +26,7 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
+import org.webdevandsausages.events.config.Secrets
 import org.webdevandsausages.events.controller.DeleteRegistration
 import org.webdevandsausages.events.controller.GetCurrentEvent
 import org.webdevandsausages.events.controller.GetEvent
@@ -53,7 +56,7 @@ class Router(
     val cancelRegistration: CancelRegistrationService
 ) {
 
-    operator fun invoke(): RoutingHttpHandler {
+    operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
         return DebuggingFilters
             .PrintRequestAndResponse()
             .then(ServerFilters.CatchLensFailure)
@@ -61,7 +64,8 @@ class Router(
                 "/api/1.0/" bind contract(
                 // Automatic Swagger
                     OpenApi(ApiInfo("Event tool api", "v1.0"), Jackson),
-                "/api-docs",
+                    "/api-docs",
+                    ApiKey(Header.required("wds-key"), { key: String -> key == secrets?.WDSApiKey ?: "wds-secret"}),
                     *getApiRoutes().toTypedArray()
                     ),
                 "/" bind static(ResourceLoader.Classpath("public"))

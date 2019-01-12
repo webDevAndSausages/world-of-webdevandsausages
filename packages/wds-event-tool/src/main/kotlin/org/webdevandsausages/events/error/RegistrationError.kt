@@ -8,8 +8,8 @@ import org.webdevandsausages.events.dto.ErrorOutDto
 
 sealed class RegistrationError {
     object EventNotFound : RegistrationError() {
-        val message = "The event is closed or non-existent."
-        val code = ErrorCode.EVENT_CLOSED_OR_MISSING
+        val message = "The event does not exist."
+        val code = ErrorCode.NOT_FOUND
         val status = Status.NOT_FOUND
     }
     object DatabaseError : RegistrationError() {
@@ -18,9 +18,9 @@ sealed class RegistrationError {
         val status = Status.INTERNAL_SERVER_ERROR
     }
     object EventClosed : RegistrationError() {
-        val message = "The event is closed or non-existent."
+        val message = "The event is closed."
         val code = ErrorCode.EVENT_CLOSED_OR_MISSING
-        val status = Status.NOT_FOUND
+        val status = Status.GONE
     }
     object ParticipantNotFound : RegistrationError() {
         val message = "The participant was not found with that token."

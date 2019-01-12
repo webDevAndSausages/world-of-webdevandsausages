@@ -51,9 +51,9 @@ class PostRegistrationEndpointTest : StringSpec() {
                     insertedOn = TIMESTAMP.prettified
                     ))
 
-            val request = Request(Method.POST, "/api/1.0/events/1/registrations").body(okRequestBody)
+            val request = Request(Method.POST, "/api/1.0/events/1/registrations").body(okRequestBody).withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             @Language("JSON")
             val expectedResponseBody = """
@@ -90,8 +90,8 @@ class PostRegistrationEndpointTest : StringSpec() {
                 }
           """.trimIndent()
 
-            val request = Request(Method.POST, "/api/1.0/events/1/registrations").body(requestBody)
-            val resp = router()(request)
+            val request = Request(Method.POST, "/api/1.0/events/1/registrations").body(requestBody).withApiKey()
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.UNPROCESSABLE_ENTITY)
             resp.expectJsonResponse(expectedResponseBody)
@@ -106,9 +106,9 @@ class PostRegistrationEndpointTest : StringSpec() {
                 }
           """.trimIndent()
 
-            val request = Request(Method.POST, "/api/1.0/events/2/registrations").body(okRequestBody)
+            val request = Request(Method.POST, "/api/1.0/events/2/registrations").body(okRequestBody).withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.NOT_FOUND)
             resp.expectJsonResponse(expectedResponseBody)
@@ -123,9 +123,9 @@ class PostRegistrationEndpointTest : StringSpec() {
                 }
           """.trimIndent()
 
-            val request = Request(Method.POST, "/api/1.0/events/2/registrations").body(okRequestBody)
+            val request = Request(Method.POST, "/api/1.0/events/2/registrations").body(okRequestBody).withApiKey()
 
-            val resp = router()(request)
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.BAD_REQUEST)
             resp.expectJsonResponse(expectedResponseBody)
@@ -140,8 +140,8 @@ class PostRegistrationEndpointTest : StringSpec() {
                 }
           """.trimIndent()
 
-            val request = Request(Method.POST, "/api/1.0/events/2/registrations").body(okRequestBody)
-            val resp = router()(request)
+            val request = Request(Method.POST, "/api/1.0/events/2/registrations").body(okRequestBody).withApiKey()
+            val resp = router(null)(request)
 
             resp.status.shouldBe(Status.INTERNAL_SERVER_ERROR)
             resp.expectJsonResponse(expectedResponseBody)

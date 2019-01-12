@@ -51,7 +51,7 @@ fun startApp(config: AppConfig): Http4kServer {
             logger
         ),
         CancelRegistrationService(eventCRUD, participantCRUD, emailService)
-    )()
+    )(config.secrets)
     val server = app.asServer(Jetty(config.port)).start()
     logger.info("Server started on port ${config.port}")
     return server
