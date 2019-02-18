@@ -15,6 +15,11 @@
     name: ufw
     state: latest
 
+- name: Install Python 3 Pip
+  apt:
+    name: python3-pip
+    state: latest
+
 - name: Install Nginx site configuration
   template: src={{ item.template }} dest=/etc/nginx/{{ item.destination }} mode=0644 owner=root group=root
   notify: Reload Nginx
@@ -26,13 +31,13 @@
   include_role:
     name: haxorof.docker-ce
   vars:
-      docker_compose: true
+    docker_compose: true
   notify: Ensure docker daemon is running
   tags:
     - docker-ce
 
- - include_tasks: firewall.yml
- - include_tasks: hardening.yml
+- include_tasks: firewall.yml
+- include_tasks: hardening.yml
 
 - name: Make sure rsync is installed
   apt:
@@ -42,11 +47,13 @@
   become: yes
   synchronize:
     src: /opt/wds-event-tool
-    dest: /opt/wds-event-tool
+    dest: /opt
     archive: yes
     recursive: yes
     rsync_opts:
       - "--exclude=.git"
 
 - name: Run docker compose up
-  shell: cd /opt/wds-event-tool && docker-compose up
+  docker_service:
+    project_src: /opt/wds-event-tool
+    state: present

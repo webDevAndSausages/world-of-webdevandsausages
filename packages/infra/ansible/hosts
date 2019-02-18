@@ -1,2 +1,2 @@
 [mainserver]
-default ansible_host=127.0.0.1 ansible_connection=ssh ansible_ssh_extra_args="-o StrictHostKeyChecking=no"
+default ansible_host=68.183.219.166 ansible_connection=ssh
