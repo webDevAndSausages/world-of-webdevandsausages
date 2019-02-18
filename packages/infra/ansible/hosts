@@ -1,2 +1,2 @@
 [mainserver]
-default ansible_host=68.183.219.166 ansible_connection=ssh
+default ansible_host=138.68.76.78 ansible_connection=ssh

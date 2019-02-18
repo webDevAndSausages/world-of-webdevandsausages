@@ -1,0 +1,38 @@
+---
+
+- name: Update the repository cache and install software properties common
+  apt:
+    name: software-properties-common
+    state: latest
+    update_cache: yes
+
+- name: Add universe repository
+  apt_repository:
+    repo: "{{ item }}"
+  with_items:
+    - "deb http://archive.ubuntu.com/ubuntu/ bionic universe"
+    - "deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe"
+    - "deb http://security.ubuntu.com/ubuntu/ bionic-security universe"
+
+- name: Add certbot repository
+  apt_repository:
+    repo: ppa:certbot/certbot
+
+- name: Update the repository cache and install certbot
+  apt:
+    name: certbot
+    state: latest
+    update_cache: yes
+
+- name: Install python-certbot-nginx
+  apt:
+    name: python-certbot-nginx
+    state: latest
+
+- name: Install certbot route53 dns plugin
+  pip:
+    name: certbot-dns-route53
+    executable: pip-3.3
+
+- name: Run certbot
+  shell: certbot -a dns-route53 -i nginx -d "*.webdevandsausages.org" -d webdevandsausages.org --server https://acme-v02.api.letsencrypt.org/directory

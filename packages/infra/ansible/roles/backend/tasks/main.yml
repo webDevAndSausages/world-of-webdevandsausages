@@ -20,6 +20,8 @@
     name: python3-pip
     state: latest
 
+- include_tasks: certbot.yml
+
 - name: Install Nginx site configuration
   template: src={{ item.template }} dest=/etc/nginx/{{ item.destination }} mode=0644 owner=root group=root
   notify: Reload Nginx
