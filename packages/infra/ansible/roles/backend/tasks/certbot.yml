@@ -32,7 +32,7 @@
 - name: Install certbot route53 dns plugin
   pip:
     name: certbot-dns-route53
-    executable: pip-3.3
+    executable: pip3
 
-- name: Run certbot
-  shell: certbot -a dns-route53 -i nginx -d "*.webdevandsausages.org" -d webdevandsausages.org --server https://acme-v02.api.letsencrypt.org/directory
+# - name: Run certbot
+#  shell: certbot -a dns-route53 -i nginx -d "*.webdevandsausages.org" -d webdevandsausages.org --server https://acme-v02.api.letsencrypt.org/directory
