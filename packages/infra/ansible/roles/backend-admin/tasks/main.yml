@@ -1,0 +1,42 @@
+---
+
+- name: Create event
+  block:
+    - prompt:
+        msg:
+          - say: "Event name?"
+            ask: name
+          - say: "Sponsor?"
+            ask: sponsor
+          - say: "Contact info?"
+            ask: contact
+          - say: "Event date (YYYY-MM-DD)?"
+            ask: event_date
+          - say: "Event details?"
+            ask: details
+          - say: "Location?"
+            ask: location
+          - say: "Maximum number of participants?"
+            ask: max_participants
+          - say: "Registration opens date (YYYY-MM-DD)?"
+            ask: registration_opens
+
+    - name: Send HTTP request
+      uri:
+        url: http://localhost:5000/admin-api/events
+        method: POST
+        body_format: json
+        body:
+          name: "{{name}}"
+          sponsor: "{{sponsor}}"
+          contact: "{{contact}}"
+          date: "{{event_date}}"
+          details: "{{details}}"
+          location: "{{location}}"
+          maxParticipants: "{{max_participants}}"
+          registrationOpens: "{{registration_opens}}"
+        status_code: 201
+  tags:
+    - add-event
+
+
