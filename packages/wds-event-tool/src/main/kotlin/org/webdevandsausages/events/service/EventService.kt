@@ -2,11 +2,13 @@ package org.webdevandsausages.events.service
 
 import arrow.core.Either
 import meta.enums.EventStatus
+import meta.tables.Event
 import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.EventUpdates
 import org.webdevandsausages.events.dao.field
 import org.webdevandsausages.events.dto.EventDto
+import org.webdevandsausages.events.dto.EventInDto
 import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.utils.hasPassed
 import org.webdevandsausages.events.utils.threeDaysLater
@@ -31,7 +33,8 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         logger.info("Opening event ${data.event.name}")
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.OPEN)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.OPEN)) as EventUpdates
+        )
         return getLatest()
     }
 
@@ -40,7 +43,8 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         logger.info("Closing registration for event ${data.event.name}")
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates
+        )
         return getLatest()
     }
 
@@ -49,15 +53,16 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         logger.info("Closing feedback for event ${data.event.name}")
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED)) as EventUpdates)
+            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED)) as EventUpdates
+        )
         return getLatest()
     }
 
     private fun getLatest(): Either<EventError, EventDto> = eventCRUD.findByIdOrLatest().fold({
-            Either.Left(EventError.NotFound)
-        }, {
-            Either.Right(it)
-        })
+        Either.Left(EventError.NotFound)
+    }, {
+        Either.Right(it)
+    })
 
     operator fun invoke(): Either<EventError, EventDto> {
         val result = getLatest()
@@ -74,8 +79,8 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
                     status.isOpenFeedbackStatus && date.threeDaysLater -> closeFeedback(it)
                     else -> Either.Right(it)
                 }
-                }
-            )
+            }
+        )
     }
 }
 
@@ -83,6 +88,17 @@ class GetEventByIdService(val eventRepository: EventCRUD) {
     operator fun invoke(eventId: Long): Either<EventError, EventDto> {
         return eventRepository.findByIdOrLatest(eventId).fold({
             Either.Left(EventError.NotFound)
+        }, {
+            Either.Right(it)
+        })
+    }
+}
+
+class CreateEventService(val eventRepository: EventCRUD) {
+    operator fun invoke(eventInDto: EventInDto): Either<EventError, EventDto> {
+
+        return eventRepository.create(eventInDto).fold({
+            Either.Left(EventError.DatabaseError)
         }, {
             Either.Right(it)
         })

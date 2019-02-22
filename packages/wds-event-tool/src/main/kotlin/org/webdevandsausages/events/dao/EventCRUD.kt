@@ -18,6 +18,7 @@ import org.jooq.impl.DSL
 import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
 import org.webdevandsausages.events.dto.EventDto
+import org.webdevandsausages.events.dto.EventInDto
 import kotlin.streams.toList
 
 typealias EventUpdates = List<Pair<TableField<EventRecord, Any>, Any>>
@@ -73,7 +74,7 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
             val jdbcMapper = mapperInstance
                 .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
                 .newMapper(object :
-                               TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
+                    TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
             jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull()
         }.getOrDefault { null }.toOption()
@@ -111,6 +112,72 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
             is None -> Option.empty()
         }
     }
+
+    fun create(event: EventInDto): Option<EventDto> {
+        return with(Event.EVENT) {
+            val (name,
+                contact,
+                sponsor,
+                date,
+                details,
+                location,
+                status,
+                maxParticipants,
+                registrationOpens,
+                createdOn,
+                updatedOn) = event
+            db.use { ctx ->
+                ctx
+                    .insertInto(
+                        Event.EVENT,
+                        NAME,
+                        SPONSOR,
+                        CONTACT,
+                        DATE,
+                        DETAILS,
+                        LOCATION,
+                        STATUS,
+                        MAX_PARTICIPANTS,
+                        REGISTRATION_OPENS,
+                        CREATED_ON,
+                        UPDATED_ON
+                    )
+                    .values(
+                        name,
+                        contact,
+                        sponsor,
+                        date,
+                        details,
+                        location,
+                        status,
+                        maxParticipants,
+                        registrationOpens,
+                        createdOn,
+                        updatedOn
+                    )
+                    .returning()
+                    .fetchOne()
+            }.let {
+                EventDto(
+                    event = meta.tables.pojos.Event(
+                        it.id,
+                        it.name,
+                        it.sponsor,
+                        it.contact,
+                        it.date,
+                        it.details,
+                        it.location,
+                        it.status,
+                        it.maxParticipants,
+                        it.registrationOpens,
+                        it.createdOn,
+                        it.updatedOn
+                    )
+                ).toOption()
+            }
+        }
+    }
+
 }
 
 val EventCRUD.field get() = Event.EVENT
