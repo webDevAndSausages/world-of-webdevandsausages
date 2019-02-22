@@ -10,10 +10,15 @@
     state: latest
     update_cache: yes
 
-- name: Install Ubuntu firewall
-  apt:
-    name: ufw
-    state: latest
+- name: Install and configure Ubuntu firewall
+  block:
+    - name: Install ubuntu firewall
+      apt:
+        name: ufw
+        state: latest
+    - include_tasks: firewall.yml
+  tags:
+    - firewall
 
 - name: Install Python 3 Pip
   apt:
@@ -21,13 +26,15 @@
     state: latest
 
 - include_tasks: certbot.yml
+  tags:
+    - certbot
 
 - name: Install Nginx site configuration
   template: src={{ item.template }} dest=/etc/nginx/{{ item.destination }} mode=0644 owner=root group=root
   notify: Reload Nginx
   with_items:
-    - { "template": "backend_site.j2",
-        "destination": "sites-enabled/backend_site" }
+    - "template": backend_site.j2
+      "destination": sites-enabled/backend_site
 
 - name: Install Docker CE
   include_role:
@@ -38,8 +45,9 @@
   tags:
     - docker-ce
 
-- include_tasks: firewall.yml
 - include_tasks: hardening.yml
+  tags:
+    - hardening
 
 - name: Make sure rsync is installed
   apt:

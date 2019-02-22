@@ -8,11 +8,11 @@
 
 - name: Add universe repository
   apt_repository:
-    repo: "{{ item }}"
+    repo: '{{ item }}'
   with_items:
-    - "deb http://archive.ubuntu.com/ubuntu/ bionic universe"
-    - "deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe"
-    - "deb http://security.ubuntu.com/ubuntu/ bionic-security universe"
+    - 'deb http://archive.ubuntu.com/ubuntu/ bionic universe'
+    - 'deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe'
+    - 'deb http://security.ubuntu.com/ubuntu/ bionic-security universe'
 
 - name: Add certbot repository
   apt_repository:
@@ -34,5 +34,10 @@
     name: certbot-dns-route53
     executable: pip3
 
-# - name: Run certbot
-#  shell: certbot -a dns-route53 -i nginx -d "*.webdevandsausages.org" -d webdevandsausages.org --server https://acme-v02.api.letsencrypt.org/directory
+- name: Install cronjob for renewing certificates with certbot
+  become: yes
+  cron:
+    name: renew outdated certificates every day
+    minute: 0
+    hour: 0
+    job: certbot renew
