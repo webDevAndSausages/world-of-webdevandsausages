@@ -8,9 +8,9 @@ Then get the ssh port by typing:
 $ docker port test_sshd 22
 ```
 
-Make sure that the file `hosts` has correct port for ansible ssh connection (You probably have to change that)
+Make sure that the file `hosts` has correct port and ip address for ansible ssh connection (You probably have to change that)
 To deploy, run:
 
 ```bash
-$ ./deploy.sh "ansible_user=<SSH_USERNAME> ansible_ssh_pass=<SSH_PASSWORD> ansible_port=<SSH_PORT>"
+$ ./deploy.sh [quick] # quick keyword only deploys the app and essentials. It can be used if the app is deployed at least once without quick modifier
 ```
