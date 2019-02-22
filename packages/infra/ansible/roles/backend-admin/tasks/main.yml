@@ -1,8 +1,9 @@
 ---
 
-- name: Create event
+- name: Create event task block
   block:
-    - prompt:
+    - name: Create new event
+      prompt:
         msg:
           - say: "Event name?"
             ask: name
