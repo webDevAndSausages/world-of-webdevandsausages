@@ -4,6 +4,7 @@ import meta.enums.EventStatus
 import meta.tables.pojos.Event
 import java.sql.Timestamp
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
 import kotlin.math.max
@@ -18,6 +19,6 @@ data class EventInDto(
     val status: EventStatus = EventStatus.PLANNING,
     val maxParticipants: Int,
     val registrationOpens: Timestamp,
-    val createdOn: Timestamp,
-    val updatedOn: Timestamp
+    val createdOn: Timestamp = Timestamp.valueOf(LocalDateTime.now()),
+    val updatedOn: Timestamp = Timestamp.valueOf(LocalDateTime.now())
 )

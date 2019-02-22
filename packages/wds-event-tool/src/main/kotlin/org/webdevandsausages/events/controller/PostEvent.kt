@@ -19,7 +19,6 @@ import java.sql.Timestamp
 
 object PostEvent {
     private val eventCreateRequestLens = Body.auto<EventInDto>().toLens()
-    private val EventsLens = Body.auto<EventDto>().toLens()
 
     fun route(createEvent: CreateEventService): ContractRoute {
 
