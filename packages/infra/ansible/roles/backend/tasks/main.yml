@@ -66,4 +66,5 @@
 - name: Run docker compose up
   docker_service:
     project_src: /opt/wds-event-tool
+    restarted: true
     state: present
