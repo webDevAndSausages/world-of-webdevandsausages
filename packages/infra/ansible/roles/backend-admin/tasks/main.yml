@@ -37,6 +37,8 @@
           maxParticipants: "{{max_participants}}"
           registrationOpens: "{{registration_opens}}"
         status_code: 201
+      register: result
+    - debug: var={{ result.json | to_nice_json(indent=2)}}
   tags:
     - add-event
 
