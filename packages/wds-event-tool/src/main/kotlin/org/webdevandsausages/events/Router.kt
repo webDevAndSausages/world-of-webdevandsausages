@@ -1,13 +1,10 @@
 package org.webdevandsausages.events
 
 import org.http4k.contract.*
-import org.http4k.core.Body
-import org.http4k.core.Method.OPTIONS
-import org.http4k.core.Request
-import org.http4k.core.Response
-import org.http4k.core.Status
+import org.http4k.core.*
+import org.http4k.core.Method.*
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.then
+import org.http4k.filter.CorsPolicy
 import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ServerFilters
 import org.http4k.format.Jackson
@@ -42,6 +39,7 @@ class Router(
     operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
         return DebuggingFilters
             .PrintRequestAndResponse()
+            .then(ServerFilters.Cors(CorsPolicy(listOf("*"), listOf("wds-key"), listOf(Method.OPTIONS, GET, POST, DELETE, PUT))))
             .then(ServerFilters.CatchLensFailure)
             .then(
                 routes(
