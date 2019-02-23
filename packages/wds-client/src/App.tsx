@@ -1,27 +1,63 @@
-import React, { Component } from 'react'
+import React, { createContext, useState } from 'react'
 import { createGlobalStyle } from './styles/styled-components'
 import { ThemeProvider } from './styles/styled-components'
 import { theme } from './styles/theme'
 import { useApi } from './hooks/useApi'
-import PageWrapper from './components/PageWrapper'
+import { ApiRequest, Request } from './models/ApiRequest'
+import normalize from 'polished/lib/mixins/normalize'
+import { UI, Theme } from './models/UI'
+import { Switch, Route } from 'react-router-dom'
+import Nav from './components/nav'
+import ScrollWatcher from './components/ScrollWatcher'
+import { Home } from './pages/home'
+
+const defaultUiState = {
+  theme: Theme.Reversed,
+  showMobileNav: false,
+  isScrolled: false,
+  showSidebar: false,
+  isSideClosed: true
+}
+
+export const EventContext = createContext<Request>(ApiRequest.NOT_ASKED())
+export const UiContext = createContext<UI>(defaultUiState)
 
 const GlobalStyles = createGlobalStyle`
+  ${normalize()}
   font-family: museo_sans500, sans-serif;
   font-weight: 400;
 `
 
 function App() {
-  const data = useApi('events')
+  const event = useApi('events')
+  const [uiState, setUIState] = useState(defaultUiState)
   return (
     <ThemeProvider theme={theme}>
-      <div className="App">
+      <EventContext.Provider value={event}>
+        <UiContext.Provider value={uiState}>
+          <ScrollWatcher
+            isScrolled={uiState.isScrolled}
+            setIsScrolled={(isScrolled: boolean) =>
+              setUIState({ ...uiState, isScrolled })
+            }
+          >
+            <Nav
+              disableRegistration={false}
+              isFeedbackLinkVisible={false}
+              toggleNav={() =>
+                setUIState({
+                  ...uiState,
+                  showMobileNav: !uiState.showMobileNav
+                })
+              }
+            />
+          </ScrollWatcher>
+        </UiContext.Provider>
         <GlobalStyles />
-        <PageWrapper background="pink" style={{ height: '100%' }}>
-          <pre style={{ background: 'white', color: 'purple', width: '400px' }}>
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        </PageWrapper>
-      </div>
+        <Switch>
+          <Route path="/" component={Home} />
+        </Switch>
+      </EventContext.Provider>
     </ThemeProvider>
   )
 }

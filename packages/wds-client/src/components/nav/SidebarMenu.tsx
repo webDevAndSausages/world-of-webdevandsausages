@@ -1,13 +1,13 @@
 import React from 'react'
 import styled, { css } from '../../styles/styled-components'
-import { Link } from 'preact-router/match'
+import { NavLink } from 'react-router-dom'
 import darken from 'polished/lib/color/darken'
 
-import { sections } from '../../routes/admin/AdminPanel'
-import { toRem } from '../../helpers/styleHelpers'
-import R from '../../helpers'
+// import { sections } from '../../routes/admin/AdminPanel'
+import { toRem } from '../../styles/helpers'
+import { compose, toLower, join, split } from 'ramda'
 
-const StyledLink = styled(Link)`
+const StyledLink = styled<any>(NavLink)`
   display: inline-block;
   text-decoration: none;
   color: inherit;
@@ -40,12 +40,16 @@ const LinkWrapper = styled.h5`
   font-weight: normal;
 `
 
-const SidebarMenu = ({ matches }) => (
+const SidebarMenu = () => (
   <MenuInner>
-    {sections.map(title => (
+    {['todo'].map(title => (
       <LinkWrapper>
         <StyledLink
-          href={`/__admin__/${R.dashify(title)}`}
+          to={`/__admin__/${compose(
+            toLower,
+            join('-'),
+            split(' ')
+          )(title)}`}
           activeClassName="active"
         >
           {title}

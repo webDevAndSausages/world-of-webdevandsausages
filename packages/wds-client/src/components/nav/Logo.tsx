@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from '../../styles/styled-components'
 import { Link } from 'react-router-dom'
 import { toRem } from '../../styles/helpers'
@@ -14,7 +15,7 @@ const Logo = () => (
   <Link to="/">
     <MainLogo
       className="logo bounceDown"
-      src="../../assets/logo.svg"
+      src="logo.svg"
       alt="Web Dev &amp; Sausages"
     />
   </Link>

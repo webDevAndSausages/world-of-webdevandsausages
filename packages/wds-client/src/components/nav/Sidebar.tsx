@@ -1,9 +1,9 @@
 import styled, { css } from '../../styles/styled-components'
 
-import { toRem, phone } from '../../helpers/styleHelpers'
+import { toRem, phone } from '../../styles/helpers'
 
 // TODO: handle toggling and addition of hamburger on small screen
-const Sidebar = styled.nav`
+const Sidebar = styled.nav<any>`
   position: fixed;
   transform: translateZ(0);
   display: block;
@@ -21,7 +21,7 @@ const Sidebar = styled.nav`
   overflow-y: auto;
   transition: transform 150ms ease-out;
   ${phone(css`
-    ${p =>
+    ${(p: any) =>
       p.isFolded
         ? css`
             transform: translateX(${toRem(-p.theme.sidebarWidth)});

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled, { css } from '../../styles/styled-components'
 import darken from 'polished/lib/color/darken'
 
@@ -9,6 +9,9 @@ import NavLinks from './NavLinks'
 import SocialLinks from './SocialLinks'
 import Logo from './Logo'
 import Sidebar from './Sidebar'
+import SidebarMenu from './SidebarMenu'
+import { UiContext } from '../../App'
+import { Theme } from '../../models/UI'
 
 const Wrapper = styled.nav<{ transparent: boolean; reverse: boolean }>`
   position: fixed;
@@ -77,43 +80,48 @@ const NavTitleLink = styled(NavLink)`
 `
 
 const Navbar = ({
-  transparent,
-  reverseTheme,
-  showSidebar,
   disableRegistration,
-  isFeedbackLinkVisible
-}: any) => (
-  <div>
-    <Wrapper transparent={transparent} reverse={reverseTheme}>
-      <NormalNavbar>
-        <StartWrapper>
-          <Logo />
-          <NavTitleLink to="/">Web Dev &amp; Sausages</NavTitleLink>
-          <NavLinks
-            disableRegistration={disableRegistration}
-            isFeedbackLinkVisible={isFeedbackLinkVisible}
-          />
-        </StartWrapper>
+  isFeedbackLinkVisible,
+  toggleNav
+}: any) => {
+  const { theme, showSidebar, isScrolled, showMobileNav } = useContext(
+    UiContext
+  )
 
-        <EndWrapper>
-          <SocialLinks />
-        </EndWrapper>
-      </NormalNavbar>
-      <MobileNavbar
-        isScrolled={transparent}
-        disableRegistration={disableRegistration}
-        isFeedbackLinkVisible={isFeedbackLinkVisible}
-      />
-    </Wrapper>
-    {showSidebar && <Sidebar>{/* <SidebarMenu /> */} TODO</Sidebar>}
-  </div>
-)
-/*
-export default connect(state => ({
-  transparent: R.pathEq(['ui', 'isScrolled'], false, state),
-  reverseTheme: R.pathEq(['ui', 'theme'], 'reverse', state),
-  showSidebar: R.path(['ui', 'showSidebar'], state)
-}))(Navbar)
-*/
+  const reversed = theme === Theme.Reversed
+  return (
+    <div>
+      <Wrapper transparent={isScrolled} reverse={reversed}>
+        <NormalNavbar>
+          <StartWrapper>
+            <Logo />
+            <NavTitleLink to="/">Web Dev &amp; Sausages</NavTitleLink>
+            <NavLinks
+              disableRegistration={disableRegistration}
+              isFeedbackLinkVisible={isFeedbackLinkVisible}
+            />
+          </StartWrapper>
+
+          <EndWrapper>
+            <SocialLinks />
+          </EndWrapper>
+        </NormalNavbar>
+        <MobileNavbar
+          isScrolled={isScrolled}
+          disableRegistration={disableRegistration}
+          isFeedbackLinkVisible={isFeedbackLinkVisible}
+          toggleNav={toggleNav}
+          showMobileNav={showMobileNav}
+          reverseTheme={reversed}
+        />
+      </Wrapper>
+      {showSidebar && (
+        <Sidebar>
+          <SidebarMenu />
+        </Sidebar>
+      )}
+    </div>
+  )
+}
 
 export default Navbar

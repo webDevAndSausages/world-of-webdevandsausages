@@ -4,13 +4,14 @@ import React, { Component } from 'react'
 
 interface Props {
   isScrolled: boolean
+  setIsScrolled: any
 }
 
 class ScrollWatcher extends Component<Props> {
   onScroll = e => {
     const isScrolled = (window.pageYOffset || document.body.scrollTop) > 0
     if (isScrolled !== this.props.isScrolled) {
-      // this.props.actions.setIsScrolled(isScrolled)
+      this.props.setIsScrolled(isScrolled)
     }
   }
 

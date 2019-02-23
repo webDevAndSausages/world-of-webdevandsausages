@@ -1,21 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { unionize, ofType, UnionOf } from 'unionize'
+import { ApiRequest, Request } from '../models/ApiRequest'
 
 const headers = {
   // add secrets config
   'wds-key': 'WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27',
   'Content-Type': 'application/json'
 }
-
-const ApiRequest = unionize({
-  NOT_ASKED: {},
-  LOADING: {},
-  OK: ofType<{ data: string }>(),
-  NOT_OK: ofType<{ error: any }>()
-})
-
-type Request = UnionOf<typeof ApiRequest>
 
 // TODO: use react .env
 const API_ROOT = 'http://localhost:5000/api/1.0/'

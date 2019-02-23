@@ -65,18 +65,18 @@ const NavLinks = ({
   isFeedbackLinkVisible
 }: any) => (
   <Wrapper>
-    <NavLink id="home" activeClassName="active" href="/" showMobileNav>
+    <NavLink id="home" activeClassName="active" to="/">
       HOME
     </NavLink>
     <NavSeparator />
-    <NavLink id="about" activeClassName="active" href="/about" showMobileNav>
+    <NavLink id="about" activeClassName="active" to="/about">
       ABOUT
     </NavLink>
     <NavSeparator />
     <NavLink
       id="registration"
       activeClassName={!disableRegistration && 'active'}
-      href={`/${disableRegistration ? '' : 'registration'}`}
+      to={`/${disableRegistration ? '' : 'registration'}`}
       showMobileNav
       disabled={disableRegistration}
     >
@@ -87,7 +87,7 @@ const NavLinks = ({
       <NavLink
         id="feedback"
         activeClassName="active"
-        href="/feedback"
+        to="/feedback"
         showMobileNav
       >
         FEEDBACK

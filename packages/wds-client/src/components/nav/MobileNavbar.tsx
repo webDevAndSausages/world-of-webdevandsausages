@@ -134,26 +134,25 @@ interface Props {
   reverseTheme?: boolean
   disableRegistration?: boolean
   isFeedbackLinkVisible?: boolean
+  toggleNav: any
 }
 
 class MobileNavbar extends Component<Props> {
-  toggleNav = () => {
-    // this.props.actions.toggleMobileNav()
-  }
   render() {
     const {
       showMobileNav,
       isScrolled,
       reverseTheme,
       disableRegistration,
-      isFeedbackLinkVisible
+      isFeedbackLinkVisible,
+      toggleNav
     } = this.props
     return (
       <Wrapper>
         <Logo />
 
-        <NavButton onClick={this.toggleNav} active={showMobileNav}>
-          <MenuIconWrapper rotate={showMobileNav}>
+        <NavButton onClick={toggleNav} active={showMobileNav}>
+          <MenuIconWrapper rotate={showMobileNav ? 'rotate' : undefined}>
             <MenuIcon />
           </MenuIconWrapper>
         </NavButton>
@@ -174,12 +173,5 @@ class MobileNavbar extends Component<Props> {
     )
   }
 }
-/*
-
-const mapStateToProps = state => ({
-  showMobileNav: R.pathOr(false, ['ui', 'showMobileNav'], state),
-  reverseTheme: R.pathEq(['ui', 'theme'], 'reverse', state)
-})
-*/
 
 export default MobileNavbar
