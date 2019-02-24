@@ -10,6 +10,11 @@
     state: latest
     update_cache: yes
 
+- name: Install nginx extras
+  apt:
+    name: nginx-extras
+    state: latest
+
 - name: Install and configure Ubuntu firewall
   block:
     - name: Install ubuntu firewall

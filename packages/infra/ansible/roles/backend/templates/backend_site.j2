@@ -1,12 +1,13 @@
 # Server configuration
 server {
 
-        listen 443;
+        listen 443 ssl http2;
         server_name backend;
         ssl on;
         ssl_certificate /etc/letsencrypt/live/test.webdevandsausages.org/fullchain.pem;
         ssl_certificate_key /etc/letsencrypt/live/test.webdevandsausages.org/privkey.pem;
         gzip on;
+        more_clear_headers Server;
 
         location /api/ {
                 add_header 'Access-Control-Allow-Origin' 'test.webdevandsausages.org';
