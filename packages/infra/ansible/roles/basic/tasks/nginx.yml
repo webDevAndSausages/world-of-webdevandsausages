@@ -1,0 +1,23 @@
+---
+
+- name: Add Nginx repository
+  apt_repository:
+    repo: ppa:nginx/stable
+
+- name: Update the repository cache and update package "nginx" to latest version
+  apt:
+    name: nginx
+    state: latest
+    update_cache: yes
+
+- name: Install nginx extras
+  apt:
+    name: nginx-extras
+    state: latest
+
+- name: Install Nginx site configuration
+  template: src={{ item.template }} dest=/etc/nginx/{{ item.destination }} mode=0644 owner=root group=root
+  notify: Reload Nginx
+  with_items:
+    - "template": primary_site.j2
+      "destination": sites-enabled/primary_site

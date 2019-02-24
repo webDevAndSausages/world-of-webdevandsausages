@@ -1,5 +1,10 @@
 ---
 
+- name: Install ubuntu firewall
+  apt:
+    name: ufw
+    state: latest
+
 - name: Set logging
   become: yes
   ufw:
