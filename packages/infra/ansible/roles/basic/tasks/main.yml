@@ -38,8 +38,8 @@
   template: src={{ item.template }} dest=/etc/nginx/{{ item.destination }} mode=0644 owner=root group=root
   notify: Reload Nginx
   with_items:
-    - "template": backend_site.j2
-      "destination": sites-enabled/backend_site
+    - "template": primary_site.j2
+      "destination": sites-enabled/primary_site
 
 - name: Install Docker CE
   include_role:
@@ -58,37 +58,5 @@
   apt:
     name: rsync
 
-- name: Synchronize backend project file to target machine
-  become: yes
-  synchronize:
-    delete: yes
-    src: /opt/wds-event-tool
-    dest: /opt
-    archive: yes
-    recursive: yes
-    rsync_opts:
-      - "--exclude=.git"
-
-- name: Run npm install & Build the client
-  local_action: command bash -c "cd /opt/wds-client && npm install && npm build"
-  tags:
-    - client
-
-- name: Synchronize client project file to target machine
-  become: yes
-  synchronize:
-    delete: yes
-    src: /opt/wds-client/build/
-    dest: /opt/wds-client
-    archive: yes
-    recursive: yes
-    rsync_opts:
-      - "--exclude=.git"
-  tags:
-    - client
-
-- name: Run docker compose up
-  docker_service:
-    project_src: /opt/wds-event-tool
-    restarted: true
-    state: present
+- include_tasks: client.yml
+- include_tasks: backend.yml

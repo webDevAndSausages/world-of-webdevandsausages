@@ -1,0 +1,23 @@
+---
+
+- name: Run npm install & Build the client
+  block:
+    - name: Run npm install in client directory
+      local_action: command bash -c "cd /opt/wds-client && npm install"
+    - name: Build the client
+      local_action: command bash -c "cd /opt/wds-client && npm run build"
+  tags:
+    - client
+
+- name: Synchronize client project file to target machine
+  become: yes
+  synchronize:
+    delete: yes
+    src: /opt/wds-client/build/
+    dest: /opt/wds-client
+    archive: yes
+    recursive: yes
+    rsync_opts:
+      - "--exclude=.git"
+  tags:
+    - client
