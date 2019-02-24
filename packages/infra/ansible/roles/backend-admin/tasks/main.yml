@@ -13,6 +13,8 @@
             ask: contact
           - say: "Event date (YYYY-MM-DD)?"
             ask: event_date
+          - say: "What time does the event start (HH:MM [Finnish time])?"
+            ask: event_start_time
           - say: "Event details?"
             ask: details
           - say: "Location?"
@@ -21,7 +23,9 @@
             ask: max_participants
           - say: "Registration opens date (YYYY-MM-DD)?"
             ask: registration_opens
-
+    - name: Capture current timezone offset
+      shell: 'TZ=Europe/Helsinki date "+%z"'
+      register: tz_offset
     - name: Send HTTP request
       uri:
         url: http://localhost:5000/admin-api/events
@@ -31,10 +35,10 @@
           name: "{{name}}"
           sponsor: "{{sponsor}}"
           contact: "{{contact}}"
-          date: "{{event_date}}"
+          date: "{{event_date}}T{{event_start_time}}{{tz_offset.stdout}}"
           details: "{{details}}"
           location: "{{location}}"
-          maxParticipants: "{{max_participants}}"
+          maxParticipants: "{{max_participants | int}}"
           registrationOpens: "{{registration_opens}}"
         status_code: 201
       register: result
