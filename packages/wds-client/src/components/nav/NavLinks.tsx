@@ -84,12 +84,7 @@ const NavLinks = ({
     </NavLink>
     {isFeedbackLinkVisible && <NavSeparator />}
     {isFeedbackLinkVisible && (
-      <NavLink
-        id="feedback"
-        activeClassName="active"
-        to="/feedback"
-        showMobileNav
-      >
+      <NavLink id="feedback" activeClassName="active" to="/feedback">
         FEEDBACK
       </NavLink>
     )}

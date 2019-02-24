@@ -1,4 +1,6 @@
+import React from 'react'
 import styled from '../styles/styled-components'
+import logo from '../images/wds-logo-round.svg'
 
 const Logo = styled.img`
   max-width: 100%;
@@ -8,6 +10,6 @@ const Logo = styled.img`
   margin-top: 50px;
 `
 
-const LargeLogo = () => <Logo src="assets/wds-logo-round.svg" />
+const LargeLogo = () => <Logo src={logo} />
 
 export default LargeLogo

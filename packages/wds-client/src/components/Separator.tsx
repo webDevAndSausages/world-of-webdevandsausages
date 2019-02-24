@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from '../styles/styled-components'
 
-const Separator = styled.hr<{ orange: boolean }>`
+const Separator = styled.hr<{ orange?: boolean }>`
   width: 50%;
   border: 0;
   height: 0;

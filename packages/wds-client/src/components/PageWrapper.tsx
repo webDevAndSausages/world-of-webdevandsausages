@@ -1,6 +1,6 @@
 import styled, { css } from '../styles/styled-components'
 
-const PageWrapper = styled.div<{ background: string }>`
+const PageWrapper = styled.div<{ background?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: top;
@@ -10,6 +10,7 @@ const PageWrapper = styled.div<{ background: string }>`
   box-sizing: border-box;
   height: 100%;
   ${({ background }) =>
+    background &&
     css`
       background: ${background};
     `};

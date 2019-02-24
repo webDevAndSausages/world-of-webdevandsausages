@@ -160,9 +160,9 @@ const Notification = ({
   type = 'info',
   defaultMessage = 'no message provided',
   message,
-  visible
+  when
 }: any) => {
-  if (!visible) return null
+  if (!when) return null
   const text = message || defaultMessage
   const Icon = iconMap[type]
 
@@ -174,10 +174,4 @@ const Notification = ({
   )
 }
 
-// TODO: previously connected
-/*
-const mapStateToProps = (state, { id }) => ({
-  visible: R.pathOr(false, ['notifications', id], state)
-})
-*/
 export default Notification
