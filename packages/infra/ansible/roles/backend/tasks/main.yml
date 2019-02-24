@@ -53,15 +53,34 @@
   apt:
     name: rsync
 
-- name: Synchronize project file to target machine
+- name: Synchronize backend project file to target machine
   become: yes
   synchronize:
+    delete: yes
     src: /opt/wds-event-tool
     dest: /opt
     archive: yes
     recursive: yes
     rsync_opts:
       - "--exclude=.git"
+
+- name: Run npm install & Build the client
+  local_action: command bash -c "cd /opt/wds-client && npm install && npm build"
+  tags:
+    - client
+
+- name: Synchronize client project file to target machine
+  become: yes
+  synchronize:
+    delete: yes
+    src: /opt/wds-client/build/
+    dest: /opt/wds-client
+    archive: yes
+    recursive: yes
+    rsync_opts:
+      - "--exclude=.git"
+  tags:
+    - client
 
 - name: Run docker compose up
   docker_service:

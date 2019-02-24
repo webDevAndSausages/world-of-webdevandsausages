@@ -6,6 +6,7 @@ server {
         ssl on;
         ssl_certificate /etc/letsencrypt/live/test.webdevandsausages.org/fullchain.pem;
         ssl_certificate_key /etc/letsencrypt/live/test.webdevandsausages.org/privkey.pem;
+        gzip on;
 
         location /api/ {
                 add_header 'Access-Control-Allow-Origin' 'test.webdevandsausages.org';
@@ -41,7 +42,7 @@ server {
         }
 
         location / {
-                add_header Content-Type text/plain;
-                return 200 "Insert frontend here :D";
+                add_header 'Content-Security-Policy' ''; # Hardening script's Security policy was too strict for createreact app. Have to disable it.
+                root /opt/wds-client;
         }
 }
