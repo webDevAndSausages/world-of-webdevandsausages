@@ -8,8 +8,7 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
-// TODO: use react .env
-const API_ROOT = 'http://localhost:5000/api/1.0/'
+const API_ROOT = process.env.REACT_APP_API_ROOT
 
 export function useApi(endpoint: string) {
   const [request, setRequestState] = useState<Request>(ApiRequest.NOT_ASKED())
