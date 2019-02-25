@@ -1,12 +1,13 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import PageWrapper from '../../components/PageWrapper'
 import { EventContext } from '../../App'
 import LargeLogo from '../../components/LargeLogo'
 import Separator from '../../components/Separator'
 import { MailingListForm } from './MailingListForm'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { toRem, tablet, phone } from '../../styles/helpers'
 import bgImage from '../../images/sausage-bg.svg'
+import { Theme } from '../../models/UI'
 
 const TopSection = styled.div<any>`
   padding: ${p => `${toRem(p.theme.navHeight)} ${toRem(p.theme.pagePadding)}}`};
@@ -31,8 +32,11 @@ const TopSection = styled.div<any>`
   margin-top: -30px;
 `
 
-export function Home() {
+export function Home({ setTheme }: { setTheme: Function }) {
   const event = useContext(EventContext)
+  useEffect(() => {
+    setTheme(Theme.Standard)
+  }, [])
   return (
     <PageWrapper>
       <TopSection isExpandedMobileNav={false}>

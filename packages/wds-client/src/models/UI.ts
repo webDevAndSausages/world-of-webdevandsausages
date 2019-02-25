@@ -6,7 +6,6 @@ export enum Theme {
 export interface UI {
   theme: Theme
   showMobileNav: boolean
-  isScrolled: boolean
   showSidebar: boolean
   isSideClosed: boolean
 }

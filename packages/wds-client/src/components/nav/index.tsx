@@ -82,16 +82,15 @@ const NavTitleLink = styled(NavLink)`
 const Navbar = ({
   disableRegistration,
   isFeedbackLinkVisible,
-  toggleNav
+  toggleNav,
+  isScrolled
 }: any) => {
-  const { theme, showSidebar, isScrolled, showMobileNav } = useContext(
-    UiContext
-  )
+  const { theme, showSidebar, showMobileNav } = useContext(UiContext)
 
   const reversed = theme === Theme.Reversed
   return (
     <div>
-      <Wrapper transparent={isScrolled} reverse={reversed}>
+      <Wrapper transparent={!isScrolled} reverse={reversed}>
         <NormalNavbar>
           <StartWrapper>
             <Logo />
