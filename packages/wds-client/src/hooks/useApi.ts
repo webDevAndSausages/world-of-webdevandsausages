@@ -1,19 +1,31 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { ApiRequest, Request } from '../models/ApiRequest'
-
+import { ApiRequest, RequestFromApi } from '../models/ApiRequest'
+import { config } from '../config'
 const headers = {
-  // add secrets config
+  Accept: 'application/json',
   'wds-key': 'WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27',
   'Content-Type': 'application/json'
 }
 
-// TODO: use react .env
-const API_ROOT = 'http://localhost:5000/api/1.0/'
+export const endpoints = {
+  events: `${config.API_ROOT}events`,
+  mailingList: `${config.MAILING_LIST_URI}participants`
+}
 
-export function useApi(endpoint: string) {
-  const [request, setRequestState] = useState<Request>(ApiRequest.NOT_ASKED())
+// if you want data loaded when the component loads pass immediate true
+// otherwise call the returned with payload and or url with params, e.g. query({payload, url})
+// to trigger request
+export function useApi(endpoint: string, immediate = true, method = 'get') {
+  const [request, setRequestState] = useState<RequestFromApi>(
+    ApiRequest.NOT_ASKED()
+  )
   const mountedRef = useRef(false)
+  const [query, setQuery] = useState({
+    endpoint,
+    payload: null,
+    called: false
+  })
 
   useEffect(() => {
     mountedRef.current = true
@@ -24,8 +36,13 @@ export function useApi(endpoint: string) {
     mountedRef.current && setRequestState(requestState)
 
   async function handleFetch() {
+    const request = [
+      endpoints[query.endpoint],
+      query.payload,
+      { headers }
+    ].filter(v => v)
     try {
-      const { data } = await axios.get(`${API_ROOT}${endpoint}`, { headers })
+      const { data } = await axios[method](...request)
       return setRequestStateSafely(ApiRequest.OK({ data }))
     } catch (e) {
       return setRequestStateSafely(ApiRequest.NOT_OK({ error: e.message }))
@@ -33,9 +50,23 @@ export function useApi(endpoint: string) {
   }
 
   useEffect(() => {
-    setRequestStateSafely(ApiRequest.LOADING())
-    handleFetch()
-  }, [])
+    if (immediate) {
+      setRequestStateSafely(ApiRequest.LOADING())
+      handleFetch()
+    } else if (query.called) {
+      setRequestStateSafely(ApiRequest.LOADING())
+      handleFetch()
+    }
+  }, [query])
 
-  return request
+  return {
+    request,
+    query: (data: { payload?: any; endpoint?: any }) => {
+      setQuery({ ...query, called: true, ...data })
+    },
+    reset: () => {
+      setQuery({ ...query, called: false })
+      setRequestState(ApiRequest.NOT_ASKED())
+    }
+  }
 }

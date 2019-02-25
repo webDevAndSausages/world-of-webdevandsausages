@@ -3,7 +3,7 @@ import { createGlobalStyle } from './styles/styled-components'
 import { ThemeProvider } from './styles/styled-components'
 import { theme } from './styles/theme'
 import { useApi } from './hooks/useApi'
-import { ApiRequest, Request } from './models/ApiRequest'
+import { ApiRequest, RequestFromApi } from './models/ApiRequest'
 import normalize from 'polished/lib/mixins/normalize'
 import { UI, Theme } from './models/UI'
 import { Switch, Route } from 'react-router-dom'
@@ -19,7 +19,9 @@ const defaultUiState = {
   isSideClosed: true
 }
 
-export const EventContext = createContext<Request>(ApiRequest.NOT_ASKED())
+export const EventContext = createContext<RequestFromApi>(
+  ApiRequest.NOT_ASKED()
+)
 export const UiContext = createContext<UI>(defaultUiState)
 
 const GlobalStyles = createGlobalStyle`
@@ -29,11 +31,11 @@ const GlobalStyles = createGlobalStyle`
 `
 
 function App() {
-  const event = useApi('events')
+  const event = useApi('events', true)
   const [uiState, setUIState] = useState(defaultUiState)
   return (
     <ThemeProvider theme={theme}>
-      <EventContext.Provider value={event}>
+      <EventContext.Provider value={event as any}>
         <UiContext.Provider value={uiState}>
           <ScrollWatcher
             isScrolled={uiState.isScrolled}

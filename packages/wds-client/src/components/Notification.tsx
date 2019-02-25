@@ -160,9 +160,9 @@ const Notification = ({
   type = 'info',
   defaultMessage = 'no message provided',
   message,
-  when
+  show
 }: any) => {
-  if (!when) return null
+  if (!show) return null
   const text = message || defaultMessage
   const Icon = iconMap[type]
 

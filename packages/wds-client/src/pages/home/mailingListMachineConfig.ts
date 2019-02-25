@@ -1,7 +1,42 @@
-export const machineConfig = {
+import { ApiRequest, RequestFromApi } from '../../models/ApiRequest'
+import { MachineConfig } from 'xstate'
+
+export interface MailingListSchema {
+  states: {
+    emailEntry: {}
+    awaitingResponse: {}
+    emailErr: {}
+    serviceErr: {}
+  }
+}
+
+// The events that the machine handles
+export type MailingListEvent =
+  | { type: 'ENTER_EMAIL' }
+  | { type: 'EMAIL_BLUR' }
+  | { type: 'SUBMIT' }
+  | { type: 'SUCCESS' }
+  | { type: 'FAILURE' }
+  | { type: 'LOADING' }
+  | { type: 'RESET' }
+
+// The context (extended state) of the machine
+export interface MailingListContext {
+  email: string
+  data: RequestFromApi
+}
+
+export type MailingListConfig = MachineConfig<
+  MailingListContext,
+  MailingListSchema,
+  MailingListEvent
+>
+
+export const machineConfig: MailingListConfig = {
   id: 'mailingList',
   context: {
-    email: ''
+    email: '',
+    data: ApiRequest.NOT_ASKED()
   },
   initial: 'emailEntry',
   states: {
@@ -20,39 +55,36 @@ export const machineConfig = {
             target: 'emailErr.badFormat'
           },
           {
-            actions: 'send',
-            target: 'awaitingResponse'
+            target: 'awaitingResponse',
+            actions: 'send'
           }
         ]
       }
     },
     awaitingResponse: {
-      invoke: {
-        src: 'sendRequest',
-        onDone: {
-          target: 'success'
+      on: {
+        SUCCESS: {
+          actions: 'cacheRequest'
         },
-        onError: [
-          {
-            cond: 'isIncorrectPassword',
-            target: 'passwordErr.incorrect'
-          },
-          {
-            cond: 'isServiceErr',
-            target: 'serviceErr'
-          }
-        ]
+        FAILURE: {
+          actions: 'cacheRequest'
+        },
+        LOADING: {
+          actions: 'cacheRequest'
+        },
+        RESET: {
+          target: 'emailEntry'
+        }
       }
     },
     emailErr: {
       onEntry: 'focusEmailInput',
       on: {
         ENTER_EMAIL: {
-          target: 'dataEntry',
+          target: 'emailEntry',
           actions: 'cacheEmail'
         }
       },
-      initial: 'badFormat',
       states: {
         badFormat: {}
       }
@@ -62,15 +94,13 @@ export const machineConfig = {
       on: {
         SUBMIT: {
           target: 'awaitingResponse'
+        },
+        ENTER_EMAIL: {
+          target: 'emailEntry',
+          actions: 'cacheEmail'
         }
       }
-    },
-    success: {
-      type: 'final'
     }
-  },
-  onDone: {
-    actions: 'reset'
   }
 }
 

@@ -7,4 +7,4 @@ export const ApiRequest = unionize({
   NOT_OK: ofType<{ error: any }>()
 })
 
-export type Request = UnionOf<typeof ApiRequest>
+export type RequestFromApi = UnionOf<typeof ApiRequest>
