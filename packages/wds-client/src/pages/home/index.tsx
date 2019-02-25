@@ -9,10 +9,13 @@ import Separator from '../../components/Separator'
 import Footer from '../../components/Footer'
 import Merchandise from './Merchandise'
 import PreviousEvents from './PreviousEvents'
+import Event from './CurrentEvent'
 import { MailingListForm } from './MailingListForm'
+import SectionTitle from '../../components/SectionTitle'
 
 import bgImage from '../../images/sausage-bg.svg'
 import { Theme } from '../../models/UI'
+import { mapRequestToEvent, CurrentEvent } from '../../models/Event'
 
 const TopSection = styled.div<any>`
   padding: ${p => `${toRem(p.theme.navHeight)} ${toRem(p.theme.pagePadding)}}`};
@@ -44,6 +47,11 @@ const PreviousEventsWrapper = styled.section`
   padding-bottom: 5rem;
 `
 
+const CurrentEventWrapper = styled.section`
+  width: 100%;
+  padding: 2rem 0 3rem;
+`
+
 export function Home({ setTheme }: { setTheme: Function }) {
   const event = useContext(EventContext)
   useEffect(() => {
@@ -56,6 +64,10 @@ export function Home({ setTheme }: { setTheme: Function }) {
         <Separator />
         <MailingListForm />
       </TopSection>
+      <SectionTitle>Our Next Meetup</SectionTitle>
+      <CurrentEventWrapper>
+        <Event {...mapRequestToEvent(event)} />
+      </CurrentEventWrapper>
       <PreviousEventsWrapper>
         <PreviousEvents />
       </PreviousEventsWrapper>

@@ -11,7 +11,6 @@ function ScrollWatcher({ children }) {
     const onScroll = _e => {
       const currentScrolled =
         (window.pageYOffset || document.body.scrollTop) > 0
-      console.log(currentScrolled, isScrolled)
       if (currentScrolled !== isScrolled) {
         setIsScrolled(currentScrolled)
       }
