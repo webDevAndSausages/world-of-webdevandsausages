@@ -15,4 +15,4 @@ RUN echo "$ssh_prv_key" > /root/.ssh/id_rsa && \
 
 WORKDIR /opt/infra
 
-RUN apt-get update && apt-get -y install rsync && apt-get -y install python-simplejson && apt-get install -y python
+RUN apt-get update && apt-get -y install rsync && apt-get -y install python-simplejson && apt-get install -y python && apt-get install -y python3-pip && apt-get install -y nodejs && apt-get install -y npm

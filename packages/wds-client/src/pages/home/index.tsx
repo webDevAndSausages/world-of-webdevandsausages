@@ -8,11 +8,6 @@ import styled, { css, keyframes } from 'styled-components'
 import { toRem, tablet, phone } from '../../styles/helpers'
 import bgImage from '../../images/sausage-bg.svg'
 
-const moveSausages = keyframes`
-from {background-position: bottom right;}
-  to {background-position: top left;}
-`
-
 const TopSection = styled.div<any>`
   padding: ${p => `${toRem(p.theme.navHeight)} ${toRem(p.theme.pagePadding)}}`};
   ${p =>
@@ -31,7 +26,6 @@ const TopSection = styled.div<any>`
     background-image: url(${bgImage}),
       linear-gradient(15deg, ${p.theme.primaryOrange}, ${'#52bdf6'});
   `};
-  animation: ${moveSausages} 90s linear infinite;
   background-size: 60px, auto;
   background-repeat: repeat;
   margin-top: -30px;

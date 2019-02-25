@@ -124,7 +124,10 @@ export function MailingListForm() {
           query({ payload: { email, receivesMail: true } }),
         cacheRequest: (_ctx: MailingListContext, value: RequestFromApi) =>
           value,
-        reset: (ctx: MailingListContext) => ({ ...ctx, email: '' })
+        reset: (ctx: MailingListContext, value) => ({
+          data: ApiRequest.NOT_ASKED(),
+          email: ''
+        })
       },
       guards: {
         isBadEmailFormat: ctx => !isEmail(ctx.email)
@@ -137,7 +140,9 @@ export function MailingListForm() {
           delay(5000),
           map(([_state, send]) => {
             resetApi()
-            send({ type: 'RESET', value: { data: ApiRequest.NOT_ASKED() } })
+            send({
+              type: 'RESET'
+            })
           })
         )
     ]

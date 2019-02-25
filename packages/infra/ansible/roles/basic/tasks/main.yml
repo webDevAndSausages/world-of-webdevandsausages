@@ -1,0 +1,14 @@
+---
+
+- include_tasks: os.yml
+  tags:
+    - os
+- include_tasks: nginx.yml
+  tags:
+    - nginx
+- include_tasks: client.yml
+  tags:
+    - client
+- include_tasks: backend.yml
+  tags:
+    - backend

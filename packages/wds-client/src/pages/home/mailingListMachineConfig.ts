@@ -73,7 +73,8 @@ export const machineConfig: MailingListConfig = {
           actions: 'cacheRequest'
         },
         RESET: {
-          target: 'emailEntry'
+          target: 'emailEntry',
+          actions: 'reset'
         }
       }
     },

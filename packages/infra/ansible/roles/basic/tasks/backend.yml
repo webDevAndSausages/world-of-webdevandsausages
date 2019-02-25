@@ -1,0 +1,20 @@
+- name: Synchronize backend project file to target machine
+  become: yes
+  synchronize:
+    delete: yes
+    src: /opt/wds-event-tool
+    dest: /opt
+    archive: yes
+    recursive: yes
+    rsync_opts:
+      - "--exclude=.git --exclude=.idea"
+  tags:
+    - backend
+
+- name: Run docker compose up
+  docker_service:
+    project_src: /opt/wds-event-tool
+    restarted: true
+    state: present
+  tags:
+    - backend
