@@ -1,11 +1,16 @@
 import React, { useContext, useEffect } from 'react'
+import styled, { css } from 'styled-components'
+import { toRem, tablet, phone } from '../../styles/helpers'
+
 import PageWrapper from '../../components/PageWrapper'
 import { EventContext } from '../../App'
 import LargeLogo from '../../components/LargeLogo'
 import Separator from '../../components/Separator'
+import Footer from '../../components/Footer'
+import Merchandise from './Merchandise'
+import PreviousEvents from './PreviousEvents'
 import { MailingListForm } from './MailingListForm'
-import styled, { css } from 'styled-components'
-import { toRem, tablet, phone } from '../../styles/helpers'
+
 import bgImage from '../../images/sausage-bg.svg'
 import { Theme } from '../../models/UI'
 
@@ -32,6 +37,13 @@ const TopSection = styled.div<any>`
   margin-top: -30px;
 `
 
+const PreviousEventsWrapper = styled.section`
+  background: #fff
+  min-height: 50vh;
+  width: 100%;
+  padding-bottom: 5rem;
+`
+
 export function Home({ setTheme }: { setTheme: Function }) {
   const event = useContext(EventContext)
   useEffect(() => {
@@ -44,6 +56,12 @@ export function Home({ setTheme }: { setTheme: Function }) {
         <Separator />
         <MailingListForm />
       </TopSection>
+      <PreviousEventsWrapper>
+        <PreviousEvents />
+      </PreviousEventsWrapper>
+      <Separator orange />
+      <Merchandise />
+      <Footer color="primaryBlue" />
     </PageWrapper>
   )
 }

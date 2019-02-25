@@ -71,10 +71,10 @@ const Input = styled.input<any>`
   ${phone(css`
     width: 70%;
   `)};
-  ${({ err }) =>
+  ${({ err, theme }) =>
     err &&
     css`
-      border-color: red;
+      border-color: ${({ theme }) => theme.notificationError};
     `}
 `
 
@@ -172,7 +172,7 @@ export function MailingListForm() {
           <Input
             id="email"
             type="email"
-            placeholder="charlie@gmail.com"
+            placeholder="devaaja@gmail.com"
             onBlur={() => {
               send({ type: 'EMAIL_BLUR' })
             }}
@@ -192,8 +192,8 @@ export function MailingListForm() {
             type="submit"
             loading={state.matches('SUBMIT')}
             secondary
-            disabled={state.matches('emailErr')}
-            valid={true}
+            disabled={!isEmail(context.email)}
+            valid={isEmail(context.email)}
             white
           >
             {'+'}

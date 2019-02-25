@@ -3,7 +3,7 @@ import styled, { css } from '../styles/styled-components'
 
 import { toRem } from '../styles/helpers'
 
-const SectionTitle = styled.h2<{ paddingTop: number; paddingBottom: number }>`
+const SectionTitle = styled.h2<{ paddingTop?: number; paddingBottom?: number }>`
   font-size: 2.5rem;
   ${({ theme }) =>
     css`

@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled, { keyframes } from '../styles/styled-components'
 import 'intersection-observer'
-import Observer from 'react-intersection-observer'
+import { useInView } from 'react-intersection-observer'
 
 const Loading = keyframes`
 0% {
@@ -29,13 +29,24 @@ const Placeholder = styled.div`
   border-radius: 3px;
 `
 
-const renderImg = (inView: boolean, src: string, alt: string, height: number) =>
-  inView ? <img src={src} alt={alt} height={height} /> : <Placeholder />
+function LazyImg({ src, height = 250, alt = 'image' }) {
+  const [ref, inView] = useInView({ threshold: 0.5 })
+  const [isLoaded, setLoaded] = useState(false)
 
-const LazyImg = ({ src, height = 250, alt = 'image' }: any) => (
-  <Observer triggerOnce>
-    {(inView: any) => renderImg(inView, src, alt, height)}
-  </Observer>
-)
+  return (
+    <span ref={ref}>
+      {isLoaded || inView ? (
+        <img
+          src={src}
+          alt={alt}
+          height={height}
+          onLoad={() => setLoaded(true)}
+        />
+      ) : (
+        <Placeholder />
+      )}
+    </span>
+  )
+}
 
 export default LazyImg

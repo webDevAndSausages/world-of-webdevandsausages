@@ -31,7 +31,7 @@ const GlobalStyles = createGlobalStyle`
 `
 
 function App() {
-  const event = useApi('events', true)
+  const event = useApi('currentEvent', true)
   const [uiState, setUIState] = useState(defaultUiState)
   const setTheme = (theme: Theme) => setUIState(assoc('theme', theme, uiState))
   return (
@@ -39,7 +39,7 @@ function App() {
       <EventContext.Provider value={event as any}>
         <UiContext.Provider value={uiState}>
           <ScrollWatcher>
-            {({ isScrolled }) => (
+            {({ isScrolled }: {isScrolled: boolean}) => (
               <Nav
                 disableRegistration={false}
                 isFeedbackLinkVisible={false}

@@ -9,7 +9,7 @@ const headers = {
 }
 
 export const endpoints = {
-  events: `${config.API_ROOT}events`,
+  currentEvent: `${config.API_ROOT}events/current`,
   mailingList: `${config.MAILING_LIST_URI}participants`
 }
 

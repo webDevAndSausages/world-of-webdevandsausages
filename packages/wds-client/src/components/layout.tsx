@@ -13,13 +13,14 @@ const flow = ({ flow = 'row' }) => flow
 const formatAreas = (areas: any[]) => areas.map(area => `"${area}"`).join(' ')
 
 const Grid = styled.div<{
-  flow: string
-  rows: string
-  areas: any
-  justifyContent: boolean
-  alignContent: boolean
-  columnsTablet: boolean
-  columnsPhone: boolean
+  flow?: string
+  rows?: string
+  areas?: any
+  columns?: string | number
+  justifyContent?: boolean
+  alignContent?: boolean
+  columnsTablet?: boolean
+  columnsPhone?: boolean
 }>`
   display: grid;
   grid-auto-flow: ${flow};
