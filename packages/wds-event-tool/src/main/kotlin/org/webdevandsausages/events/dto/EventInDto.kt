@@ -19,6 +19,6 @@ data class EventInDto(
     val status: EventStatus = EventStatus.PLANNING,
     val maxParticipants: Int,
     val registrationOpens: Timestamp,
-    val createdOn: Timestamp = Timestamp.valueOf(LocalDateTime.now()),
-    val updatedOn: Timestamp = Timestamp.valueOf(LocalDateTime.now())
+    val volume: Int,
+    val sponsorLink: String?
 )

@@ -45,8 +45,10 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<EventRecord> EVENT_PKEY = UniqueKeys0.EVENT_PKEY;
+    public static final UniqueKey<EventRecord> EVENT_VOLUME_KEY = UniqueKeys0.EVENT_VOLUME_KEY;
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = UniqueKeys0.FLYWAY_SCHEMA_HISTORY_PK;
     public static final UniqueKey<ParticipantRecord> PARTICIPANT_PKEY = UniqueKeys0.PARTICIPANT_PKEY;
+    public static final UniqueKey<ParticipantRecord> PARTICIPANT_VERIFICATION_TOKEN_UNIQUE = UniqueKeys0.PARTICIPANT_VERIFICATION_TOKEN_UNIQUE;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -65,8 +67,10 @@ public class Keys {
 
     private static class UniqueKeys0 extends AbstractKeys {
         public static final UniqueKey<EventRecord> EVENT_PKEY = createUniqueKey(Event.EVENT, "event_pkey", Event.EVENT.ID);
+        public static final UniqueKey<EventRecord> EVENT_VOLUME_KEY = createUniqueKey(Event.EVENT, "event_volume_key", Event.EVENT.VOLUME);
         public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, "flyway_schema_history_pk", FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK);
         public static final UniqueKey<ParticipantRecord> PARTICIPANT_PKEY = createUniqueKey(Participant.PARTICIPANT, "participant_pkey", Participant.PARTICIPANT.ID);
+        public static final UniqueKey<ParticipantRecord> PARTICIPANT_VERIFICATION_TOKEN_UNIQUE = createUniqueKey(Participant.PARTICIPANT, "participant_verification_token_unique", Participant.PARTICIPANT.VERIFICATION_TOKEN);
     }
 
     private static class ForeignKeys0 extends AbstractKeys {

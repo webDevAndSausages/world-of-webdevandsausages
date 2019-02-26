@@ -84,4 +84,14 @@ public interface IEvent extends Serializable {
      * Getter for <code>public.event.updated_on</code>.
      */
     public Timestamp getUpdatedOn();
+
+    /**
+     * Getter for <code>public.event.volume</code>.
+     */
+    public Integer getVolume();
+
+    /**
+     * Getter for <code>public.event.sponsor_link</code>.
+     */
+    public String getSponsorLink();
 }

@@ -102,6 +102,13 @@ public class ParticipantDao extends DAOImpl<ParticipantRecord, meta.tables.pojos
     }
 
     /**
+     * Fetch a unique record that has <code>verification_token = value</code>
+     */
+    public meta.tables.pojos.Participant fetchOneByVerificationToken(String value) {
+        return fetchOne(Participant.PARTICIPANT.VERIFICATION_TOKEN, value);
+    }
+
+    /**
      * Fetch records that have <code>order_number IN (values)</code>
      */
     public List<meta.tables.pojos.Participant> fetchByOrderNumber(Integer... values) {

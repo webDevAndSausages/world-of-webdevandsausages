@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event extends TableImpl<EventRecord> {
 
-    private static final long serialVersionUID = -881941140;
+    private static final long serialVersionUID = 295147827;
 
     /**
      * The reference instance of <code>public.event</code>
@@ -117,6 +117,16 @@ public class Event extends TableImpl<EventRecord> {
     public final TableField<EventRecord, Timestamp> UPDATED_ON = createField("updated_on", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("CURRENT_TIMESTAMP", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
+     * The column <code>public.event.volume</code>.
+     */
+    public final TableField<EventRecord, Integer> VOLUME = createField("volume", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>public.event.sponsor_link</code>.
+     */
+    public final TableField<EventRecord, String> SPONSOR_LINK = createField("sponsor_link", org.jooq.impl.SQLDataType.VARCHAR(255), this, "");
+
+    /**
      * Create a <code>public.event</code> table reference
      */
     public Event() {
@@ -158,7 +168,7 @@ public class Event extends TableImpl<EventRecord> {
      */
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.EVENT_PKEY);
+        return Arrays.<Index>asList(Indexes.EVENT_PKEY, Indexes.EVENT_VOLUME_KEY);
     }
 
     /**
@@ -182,7 +192,7 @@ public class Event extends TableImpl<EventRecord> {
      */
     @Override
     public List<UniqueKey<EventRecord>> getKeys() {
-        return Arrays.<UniqueKey<EventRecord>>asList(Keys.EVENT_PKEY);
+        return Arrays.<UniqueKey<EventRecord>>asList(Keys.EVENT_PKEY, Keys.EVENT_VOLUME_KEY);
     }
 
     /**

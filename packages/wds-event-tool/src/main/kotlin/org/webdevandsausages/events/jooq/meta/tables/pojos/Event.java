@@ -25,7 +25,7 @@ import meta.tables.interfaces.IEvent;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event implements IEvent {
 
-    private static final long serialVersionUID = -678311983;
+    private static final long serialVersionUID = -1967594570;
 
     private final Long        id;
     private final String      name;
@@ -39,6 +39,8 @@ public class Event implements IEvent {
     private final Timestamp   registrationOpens;
     private final Timestamp   createdOn;
     private final Timestamp   updatedOn;
+    private final Integer     volume;
+    private final String      sponsorLink;
 
     public Event(Event value) {
         this.id = value.id;
@@ -53,6 +55,8 @@ public class Event implements IEvent {
         this.registrationOpens = value.registrationOpens;
         this.createdOn = value.createdOn;
         this.updatedOn = value.updatedOn;
+        this.volume = value.volume;
+        this.sponsorLink = value.sponsorLink;
     }
 
     public Event(
@@ -67,7 +71,9 @@ public class Event implements IEvent {
         Integer     maxParticipants,
         Timestamp   registrationOpens,
         Timestamp   createdOn,
-        Timestamp   updatedOn
+        Timestamp   updatedOn,
+        Integer     volume,
+        String      sponsorLink
     ) {
         this.id = id;
         this.name = name;
@@ -81,6 +87,8 @@ public class Event implements IEvent {
         this.registrationOpens = registrationOpens;
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
+        this.volume = volume;
+        this.sponsorLink = sponsorLink;
     }
 
     @Override
@@ -144,6 +152,16 @@ public class Event implements IEvent {
     }
 
     @Override
+    public Integer getVolume() {
+        return this.volume;
+    }
+
+    @Override
+    public String getSponsorLink() {
+        return this.sponsorLink;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Event (");
 
@@ -159,6 +177,8 @@ public class Event implements IEvent {
         sb.append(", ").append(registrationOpens);
         sb.append(", ").append(createdOn);
         sb.append(", ").append(updatedOn);
+        sb.append(", ").append(volume);
+        sb.append(", ").append(sponsorLink);
 
         sb.append(")");
         return sb.toString();

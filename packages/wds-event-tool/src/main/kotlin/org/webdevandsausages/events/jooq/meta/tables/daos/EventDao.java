@@ -142,4 +142,25 @@ public class EventDao extends DAOImpl<EventRecord, meta.tables.pojos.Event, Long
     public List<meta.tables.pojos.Event> fetchByUpdatedOn(Timestamp... values) {
         return fetch(Event.EVENT.UPDATED_ON, values);
     }
+
+    /**
+     * Fetch records that have <code>volume IN (values)</code>
+     */
+    public List<meta.tables.pojos.Event> fetchByVolume(Integer... values) {
+        return fetch(Event.EVENT.VOLUME, values);
+    }
+
+    /**
+     * Fetch a unique record that has <code>volume = value</code>
+     */
+    public meta.tables.pojos.Event fetchOneByVolume(Integer value) {
+        return fetchOne(Event.EVENT.VOLUME, value);
+    }
+
+    /**
+     * Fetch records that have <code>sponsor_link IN (values)</code>
+     */
+    public List<meta.tables.pojos.Event> fetchBySponsorLink(String... values) {
+        return fetch(Event.EVENT.SPONSOR_LINK, values);
+    }
 }

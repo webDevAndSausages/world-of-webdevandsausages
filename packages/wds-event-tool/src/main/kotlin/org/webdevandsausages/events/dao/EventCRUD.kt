@@ -124,8 +124,9 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                 status,
                 maxParticipants,
                 registrationOpens,
-                createdOn,
-                updatedOn) = event
+                volume,
+                sponsorLnk
+               ) = event
             db.use { ctx ->
                 ctx
                     .insertInto(
@@ -139,8 +140,8 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                         STATUS,
                         MAX_PARTICIPANTS,
                         REGISTRATION_OPENS,
-                        CREATED_ON,
-                        UPDATED_ON
+                        VOLUME,
+                        SPONSOR_LINK
                     )
                     .values(
                         name,
@@ -152,8 +153,8 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                         status,
                         maxParticipants,
                         registrationOpens,
-                        createdOn,
-                        updatedOn
+                        volume,
+                        sponsorLnk
                     )
                     .returning()
                     .fetchOne()
@@ -171,7 +172,9 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                         it.maxParticipants,
                         it.registrationOpens,
                         it.createdOn,
-                        it.updatedOn
+                        it.updatedOn,
+                        it.volume,
+                        it.sponsorLink
                     )
                 ).toOption()
             }
