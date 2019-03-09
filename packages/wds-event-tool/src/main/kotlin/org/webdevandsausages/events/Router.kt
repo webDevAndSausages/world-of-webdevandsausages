@@ -39,7 +39,15 @@ class Router(
     operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
         return DebuggingFilters
             .PrintRequestAndResponse()
-            .then(ServerFilters.Cors(CorsPolicy(listOf("*"), listOf("wds-key"), listOf(Method.OPTIONS, GET, POST, DELETE, PUT))))
+            .then(
+                ServerFilters.Cors(
+                    CorsPolicy(
+                        listOf("*"),
+                        listOf("wds-key"),
+                        listOf(Method.OPTIONS, GET, POST, DELETE, PUT)
+                    )
+                )
+            )
             .then(ServerFilters.CatchLensFailure)
             .then(
                 routes(
@@ -74,7 +82,9 @@ class Router(
     private fun getAdminApiRoutes() = listOf(
         "/{any:.*}" bindContract OPTIONS to ok(),
         PostEvent.route(createEvent),
-        AdminGetEventInfo.route(getEventById)
+        AdminGetEventInfo.route(getEventById),
+        GetEvents.route(getEvents),
+        GetCurrentEvent.route(getCurrentEvent)
     )
 
     private fun getApiRoutes() = listOf(
