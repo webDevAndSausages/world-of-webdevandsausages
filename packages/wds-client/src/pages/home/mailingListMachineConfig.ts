@@ -67,7 +67,8 @@ export const machineConfig: MailingListConfig = {
           actions: 'cacheRequest'
         },
         FAILURE: {
-          actions: 'cacheRequest'
+          actions: 'cacheRequest',
+          target: 'serviceErr'
         },
         LOADING: {
           actions: 'cacheRequest'
@@ -79,7 +80,6 @@ export const machineConfig: MailingListConfig = {
       }
     },
     emailErr: {
-      onEntry: 'focusEmailInput',
       on: {
         ENTER_EMAIL: {
           target: 'emailEntry',
@@ -91,7 +91,6 @@ export const machineConfig: MailingListConfig = {
       }
     },
     serviceErr: {
-      onEntry: 'focusSubmitBtn',
       on: {
         SUBMIT: {
           target: 'awaitingResponse'

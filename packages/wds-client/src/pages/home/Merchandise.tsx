@@ -50,7 +50,7 @@ const Merchandise = () => (
           <LazyImg
             src={`/merchandise/${item}.jpg`}
             alt={item}
-            height={item === 'beer' && 250}
+            height={item === 'beer' ? 250 : undefined}
           />
         </ImgCell>
       ))}

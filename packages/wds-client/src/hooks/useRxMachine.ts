@@ -22,6 +22,25 @@ export const onEvent = (...keys) => source =>
     })
   )
 
+export const onState = (...keys) => source =>
+  source.pipe(
+    filter(([state]) => {
+      const { value } = state
+      if (!value) return false
+      const len = keys.length
+      if (len === 1) {
+        return value === keys[0]
+      } else {
+        for (let i = 0; i < len; i++) {
+          if (value === keys[i]) {
+            return true
+          }
+        }
+      }
+      return false
+    })
+  )
+
 export function useRxMachine<Config, Options>(config, options, epics = []) {
   const machine = useMemo(() => Machine(config, options), [])
   let inputsRef$ = useRef(null)
