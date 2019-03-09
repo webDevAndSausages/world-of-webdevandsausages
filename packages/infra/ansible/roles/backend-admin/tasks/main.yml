@@ -7,6 +7,8 @@
         msg:
           - say: "Event name?"
             ask: name
+          - say: "Volume?"
+            ask: volume
           - say: "Sponsor?"
             ask: sponsor
           - say: "Contact info?"
@@ -40,9 +42,10 @@
           location: "{{location}}"
           maxParticipants: "{{max_participants | int}}"
           registrationOpens: "{{registration_opens}}"
+          volume: "{{volume | int}}"
         status_code: 201
       register: result
-    - debug: var={{ result.json | to_nice_json(indent=2)}}
+    - debug: var={{ result.json | to_nice_json(indent=2) }}
   tags:
     - add-event
 
