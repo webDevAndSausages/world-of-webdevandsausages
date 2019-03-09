@@ -105,6 +105,17 @@ class CreateEventService(val eventRepository: EventCRUD) {
     }
 }
 
+class UpdateEventService(val eventRepository: EventCRUD) {
+    operator fun invoke(eventInDto: EventInDto): Either<EventError, EventDto> {
+
+        return eventRepository.update(eventInDto).fold({
+            Either.Left(EventError.DatabaseError)
+        }, {
+            Either.Right(it)
+        })
+    }
+}
+
 val EventStatus.isVisibleStatus get() = this == EventStatus.VISIBLE
 val EventStatus.isNotFull get() = this == EventStatus.OPEN
 val EventStatus.isWithWaitList get() = this == EventStatus.OPEN_WITH_WAITLIST

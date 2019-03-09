@@ -33,7 +33,8 @@ class Router(
     val getRegistration: GetRegistrationService,
     val createRegistration: CreateRegistrationService,
     val cancelRegistration: CancelRegistrationService,
-    val createEvent: CreateEventService
+    val createEvent: CreateEventService,
+    val updateEvent: UpdateEventService
 ) {
 
     operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
@@ -83,6 +84,7 @@ class Router(
         "/{any:.*}" bindContract OPTIONS to ok(),
         PostEvent.route(createEvent),
         AdminGetEventInfo.route(getEventById),
+        PatchEvent.route(updateEvent),
         GetEvents.route(getEvents),
         GetCurrentEvent.route(getCurrentEvent)
     )

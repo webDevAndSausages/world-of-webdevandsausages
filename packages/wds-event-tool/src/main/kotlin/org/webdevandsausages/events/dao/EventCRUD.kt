@@ -184,6 +184,10 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
         }
     }
 
+    fun update(eventInDto: EventInDto): Option<EventDto> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }
 
 val EventCRUD.field get() = Event.EVENT
