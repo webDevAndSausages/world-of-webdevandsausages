@@ -37,7 +37,8 @@ export const mapRequestToEvent = (request: RequestFromApi): CurrentEvent =>
   ApiRequest.match(request, {
     LOADING: () => Event.LOADING(),
     NOT_OK: () => Event.ERROR(),
-    OK: ({ data }: { data }) => {
+    OK: ({ data }: any) => {
+      // TODO: map status -> Event type
       return Event.OPEN({ data })
     },
     default: data => {
