@@ -1,17 +1,17 @@
-import React from 'react'
-import styled, { css, keyframes } from 'styled-components'
-import darken from 'polished/lib/color/darken'
+import React, { useReducer, useState } from "react"
+import styled, { css, keyframes } from "styled-components"
+import darken from "polished/lib/color/darken"
 
-import format from 'date-fns/format'
-import { over, lensProp } from 'ramda'
-import { toRem, phone, tablet } from '../../styles/helpers'
-import { theme } from '../../styles/theme'
-import Markdown from 'react-markdown/with-html'
-import { EventData, Event as EventType } from '../../models/Event'
+import format from "date-fns/format"
+import { over, lensProp } from "ramda"
+import { toRem, phone, tablet } from "../../styles/helpers"
+import { theme } from "../../styles/theme"
+import Markdown from "react-markdown/with-html"
+import { EventData, Event as EventType } from "../../models/Event"
+import { unionize, ofType, UnionOf } from "unionize"
 
-import Spinner from '../../components/Spinner'
-import { ButtonLink } from '../../components/Button'
-import FutureEvent from './FutureEvent'
+import Spinner from "../../components/Spinner"
+import FutureEvent from "./FutureEvent"
 
 const InnerWrapper = styled.div<any>`
   display: flex;
@@ -148,10 +148,15 @@ const blink = keyframes`
   };
 `
 
-const Cursor = styled.input`
+const Cursor = styled.input<{ blink: boolean }>`
   font-size: 24px;
-  color: #fff;
-  animation: 1s ${blink} 1s infinite;
+  color: black;
+  ${({ blink: b }) =>
+    b
+      ? css`
+          animation: 1s ${blink} 1s infinite;
+        `
+      : undefined};
   background: transparent;
   border: none;
   box-shadow: none;
@@ -160,6 +165,24 @@ const Cursor = styled.input`
     color: #fff;
   }
 `
+
+const CursorInput = ({
+  commandValue,
+  onChange,
+  onKeyPress
+}: {
+  commandValue: string
+  onChange: (e: any) => any
+  onKeyPress: any
+}) => (
+  <Cursor
+    placeholder="_"
+    value={commandValue}
+    onChange={onChange}
+    blink={!commandValue}
+    onKeyPress={onKeyPress}
+  />
+)
 
 const SponsorLogo = styled.img`
   width: ${toRem(400)};
@@ -182,29 +205,81 @@ export const Console = ({ children }) => (
   </EventWrapper>
 )
 
-const RegistrationLink = () => (
-  <InnerWrapper marginTop={60}>
-    <ButtonLink id="register-link-button" big light href="/registration">
-      Register
-    </ButtonLink>
-  </InnerWrapper>
-)
+interface ConState {
+  prompt: string
+  last: any
+}
 
-const RegistrationConsole = ({
-  event,
-  children
-}: {
-  event: EventData
-  children?: any
-}) => {
+const ConsoleState = unionize({
+  Waiting: ofType<ConState>(),
+  Registering: ofType<ConState>(),
+  Modifing: ofType<ConState>(),
+  Checking: ofType<ConState>(),
+  Helping: ofType<ConState>()
+})
+
+type ConsoleStateType = UnionOf<typeof ConsoleState>
+
+type Action = "wait" | "register" | "modify" | "check" | "help" | "back"
+
+const defaultPrompt = "Commands: register [r], modify [m], check [c], help [h], back [b/esc]:"
+
+const defaultState = ConsoleState.Waiting({
+  prompt: defaultPrompt,
+  last: defaultPrompt
+})
+
+const updates = {
+  wait: () => defaultState,
+  register: (state: ConsoleStateType) =>
+    ConsoleState.Registering({ prompt: "Email:", last: state }),
+  modify: (state: ConsoleStateType) =>
+    ConsoleState.Modifing({ prompt: "Registration token (received by email):", last: state }),
+  check: (state: ConsoleStateType) =>
+    ConsoleState.Modifing({ prompt: "Registration token (received by email):", last: state }),
+  help: (state: ConsoleStateType) =>
+    ConsoleState.Helping({ prompt: "To return press any key", last: state }),
+  back: (state: ConsoleStateType) => state.last
+}
+
+const consoleReducer = (state: ConsoleStateType, action: Action) =>
+  updates[action] ? updates[action](state) : defaultState
+
+const commands: { [key: string]: Action } = {
+  r: "register",
+  m: "modify",
+  c: "check",
+  h: "help",
+  b: "back"
+}
+
+const RegistrationConsole = ({ event, children }: { event: EventData; children?: any }) => {
+  const [consoleState, dispatch] = useReducer(consoleReducer, defaultState)
+  const [commandValue, setCommand] = useState("")
+  const handleCommand = (e: any) => {
+    if (commands[e.target.value.toLowerCase()]) {
+      setCommand(e.target.value)
+    }
+  }
+  const dispatchCommand = (e: any) => {
+    if (e.charCode == "13" && commandValue) {
+      dispatch(commands[commandValue.toLowerCase()])
+      setCommand("")
+    }
+    if (e.charCode === "27") {
+      dispatch("back")
+      setCommand("")
+    }
+  }
+
+  const getPrompt = ConsoleState.match({ default: ({ prompt }) => prompt })
+
   return (
     <div id="current-event-console">
       <SponsorAnnouncement>Sponsored by</SponsorAnnouncement>
       {event.sponsor && (
         <a href={event.sponsorLink || null}>
-          <SponsorLogo
-            src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`}
-          />
+          <SponsorLogo src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`} />
         </a>
       )}
       <Console>
@@ -225,7 +300,14 @@ const RegistrationConsole = ({
           <EventDetail>
             <Markdown source={event.contact} escapeHtml={false} />
           </EventDetail>
-          {children}
+          <EventDetailLabel>
+            $ {getPrompt(consoleState as ConsoleStateType)}
+            <CursorInput
+              commandValue={commandValue}
+              onChange={handleCommand}
+              onKeyPress={dispatchCommand}
+            />
+          </EventDetailLabel>
         </Screen>
       </Console>
     </div>
@@ -247,8 +329,8 @@ function Event(event: any) {
           NONE: () => <FutureEvent />,
           ERROR: () => <FutureEvent />,
           default: ({ data }: any) => {
-            const formattedData = over(lensProp('date'), date =>
-              format(date, 'MMMM Do, YYYY, HH:mm')
+            const formattedData = over(lensProp("date"), date =>
+              format(date, "MMMM Do, YYYY, HH:mm")
             )(data)
             return <RegistrationConsole event={formattedData} />
           }

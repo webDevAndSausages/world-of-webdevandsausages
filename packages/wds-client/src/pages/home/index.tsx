@@ -1,21 +1,21 @@
-import React, { useContext, useEffect } from 'react'
-import styled, { css } from 'styled-components'
-import { toRem, tablet, phone } from '../../styles/helpers'
+import React, { useContext, useEffect } from "react"
+import styled, { css } from "styled-components"
+import { toRem, tablet, phone } from "../../styles/helpers"
 
-import PageWrapper from '../../components/PageWrapper'
-import { EventContext } from '../../App'
-import LargeLogo from '../../components/LargeLogo'
-import Separator from '../../components/Separator'
-import Footer from '../../components/Footer'
-import Merchandise from './Merchandise'
-import PreviousEvents from './PreviousEvents'
-import Event from './CurrentEvent'
-import { MailingListForm } from './MailingListForm'
-import SectionTitle from '../../components/SectionTitle'
+import PageWrapper from "../../components/PageWrapper"
+import { EventContext } from "../../App"
+import LargeLogo from "../../components/LargeLogo"
+import Separator from "../../components/Separator"
+import Footer from "../../components/Footer"
+import Merchandise from "./Merchandise"
+import PreviousEvents from "./PreviousEvents"
+import Event from "./CurrentEvent"
+import { MailingListForm } from "./MailingListForm"
+import SectionTitle from "../../components/SectionTitle"
 
-import bgImage from '../../images/sausage-bg.svg'
-import { Theme } from '../../models/UI'
-import { mapRequestToEvent, CurrentEvent } from '../../models/Event'
+import bgImage from "../../images/sausage-bg.svg"
+import { Theme } from "../../models/UI"
+import { mapRequestToEvent, CurrentEvent } from "../../models/Event"
 
 const TopSection = styled.div<any>`
   padding: ${p => `${toRem(p.theme.navHeight)} ${toRem(p.theme.pagePadding)}}`};
@@ -33,7 +33,7 @@ const TopSection = styled.div<any>`
   width: 100%;
   ${p => css`
     background-image: url(${bgImage}),
-      linear-gradient(15deg, ${p.theme.primaryOrange}, ${'#52bdf6'});
+      linear-gradient(15deg, ${p.theme.primaryOrange}, ${"#52bdf6"});
   `};
   background-size: 60px, auto;
   background-repeat: repeat;
@@ -57,6 +57,7 @@ export function Home({ setTheme }: { setTheme: Function }) {
   useEffect(() => {
     setTheme(Theme.Standard)
   }, [])
+  console.log(event)
   return (
     <PageWrapper>
       <TopSection isExpandedMobileNav={false}>
