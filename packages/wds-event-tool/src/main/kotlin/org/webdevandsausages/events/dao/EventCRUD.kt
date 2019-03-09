@@ -19,6 +19,9 @@ import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
+import org.webdevandsausages.events.dto.EventUpdateInDto
+import java.sql.Time
+import java.sql.Timestamp
 import kotlin.streams.toList
 
 typealias EventUpdates = List<Pair<TableField<EventRecord, Any>, Any>>
@@ -82,22 +85,22 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
     }
 
     // can handle an arbitrary number of updates
-    fun update(id: Long?, updates: EventUpdates): Option<Int> {
-        val result = Try {
-            db.use { ctx ->
-                ctx
-                    .update(Event.EVENT)
-                    .set(updates[0].first, updates[0].second)
-                    .apply {
-                        updates.drop(1).forEach {
-                            set(it.first, it.second)
-                        }
+    fun update(id: Long?, updates: EventUpdates): Option<meta.tables.pojos.Event> {
+        val result = db.use { ctx ->
+            ctx
+                .update(Event.EVENT)
+                .set(updates[0].first, updates[0].second)
+                .apply {
+                    updates.drop(1).forEach {
+                        set(it.first, it.second)
                     }
-                    .where(Event.EVENT.ID.eq(id))
-                    .execute()
-            }
-        }.getOrDefault { 0 }
-        return if (result == 1) Some(1) else None
+                }
+                .where(Event.EVENT.ID.eq(id))
+                .returning()
+                .fetchOne().into(meta.tables.pojos.Event::class.java).toOption()
+        }
+
+        return result
     }
 
     fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use { ctx ->
@@ -129,7 +132,7 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                 registrationOpens,
                 volume,
                 sponsorLnk
-               ) = event
+            ) = event
             db.use { ctx ->
                 ctx
                     .insertInto(
@@ -183,11 +186,6 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
             }
         }
     }
-
-    fun update(eventInDto: EventInDto): Option<EventDto> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 }
 
 val EventCRUD.field get() = Event.EVENT

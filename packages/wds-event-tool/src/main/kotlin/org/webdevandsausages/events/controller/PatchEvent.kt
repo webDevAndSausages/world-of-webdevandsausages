@@ -8,17 +8,18 @@ import org.http4k.contract.meta
 import org.http4k.core.*
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventInDto
+import org.webdevandsausages.events.dto.EventUpdateInDto
 import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.service.UpdateEventService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object PatchEvent {
-    private val eventUpdateRequestLens = Body.auto<EventInDto>().toLens()
+    private val eventUpdateRequestLens = Body.auto<EventUpdateInDto>().toLens()
 
-    fun route(createEvent: UpdateEventService): ContractRoute {
+    fun route(updateEvent: UpdateEventService): ContractRoute {
 
         fun handlepatchEvent(eventId: Long): HttpHandler = { req: Request ->
-            createEvent(eventUpdateRequestLens(req)).let { reg ->
+            updateEvent(eventId, eventUpdateRequestLens(req)).let { reg ->
                 when (reg) {
                     is Either.Left -> reg.a.toResponse()
                     is Either.Right -> Router.eventResponseLens(
