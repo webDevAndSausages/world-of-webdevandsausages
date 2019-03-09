@@ -11,6 +11,8 @@
             ask: volume
           - say: "Sponsor?"
             ask: sponsor
+          - say: "Sponsor link?"
+            ask: sponsor_link
           - say: "Contact info?"
             ask: contact
           - say: "Event date (YYYY-MM-DD)?"
@@ -43,6 +45,7 @@
           maxParticipants: "{{max_participants | int}}"
           registrationOpens: "{{registration_opens}}"
           volume: "{{volume | int}}"
+          sponsorLink: "{{sponsor_link}}"
         status_code: 201
       register: result
     - debug:
