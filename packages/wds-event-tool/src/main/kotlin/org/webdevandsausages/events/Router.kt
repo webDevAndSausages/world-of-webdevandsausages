@@ -84,7 +84,8 @@ class Router(
         GetCurrentEvent.route(getCurrentEvent),
         GetRegistration.route(getRegistration),
         PostRegistration.route(createRegistration),
-        DeleteRegistration.route(cancelRegistration)
+        DeleteRegistration.route(cancelRegistration),
+        GetUser.route(getRegistration)
     )
 
     private fun ok() = { _: Request -> Response(OK) }

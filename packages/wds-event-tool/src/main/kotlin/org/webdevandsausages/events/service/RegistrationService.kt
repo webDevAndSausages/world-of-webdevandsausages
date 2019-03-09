@@ -106,6 +106,14 @@ class GetRegistrationService(
         }
     }
 
+    fun getParticipant(token: String): Either<RegistrationError, ParticipantDto?> {
+        val participantData = participantCRUD.findByToken(token)
+        return when (participantData) {
+            is None -> Either.left(RegistrationError.ParticipantNotFound)
+            is Some -> participantData.t.right()
+        }
+    }
+
     operator fun invoke(eventId: Long, verificationToken: String): Either<RegistrationError, ParticipantDto?> {
         val eventData = eventCRUD.findByIdOrLatest(eventId)
         return when (eventData) {
