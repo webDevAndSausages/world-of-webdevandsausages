@@ -14,7 +14,7 @@ import org.webdevandsausages.events.utils.hasPassed
 import org.webdevandsausages.events.utils.threeDaysLater
 
 class GetEventsService(val eventRepository: EventCRUD) {
-    operator fun invoke(status: String?): List<EventDto>? {
+    operator fun invoke(status: String?): List<EventDto> {
         return eventRepository.findAllWithParticipants(status)
     }
 }
