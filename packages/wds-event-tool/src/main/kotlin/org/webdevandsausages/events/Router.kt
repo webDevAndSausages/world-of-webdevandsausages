@@ -73,7 +73,8 @@ class Router(
 
     private fun getAdminApiRoutes() = listOf(
         "/{any:.*}" bindContract OPTIONS to ok(),
-        PostEvent.route(createEvent)
+        PostEvent.route(createEvent),
+        AdminGetEventInfo.route(getEventById)
     )
 
     private fun getApiRoutes() = listOf(
