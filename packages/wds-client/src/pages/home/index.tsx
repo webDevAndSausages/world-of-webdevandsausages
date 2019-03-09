@@ -57,7 +57,6 @@ export function Home({ setTheme }: { setTheme: Function }) {
   useEffect(() => {
     setTheme(Theme.Standard)
   }, [])
-  console.log(event)
   return (
     <PageWrapper>
       <TopSection isExpandedMobileNav={false}>

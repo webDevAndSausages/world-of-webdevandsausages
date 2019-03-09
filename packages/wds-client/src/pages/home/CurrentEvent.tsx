@@ -9,6 +9,7 @@ import { theme } from "../../styles/theme"
 import Markdown from "react-markdown/with-html"
 import { EventData, Event as EventType } from "../../models/Event"
 import { unionize, ofType, UnionOf } from "unionize"
+import { ConsoleRegistration } from "./ConsoleRegistration"
 
 import Spinner from "../../components/Spinner"
 import FutureEvent from "./FutureEvent"
@@ -130,7 +131,7 @@ const FakeZoom = styled(FakeButton)`
   border-color: #049931;
 `
 
-const blink = keyframes`
+export const blink = keyframes`
   0% {
     opacity: 0;
   };
@@ -160,13 +161,15 @@ const Cursor = styled.input<{ blink: boolean }>`
   background: transparent;
   border: none;
   box-shadow: none;
+  width: 100%;
+  padding-left: 5px;
   outline: none;
   ::placeholder {
     color: #fff;
   }
 `
 
-const CursorInput = ({
+export const CursorInput = ({
   commandValue,
   onChange,
   onKeyPress
@@ -181,6 +184,7 @@ const CursorInput = ({
     onChange={onChange}
     blink={!commandValue}
     onKeyPress={onKeyPress}
+    autoFocus
   />
 )
 
@@ -206,7 +210,7 @@ export const Console = ({ children }) => (
 )
 
 interface ConState {
-  prompt: string
+  prompt?: string
   last: any
 }
 
@@ -231,14 +235,10 @@ const defaultState = ConsoleState.Waiting({
 
 const updates = {
   wait: () => defaultState,
-  register: (state: ConsoleStateType) =>
-    ConsoleState.Registering({ prompt: "Email:", last: state }),
-  modify: (state: ConsoleStateType) =>
-    ConsoleState.Modifing({ prompt: "Registration token (received by email):", last: state }),
-  check: (state: ConsoleStateType) =>
-    ConsoleState.Modifing({ prompt: "Registration token (received by email):", last: state }),
-  help: (state: ConsoleStateType) =>
-    ConsoleState.Helping({ prompt: "To return press any key", last: state }),
+  register: (state: ConsoleStateType) => ConsoleState.Registering({ last: state }),
+  modify: (state: ConsoleStateType) => ConsoleState.Modifing({ last: state }),
+  check: (state: ConsoleStateType) => ConsoleState.Checking({ last: state }),
+  help: (state: ConsoleStateType) => ConsoleState.Helping({ prompt: "Back [b/esc]:", last: state }),
   back: (state: ConsoleStateType) => state.last
 }
 
@@ -253,7 +253,7 @@ const commands: { [key: string]: Action } = {
   b: "back"
 }
 
-const RegistrationConsole = ({ event, children }: { event: EventData; children?: any }) => {
+const RegistrationConsole = ({ event }: { event: EventData; children?: any }) => {
   const [consoleState, dispatch] = useReducer(consoleReducer, defaultState)
   const [commandValue, setCommand] = useState("")
   const handleCommand = (e: any) => {
@@ -271,8 +271,6 @@ const RegistrationConsole = ({ event, children }: { event: EventData; children?:
       setCommand("")
     }
   }
-
-  const getPrompt = ConsoleState.match({ default: ({ prompt }) => prompt })
 
   return (
     <div id="current-event-console">
@@ -300,14 +298,19 @@ const RegistrationConsole = ({ event, children }: { event: EventData; children?:
           <EventDetail>
             <Markdown source={event.contact} escapeHtml={false} />
           </EventDetail>
-          <EventDetailLabel>
-            $ {getPrompt(consoleState as ConsoleStateType)}
-            <CursorInput
-              commandValue={commandValue}
-              onChange={handleCommand}
-              onKeyPress={dispatchCommand}
-            />
-          </EventDetailLabel>
+          {ConsoleState.match(consoleState, {
+            Registering: () => <ConsoleRegistration eventId={event.id} />,
+            default: ({ prompt }) => (
+              <EventDetailLabel>
+                $ {prompt}
+                <CursorInput
+                  commandValue={commandValue}
+                  onChange={handleCommand}
+                  onKeyPress={dispatchCommand}
+                />
+              </EventDetailLabel>
+            )
+          })}
         </Screen>
       </Console>
     </div>
@@ -340,23 +343,3 @@ function Event(event: any) {
 }
 
 export default Event
-
-/*
-  <RegistrationConsole event={event}>
-      <EventDetailLabel>[?] coming</EventDetailLabel>
-      <EventDetailLabel onKeyPress={this.handleKeyPress}>
-        $ <Cursor placeholder="_" />
-      </EventDetailLabel>
-    </RegistrationConsole>
-
-  <EventConsumer
-        renderOpenEvent={this.renderEvent}
-        renderOpenEventWithRegistration={this.renderEventWithRegistration}
-        map={event => ({
-          eventDate: event.datetime
-            ? format(event.datetime, 'MMMM Do, YYYY, HH:mm')
-            : '',
-          ...event
-        })}
-      />
-      */
