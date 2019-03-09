@@ -3,10 +3,11 @@ import styled, { css, keyframes } from 'styled-components'
 import darken from 'polished/lib/color/darken'
 
 import format from 'date-fns/format'
+import { over, lensProp } from 'ramda'
 import { toRem, phone, tablet } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
 import Markdown from 'react-markdown/with-html'
-import { CurrentEvent, EventData, Event as EventType } from '../../models/Event'
+import { EventData, Event as EventType } from '../../models/Event'
 
 import Spinner from '../../components/Spinner'
 import { ButtonLink } from '../../components/Button'
@@ -64,7 +65,7 @@ export const EventDetailLabel = styled.label`
   line-height: 120%;
 `
 
-export const EventDetail = styled.p`
+export const EventDetail = styled.div`
   margin: 0;
   padding-left: 1.5rem;
   line-height: 100%;
@@ -199,17 +200,17 @@ const RegistrationConsole = ({
   return (
     <div id="current-event-console">
       <SponsorAnnouncement>Sponsored by</SponsorAnnouncement>
-      {/*event.sponsor && (
-      <a href={event.sponsorWWWLink || null}>
-        <SponsorLogo
-          src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`}
-        />
-      </a>
-    )}*/}
+      {event.sponsor && (
+        <a href={event.sponsorLink || null}>
+          <SponsorLogo
+            src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`}
+          />
+        </a>
+      )}
       <Console>
         <Screen>
           <EventDetailLabel>$ which</EventDetailLabel>
-          {/*<EventDetail>Volume {event.volume}</EventDetail> */}
+          <EventDetail>Volume {event.volume}</EventDetail>
           <EventDetailLabel>$ when</EventDetailLabel>
           <EventDetail>{event.date}</EventDetail>
           <EventDetailLabel>$ what</EventDetailLabel>
@@ -246,7 +247,10 @@ function Event(event: any) {
           NONE: () => <FutureEvent />,
           ERROR: () => <FutureEvent />,
           default: ({ data }: any) => {
-            return <RegistrationConsole event={data} />
+            const formattedData = over(lensProp('date'), date =>
+              format(date, 'MMMM Do, YYYY, HH:mm')
+            )(data)
+            return <RegistrationConsole event={formattedData} />
           }
         })}
     </>

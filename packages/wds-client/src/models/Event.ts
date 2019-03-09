@@ -2,8 +2,10 @@ import { unionize, ofType, UnionOf } from 'unionize'
 import { RequestFromApi, ApiRequest } from './ApiRequest'
 
 export interface EventData {
+  volume: number
   name: string
   sponsor: string
+  sponsorLink: string
   contact: string
   date: string
   details: string

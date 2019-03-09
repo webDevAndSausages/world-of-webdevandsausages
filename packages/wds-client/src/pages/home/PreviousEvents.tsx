@@ -79,6 +79,7 @@ const PreviousEvents = () => (
     <Grid columns="repeat(auto-fit,minmax(330px,1fr))">
       {events.talks.map(t => (
         <EventPanel
+          key={t.title}
           title={t.title}
           titleLink={t.titleLink}
           details={t.details}

@@ -136,7 +136,7 @@ export function MailingListForm() {
     [
       vals =>
         vals.pipe(
-          onEvent('SUCCESS', 'FAILURE'),
+          onEvent('SUCCESS'),
           delay(5000),
           map(([_state, send]) => {
             resetApi()
@@ -176,6 +176,12 @@ export function MailingListForm() {
             onBlur={() => {
               send({ type: 'EMAIL_BLUR' })
             }}
+            onKeyPress={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                send({ type: 'SUBMIT' })
+              }
+            }}
             value={context.email}
             err={state.matches('emailErr')}
             active={context.email.length > 0}
@@ -190,7 +196,7 @@ export function MailingListForm() {
           />
           <Button
             type="submit"
-            loading={state.matches('SUBMIT')}
+            loading={ApiRequest.is.LOADING(context.data)}
             secondary
             disabled={!isEmail(context.email)}
             valid={isEmail(context.email)}
@@ -211,7 +217,6 @@ export function MailingListForm() {
           defaultMessage="Oops, something didn't work as planned"
           show={ApiRequest.is.NOT_OK(context.data)}
         />
-        <Notification type="info" id="mailingListInfo" />
         <MetaWrapper>
           <Pre>
             <b>state:</b> {JSON.stringify(state.value, null, 2)}

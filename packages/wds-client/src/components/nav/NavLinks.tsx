@@ -59,11 +59,7 @@ export const NavSeparator = styled.span`
   opacity: 0.35;
 `
 
-const NavLinks = ({
-  showMobileNav,
-  disableRegistration,
-  isFeedbackLinkVisible
-}: any) => (
+const NavLinks = ({ disableRegistration, isFeedbackLinkVisible }: any) => (
   <Wrapper>
     <NavLink id="home" activeClassName="active" to="/">
       HOME
@@ -77,7 +73,6 @@ const NavLinks = ({
       id="registration"
       activeClassName={!disableRegistration && 'active'}
       to={`/${disableRegistration ? '' : 'registration'}`}
-      showMobileNav
       disabled={disableRegistration}
     >
       REGISTRATION
