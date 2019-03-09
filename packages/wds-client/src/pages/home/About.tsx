@@ -131,22 +131,22 @@ const About = (props, context) => (
       <Heading small>Former Sponsors</Heading>
       <Article>
         <a href="https://futurice.com">
-          <SponsorLogo src="sponsor-logos/futurice-logo.svg" />
+          <SponsorLogo src="sponsor-logos/futurice-logo.svg" alt="Futurice" />
         </a>
         <a href="https://gofore.com">
-          <SponsorLogo src="sponsor-logos/gofore-logo.svg" />
+          <SponsorLogo src="sponsor-logos/gofore-logo.svg" alt="Gofore" />
         </a>
         <a href="https://wapice.com">
-          <SponsorLogo src="sponsor-logos/wapice-logo.svg" />
+          <SponsorLogo src="sponsor-logos/wapice-logo.svg" alt="Wapice" />
         </a>
         <a href="https://vincit.com">
-          <SponsorLogo src="sponsor-logos/vincit-logo.svg" />
+          <SponsorLogo src="sponsor-logos/vincit-logo.svg" alt="Vincit" />
         </a>
         <a href="https://www.solita.fi">
-          <SponsorLogo src="sponsor-logos/solita-logo-white.svg" />
+          <SponsorLogo src="sponsor-logos/solita-logo-white.svg" alt="Solita" />
         </a>
         <a href="https://www.happy-or-not.com">
-          <SponsorLogo src="sponsor-logos/happyornot.svg" />
+          <SponsorLogo src="sponsor-logos/happyornot.svg" alt="HappyOrNot" />
         </a>
       </Article>
     </Section>
