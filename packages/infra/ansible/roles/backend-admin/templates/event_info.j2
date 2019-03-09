@@ -1,0 +1,73 @@
+** ** ** ** ** ** ** ** **
+{{ result.json.name }} - volume {{ result.json.volume }}
+Event id: {{ result.json.id }}
+
+Organizers:
+-----------
+{% set organizers = (result.json.participants | selectattr("status", "equalto", "ORGANIZER")) | list %}
+{% if organizers | length > 0 %}
+  {% for participant in organizers %}
+
+    ID:           {{ participant.id }}
+    First name:   {{ participant.firstName }}
+    Last name:    {{ participant.lastName }}
+    Status:       {{ participant.status }}
+    ----
+  {% endfor %}
+{% else %}
+  - Zero participants -
+{% endif %}
+
+
+Currently registered participants:
+----------------------------------
+{% set registeredParticipants = (result.json.participants | selectattr("status", "equalto", "REGISTERED")) | list %}
+{% if registeredParticipants | length > 0 %}
+  {% for participant in registeredParticipants %}
+
+    ID:           {{ participant.id }}
+    First name:   {{ participant.firstName }}
+    Last name:    {{ participant.lastName }}
+    Status:       {{ participant.status }}
+    ----
+  {% endfor %}
+{% else %}
+  - Zero participants -
+{% endif %}
+
+
+Waitlisted participants:
+------------------------
+{% set waitlistedParticipants = (result.json.participants | selectattr("status", "equalto", "WAIT_LISTED")) | list %}
+{% if waitlistedParticipants | length > 0 %}
+  {% for participant in waitlistedParticipants %}
+
+    ID:           {{ participant.id }}
+    First name:   {{ participant.firstName }}
+    Last name:    {{ participant.lastName }}
+    Status:       {{ participant.status }}
+    ----
+  {% endfor %}
+{% else %}
+  - Zero participants -
+{% endif %}
+
+
+Cancelled participants:
+-----------------------
+{% set cancelledParticipants = (result.json.participants | selectattr("status", "equalto", "CANCELLED")) | list %}
+{% if cancelledParticipants | length > 0 %}
+  {% for participant in cancelledParticipants %}
+
+    ID:           {{ participant.id }}
+    First name:   {{ participant.firstName }}
+    Last name:    {{ participant.lastName }}
+    Status:       {{ participant.status }}
+    ----
+  {% endfor %}
+{% else %}
+  - Zero participants -
+{% endif %}
+
+
+** ** ** ** ** ** ** ** **
