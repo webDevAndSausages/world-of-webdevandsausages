@@ -7,8 +7,12 @@
         msg:
           - say: "Event name?"
             ask: name
+          - say: "Volume?"
+            ask: volume
           - say: "Sponsor?"
             ask: sponsor
+          - say: "Sponsor link?"
+            ask: sponsor_link
           - say: "Contact info?"
             ask: contact
           - say: "Event date (YYYY-MM-DD)?"
@@ -40,10 +44,33 @@
           location: "{{location}}"
           maxParticipants: "{{max_participants | int}}"
           registrationOpens: "{{registration_opens}}"
+          volume: "{{volume | int}}"
+          sponsorLink: "{{sponsor_link}}"
         status_code: 201
       register: result
-    - debug: var={{ result.json | to_nice_json(indent=2)}}
+    - debug:
+        msg: "{{ result.json | to_nice_json(indent=2) }}"
   tags:
     - add-event
 
 
+- name: Get event info task block
+  block:
+    - name: Get current event
+      uri:
+        url: http://localhost:5000/admin-api/events/current
+        body_format: json
+        method: GET
+        status_code: 200
+      register: result
+    - name: Get participants for current event
+      uri:
+        url: "http://localhost:5000/admin-api/events/{{ result.json.id }}"
+        body_format: json
+        method: GET
+        status_code: 200
+      register: result
+    - debug:
+        msg: "{{ lookup('template', 'event_info.j2') }}"
+  tags:
+    - get-current-event-info

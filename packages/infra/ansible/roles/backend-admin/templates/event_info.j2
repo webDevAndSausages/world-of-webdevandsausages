@@ -1,0 +1,85 @@
+{% set event = result.json %}
+EVENT ID:           {{ event.id }}
+** ** ** ** ** ** ** ** ** ** ** ** **
+Event name:         {{ event.name }}
+Volume:             {{ event.volume }}
+Sponsor:            {{ event.sponsor }}
+Contact info:       {{ event.contact }}
+Date:               {{ event.date }}
+Details:            {{ event.details }}
+Location:           {{ event.location }}
+Event status:       {{ event.status }}
+Max participants:   {{ event.maxParticipants }}
+Registration opens: {{ event.registrationOpens }}
+
+-----------
+
+Organizers:
+-----------
+{% set organizers = (event.participants | selectattr("status", "equalto", "ORGANIZER")) | list %}
+{% if organizers | length > 0 %}
+  {% for participant in organizers %}
+
+    ID:           {{ participant.id }}
+    First name:   {{ participant.firstName }}
+    Last name:    {{ participant.lastName }}
+    Status:       {{ participant.status }}
+    ----
+  {% endfor %}
+{% else %}
+  - Zero participants -
+{% endif %}
+
+
+Currently registered participants:
+----------------------------------
+{% set registeredParticipants = (event.participants | selectattr("status", "equalto", "REGISTERED")) | list %}
+{% if registeredParticipants | length > 0 %}
+  {% for participant in registeredParticipants %}
+
+    ID:           {{ participant.id }}
+    First name:   {{ participant.firstName }}
+    Last name:    {{ participant.lastName }}
+    Status:       {{ participant.status }}
+    ----
+  {% endfor %}
+{% else %}
+  - Zero participants -
+{% endif %}
+
+
+Waitlisted participants:
+------------------------
+{% set waitlistedParticipants = (event.participants | selectattr("status", "equalto", "WAIT_LISTED")) | list %}
+{% if waitlistedParticipants | length > 0 %}
+  {% for participant in waitlistedParticipants %}
+
+    ID:           {{ participant.id }}
+    First name:   {{ participant.firstName }}
+    Last name:    {{ participant.lastName }}
+    Status:       {{ participant.status }}
+    ----
+  {% endfor %}
+{% else %}
+  - Zero participants -
+{% endif %}
+
+
+Cancelled participants:
+-----------------------
+{% set cancelledParticipants = (event.participants | selectattr("status", "equalto", "CANCELLED")) | list %}
+{% if cancelledParticipants | length > 0 %}
+  {% for participant in cancelledParticipants %}
+
+    ID:           {{ participant.id }}
+    First name:   {{ participant.firstName }}
+    Last name:    {{ participant.lastName }}
+    Status:       {{ participant.status }}
+    ----
+  {% endfor %}
+{% else %}
+  - Zero participants -
+{% endif %}
+
+
+** ** ** ** ** ** ** ** **

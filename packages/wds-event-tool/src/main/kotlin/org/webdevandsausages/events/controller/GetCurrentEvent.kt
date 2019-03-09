@@ -28,7 +28,7 @@ object GetCurrentEvent {
                     is Either.Right -> EventLens(
                         EventOutDto(it.b),
                         Response(Status.OK)
-                        )
+                    )
                 }
             }
         }
