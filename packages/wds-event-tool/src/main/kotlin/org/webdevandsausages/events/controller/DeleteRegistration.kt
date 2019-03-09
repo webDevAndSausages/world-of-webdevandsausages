@@ -41,10 +41,10 @@ object DeleteRegistration {
 
         return "events/registrations" / registrationToken meta {
             summary = "Cancel user registration"
-            returning("Registration to the event has been cancelled." to Status.OK)
-            returning("The event is closed or non-existent." to Status.NOT_FOUND)
-            returning("Some internal error occurred" to Status.INTERNAL_SERVER_ERROR)
-            returning("Participant was already cancelled" to Status.UNPROCESSABLE_ENTITY)
+            returning(Status.OK to "Registration to the event has been cancelled.")
+            returning(Status.NOT_FOUND to "The event is closed or non-existent.")
+            returning(Status.INTERNAL_SERVER_ERROR to "Some internal error occurred")
+            returning(Status.UNPROCESSABLE_ENTITY to "Participant was already cancelled")
         } bindContract Method.DELETE to ::handleCancellation
     }
 }

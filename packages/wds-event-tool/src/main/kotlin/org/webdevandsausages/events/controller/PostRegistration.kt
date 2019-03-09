@@ -61,11 +61,11 @@ object PostRegistration {
         return "events" / eventIdParam / "registrations" meta {
             summary = "Register user"
             receiving(registrationRequestLens)
-            returning("User has been registered to the event." to Status.CREATED)
-            returning("The event is closed or non-existent." to Status.NOT_FOUND)
-            returning("The email is already registered." to Status.BAD_REQUEST)
-            returning("A database error occurred." to Status.INTERNAL_SERVER_ERROR)
-            returning("The email address is not valid" to Status.UNPROCESSABLE_ENTITY)
+            returning(Status.CREATED to "User has been registered to the event.")
+            returning(Status.NOT_FOUND to "The event is closed or non-existent.")
+            returning(Status.BAD_REQUEST to "The email is already registered.")
+            returning(Status.INTERNAL_SERVER_ERROR to "A database error occurred.")
+            returning(Status.UNPROCESSABLE_ENTITY to "The email address is not valid")
         } bindContract Method.POST to ::handleRegistration
     }
 }

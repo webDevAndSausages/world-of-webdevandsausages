@@ -39,8 +39,8 @@ object GetEvent {
 
         return "events" / Router.eventIdParam meta {
                 summary = "Get event by id"
-                returning("Event found" to Status.OK)
-                returning("The event does not exist." to Status.NOT_FOUND)
+                returning( Status.OK to "Event found")
+                returning(Status.NOT_FOUND to "The event does not exist.")
             } bindContract GET to ::handleGetEventById
     }
 }

@@ -2,13 +2,16 @@ package org.webdevandsausages.events.utils
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import org.http4k.format.ConfigurableJackson
-import org.http4k.format.defaultKotlinModuleWithHttp4kSerialisers
+import org.http4k.format.asConfigurable
+import org.http4k.format.withStandardMappings
 
-val mapper = ObjectMapper()
-    .registerModule(defaultKotlinModuleWithHttp4kSerialisers)
+val mapper = KotlinModule()
+    .asConfigurable()
+    .withStandardMappings()
+    .done()
     .registerModule(JodaModule())
     .disableDefaultTyping()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

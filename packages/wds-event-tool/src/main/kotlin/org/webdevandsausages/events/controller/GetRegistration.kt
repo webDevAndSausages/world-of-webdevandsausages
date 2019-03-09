@@ -37,11 +37,11 @@ object GetRegistration {
 
         return "events" / Router.eventIdParam / "registrations" / Router.verificationTokenParam meta {
             summary = "Get registration by verification token"
-            returning("Registration found." to Status.OK)
-            returning("The event does not exist." to Status.NOT_FOUND)
-            returning("The participant was not found with that token." to Status.NOT_FOUND)
-            returning("The event is closed." to Status.GONE)
-            returning("A database error occurred." to Status.INTERNAL_SERVER_ERROR)
+            returning( Status.OK to "Registration found.")
+            returning(Status.NOT_FOUND to "The event does not exist.")
+            returning(Status.NOT_FOUND to "The participant was not found with that token.")
+            returning(Status.GONE to "The event is closed.")
+            returning(Status.INTERNAL_SERVER_ERROR to "A database error occurred.")
         } bindContract GET to ::handleGetRegistrationByToken
     }
 }

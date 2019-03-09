@@ -13,19 +13,19 @@ import org.jooq.util.jaxb.Jdbc
 import org.jooq.util.jaxb.Strategy
 import org.jooq.util.postgres.PostgresDatabase
 
-val kotlinVersion = "1.3.11"
-val http4kVersion = "3.103.2"
+val kotlinVersion = "1.3.20"
+val http4kVersion = "3.115.1"
 val log4jVersion = "2.10.0"
 val jacksonVersion = "2.9.6"
 val firebaseVersion = "6.6.0"
 val flywayCoreVersion = "5.2.4"
 val postgresqlDriverVersion = "42.2.5"
 val jooqVersion = "3.10.1"
-val arrowVersion = "0.8.1"
+val arrowVersion = "0.8.2"
 val mockkVersion = "1.8.13.kotlin13"
 
 plugins {
-    kotlin("jvm") version "1.3.11"
+    kotlin("jvm") version "1.3.20"
     id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
     // id("org.jmailen.kotlinter") version "1.20.1"
     java

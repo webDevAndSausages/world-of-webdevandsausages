@@ -35,8 +35,8 @@ object GetCurrentEvent {
 
         return "events/current" meta {
             summary = "Get latest publishable event"
-            returning("Latest event found." to Status.OK)
-            returning("The event is closed or non-existent." to Status.NOT_FOUND)
+            returning(Status.OK to "Latest event found.")
+            returning(Status.NOT_FOUND to "The event is closed or non-existent.")
         } bindContract GET to handleGetCurrentEvent()
     }
 }

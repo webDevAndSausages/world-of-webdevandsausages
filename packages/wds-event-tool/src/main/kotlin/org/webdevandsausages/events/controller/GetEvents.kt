@@ -2,7 +2,6 @@ package org.webdevandsausages.events.controller
 
 import meta.enums.EventStatus
 import org.http4k.contract.ContractRoute
-import org.http4k.contract.bindContract
 import org.http4k.contract.meta
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
