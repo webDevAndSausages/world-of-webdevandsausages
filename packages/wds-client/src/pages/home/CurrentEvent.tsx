@@ -1,17 +1,19 @@
-import React from 'react'
-import styled, { css, keyframes } from 'styled-components'
-import darken from 'polished/lib/color/darken'
+import React, { useReducer, useState } from "react"
+import styled, { css, keyframes } from "styled-components"
+import darken from "polished/lib/color/darken"
 
-import format from 'date-fns/format'
-import { over, lensProp } from 'ramda'
-import { toRem, phone, tablet } from '../../styles/helpers'
-import { theme } from '../../styles/theme'
-import Markdown from 'react-markdown/with-html'
-import { EventData, Event as EventType } from '../../models/Event'
+import format from "date-fns/format"
+import { over, lensProp } from "ramda"
+import { toRem, phone, tablet } from "../../styles/helpers"
+import { theme } from "../../styles/theme"
+import Markdown from "react-markdown/with-html"
+import { EventData, Event as EventType } from "../../models/Event"
+import { ConsoleRegistration } from "./ConsoleRegistration"
 
-import Spinner from '../../components/Spinner'
-import { ButtonLink } from '../../components/Button'
-import FutureEvent from './FutureEvent'
+import Spinner from "../../components/Spinner"
+import FutureEvent from "./FutureEvent"
+
+import { ConsoleState, ConsoleStateType } from "../../models/ConsoleState"
 
 const InnerWrapper = styled.div<any>`
   display: flex;
@@ -130,7 +132,7 @@ const FakeZoom = styled(FakeButton)`
   border-color: #049931;
 `
 
-const blink = keyframes`
+export const blink = keyframes`
   0% {
     opacity: 0;
   };
@@ -148,18 +150,46 @@ const blink = keyframes`
   };
 `
 
-const Cursor = styled.input`
+const Cursor = styled.input<{ blink: boolean }>`
   font-size: 24px;
-  color: #fff;
-  animation: 1s ${blink} 1s infinite;
+  margin-left: 15px;
+  padding-top: 5px;
+  color: #cdee69;
+  ${({ blink: b }) =>
+    b
+      ? css`
+          animation: 1s ${blink} 1s infinite;
+        `
+      : undefined};
   background: transparent;
   border: none;
   box-shadow: none;
+  width: 100%;
+  padding-left: 5px;
   outline: none;
   ::placeholder {
     color: #fff;
   }
 `
+
+export const CursorInput = ({
+  commandValue,
+  onChange,
+  onKeyPress
+}: {
+  commandValue: string
+  onChange: (e: any) => any
+  onKeyPress: any
+}) => (
+  <Cursor
+    placeholder="_"
+    value={commandValue}
+    onChange={onChange}
+    blink={!commandValue}
+    onKeyPress={onKeyPress}
+    autoFocus
+  />
+)
 
 const SponsorLogo = styled.img`
   width: ${toRem(400)};
@@ -182,29 +212,60 @@ export const Console = ({ children }) => (
   </EventWrapper>
 )
 
-const RegistrationLink = () => (
-  <InnerWrapper marginTop={60}>
-    <ButtonLink id="register-link-button" big light href="/registration">
-      Register
-    </ButtonLink>
-  </InnerWrapper>
-)
+type Action = "wait" | "register" | "modify" | "check" | "help" | "back"
 
-const RegistrationConsole = ({
-  event,
-  children
-}: {
-  event: EventData
-  children?: any
-}) => {
+const defaultPrompt = "Commands: register [r], modify [m], check [c], help [h], back [</b/esc]:"
+
+const defaultState = ConsoleState.Waiting({
+  prompt: defaultPrompt,
+  last: defaultPrompt
+})
+
+const updates = {
+  wait: () => defaultState,
+  register: (state: ConsoleStateType) => ConsoleState.Registering({ last: state }),
+  modify: (state: ConsoleStateType) => ConsoleState.Modifing({ last: state }),
+  check: (state: ConsoleStateType) => ConsoleState.Checking({ last: state }),
+  help: (state: ConsoleStateType) => ConsoleState.Helping({ prompt: "Back [b/esc]:", last: state }),
+  back: (state: ConsoleStateType) => state.last
+}
+
+const consoleReducer = (state: ConsoleStateType, action: Action) =>
+  updates[action] ? updates[action](state) : defaultState
+
+const commands: { [key: string]: Action } = {
+  r: "register",
+  m: "modify",
+  c: "check",
+  h: "help",
+  b: "back"
+}
+
+const RegistrationConsole = ({ event }: { event: EventData; children?: any }) => {
+  const [consoleState, dispatch] = useReducer(consoleReducer, defaultState)
+  const [commandValue, setCommand] = useState("")
+  const handleCommand = (e: any) => {
+    if (commands[e.target.value.toLowerCase()]) {
+      setCommand(e.target.value)
+    }
+  }
+  const dispatchCommand = (e: any) => {
+    if (e.charCode == "13" && commandValue) {
+      dispatch(commands[commandValue.toLowerCase()])
+      setCommand("")
+    }
+    if (e.charCode === "27" || e.charCode === "37") {
+      dispatch("back")
+      setCommand("")
+    }
+  }
+
   return (
     <div id="current-event-console">
       <SponsorAnnouncement>Sponsored by</SponsorAnnouncement>
       {event.sponsor && (
         <a href={event.sponsorLink || null}>
-          <SponsorLogo
-            src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`}
-          />
+          <SponsorLogo src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`} />
         </a>
       )}
       <Console>
@@ -225,7 +286,19 @@ const RegistrationConsole = ({
           <EventDetail>
             <Markdown source={event.contact} escapeHtml={false} />
           </EventDetail>
-          {children}
+          {ConsoleState.match(consoleState, {
+            Registering: () => <ConsoleRegistration eventId={event.id} />,
+            default: ({ prompt }) => (
+              <>
+                <EventDetailLabel>$ {prompt}</EventDetailLabel>
+                <CursorInput
+                  commandValue={commandValue}
+                  onChange={handleCommand}
+                  onKeyPress={dispatchCommand}
+                />
+              </>
+            )
+          })}
         </Screen>
       </Console>
     </div>
@@ -247,8 +320,8 @@ function Event(event: any) {
           NONE: () => <FutureEvent />,
           ERROR: () => <FutureEvent />,
           default: ({ data }: any) => {
-            const formattedData = over(lensProp('date'), date =>
-              format(date, 'MMMM Do, YYYY, HH:mm')
+            const formattedData = over(lensProp("date"), date =>
+              format(date, "MMMM Do, YYYY, HH:mm")
             )(data)
             return <RegistrationConsole event={formattedData} />
           }
@@ -258,23 +331,3 @@ function Event(event: any) {
 }
 
 export default Event
-
-/*
-  <RegistrationConsole event={event}>
-      <EventDetailLabel>[?] coming</EventDetailLabel>
-      <EventDetailLabel onKeyPress={this.handleKeyPress}>
-        $ <Cursor placeholder="_" />
-      </EventDetailLabel>
-    </RegistrationConsole>
-
-  <EventConsumer
-        renderOpenEvent={this.renderEvent}
-        renderOpenEventWithRegistration={this.renderEventWithRegistration}
-        map={event => ({
-          eventDate: event.datetime
-            ? format(event.datetime, 'MMMM Do, YYYY, HH:mm')
-            : '',
-          ...event
-        })}
-      />
-      */

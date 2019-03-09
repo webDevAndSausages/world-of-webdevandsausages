@@ -1,7 +1,8 @@
-import { unionize, ofType, UnionOf } from 'unionize'
-import { RequestFromApi, ApiRequest } from './ApiRequest'
+import { unionize, ofType, UnionOf } from "unionize"
+import { RequestFromApi, ApiRequest } from "./ApiRequest"
 
 export interface EventData {
+  id: number
   volume: number
   name: string
   sponsor: string
