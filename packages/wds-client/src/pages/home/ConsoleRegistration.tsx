@@ -1,45 +1,28 @@
 import React, { useState, useReducer, useEffect } from "react"
 import styled from "styled-components"
 import { CursorInput, EventDetailLabel } from "./CurrentEvent"
-import { unionize, ofType, UnionOf } from "unionize"
 import { useApi, endpoints } from "../../hooks/useApi"
 import { ApiRequest } from "../../models/ApiRequest"
-import { blink } from "./CurrentEvent"
+import { Registration, RegistrationType } from "../../models/Registration"
 
 const Loading = styled.div`
   font-size: 24px;
   color: #cdee69;
 `
 
-interface Prompt {
-  prompt: string
-}
-
-const Registration = unionize(
-  {
-    EnteringEmail: ofType<Prompt>(),
-    EnteringName: ofType<Prompt>(),
-    EnteringAffiliation: ofType<Prompt>(),
-    Success: ofType<Prompt>(),
-    Failure: ofType<Prompt>(),
-    Loading: {}
-  },
-  {
-    value: "value"
-  }
-)
-
-type RegistrationType = UnionOf<typeof Registration>
-
 const updates = {
-  email: (state: RegistrationType) => Registration.EnteringEmail({ prompt: "Enter your email:" }),
-  name: (state: RegistrationType) => Registration.EnteringName({ prompt: "Enter your name:" }),
+  email: (state: RegistrationType) =>
+    Registration.EnteringEmail({ prompt: "Enter your email:", last: state }),
+  name: (state: RegistrationType) =>
+    Registration.EnteringName({ prompt: "Enter your name:", last: state }),
   affiliation: (state: RegistrationType) =>
     Registration.EnteringAffiliation({
-      prompt: "Enter your affiliation (company) and press return to register:"
+      prompt: "Enter your affiliation (company) and press return to register:",
+      last: state
     }),
   success: () => Registration.Success({ prompt: "You are registered" }),
-  failure: () => Registration.Failure({ prompt: "Oops, something is fucked up" }),
+  failure: (state: RegistrationType) =>
+    Registration.Failure({ prompt: "Oops, something is fucked up", last: state }),
   loading: () => Registration.Loading()
 }
 
@@ -97,7 +80,7 @@ export const ConsoleRegistration = ({ eventId }: { eventId: number }) => {
       const act = getAction(registrationState)
       act && dispatch(act)
     }
-    if (e.charCode === "27") {
+    if (e.charCode === "27" || e.charCode === "37") {
       dispatch("back")
     }
   }

@@ -8,11 +8,12 @@ import { toRem, phone, tablet } from "../../styles/helpers"
 import { theme } from "../../styles/theme"
 import Markdown from "react-markdown/with-html"
 import { EventData, Event as EventType } from "../../models/Event"
-import { unionize, ofType, UnionOf } from "unionize"
 import { ConsoleRegistration } from "./ConsoleRegistration"
 
 import Spinner from "../../components/Spinner"
 import FutureEvent from "./FutureEvent"
+
+import { ConsoleState, ConsoleStateType } from "../../models/ConsoleState"
 
 const InnerWrapper = styled.div<any>`
   display: flex;
@@ -209,24 +210,9 @@ export const Console = ({ children }) => (
   </EventWrapper>
 )
 
-interface ConState {
-  prompt?: string
-  last: any
-}
-
-const ConsoleState = unionize({
-  Waiting: ofType<ConState>(),
-  Registering: ofType<ConState>(),
-  Modifing: ofType<ConState>(),
-  Checking: ofType<ConState>(),
-  Helping: ofType<ConState>()
-})
-
-type ConsoleStateType = UnionOf<typeof ConsoleState>
-
 type Action = "wait" | "register" | "modify" | "check" | "help" | "back"
 
-const defaultPrompt = "Commands: register [r], modify [m], check [c], help [h], back [b/esc]:"
+const defaultPrompt = "Commands: register [r], modify [m], check [c], help [h], back [</b/esc]:"
 
 const defaultState = ConsoleState.Waiting({
   prompt: defaultPrompt,
@@ -266,7 +252,7 @@ const RegistrationConsole = ({ event }: { event: EventData; children?: any }) =>
       dispatch(commands[commandValue.toLowerCase()])
       setCommand("")
     }
-    if (e.charCode === "27") {
+    if (e.charCode === "27" || e.charCode === "37") {
       dispatch("back")
       setCommand("")
     }
