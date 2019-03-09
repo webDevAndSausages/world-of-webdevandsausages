@@ -40,7 +40,9 @@ class GetRegistrationServiceTest : StringSpec() {
             10,
             Timestamp.valueOf(LocalDateTime.now().plusDays(2)),
             TIMESTAMP,
-            TIMESTAMP
+            TIMESTAMP,
+            10,
+            "www.acme.fi"
          ),
         participants = populateParticipants()
       )

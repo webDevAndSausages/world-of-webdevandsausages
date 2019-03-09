@@ -55,7 +55,9 @@ class CancelRegistrationServiceTest : StringSpec() {
         3,
         Timestamp.valueOf(LocalDateTime.now().plusDays(2)),
         TIMESTAMP,
-        TIMESTAMP
+        TIMESTAMP,
+        10,
+        "www.acme.fi"
     )
 
     private val dbEvent = EventDto(

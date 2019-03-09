@@ -9,3 +9,5 @@ build/
 firebaseServiceAccountKey.json
 /out
 secrets.yaml
+wds-event-tool.ipr
+wds-event-tool.iws

@@ -66,7 +66,9 @@ class CreateRegistrationServiceTest : StringSpec() {
             80,
             Timestamp.valueOf(LocalDateTime.now().plusDays(2)),
             TIMESTAMP,
-            TIMESTAMP
+            TIMESTAMP,
+            10,
+            "www.acme.fi"
             )
       )
 
@@ -130,7 +132,9 @@ class CreateRegistrationServiceTest : StringSpec() {
                     1,
                     Timestamp.valueOf(LocalDateTime.now().plusDays(-2)),
                     TIMESTAMP,
-                    TIMESTAMP
+                    TIMESTAMP,
+                    10,
+                    "www.acme.fi"
                     ),
                 participants = listOf(
                      Participant(
@@ -224,7 +228,9 @@ class CreateRegistrationServiceTest : StringSpec() {
                     80,
                     Timestamp.valueOf(LocalDateTime.now().plusDays(-2)),
                     TIMESTAMP,
-                    TIMESTAMP
+                    TIMESTAMP,
+                    10,
+                    "www.acme.fi"
                     )
                 )
             every { unit.eventCRUD.findByIdOrLatest(any()) } returns Option(dbEvent)
