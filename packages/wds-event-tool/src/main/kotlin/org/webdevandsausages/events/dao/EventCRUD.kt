@@ -27,7 +27,7 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
     val db = DSL.using(configuration())
     val mapperInstance = JdbcMapperFactory.newInstance()
 
-    fun findAllWithParticipants(status: String?): List<EventDto>? {
+    fun findAllWithParticipants(status: String?): List<EventDto> {
         val resultSet = db.use { ctx ->
             ctx.select()
                 .from(Event.EVENT)
