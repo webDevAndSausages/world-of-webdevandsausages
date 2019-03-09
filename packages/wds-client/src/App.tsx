@@ -10,6 +10,7 @@ import { Switch, Route } from 'react-router-dom'
 import Nav from './components/nav'
 import ScrollWatcher from './components/ScrollWatcher'
 import { Home } from './pages/home'
+import About from './pages/home/About'
 import { assoc } from 'ramda'
 
 const defaultUiState = {
@@ -56,6 +57,12 @@ function App() {
         </UiContext.Provider>
         <GlobalStyles />
         <Switch>
+          <Route
+            path="/about"
+            render={() => {
+              return <About />
+            }}
+          />
           <Route
             path="/"
             render={() => {
