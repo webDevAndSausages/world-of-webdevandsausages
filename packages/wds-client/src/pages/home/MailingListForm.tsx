@@ -14,8 +14,8 @@ import { RequestFromApi, ApiRequest } from "../../models/ApiRequest"
 // components
 import Button from "../../components/Button"
 import Notification from "../../components/Notification"
-import { MetaWrapper, Pre } from "../../components/DevTools"
 import { Input } from "../../components/forms/Input"
+import { MetaWrapper, Pre } from "../../components/DevTools"
 
 const FieldWrapper = styled.div`
   display: flex;
@@ -150,7 +150,7 @@ export function MailingListForm() {
           defaultMessage="Oops, something didn't work as planned"
           show={ApiRequest.is.NOT_OK(context.data)}
         />
-        <MetaWrapper>
+        {/*<MetaWrapper>
           <Pre>
             <b>state:</b> {JSON.stringify(state.value, null, 2)}
           </Pre>
@@ -158,7 +158,7 @@ export function MailingListForm() {
           <Pre>
             <b>context (ctx):</b> {JSON.stringify(context, null, 2)}
           </Pre>
-        </MetaWrapper>
+        </MetaWrapper> */}
       </form>
     </FormWrapper>
   )

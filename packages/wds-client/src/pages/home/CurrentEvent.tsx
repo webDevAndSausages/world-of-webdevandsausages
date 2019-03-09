@@ -152,7 +152,9 @@ export const blink = keyframes`
 
 const Cursor = styled.input<{ blink: boolean }>`
   font-size: 24px;
-  color: black;
+  margin-left: 15px;
+  padding-top: 5px;
+  color: #cdee69;
   ${({ blink: b }) =>
     b
       ? css`
@@ -287,14 +289,14 @@ const RegistrationConsole = ({ event }: { event: EventData; children?: any }) =>
           {ConsoleState.match(consoleState, {
             Registering: () => <ConsoleRegistration eventId={event.id} />,
             default: ({ prompt }) => (
-              <EventDetailLabel>
-                $ {prompt}
+              <>
+                <EventDetailLabel>$ {prompt}</EventDetailLabel>
                 <CursorInput
                   commandValue={commandValue}
                   onChange={handleCommand}
                   onKeyPress={dispatchCommand}
                 />
-              </EventDetailLabel>
+              </>
             )
           })}
         </Screen>
