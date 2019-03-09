@@ -5,7 +5,7 @@ import { config } from "../config"
 
 const headers = {
   Accept: "application/json",
-  "wds-key": "wds-secret",
+  "wds-key": "WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27",
   "Content-Type": "application/json"
 }
 
