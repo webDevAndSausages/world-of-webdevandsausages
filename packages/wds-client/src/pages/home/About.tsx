@@ -24,8 +24,8 @@ const Heading = styled.h2<{small?: boolean}>`
     css`
       color: ${theme[color]};
     `};
-  ${props =>
-    props.small &&
+  ${p =>
+    p.small &&
     css`
       font-size: 1.8rem};
     `};
@@ -131,22 +131,22 @@ const About = (props, context) => (
       <Heading small>Former Sponsors</Heading>
       <Article>
         <a href="https://futurice.com">
-          <SponsorLogo src="../../assets/futurice-logo.svg" />
+          <SponsorLogo src="sponsor-logos/futurice-logo.svg" />
         </a>
         <a href="https://gofore.com">
-          <SponsorLogo src="../../assets/gofore-logo.svg" />
+          <SponsorLogo src="sponsor-logos/gofore-logo.svg" />
         </a>
         <a href="https://wapice.com">
-          <SponsorLogo src="../../assets/wapice-logo.svg" />
+          <SponsorLogo src="sponsor-logos/wapice-logo.svg" />
         </a>
         <a href="https://vincit.com">
-          <SponsorLogo src="../../assets/vincit-logo.svg" />
+          <SponsorLogo src="sponsor-logos/vincit-logo.svg" />
         </a>
         <a href="https://www.solita.fi">
-          <SponsorLogo src="../../assets/solita-logo-white.svg" />
+          <SponsorLogo src="sponsor-logos/solita-logo-white.svg" />
         </a>
         <a href="https://www.happy-or-not.com">
-          <SponsorLogo src="../../assets/happyornot.svg" />
+          <SponsorLogo src="sponsor-logos/happyornot.svg" />
         </a>
       </Article>
     </Section>
