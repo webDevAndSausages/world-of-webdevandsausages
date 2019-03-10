@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import React from 'react'
 import styled, { css } from 'styled-components'
 
@@ -13,7 +13,7 @@ import Separator from '../../components/Separator'
 import { toRem, tablet, phone } from '../../styles/helpers'
 import speakers from '../../speakers.json'
 
-const Heading = styled.h2<{small?: boolean}>`
+const Heading = styled.h2<{ small?: boolean }>`
   color: #fff;
   font-size: 2.5rem;
   font-weight: 700;
@@ -41,7 +41,7 @@ const TagLine = styled.h3`
 `
 
 const MissionStatement = styled.div`
-  diplay: flex;
+  display: flex;
   flex-direction: row;
   margin: auto;
   width: 80%;
@@ -65,7 +65,7 @@ const PresentersSection = styled.section`
   box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.17);
 `
 
-const SponsorLogo = styled.img<{height?: string, bottom?: string}>`
+const SponsorLogo = styled.img<{ height?: string; bottom?: string }>`
   position: relative;
   height: ${p => p.height || '2rem'};
   margin: 1rem;
