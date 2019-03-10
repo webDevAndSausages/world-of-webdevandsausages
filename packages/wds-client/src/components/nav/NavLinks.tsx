@@ -59,7 +59,7 @@ export const NavSeparator = styled.span`
   opacity: 0.35;
 `
 
-const NavLinks = ({ disableRegistration, isFeedbackLinkVisible }: any) => (
+const NavLinks = () => (
   <Wrapper>
     <NavLink id="home" activeClassName="active" to="/">
       HOME
@@ -68,21 +68,6 @@ const NavLinks = ({ disableRegistration, isFeedbackLinkVisible }: any) => (
     <NavLink id="about" activeClassName="active" to="/about">
       ABOUT
     </NavLink>
-    <NavSeparator />
-    <NavLink
-      id="registration"
-      activeClassName={!disableRegistration && 'active'}
-      to={`/${disableRegistration ? '' : 'registration'}`}
-      disabled={disableRegistration}
-    >
-      REGISTRATION
-    </NavLink>
-    {isFeedbackLinkVisible && <NavSeparator />}
-    {isFeedbackLinkVisible && (
-      <NavLink id="feedback" activeClassName="active" to="/feedback">
-        FEEDBACK
-      </NavLink>
-    )}
   </Wrapper>
 )
 

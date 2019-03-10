@@ -95,10 +95,7 @@ const Navbar = ({
           <StartWrapper>
             <Logo />
             <NavTitleLink to="/">Web Dev &amp; Sausages</NavTitleLink>
-            <NavLinks
-              disableRegistration={disableRegistration}
-              isFeedbackLinkVisible={isFeedbackLinkVisible}
-            />
+            <NavLinks />
           </StartWrapper>
 
           <EndWrapper>
