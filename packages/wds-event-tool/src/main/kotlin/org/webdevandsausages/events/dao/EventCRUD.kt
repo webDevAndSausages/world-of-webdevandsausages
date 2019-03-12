@@ -24,7 +24,8 @@ import java.sql.Time
 import java.sql.Timestamp
 import kotlin.streams.toList
 
-typealias EventUpdates = List<Pair<TableField<EventRecord, Any>, Any>>
+typealias EventUpdate = Pair<TableField<EventRecord, Any>, Any>
+typealias EventUpdates = List<EventUpdate>
 
 class EventCRUD(configuration: Configuration) : EventDao(configuration) {
     val db = DSL.using(configuration())
