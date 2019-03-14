@@ -3,6 +3,7 @@ package org.webdevandsausages.events.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.common.base.CaseFormat
 import meta.enums.EventStatus
+import meta.tables.Event.EVENT
 import meta.tables.pojos.Event
 import meta.tables.records.EventRecord
 import org.jooq.TableField
@@ -30,21 +31,16 @@ data class EventUpdateInDto(
     val sponsorLink: String? = null
 )
 
-@Suppress("UNCHECKED_CAST")
 fun EventUpdateInDto.toEventUpdates(): EventUpdates =
     this.javaClass.kotlin.declaredMemberProperties.fold(
         listOf<EventUpdate>(),
-        { acc: List<EventUpdate>, i ->
+        { acc: EventUpdates, i ->
             val value = i.get(this)
             if (value != null)
                 acc.plus(
-                    meta.tables.Event.EVENT.field(
-                        CaseFormat.LOWER_CAMEL.to(
-                            CaseFormat.LOWER_UNDERSCORE,
-                            i.name
-                        )
-                    ) to value
-                ) as EventUpdates
+                    (EVENT.field(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, i.name)) to value)
+                            as EventUpdate
+                )
             else
                 acc
         })
