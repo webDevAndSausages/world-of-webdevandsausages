@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react'
 import styled from 'styled-components'
-import { EventDetailLabel } from './CurrentEvent'
+import { EventDetailLabel } from '../../components/terminal/TerminalDetail'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
 import { Registration, RegistrationType } from '../../models/Registration'
@@ -106,11 +106,11 @@ export const ConsoleRegistration = ({ eventId }: { eventId: number }) => {
           return (
             <>
               $ {prompt}
-              <CursorInput
+              {/*<CursorInput
                 commandValue={email}
                 onChange={e => setEmail(e.target.value)}
                 onKeyPress={dispatchCommand}
-              />
+              />*/}
             </>
           )
         },
@@ -118,11 +118,11 @@ export const ConsoleRegistration = ({ eventId }: { eventId: number }) => {
           return (
             <>
               $ {prompt}
-              <CursorInput
+              {/*<CursorInput
                 commandValue={name}
                 onChange={e => setName(e.target.value)}
                 onKeyPress={dispatchCommand}
-              />
+              />*/}
             </>
           )
         },
@@ -130,11 +130,11 @@ export const ConsoleRegistration = ({ eventId }: { eventId: number }) => {
           return (
             <>
               $ {prompt}
-              <CursorInput
-                commandValue={affiliation}
-                onChange={e => setAffiliation(e.target.value)}
+              {/*<CursorInput
+                commandValue={name}
+                onChange={e => setName(e.target.value)}
                 onKeyPress={dispatchCommand}
-              />
+              />*/}
             </>
           )
         },

@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const EventDetail = styled.div`
   margin: 0;

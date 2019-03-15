@@ -3,7 +3,8 @@ import styled, { css } from 'styled-components'
 import darken from 'polished/lib/color/darken'
 import { toRem, phone, tablet } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
-export { CursorInput } from './Input'
+export * from './Input'
+export * from './TerminalDetail'
 import { TabBar } from './TabBar'
 
 export const TerminalWrapper = styled.article`

@@ -3,8 +3,11 @@ import styled, { css } from '../../styles/styled-components'
 import lighten from 'polished/lib/color/lighten'
 import transparentize from 'polished/lib/color/transparentize'
 
-import { EventDetailLabel, EventDetail } from './CurrentEvent'
-import { Terminal } from '../../components/terminal'
+import {
+  EventDetailLabel,
+  EventDetail
+} from '../../components/terminal/TerminalDetail'
+import { Terminal, TerminalDetail } from '../../components/terminal'
 import Mailto from '../../components/Mailto'
 
 const ConsoleLink = styled.span`
@@ -18,12 +21,11 @@ const ConsoleLink = styled.span`
 
 const FutureEvent = () => (
   <Terminal>
-    <EventDetailLabel>$ what</EventDetailLabel>
-    <EventDetail>The next volume is in the works...</EventDetail>
-    <EventDetailLabel>$ when</EventDetailLabel>
-    <EventDetail>
-      Join our mailing list &uarr; or follow us on Twitter to find out
-    </EventDetail>
+    <TerminalDetail title="what" detail="The next volume is in the works..." />
+    <TerminalDetail
+      title="when"
+      detail="Join our mailing list &uarr; or follow us on Twitter to find out"
+    />
     <EventDetailLabel>
       [?] help by sponsoring, speaking, or organizing
     </EventDetailLabel>
