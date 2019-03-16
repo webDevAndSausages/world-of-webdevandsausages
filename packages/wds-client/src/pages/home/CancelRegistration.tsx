@@ -219,7 +219,7 @@ export const CancelRegistration = ({
                   <Prompt>$ result: </Prompt>
                 </Cell>
                 <Cell width={7} style={{ color: '#fff' }}>
-                  TODO: send clear error from backend {values.error.message}{' '}
+                  {values.error.message}{' '}
                   <RegistrationLabel valid>{values.status}</RegistrationLabel>
                 </Cell>
               </Grid>
