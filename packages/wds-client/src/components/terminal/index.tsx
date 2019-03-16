@@ -4,7 +4,7 @@ import darken from 'polished/lib/color/darken'
 import { toRem, phone, tablet } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
 export * from './Input'
-export * from './TerminalDetail'
+export * from './Output'
 import { TabBar } from './TabBar'
 
 export const TerminalWrapper = styled.article`

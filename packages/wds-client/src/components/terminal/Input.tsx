@@ -73,13 +73,16 @@ const commandsRegex = /(r|register|m|modify|c|check|c|help)/
 
 export const CursorInput = ({
   onCommand,
-  active
+  active,
+  onKeyDown
 }: {
   onCommand: (a: Action) => void
   active: boolean
+  onKeyDown?: (a: any) => void
 }) => {
   const [value, setValue] = useState('')
-  const onKeyDown = (e: any) => {
+
+  const onKeyDownDefault = (e: any) => {
     if (!active) return
 
     const RETURN = e.keyCode === 13
@@ -107,7 +110,7 @@ export const CursorInput = ({
       value={value}
       onChange={(e: any) => setValue(e.target.value.toLowerCase())}
       blink={!value}
-      onKeyDown={onKeyDown}
+      onKeyDown={onKeyDown ? onKeyDown : onKeyDownDefault}
       autoFocus
       disabled={!active}
     />

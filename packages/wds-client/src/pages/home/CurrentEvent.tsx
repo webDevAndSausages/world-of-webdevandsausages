@@ -8,8 +8,8 @@ import { over, lensProp } from 'ramda'
 import { toRem, phone, tablet } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
 import { EventData, Event as EventType } from '../../models/Event'
-import { ConsoleRegistration } from './TerminalRegistration'
-import { EventDetailLabel } from '../../components/terminal/TerminalDetail'
+import { TerminalRegistration } from './TerminalRegistration'
+import { Prompt } from '../../components/terminal'
 
 import Spinner from '../../components/Spinner'
 import FutureEvent from './FutureEvent'
@@ -17,7 +17,7 @@ import FutureEvent from './FutureEvent'
 import {
   Terminal,
   CursorInput,
-  TerminalDetail,
+  TerminalOut,
   Action
 } from '../../components/terminal'
 
@@ -85,7 +85,7 @@ interface TerminalState {
 
 const Waiting = ({ onCommand, active }) => (
   <>
-    <EventDetailLabel>$ {defaultPrompt}</EventDetailLabel>
+    <Prompt>$ {defaultPrompt}</Prompt>
     <CursorInput onCommand={onCommand} active={active} />
   </>
 )
@@ -96,8 +96,12 @@ const defaultState = {
 }
 
 const updates = {
-  register: (state: TerminalState) => {
+  wait: (state: TerminalState) => {
     state.history.push(Waiting)
+    state.current++
+  },
+  register: (state: TerminalState) => {
+    state.history.push(TerminalRegistration)
     state.current++
   },
   modify: (state: TerminalState) => {
@@ -130,10 +134,8 @@ const updates = {
   }
 }
 
-const consoleReducer = (state: TerminalState, action: Action) => {
-  console.log(state, action)
-  return updates[action] ? produce(updates[action])(state) : defaultState
-}
+const consoleReducer = (state: TerminalState, action: Action) =>
+  updates[action] ? produce(updates[action])(state) : defaultState
 
 const RegistrationConsole = ({
   event
@@ -142,7 +144,7 @@ const RegistrationConsole = ({
   children?: any
 }) => {
   const [consoleState, dispatch] = useReducer(consoleReducer, defaultState)
-  console.log(consoleState)
+
   return (
     <div id="current-event-console">
       <SponsorAnnouncement>Sponsored by</SponsorAnnouncement>
@@ -154,11 +156,11 @@ const RegistrationConsole = ({
         </a>
       )}
       <Terminal>
-        <TerminalDetail title="which" detail={`Volume ${event.volume}`} />
-        <TerminalDetail title="when" detail={event.date} />
-        <TerminalDetail title="what" detail={event.details} />
-        <TerminalDetail title="where" detail={event.location} />
-        <TerminalDetail title="who" detail={event.contact} />
+        <TerminalOut title="which" detail={`Volume ${event.volume}`} />
+        <TerminalOut title="when" detail={event.date} />
+        <TerminalOut title="what" detail={event.details} />
+        <TerminalOut title="where" detail={event.location} />
+        <TerminalOut title="who" detail={event.contact} />
         {consoleState.history.map((Component: any, i) => {
           return (
             <Component

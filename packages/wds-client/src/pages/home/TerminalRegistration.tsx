@@ -1,147 +1,366 @@
-import React, { useState, useReducer, useEffect } from 'react'
-import styled from 'styled-components'
-import { EventDetailLabel } from '../../components/terminal/TerminalDetail'
+import React, { useReducer, useEffect } from 'react'
+import styled, { css } from 'styled-components'
+import { Prompt, blink, Action } from '../../components/terminal/'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
-import { Registration, RegistrationType } from '../../models/Registration'
-import { CursorInput } from '../../components/terminal'
+import {
+  Registration,
+  RegistrationType,
+  FormState
+} from '../../models/Registration'
+import { Grid, Cell } from '../../components/layout'
+import lighten from 'polished/lib/color/lighten'
+import { LoadingEllipsis } from '../../components/LoadingEllipsis'
+import { split, compose, join, pathOr } from 'ramda'
 
 const Loading = styled.div`
   font-size: 24px;
   color: #cdee69;
 `
 
+const SpecialMode = styled.span<{ blink?: boolean }>`
+  ${({ blink: b }) =>
+    b &&
+    css`
+      animation: 2s ${blink} 1s infinite;
+    `};
+  color: ${({ theme }) => theme.primaryBlue};
+`
+
+const inputColor = lighten(0.2, '#4e4e4e')
+
+const RegistrationInput = styled.input`
+  width: 100%;
+  color: #fff;
+  background: ${lighten(0.2, '#4e4e4e')};
+  border: none;
+  box-shadow: none;
+  width: 100%;
+  padding-left: 5px;
+  outline: none;
+  ::placeholder {
+    color: #fff;
+  }
+  &:-webkit-autofill {
+    -webkit-text-fill-color: #fff;
+    box-shadow: 0 0 0px 1000px ${inputColor} inset;
+    -webkit-box-shadow: 0 0 0px 1000px ${inputColor} inset;
+  }
+`
+
+const RegistrationLabel = ({ valid, children }) => (
+  <Prompt>
+    <SpecialMode blink={!valid}> [</SpecialMode>
+    {children}
+    <SpecialMode blink={!valid}>]</SpecialMode>
+  </Prompt>
+)
+
+const Form = ({
+  email,
+  firstName,
+  lastName,
+  affiliation,
+  updateValue,
+  valid,
+  disabled
+}: FormState & {
+  updateValue: (e: any) => void
+  valid?: boolean
+  disabled?: boolean
+}) => (
+  <form style={{ width: '100%', padding: '20px 0' }}>
+    <Prompt>
+      $ mode: <span style={{ color: '#52bdf6' }}>REGISTER</span>
+    </Prompt>
+    <Grid columns={10} style={{ paddingTop: '20px' }}>
+      <Cell width={2}>
+        <RegistrationLabel valid={valid}>email</RegistrationLabel>
+      </Cell>
+      <Cell width={8}>
+        <RegistrationInput
+          id="email"
+          type="email"
+          value={email}
+          onChange={updateValue}
+          disabled={disabled}
+        />
+      </Cell>
+      <Cell width={2}>
+        <RegistrationLabel valid={valid}>first name</RegistrationLabel>
+      </Cell>
+      <Cell width={8}>
+        <RegistrationInput
+          id="firstName"
+          type="text"
+          value={firstName}
+          onChange={updateValue}
+          disabled={disabled}
+        />
+      </Cell>
+      <Cell width={2}>
+        <RegistrationLabel valid={valid}>last name</RegistrationLabel>
+      </Cell>
+      <Cell width={8}>
+        <RegistrationInput
+          id="lastName"
+          type="text"
+          value={lastName}
+          onChange={updateValue}
+          disabled={disabled}
+        />
+      </Cell>
+      <Cell width={2}>
+        <RegistrationLabel valid={valid}>affiliation</RegistrationLabel>
+      </Cell>
+      <Cell width={8}>
+        <RegistrationInput
+          id="affiliation"
+          type="text"
+          value={affiliation}
+          onChange={updateValue}
+          disabled={disabled}
+        />
+      </Cell>
+    </Grid>
+  </form>
+)
+
+const FormButton = styled.button`
+  margin-right: 5px;
+  cursor: pointer;
+  -webkit-user-drag: none;
+  user-select: none;
+  zoom: 1;
+  &:hover {
+    background: ${({ theme }) => theme.primaryOrange};
+    transform: scale(1.05);
+    transition: 0.1s ease;
+  }
+`
+
+const emailRegex = /^.+@.+\..+$/i
+export const isEmail = (value: string) => emailRegex.test(value)
+
 const updates = {
-  email: (state: RegistrationType) =>
-    Registration.EnteringEmail({ prompt: 'Enter your email:', last: state }),
-  name: (state: RegistrationType) =>
-    Registration.EnteringName({ prompt: 'Enter your name:', last: state }),
-  affiliation: (state: RegistrationType) =>
-    Registration.EnteringAffiliation({
-      prompt: 'Enter your affiliation (company) and press return to register:',
-      last: state
-    }),
-  success: () => Registration.Success({ prompt: 'You are registered' }),
-  failure: (state: RegistrationType) =>
+  set: (state: RegistrationType, payload: FormState) => {
+    const isValid = typeof payload.email === 'string' && isEmail(payload.email)
+    const newState = { ...state.value, ...payload }
+    if (isValid) {
+      return Registration.EnteringValid(newState)
+    }
+    return Registration.Entering(newState)
+  },
+  ready: (state: RegistrationType) =>
+    Registration.EnteringValid({ ...state.value, ready: true }),
+  loading: (state: RegistrationType) =>
+    Registration.Loading({ ...state.value, ready: false }),
+  success: (state: RegistrationType, { data }) =>
+    Registration.Success({ ...state.value, response: data }),
+  failure: (state: RegistrationType, payload: { error: any; status: number }) =>
     Registration.Failure({
-      prompt: 'Oops, something is fucked up',
-      last: state
+      ...state.value,
+      error: payload.error,
+      status: payload.status
     }),
-  loading: () => Registration.Loading()
+  reset: (_state: RegistrationType) => defaultState,
+  cancel: (state: RegistrationType) => Registration.Cancelled(state.value)
 }
 
-const defaultState = Registration.EnteringEmail({ prompt: 'Enter your email:' })
+const defaultState = Registration.Entering({
+  email: '',
+  firstName: '',
+  lastName: '',
+  affiliation: '',
+  ready: false
+})
 
-type Action =
-  | 'email'
-  | 'name'
-  | 'affiliation'
-  | 'back'
+type ActionType =
+  | 'set'
   | 'success'
   | 'failure'
+  | 'ready'
+  | 'reset'
+  | 'cancel'
   | 'loading'
 
-const registrationReducer = (state: RegistrationType, action: Action) =>
-  updates[action] ? updates[action](state) : defaultState
+const registrationReducer = (
+  state: RegistrationType,
+  action: { type: ActionType; payload?: any }
+) =>
+  updates[action.type]
+    ? updates[action.type](state, action.payload)
+    : defaultState
 
-export const ConsoleRegistration = ({ eventId }: { eventId: number }) => {
+export const TerminalRegistration = ({
+  eventId,
+  onCommand
+}: {
+  eventId: number
+  onCommand: (v: Action) => void
+}) => {
   const [registrationState, dispatch] = useReducer(
     registrationReducer,
     defaultState
   )
-  const [email, setEmail] = useState('')
-  const [affiliation, setAffiliation] = useState('')
-  const [name, setName] = useState('')
-  const [ready, setReady] = useState(false)
+
+  const updateValue = (e: any) =>
+    dispatch({
+      type: 'set',
+      payload: { ...registrationState.value, [e.target.id]: e.target.value }
+    })
+
   const { request, query } = useApi(endpoints.register(eventId), false, 'post')
 
-  // TODO: validate
   useEffect(() => {
-    if (ready) {
+    const {
+      ready,
+      email,
+      firstName,
+      lastName,
+      affiliation
+    } = registrationState.value
+    if (ready && Registration.is.EnteringValid(registrationState)) {
       query({
         method: 'post',
         endpoint: endpoints.register(eventId),
-        payload: { email, name, affiliation }
+        payload: { email, firstName, lastName, affiliation }
       })
+      dispatch({ type: 'loading' })
     }
-  }, [ready])
+  }, [registrationState])
 
   useEffect(() => {
-    if (ApiRequest.is.LOADING(request)) {
-      dispatch('loading')
-    }
     if (ApiRequest.is.OK(request)) {
-      dispatch('success')
+      dispatch({ type: 'success', payload: { data: request.data.registered } })
+      onCommand('wait')
     }
     if (ApiRequest.is.NOT_OK(request)) {
-      dispatch('failure')
+      dispatch({
+        type: 'failure',
+        payload: { error: request.error, status: request.status }
+      })
+      onCommand('wait')
     }
   }, [request])
 
-  const getAction = Registration.match({
-    EnteringEmail: () => 'name',
-    EnteringName: () => 'affiliation',
-    EnteringAffiliation: () => {
-      setReady(true)
-    },
-    default: () => {
-      return null
-    }
-  })
-  // TODO validate
-  const dispatchCommand = (e: any) => {
-    if (e.charCode == '13') {
-      const act = getAction(registrationState)
-      act && dispatch(act)
-    }
-    if (e.charCode === '27' || e.charCode === '37') {
-      dispatch('back')
-    }
-  }
-
   return (
-    <EventDetailLabel>
-      {Registration.match(registrationState, {
-        EnteringEmail: ({ prompt }) => {
-          return (
+    <div>
+      <Prompt>
+        {Registration.match(registrationState, {
+          Entering: values => <Form {...values} updateValue={updateValue} />,
+          EnteringValid: values => (
             <>
-              $ {prompt}
-              {/*<CursorInput
-                commandValue={email}
-                onChange={e => setEmail(e.target.value)}
-                onKeyPress={dispatchCommand}
-              />*/}
+              <Form {...values} updateValue={updateValue} valid />
+              <Grid columns={10}>
+                <Cell width={2}>
+                  <Prompt>$ action: </Prompt>
+                </Cell>
+                <Cell width={8}>
+                  <FormButton onClick={() => dispatch({ type: 'ready' })}>
+                    submit
+                  </FormButton>
+                  <FormButton
+                    onClick={() => {
+                      dispatch({ type: 'cancel' })
+                      onCommand('wait')
+                    }}
+                  >
+                    cancel
+                  </FormButton>
+                  <FormButton onClick={() => dispatch({ type: 'reset' })}>
+                    reset
+                  </FormButton>
+                </Cell>
+              </Grid>
+            </>
+          ),
+          Success: values => {
+            const status = compose(
+              join(' '),
+              split('_'),
+              pathOr('REGISTERED', ['response', 'status'])
+            )(values)
+            const place = pathOr(null, ['response', 'orderNumber'], values)
+
+            return (
+              <>
+                <Form {...values} updateValue={updateValue} disabled valid />
+                <Grid columns={10}>
+                  <Cell width={2}>
+                    <Prompt>$ result: </Prompt>
+                  </Cell>
+                  <Cell width={8} style={{ color: '#fff' }}>
+                    You are {status}.{' '}
+                    {place && `You are number ${place} in the waiting list.`}
+                  </Cell>
+                  <Cell width={2} />
+                  <Cell width={8} style={{ color: '#fff' }}>
+                    Your registration token:{' '}
+                    <span style={{ color: '#52bdf6' }}>
+                      {pathOr(
+                        'MISSING',
+                        ['response', 'verificationToken'],
+                        values
+                      )}
+                    </span>
+                    .
+                  </Cell>
+                  <Cell width={2} />
+                  <Cell width={8} style={{ color: '#fff' }}>
+                    Please record the verification token for later use.
+                  </Cell>
+                </Grid>
+              </>
+            )
+          },
+          Failure: values => (
+            <>
+              <Form {...values} updateValue={updateValue} disabled valid />
+              <Grid columns={10}>
+                <Cell width={2}>
+                  <Prompt>$ result: </Prompt>
+                </Cell>
+                <Cell width={8} style={{ color: '#fff' }}>
+                  {values.error.message}{' '}
+                  <RegistrationLabel valid>{values.status}</RegistrationLabel>
+                </Cell>
+              </Grid>
+            </>
+          ),
+          Loading: values => (
+            <>
+              <Form {...values} updateValue={updateValue} disabled valid />
+              <Grid columns={10}>
+                <Cell width={2}>
+                  <Prompt>$ result: </Prompt>
+                </Cell>
+                <Cell width={8} style={{ color: '#fff' }}>
+                  LOADING <LoadingEllipsis />
+                </Cell>
+              </Grid>
+            </>
+          ),
+          Cancelled: values => (
+            <>
+              <Form {...values} updateValue={updateValue} disabled valid />
+              <Grid columns={10}>
+                <Cell width={2}>
+                  <Prompt>$ result: </Prompt>
+                </Cell>
+                <Cell width={8} style={{ color: '#fff' }}>
+                  CANCELLED
+                </Cell>
+              </Grid>
             </>
           )
-        },
-        EnteringName: ({ prompt }) => {
-          return (
-            <>
-              $ {prompt}
-              {/*<CursorInput
-                commandValue={name}
-                onChange={e => setName(e.target.value)}
-                onKeyPress={dispatchCommand}
-              />*/}
-            </>
-          )
-        },
-        EnteringAffiliation: ({ prompt }) => {
-          return (
-            <>
-              $ {prompt}
-              {/*<CursorInput
-                commandValue={name}
-                onChange={e => setName(e.target.value)}
-                onKeyPress={dispatchCommand}
-              />*/}
-            </>
-          )
-        },
-        Success: ({ prompt }) => <>{prompt}</>,
-        Failure: ({ prompt }) => <>{prompt}</>,
-        Loading: () => <Loading>Hold on...</Loading>
-      })}
-    </EventDetailLabel>
+        })}
+      </Prompt>
+      {/*<MetaWrapper>
+        <Pre>
+          <b>state:</b> {JSON.stringify(registrationState, null, 2)}
+        </Pre>
+      </MetaWrapper>*/}
+    </div>
   )
 }

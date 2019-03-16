@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef } from "react"
-import axios from "axios"
-import { ApiRequest, RequestFromApi } from "../models/ApiRequest"
-import { config } from "../config"
+import { useState, useEffect, useRef } from 'react'
+import axios from 'axios'
+import { ApiRequest, RequestFromApi } from '../models/ApiRequest'
+import { config } from '../config'
 
 const headers = {
-  Accept: "application/json",
-  "wds-key": "WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27",
-  "Content-Type": "application/json"
+  Accept: 'application/json',
+  'wds-key': 'WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27',
+  'Content-Type': 'application/json'
 }
 
 export const endpoints = {
@@ -15,12 +15,14 @@ export const endpoints = {
   register: (id: number) => `${config.API_ROOT}events/${id}/registrations`
 }
 
-type Method = "get" | "post"
+type Method = 'get' | 'post'
 // if you want data loaded when the component loads pass immediate true
 // otherwise call the returned with payload and or url with params, e.g. query({payload, url})
 // to trigger request
-export function useApi(endpoint: string, immediate = true, method = "get") {
-  const [request, setRequestState] = useState<RequestFromApi>(ApiRequest.NOT_ASKED())
+export function useApi(endpoint: string, immediate = true, method = 'get') {
+  const [request, setRequestState] = useState<RequestFromApi>(
+    ApiRequest.NOT_ASKED()
+  )
   const mountedRef = useRef(false)
   const [query, setQuery] = useState({
     endpoint,
@@ -47,7 +49,9 @@ export function useApi(endpoint: string, immediate = true, method = "get") {
       const { data } = await axios[query.method](...request)
       return setRequestStateSafely(ApiRequest.OK({ data }))
     } catch (e) {
-      return setRequestStateSafely(ApiRequest.NOT_OK({ error: e.message }))
+      return setRequestStateSafely(
+        ApiRequest.NOT_OK({ error: e.response.data, status: e.response.status })
+      )
     }
   }
 
