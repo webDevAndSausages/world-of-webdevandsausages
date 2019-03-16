@@ -83,7 +83,7 @@ class DeleteRegistrationEndpointTest : StringSpec() {
 
             val expectedResponseBody = """
                 {
-                  "message": "The participant was not found with provided token",
+                  "message": "A registration was not found with provided token.",
                   "code": "PARTICIPANT_NOT_FOUND"
                 }
             """.trimIndent()
@@ -119,7 +119,7 @@ class DeleteRegistrationEndpointTest : StringSpec() {
 
             val expectedResponseBody = """
                 {
-                  "message": "Participant was already cancelled",
+                  "message": "This registration was already cancelled.",
                   "code": "ALREADY_CANCELLED"
                 }
             """.trimIndent()
