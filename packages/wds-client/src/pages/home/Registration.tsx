@@ -26,6 +26,7 @@ const inputColor = lighten(0.2, '#4e4e4e')
 
 export const RegistrationInput = styled.input`
   width: 100%;
+  padding: 3px;
   color: #fff;
   background: ${lighten(0.2, '#4e4e4e')};
   border: none;
