@@ -18,17 +18,17 @@ sealed class RegistrationCancellationError {
         val status = Status.INTERNAL_SERVER_ERROR
     }
     object EventClosed : RegistrationCancellationError()  {
-        val message = "The event is closed"
+        val message = "The event is closed."
         val code = ErrorCode.NOT_FOUND
         val status = Status.NOT_FOUND
     }
     object ParticipantNotFound : RegistrationCancellationError() {
-        val message = "The participant was not found with provided token"
+        val message = "A registration was not found with provided token."
         val code = ErrorCode.PARTICIPANT_NOT_FOUND
         val status = Status.NOT_FOUND
     }
     object ParticipantAlreadyCancelled: RegistrationCancellationError()  {
-        val message = "Participant was already cancelled"
+        val message = "This registration was already cancelled."
         val code = ErrorCode.ALREADY_CANCELLED
         val status = Status.UNPROCESSABLE_ENTITY
     }

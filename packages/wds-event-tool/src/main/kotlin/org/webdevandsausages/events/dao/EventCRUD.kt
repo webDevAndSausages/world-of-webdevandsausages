@@ -76,7 +76,8 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                 .newMapper(object :
                     TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-            jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull()
+            jdbcMapper.stream(resultSet).peek {
+            } .map { EventDto(it.first, it.second) }.toList().firstOrNull()
         }.getOrDefault { null }.toOption()
     }
 
@@ -100,16 +101,18 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
     }
 
     fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use { ctx ->
-        val event = ctx.select(*Event.EVENT.fields())
-            .from(Event.EVENT)
-            .join(Participant.PARTICIPANT).on(Participant.PARTICIPANT.EVENT_ID.eq(Event.EVENT.ID))
-            .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
-            .fetchAny()
-            .into(meta.tables.pojos.Event::class.java)
-            .toOption()
+        val event = Try {
+            ctx.select(*Event.EVENT.fields())
+                .from(Event.EVENT)
+                .leftJoin(Participant.PARTICIPANT)
+                .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
+                .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
+                .fetchAny()
+                .into(meta.tables.pojos.Event::class.java)
+        }.toOption()
         when (event) {
-            is Some -> findByIdOrLatest(event.t.id)
-            is None -> Option.empty()
+            is Some ->findByIdOrLatest(event.t.id)
+            is None -> event
         }
     }
 

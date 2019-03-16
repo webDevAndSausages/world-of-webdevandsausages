@@ -2,7 +2,6 @@ package org.webdevandsausages.events.controller
 
 import arrow.core.Either
 import org.http4k.contract.ContractRoute
-import org.http4k.contract.bindContract
 import org.http4k.contract.div
 import org.http4k.contract.meta
 import org.http4k.core.HttpHandler
@@ -13,10 +12,7 @@ import org.http4k.core.Status
 import org.http4k.lens.Path
 import org.http4k.lens.string
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.dto.ErrorCode
-import org.webdevandsausages.events.error.RegistrationCancellationError
 import org.webdevandsausages.events.error.toResponse
-import org.webdevandsausages.events.handleErrorResponse
 import org.webdevandsausages.events.service.CancelRegistrationService
 
 object DeleteRegistration {

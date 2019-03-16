@@ -3,8 +3,8 @@ import { phone, tablet } from '../styles/helpers'
 
 const autoRows = ({ minRowHeight = '20px' }) => `minmax(${minRowHeight}, auto)`
 
-const columns = ({ columns = 12 }) =>
-  typeof columns === 'number' ? `repeat(${columns}, 1fr)` : columns
+const frGetter = value =>
+  typeof value === 'number' ? `repeat(${value}, 1fr)` : value
 
 const gap = ({ gap = '8px' }) => `${gap} ${gap}`
 
@@ -14,21 +14,25 @@ const formatAreas = (areas: any[]) => areas.map(area => `"${area}"`).join(' ')
 
 const Grid = styled.div<{
   flow?: string
-  rows?: string
-  areas?: any
+  rows?: string | number
+  areas?: string[]
   columns?: string | number
-  justifyContent?: boolean
-  alignContent?: boolean
-  columnsTablet?: boolean
-  columnsPhone?: boolean
+  justifyContent?: string
+  alignContent?: string
+  columnsTablet?: string
+  columnsPhone?: string
+  columnGap?: string
+  rowGap?: string
 }>`
   display: grid;
   grid-auto-flow: ${flow};
   grid-auto-rows: ${autoRows as any};
-  ${({ rows }) => rows && `grid-template-rows: ${rows}`};
-  grid-template-columns: ${columns as any};
+  ${({ rows }) => rows && `grid-template-rows: ${frGetter(rows)}`};
+  grid-template-columns: ${({ columns = 12 }) => frGetter(columns)};
   grid-gap: ${gap as any};
   ${({ areas }) => areas && `grid-template-areas: ${formatAreas(areas)}`};
+  ${({ columnGap }) => columnGap && `column-gap: ${columnGap}`};
+  ${({ rowGap }) => rowGap && `row-gap: ${rowGap}`};
   ${({ justifyContent }) =>
     justifyContent && `justify-content: ${justifyContent}`};
   ${({ alignContent }) => alignContent && `align-content: ${alignContent}`};
@@ -42,7 +46,15 @@ const Grid = styled.div<{
     `)};
 `
 
-const Cell = styled.section<any>`
+const Cell = styled.section<{
+  width?: number
+  height?: number
+  top?: number | string
+  left?: number | string
+  middle?: boolean
+  center?: boolean
+  area?: string
+}>`
   height: 100%;
   min-width: 0;
   overflow: hidden;
@@ -52,7 +64,6 @@ const Cell = styled.section<any>`
   ${({ left }) => left && `grid-column-start: ${left}`};
   ${({ top }) => top && `grid-row-start: ${top}`};
   ${({ center }) => center && `text-align: center`};
-  ${({ textLeft }) => textLeft && `text-align: left`};
   ${({ area }) => area && `grid-area: ${area}`};
   ${/* prettier-ignore */
   ({ middle }) => middle && `

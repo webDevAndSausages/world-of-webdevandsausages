@@ -1,22 +1,29 @@
-import { unionize, ofType, UnionOf } from "unionize"
+import { unionize, ofType, UnionOf } from 'unionize'
 
-interface Prompt {
-  prompt: string
-  last?: any
+export interface FormState {
+  email: string
+  firstName: string
+  lastName: string
+  affiliation: string
+  ready: boolean
+  status?: number
+  response?: any
+}
+
+export interface RegistrationState extends FormState {
+  error?: any
 }
 
 export const Registration = unionize(
   {
-    EnteringEmail: ofType<Prompt>(),
-    EnteringName: ofType<Prompt>(),
-    EnteringAffiliation: ofType<Prompt>(),
-    Success: ofType<Prompt>(),
-    Failure: ofType<Prompt>(),
-    Loading: {}
+    Entering: ofType<RegistrationState>(),
+    EnteringValid: ofType<RegistrationState>(),
+    Success: ofType<RegistrationState>(),
+    Failure: ofType<RegistrationState>(),
+    Loading: ofType<RegistrationState>(),
+    Cancelled: ofType<RegistrationState>()
   },
-  {
-    value: "value"
-  }
+  { value: 'value' }
 )
 
 export type RegistrationType = UnionOf<typeof Registration>
