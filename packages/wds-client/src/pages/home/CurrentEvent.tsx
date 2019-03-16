@@ -8,7 +8,8 @@ import { over, lensProp } from 'ramda'
 import { toRem, phone, tablet } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
 import { EventData, Event as EventType } from '../../models/Event'
-import { TerminalRegistration } from './TerminalRegistration'
+import { EventRegistration } from './Registration'
+import { CheckRegistration } from './CheckRegistration'
 import { Prompt } from '../../components/terminal'
 
 import Spinner from '../../components/Spinner'
@@ -101,7 +102,7 @@ const updates = {
     state.current++
   },
   register: (state: TerminalState) => {
-    state.history.push(TerminalRegistration)
+    state.history.push(EventRegistration)
     state.current++
   },
   modify: (state: TerminalState) => {
@@ -109,7 +110,7 @@ const updates = {
     state.current++
   },
   check: (state: TerminalState) => {
-    state.history.push(Waiting)
+    state.history.push(CheckRegistration)
     state.current++
   },
   help: (state: TerminalState) => {

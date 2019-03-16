@@ -12,7 +12,9 @@ const headers = {
 export const endpoints = {
   currentEvent: `${config.API_ROOT}events/current`,
   mailingList: `${config.MAILING_LIST_URI}participants`,
-  register: (id: number) => `${config.API_ROOT}events/${id}/registrations`
+  register: (id: number) => `${config.API_ROOT}events/${id}/registrations`,
+  checkRegistration: (id: number, token: string) =>
+    `${config.API_ROOT}events/${id}/registrations/${token}`
 }
 
 type Method = 'get' | 'post'

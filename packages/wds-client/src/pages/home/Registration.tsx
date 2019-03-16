@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { Prompt, blink, Action } from '../../components/terminal/'
+import { Prompt, blink, Action } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
 import {
@@ -11,14 +11,9 @@ import {
 import { Grid, Cell } from '../../components/layout'
 import lighten from 'polished/lib/color/lighten'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
-import { split, compose, join, pathOr } from 'ramda'
+import { split, compose, join, pathOr, pathEq } from 'ramda'
 
-const Loading = styled.div`
-  font-size: 24px;
-  color: #cdee69;
-`
-
-const SpecialMode = styled.span<{ blink?: boolean }>`
+export const SpecialMode = styled.span<{ blink?: boolean }>`
   ${({ blink: b }) =>
     b &&
     css`
@@ -29,7 +24,7 @@ const SpecialMode = styled.span<{ blink?: boolean }>`
 
 const inputColor = lighten(0.2, '#4e4e4e')
 
-const RegistrationInput = styled.input`
+export const RegistrationInput = styled.input`
   width: 100%;
   color: #fff;
   background: ${lighten(0.2, '#4e4e4e')};
@@ -48,7 +43,7 @@ const RegistrationInput = styled.input`
   }
 `
 
-const RegistrationLabel = ({ valid, children }) => (
+export const RegistrationLabel = ({ valid, children }) => (
   <Prompt>
     <SpecialMode blink={!valid}> [</SpecialMode>
     {children}
@@ -192,7 +187,7 @@ const registrationReducer = (
     ? updates[action.type](state, action.payload)
     : defaultState
 
-export const TerminalRegistration = ({
+export const EventRegistration = ({
   eventId,
   onCommand
 }: {
@@ -281,7 +276,14 @@ export const TerminalRegistration = ({
               split('_'),
               pathOr('REGISTERED', ['response', 'status'])
             )(values)
+
             const place = pathOr(null, ['response', 'orderNumber'], values)
+
+            const waiting = pathEq(
+              ['response', 'status'],
+              'WAIT_LISTED',
+              values
+            )
 
             return (
               <>
@@ -292,7 +294,9 @@ export const TerminalRegistration = ({
                   </Cell>
                   <Cell width={8} style={{ color: '#fff' }}>
                     You are {status}.{' '}
-                    {place && `You are number ${place} in the waiting list.`}
+                    {place &&
+                      waiting &&
+                      `You are number ${place} in the waiting list.`}
                   </Cell>
                   <Cell width={2} />
                   <Cell width={8} style={{ color: '#fff' }}>
