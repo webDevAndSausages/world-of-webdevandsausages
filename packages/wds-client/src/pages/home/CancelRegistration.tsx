@@ -10,7 +10,6 @@ import {
 } from '../../models/RegistrationModification'
 import { Grid, Cell } from '../../components/layout'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
-import { split, compose, join, pathOr, pathEq } from 'ramda'
 import {
   RegistrationInput,
   RegistrationLabel,
@@ -24,12 +23,14 @@ export const Form = ({
   updateValue,
   valid,
   disabled,
-  label = 'CANCEL REGISTRATION'
+  label = 'CANCEL REGISTRATION',
+  handleSubmit
 }: FormState & {
   updateValue: (e: any) => void
   valid?: boolean
   disabled?: boolean
   label?: string
+  handleSubmit: (e: any) => void
 }) => (
   <form style={{ width: '100%', padding: '20px 0' }}>
     <Prompt>
@@ -46,6 +47,7 @@ export const Form = ({
           value={verificationToken}
           onChange={updateValue}
           disabled={disabled}
+          onKeyPress={handleSubmit}
         />
       </Cell>
     </Grid>
@@ -153,14 +155,36 @@ export const CancelRegistration = ({
     }
   }, [request])
 
+
+  const onSubmit = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      e.stopPropagation()
+      if (RegistrationModification.is.EnteringValid(checkState)) {
+        dispatch({ type: 'ready' })
+      }
+    }
+  }
+
   return (
     <div>
       <Prompt>
         {RegistrationModification.match(checkState, {
-          Entering: values => <Form {...values} updateValue={updateValue} />,
+          Entering: values => (
+            <Form
+              {...values}
+              updateValue={updateValue}
+              handleSubmit={onSubmit}
+            />
+          ),
           EnteringValid: values => (
             <>
-              <Form {...values} updateValue={updateValue} valid />
+              <Form
+                {...values}
+                updateValue={updateValue}
+                valid
+                handleSubmit={onSubmit}
+              />
               <Grid columns={10}>
                 <Cell width={3}>
                   <Prompt>$ action: </Prompt>
@@ -185,20 +209,15 @@ export const CancelRegistration = ({
             </>
           ),
           Success: values => {
-            const status = compose(
-              join(' '),
-              split('_'),
-              pathOr('REGISTERED', ['response', 'status'])
-            )(values)
-            const place = pathOr(null, ['response', 'orderNumber'], values)
-            const waiting = pathEq(
-              ['response', 'status'],
-              'WAIT_LISTED',
-              values
-            )
             return (
               <>
-                <Form {...values} updateValue={updateValue} disabled valid />
+                <Form
+                  {...values}
+                  updateValue={updateValue}
+                  disabled
+                  valid
+                  handleSubmit={onSubmit}
+                />
                 <Grid columns={10}>
                   <Cell width={3}>
                     <Prompt>$ result: </Prompt>
@@ -213,7 +232,13 @@ export const CancelRegistration = ({
           },
           Failure: values => (
             <>
-              <Form {...values} updateValue={updateValue} disabled valid />
+              <Form
+                {...values}
+                updateValue={updateValue}
+                disabled
+                valid
+                handleSubmit={onSubmit}
+              />
               <Grid columns={10}>
                 <Cell width={3}>
                   <Prompt>$ result: </Prompt>
@@ -227,7 +252,13 @@ export const CancelRegistration = ({
           ),
           Loading: values => (
             <>
-              <Form {...values} updateValue={updateValue} disabled valid />
+              <Form
+                {...values}
+                updateValue={updateValue}
+                disabled
+                valid
+                handleSubmit={onSubmit}
+              />
               <Grid columns={10}>
                 <Cell width={3}>
                   <Prompt>$ result: </Prompt>
@@ -240,7 +271,13 @@ export const CancelRegistration = ({
           ),
           Cancelled: values => (
             <>
-              <Form {...values} updateValue={updateValue} disabled valid />
+              <Form
+                {...values}
+                updateValue={updateValue}
+                disabled
+                valid
+                handleSubmit={onSubmit}
+              />
               <Grid columns={10}>
                 <Cell width={3}>
                   <Prompt>$ result: </Prompt>

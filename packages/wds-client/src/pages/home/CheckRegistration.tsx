@@ -1,13 +1,8 @@
 import React, { useReducer, useEffect } from 'react'
-import styled from 'styled-components'
 import { Prompt, Action } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
-import {
-  RegistrationModification,
-  RegistrationModificationType,
-  FormState
-} from '../../models/RegistrationModification'
+import { RegistrationModification } from '../../models/RegistrationModification'
 import { Grid, Cell } from '../../components/layout'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import { split, compose, join, pathOr, pathEq } from 'ramda'
@@ -58,6 +53,16 @@ export const CheckRegistration = ({
     }
   }, [request])
 
+  const onSubmit = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      e.stopPropagation()
+      if (RegistrationModification.is.EnteringValid(checkState)) {
+        dispatch({ type: 'ready' })
+      }
+    }
+  }
+
   return (
     <div>
       <Prompt>
@@ -66,6 +71,7 @@ export const CheckRegistration = ({
             <Form
               {...values}
               updateValue={updateValue}
+              handleSubmit={onSubmit}
               label="CHECK REGISTRATION"
             />
           ),
@@ -74,6 +80,7 @@ export const CheckRegistration = ({
               <Form
                 {...values}
                 updateValue={updateValue}
+                handleSubmit={onSubmit}
                 valid
                 label="CHECK REGISTRATION"
               />
@@ -117,6 +124,7 @@ export const CheckRegistration = ({
                 <Form
                   {...values}
                   updateValue={updateValue}
+                  handleSubmit={onSubmit}
                   disabled
                   valid
                   label="CHECK REGISTRATION"
@@ -140,6 +148,7 @@ export const CheckRegistration = ({
               <Form
                 {...values}
                 updateValue={updateValue}
+                handleSubmit={onSubmit}
                 disabled
                 valid
                 label="CHECK REGISTRATION"
@@ -160,6 +169,7 @@ export const CheckRegistration = ({
               <Form
                 {...values}
                 updateValue={updateValue}
+                handleSubmit={onSubmit}
                 disabled
                 valid
                 label="CHECK REGISTRATION"
@@ -179,6 +189,7 @@ export const CheckRegistration = ({
               <Form
                 {...values}
                 updateValue={updateValue}
+                handleSubmit={onSubmit}
                 disabled
                 valid
                 label="CHECK REGISTRATION"
