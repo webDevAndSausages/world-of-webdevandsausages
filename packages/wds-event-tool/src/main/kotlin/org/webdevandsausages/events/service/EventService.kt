@@ -111,8 +111,7 @@ class UpdateEventService(val eventRepository: EventCRUD) {
         return eventRepository.update(eventId, eventInDto.toEventUpdates()).fold({
             Either.Left(EventError.DatabaseError)
         }, {
-            // TODO: return also participants?
-            Either.Right(EventDto(it))
+            Either.Right(it)
         })
     }
 }

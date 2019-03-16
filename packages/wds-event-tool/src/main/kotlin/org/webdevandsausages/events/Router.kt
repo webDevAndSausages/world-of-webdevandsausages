@@ -84,7 +84,7 @@ class Router(
         "/{any:.*}" bindContract OPTIONS to ok(),
         PostEvent.route(createEvent),
         AdminGetEventInfo.route(getEventById),
-        PatchEvent.route(updateEvent),
+        PatchEvent.route(updateEvent, getEventById),
         GetEvents.route(getEvents),
         GetCurrentEvent.route(getCurrentEvent)
     )

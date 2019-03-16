@@ -11,6 +11,7 @@ import meta.enums.EventStatus
 import meta.tables.Event.EVENT
 import meta.tables.pojos.Event
 import org.webdevandsausages.events.dao.EventUpdates
+import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventUpdateInDto
 import org.webdevandsausages.events.service.UpdateEventService
 import java.sql.Timestamp
@@ -28,7 +29,7 @@ class UpdateServiceTest : StringSpec() {
     init {
         "Test update event input record construction with all fields" {
             val slot = slot<EventUpdates>()
-            every { unit.eventRepository.update(1L, capture(slot)) } returns (mockk<Event>(relaxed = true)).toOption()
+            every { unit.eventRepository.update(1L, capture(slot)) } returns (mockk<EventDto>(relaxed = true)).toOption()
 
             unit.invoke(
                 1L, EventUpdateInDto(
@@ -66,7 +67,7 @@ class UpdateServiceTest : StringSpec() {
         "Test update event input record construction with partial input" {
             // Test only partial update
             val slot = slot<EventUpdates>()
-            every { unit.eventRepository.update(1L, capture(slot)) } returns (mockk<Event>(relaxed = true)).toOption()
+            every { unit.eventRepository.update(1L, capture(slot)) } returns (mockk<EventDto>(relaxed = true)).toOption()
 
             unit.invoke(
                 1L, EventUpdateInDto(
