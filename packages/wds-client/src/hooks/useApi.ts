@@ -14,10 +14,12 @@ export const endpoints = {
   mailingList: `${config.MAILING_LIST_URI}participants`,
   register: (id: number) => `${config.API_ROOT}events/${id}/registrations`,
   checkRegistration: (id: number, token: string) =>
-    `${config.API_ROOT}events/${id}/registrations/${token}`
+    `${config.API_ROOT}events/${id}/registrations/${token}`,
+  cancelRegistration: (token: string) =>
+    `${config.API_ROOT}events/registrations/${token}`
 }
 
-type Method = 'get' | 'post'
+type Method = 'get' | 'post' | 'delete'
 // if you want data loaded when the component loads pass immediate true
 // otherwise call the returned with payload and or url with params, e.g. query({payload, url})
 // to trigger request

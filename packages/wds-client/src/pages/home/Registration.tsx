@@ -121,7 +121,7 @@ const Form = ({
   </form>
 )
 
-const FormButton = styled.button`
+export const FormButton = styled.button`
   margin-right: 5px;
   cursor: pointer;
   -webkit-user-drag: none;

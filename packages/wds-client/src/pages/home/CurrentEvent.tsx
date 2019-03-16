@@ -10,6 +10,7 @@ import { theme } from '../../styles/theme'
 import { EventData, Event as EventType } from '../../models/Event'
 import { EventRegistration } from './Registration'
 import { CheckRegistration } from './CheckRegistration'
+import { CancelRegistration } from './CancelRegistration'
 import { Prompt } from '../../components/terminal'
 
 import Spinner from '../../components/Spinner'
@@ -106,7 +107,7 @@ const updates = {
     state.current++
   },
   modify: (state: TerminalState) => {
-    state.history.push(Waiting)
+    state.history.push(CancelRegistration)
     state.current++
   },
   check: (state: TerminalState) => {
