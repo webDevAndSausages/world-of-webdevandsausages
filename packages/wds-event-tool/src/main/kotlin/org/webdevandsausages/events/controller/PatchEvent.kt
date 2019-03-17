@@ -19,6 +19,9 @@ object PatchEvent {
 
     fun route(updateEvent: UpdateEventService, findByIdService: GetEventByIdService): ContractRoute {
         fun handlepatchEvent(eventId: Long): HttpHandler = { req: Request ->
+            /* TODO: When updating maxParticipants, this ticket
+               https://github.com/webDevAndSausages/world-of-webdevandsausages/issues/35 needs to be considered */
+
             val oldEvent = findByIdService(eventId)
             when (oldEvent) {
                 is Either.Left -> oldEvent.a.toResponse()
