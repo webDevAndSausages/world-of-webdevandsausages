@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react'
+import React, { useReducer, useEffect, useRef, useState } from 'react'
 import { Prompt, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
@@ -22,6 +22,7 @@ interface FormProps extends FormState {
   disabled?: boolean
   label?: string
   handleSubmit: (e: React.KeyboardEvent<HTMLDivElement>) => void
+  inputRef?: React.Ref<any>
 }
 
 export const Form: React.FC<FormProps> = ({
@@ -30,7 +31,8 @@ export const Form: React.FC<FormProps> = ({
   valid,
   disabled,
   label = 'CANCEL REGISTRATION',
-  handleSubmit
+  handleSubmit,
+  inputRef
 }) => (
   <form style={{ width: '100%', padding: '20px 0' }}>
     <Prompt>
@@ -48,6 +50,7 @@ export const Form: React.FC<FormProps> = ({
           onChange={updateValue}
           disabled={disabled}
           onKeyPress={handleSubmit}
+          ref={inputRef}
         />
       </FormCell>
     </Grid>
@@ -114,6 +117,12 @@ export const CancelRegistration = ({
   eventId: number
   onCommand: OnCmd
 }) => {
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    inputRef.current.focus()
+  }, [])
+
   const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
 
   const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -171,6 +180,7 @@ export const CancelRegistration = ({
               {...values}
               updateValue={updateValue}
               handleSubmit={onSubmit}
+              inputRef={inputRef}
             />
             <Grid columns={10}>
               <FormCell width={3}>

@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react'
+import React, { useReducer, useEffect, useRef } from 'react'
 import { Prompt, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
@@ -17,6 +17,11 @@ export const CheckRegistration = ({
   onCommand: OnCmd
 }) => {
   const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    inputRef.current.focus()
+  }, [])
 
   const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
@@ -71,6 +76,7 @@ export const CheckRegistration = ({
               updateValue={updateValue}
               handleSubmit={onSubmit}
               label="CHECK REGISTRATION"
+              inputRef={inputRef}
             />
             <Grid columns={10}>
               <FormCell width={3}>

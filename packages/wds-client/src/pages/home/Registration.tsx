@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react'
+import React, { useReducer, useEffect, useRef } from 'react'
 import styled, { css } from '../../styles/styled-components'
 import { tablet, phone } from '../../styles/helpers'
 import { Prompt, blink, OnCmd } from '../../components/terminal'
@@ -107,6 +107,7 @@ interface FormProps extends FormState {
   updateValue: (e: React.ChangeEvent<HTMLInputElement>) => void
   valid?: boolean
   disabled?: boolean
+  inputRef?: React.Ref<any>
 }
 
 const Form: React.FC<FormProps> = ({
@@ -116,7 +117,8 @@ const Form: React.FC<FormProps> = ({
   affiliation,
   updateValue,
   valid,
-  disabled
+  disabled,
+  inputRef
 }) => (
   <form style={{ width: '100%', padding: '20px 0' }}>
     <Prompt>
@@ -133,6 +135,7 @@ const Form: React.FC<FormProps> = ({
           value={email}
           onChange={updateValue}
           disabled={disabled}
+          ref={inputRef}
         />
       </LongCell>
       <ShortCell width={2}>
@@ -250,6 +253,12 @@ export const EventRegistration = ({
     defaultState
   )
 
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    inputRef.current.focus()
+  }, [])
+
   const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
       type: 'set',
@@ -295,7 +304,7 @@ export const EventRegistration = ({
       {Registration.match(registrationState, {
         Entering: values => (
           <>
-            <Form {...values} updateValue={updateValue} />
+            <Form {...values} updateValue={updateValue} inputRef={inputRef} />
             <Grid columns={10}>
               <ShortCell width={2}>
                 <Prompt>$ action: </Prompt>
