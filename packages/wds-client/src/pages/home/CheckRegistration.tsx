@@ -20,7 +20,7 @@ export const CheckRegistration = ({
 }) => {
   const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
 
-  const updateValue = (e: any) =>
+  const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
       type: 'set',
       payload: { ...checkState.value, [e.target.id]: e.target.value }

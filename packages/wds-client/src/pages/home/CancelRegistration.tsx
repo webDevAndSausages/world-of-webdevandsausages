@@ -1,5 +1,4 @@
 import React, { useReducer, useEffect } from 'react'
-import styled from 'styled-components'
 import { Prompt, Action } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
@@ -15,22 +14,25 @@ import {
   RegistrationLabel,
   FormButton
 } from './Registration'
+import { isToken } from '../../helpers/validation'
 
 import { MetaWrapper, Pre } from '../../components/DevTools'
 
-export const Form = ({
+interface FormProps extends FormState {
+  updateValue: (e: React.ChangeEvent<HTMLInputElement>) => void
+  valid?: boolean
+  disabled?: boolean
+  label?: string
+  handleSubmit: (e: React.KeyboardEvent<HTMLDivElement>) => void
+}
+
+export const Form: React.FC<FormProps> = ({
   verificationToken,
   updateValue,
   valid,
   disabled,
   label = 'CANCEL REGISTRATION',
   handleSubmit
-}: FormState & {
-  updateValue: (e: any) => void
-  valid?: boolean
-  disabled?: boolean
-  label?: string
-  handleSubmit: (e: any) => void
 }) => (
   <form style={{ width: '100%', padding: '20px 0' }}>
     <Prompt>
@@ -53,9 +55,6 @@ export const Form = ({
     </Grid>
   </form>
 )
-
-export const tokenRegex = /^[a-z]+-[a-z]+$/i
-export const isToken = (value: string) => tokenRegex.test(value)
 
 export const updates = {
   set: (state: RegistrationModificationType, payload: FormState) => {
@@ -119,7 +118,7 @@ export const CancelRegistration = ({
 }) => {
   const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
 
-  const updateValue = (e: any) =>
+  const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
       type: 'set',
       payload: { ...checkState.value, [e.target.id]: e.target.value }
@@ -155,7 +154,6 @@ export const CancelRegistration = ({
     }
   }, [request])
 
-
   const onSubmit = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
@@ -167,70 +165,44 @@ export const CancelRegistration = ({
   }
 
   return (
-    <div>
-      <Prompt>
-        {RegistrationModification.match(checkState, {
-          Entering: values => (
+    <Prompt>
+      {RegistrationModification.match(checkState, {
+        Entering: values => (
+          <Form {...values} updateValue={updateValue} handleSubmit={onSubmit} />
+        ),
+        EnteringValid: values => (
+          <>
             <Form
               {...values}
               updateValue={updateValue}
+              valid
               handleSubmit={onSubmit}
             />
-          ),
-          EnteringValid: values => (
-            <>
-              <Form
-                {...values}
-                updateValue={updateValue}
-                valid
-                handleSubmit={onSubmit}
-              />
-              <Grid columns={10}>
-                <Cell width={3}>
-                  <Prompt>$ action: </Prompt>
-                </Cell>
-                <Cell width={7}>
-                  <FormButton onClick={() => dispatch({ type: 'ready' })}>
-                    submit
-                  </FormButton>
-                  <FormButton
-                    onClick={() => {
-                      dispatch({ type: 'cancel' })
-                      onCommand('wait')
-                    }}
-                  >
-                    cancel
-                  </FormButton>
-                  <FormButton onClick={() => dispatch({ type: 'reset' })}>
-                    reset
-                  </FormButton>
-                </Cell>
-              </Grid>
-            </>
-          ),
-          Success: values => {
-            return (
-              <>
-                <Form
-                  {...values}
-                  updateValue={updateValue}
-                  disabled
-                  valid
-                  handleSubmit={onSubmit}
-                />
-                <Grid columns={10}>
-                  <Cell width={3}>
-                    <Prompt>$ result: </Prompt>
-                  </Cell>
-                  <Cell width={7} style={{ color: '#fff' }}>
-                    Your registration has been removed.{' '}
-                    <RegistrationLabel valid>200</RegistrationLabel>
-                  </Cell>
-                </Grid>
-              </>
-            )
-          },
-          Failure: values => (
+            <Grid columns={10}>
+              <Cell width={3}>
+                <Prompt>$ action: </Prompt>
+              </Cell>
+              <Cell width={7}>
+                <FormButton onClick={() => dispatch({ type: 'ready' })}>
+                  submit
+                </FormButton>
+                <FormButton
+                  onClick={() => {
+                    dispatch({ type: 'cancel' })
+                    onCommand('wait')
+                  }}
+                >
+                  cancel
+                </FormButton>
+                <FormButton onClick={() => dispatch({ type: 'reset' })}>
+                  reset
+                </FormButton>
+              </Cell>
+            </Grid>
+          </>
+        ),
+        Success: values => {
+          return (
             <>
               <Form
                 {...values}
@@ -244,57 +216,72 @@ export const CancelRegistration = ({
                   <Prompt>$ result: </Prompt>
                 </Cell>
                 <Cell width={7} style={{ color: '#fff' }}>
-                  {values.error.message}{' '}
-                  <RegistrationLabel valid>{values.status}</RegistrationLabel>
-                </Cell>
-              </Grid>
-            </>
-          ),
-          Loading: values => (
-            <>
-              <Form
-                {...values}
-                updateValue={updateValue}
-                disabled
-                valid
-                handleSubmit={onSubmit}
-              />
-              <Grid columns={10}>
-                <Cell width={3}>
-                  <Prompt>$ result: </Prompt>
-                </Cell>
-                <Cell width={7} style={{ color: '#fff' }}>
-                  LOADING <LoadingEllipsis />
-                </Cell>
-              </Grid>
-            </>
-          ),
-          Cancelled: values => (
-            <>
-              <Form
-                {...values}
-                updateValue={updateValue}
-                disabled
-                valid
-                handleSubmit={onSubmit}
-              />
-              <Grid columns={10}>
-                <Cell width={3}>
-                  <Prompt>$ result: </Prompt>
-                </Cell>
-                <Cell width={7} style={{ color: '#fff' }}>
-                  CANCELLED
+                  Your registration has been removed.{' '}
+                  <RegistrationLabel valid>200</RegistrationLabel>
                 </Cell>
               </Grid>
             </>
           )
-        })}
-      </Prompt>
-      {/*<MetaWrapper>
-        <Pre>
-          <b>state:</b> {JSON.stringify(checkState, null, 2)}
-        </Pre>
-      </MetaWrapper> */}
-    </div>
+        },
+        Failure: values => (
+          <>
+            <Form
+              {...values}
+              updateValue={updateValue}
+              disabled
+              valid
+              handleSubmit={onSubmit}
+            />
+            <Grid columns={10}>
+              <Cell width={3}>
+                <Prompt>$ result: </Prompt>
+              </Cell>
+              <Cell width={7} style={{ color: '#fff' }}>
+                {values.error.message}{' '}
+                <RegistrationLabel valid>{values.status}</RegistrationLabel>
+              </Cell>
+            </Grid>
+          </>
+        ),
+        Loading: values => (
+          <>
+            <Form
+              {...values}
+              updateValue={updateValue}
+              disabled
+              valid
+              handleSubmit={onSubmit}
+            />
+            <Grid columns={10}>
+              <Cell width={3}>
+                <Prompt>$ result: </Prompt>
+              </Cell>
+              <Cell width={7} style={{ color: '#fff' }}>
+                LOADING <LoadingEllipsis />
+              </Cell>
+            </Grid>
+          </>
+        ),
+        Cancelled: values => (
+          <>
+            <Form
+              {...values}
+              updateValue={updateValue}
+              disabled
+              valid
+              handleSubmit={onSubmit}
+            />
+            <Grid columns={10}>
+              <Cell width={3}>
+                <Prompt>$ result: </Prompt>
+              </Cell>
+              <Cell width={7} style={{ color: '#fff' }}>
+                CANCELLED
+              </Cell>
+            </Grid>
+          </>
+        )
+      })}
+    </Prompt>
   )
 }

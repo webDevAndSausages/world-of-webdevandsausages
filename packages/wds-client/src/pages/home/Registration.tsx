@@ -12,6 +12,7 @@ import { Grid, Cell } from '../../components/layout'
 import lighten from 'polished/lib/color/lighten'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import { split, compose, join, pathOr, pathEq } from 'ramda'
+import { isEmail } from '../../helpers/validation'
 
 export const SpecialMode = styled.span<{ blink?: boolean }>`
   ${({ blink: b }) =>
@@ -52,7 +53,13 @@ export const RegistrationLabel = ({ valid, children }) => (
   </Prompt>
 )
 
-const Form = ({
+interface FormProps extends FormState {
+  updateValue: (e: React.ChangeEvent<HTMLInputElement>) => void
+  valid?: boolean
+  disabled?: boolean
+}
+
+const Form: React.FC<FormProps> = ({
   email,
   firstName,
   lastName,
@@ -60,10 +67,6 @@ const Form = ({
   updateValue,
   valid,
   disabled
-}: FormState & {
-  updateValue: (e: any) => void
-  valid?: boolean
-  disabled?: boolean
 }) => (
   <form style={{ width: '100%', padding: '20px 0' }}>
     <Prompt>
@@ -135,9 +138,6 @@ export const FormButton = styled.button`
   }
 `
 
-const emailRegex = /^.+@.+\..+$/i
-export const isEmail = (value: string) => emailRegex.test(value)
-
 const updates = {
   set: (state: RegistrationType, payload: FormState) => {
     const isValid = typeof payload.email === 'string' && isEmail(payload.email)
@@ -200,7 +200,7 @@ export const EventRegistration = ({
     defaultState
   )
 
-  const updateValue = (e: any) =>
+  const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
       type: 'set',
       payload: { ...registrationState.value, [e.target.id]: e.target.value }

@@ -8,7 +8,17 @@ import opacify from 'polished/lib/color/opacify'
 import lighten from 'polished/lib/color/lighten'
 import transparentize from 'polished/lib/color/transparentize'
 
-const StyledButton = styled.button<any>`
+interface StyledButtonProps {
+  valid?: boolean
+  transparent?: boolean
+  primary?: boolean
+  secondary?: boolean
+  light?: boolean
+  minWidth?: string | number
+  big?: boolean
+}
+
+const StyledButton = styled.button<StyledButtonProps>`
   display: inline-block;
   zoom: 1;
   line-height: normal;
@@ -141,7 +151,18 @@ const StyledButton = styled.button<any>`
     `};
 `
 
-const Button = ({
+interface ButtonProps extends StyledButtonProps {
+  type?: string
+  id?: string
+  primary?: boolean
+  white?: boolean
+  loading?: boolean
+  children?: any
+  onClick?: (e: any) => void
+  disabled?: boolean
+}
+
+const Button: React.FC<ButtonProps> = ({
   type = 'button',
   id,
   loading,
@@ -149,14 +170,14 @@ const Button = ({
   children,
   white,
   ...rest
-}: any) => (
+}) => (
   <StyledButton type={type} id={id} primary={primary} {...rest}>
     {!loading && children}
     {loading && <Spinner small white={white} />}
   </StyledButton>
 )
 
-export const ButtonLink = ({
+export const ButtonLink: React.FC<ButtonProps & { href: string }> = ({
   type = 'button',
   id,
   loading,

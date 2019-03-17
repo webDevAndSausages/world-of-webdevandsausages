@@ -7,7 +7,7 @@ const StyledFooter = styled.footer`
   display: flex;
   align-items: center;
   justify-content: center;
-    ${({ theme, color }: any) =>
+  ${({ theme, color }: any) =>
     css`
       background: ${theme[color]};
     `};
