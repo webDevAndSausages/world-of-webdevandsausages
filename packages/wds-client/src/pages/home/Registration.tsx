@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { Prompt, blink, Action } from '../../components/terminal'
+import { Prompt, blink, Action, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
 import {
@@ -44,6 +44,35 @@ export const RegistrationInput = styled.input`
     -webkit-box-shadow: 0 0 0px 1000px ${inputColor} inset;
   }
 `
+
+interface FormActionButtonProps {
+  dispatch: (a: { type: ActionType; payload?: { [key: string]: any } }) => void
+  onCommand: OnCmd
+  valid?: boolean
+}
+
+export const FormActionButtons: React.FC<FormActionButtonProps> = ({
+  dispatch,
+  onCommand,
+  valid
+}) => (
+  <>
+    {valid && (
+      <FormButton onClick={() => dispatch({ type: 'ready' })}>
+        submit
+      </FormButton>
+    )}
+    <FormButton
+      onClick={() => {
+        dispatch({ type: 'cancel' })
+        onCommand({ type: 'wait' })
+      }}
+    >
+      cancel
+    </FormButton>
+    <FormButton onClick={() => dispatch({ type: 'reset' })}>reset</FormButton>
+  </>
+)
 
 export const RegistrationLabel = ({ valid, children }) => (
   <Prompt>
@@ -193,7 +222,7 @@ export const EventRegistration = ({
   onCommand
 }: {
   eventId: number
-  onCommand: (v: Action) => void
+  onCommand: OnCmd
 }) => {
   const [registrationState, dispatch] = useReducer(
     registrationReducer,
@@ -229,14 +258,14 @@ export const EventRegistration = ({
   useEffect(() => {
     if (ApiRequest.is.OK(request)) {
       dispatch({ type: 'success', payload: { data: request.data.registered } })
-      onCommand('wait')
+      onCommand({ type: 'wait' })
     }
     if (ApiRequest.is.NOT_OK(request)) {
       dispatch({
         type: 'failure',
         payload: { error: request.error, status: request.status }
       })
-      onCommand('wait')
+      onCommand({ type: 'wait' })
     }
   }, [request])
 
@@ -244,7 +273,22 @@ export const EventRegistration = ({
     <div>
       <Prompt>
         {Registration.match(registrationState, {
-          Entering: values => <Form {...values} updateValue={updateValue} />,
+          Entering: values => (
+            <>
+              <Form {...values} updateValue={updateValue} />
+              <Grid columns={10}>
+                <Cell width={2}>
+                  <Prompt>$ action: </Prompt>
+                </Cell>
+                <Cell width={8}>
+                  <FormActionButtons
+                    onCommand={onCommand}
+                    dispatch={dispatch}
+                  />
+                </Cell>
+              </Grid>
+            </>
+          ),
           EnteringValid: values => (
             <>
               <Form {...values} updateValue={updateValue} valid />
@@ -253,20 +297,11 @@ export const EventRegistration = ({
                   <Prompt>$ action: </Prompt>
                 </Cell>
                 <Cell width={8}>
-                  <FormButton onClick={() => dispatch({ type: 'ready' })}>
-                    submit
-                  </FormButton>
-                  <FormButton
-                    onClick={() => {
-                      dispatch({ type: 'cancel' })
-                      onCommand('wait')
-                    }}
-                  >
-                    cancel
-                  </FormButton>
-                  <FormButton onClick={() => dispatch({ type: 'reset' })}>
-                    reset
-                  </FormButton>
+                  <FormActionButtons
+                    valid
+                    onCommand={onCommand}
+                    dispatch={dispatch}
+                  />
                 </Cell>
               </Grid>
             </>

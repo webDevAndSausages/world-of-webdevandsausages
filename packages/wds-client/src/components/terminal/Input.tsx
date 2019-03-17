@@ -71,12 +71,14 @@ const commands: { [key: string]: Action } = {
 
 const commandsRegex = /(r|register|m|modify|c|check|h|help)/
 
+export type OnCmd = (a: { type: Action; cmd?: string }) => void
+
 export const CursorInput = ({
   onCommand,
   active,
   onKeyDown
 }: {
-  onCommand: (a: { type: Action; cmd?: string }) => void
+  onCommand: OnCmd
   active: boolean
   onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }) => {

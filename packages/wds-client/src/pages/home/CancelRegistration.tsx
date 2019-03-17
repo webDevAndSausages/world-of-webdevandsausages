@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react'
-import { Prompt, Action } from '../../components/terminal'
+import { Prompt, Action, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
 import {
@@ -12,7 +12,8 @@ import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import {
   RegistrationInput,
   RegistrationLabel,
-  FormButton
+  FormButton,
+  FormActionButtons
 } from './Registration'
 import { isToken } from '../../helpers/validation'
 
@@ -114,7 +115,7 @@ export const CancelRegistration = ({
   onCommand
 }: {
   eventId: number
-  onCommand: (v: Action) => void
+  onCommand: OnCmd
 }) => {
   const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
 
@@ -143,14 +144,14 @@ export const CancelRegistration = ({
         type: 'success',
         payload: { data: request.data }
       })
-      onCommand('wait')
+      onCommand({ type: 'wait' })
     }
     if (ApiRequest.is.NOT_OK(request)) {
       dispatch({
         type: 'failure',
         payload: { error: request.error, status: request.status }
       })
-      onCommand('wait')
+      onCommand({ type: 'wait' })
     }
   }, [request])
 
@@ -168,7 +169,21 @@ export const CancelRegistration = ({
     <Prompt>
       {RegistrationModification.match(checkState, {
         Entering: values => (
-          <Form {...values} updateValue={updateValue} handleSubmit={onSubmit} />
+          <>
+            <Form
+              {...values}
+              updateValue={updateValue}
+              handleSubmit={onSubmit}
+            />
+            <Grid columns={10}>
+              <Cell width={3}>
+                <Prompt>$ action: </Prompt>
+              </Cell>
+              <Cell width={7}>
+                <FormActionButtons dispatch={dispatch} onCommand={onCommand} />
+              </Cell>
+            </Grid>
+          </>
         ),
         EnteringValid: values => (
           <>
@@ -183,20 +198,11 @@ export const CancelRegistration = ({
                 <Prompt>$ action: </Prompt>
               </Cell>
               <Cell width={7}>
-                <FormButton onClick={() => dispatch({ type: 'ready' })}>
-                  submit
-                </FormButton>
-                <FormButton
-                  onClick={() => {
-                    dispatch({ type: 'cancel' })
-                    onCommand('wait')
-                  }}
-                >
-                  cancel
-                </FormButton>
-                <FormButton onClick={() => dispatch({ type: 'reset' })}>
-                  reset
-                </FormButton>
+                <FormActionButtons
+                  valid
+                  dispatch={dispatch}
+                  onCommand={onCommand}
+                />
               </Cell>
             </Grid>
           </>
