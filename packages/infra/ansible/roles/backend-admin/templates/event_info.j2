@@ -1,16 +1,5 @@
 {% set event = result.json %}
-EVENT ID:           {{ event.id }}
-** ** ** ** ** ** ** ** ** ** ** ** **
-Event name:         {{ event.name }}
-Volume:             {{ event.volume }}
-Sponsor:            {{ event.sponsor }}
-Contact info:       {{ event.contact }}
-Date:               {{ event.date }}
-Details:            {{ event.details }}
-Location:           {{ event.location }}
-Event status:       {{ event.status }}
-Max participants:   {{ event.maxParticipants }}
-Registration opens: {{ event.registrationOpens }}
+{% include "event.j2" %}
 
 -----------
 

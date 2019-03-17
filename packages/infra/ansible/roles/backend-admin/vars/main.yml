@@ -1,0 +1,27 @@
+---
+
+eventFieldMap:
+  - field: id
+    text: "EVENT ID:                                         "
+  - field: name
+    text: "[1] Event name:                                   "
+  - field: volume
+    text: "[2] Volume:                                       "
+  - field: sponsor
+    text: "[3] Sponsor:                                      "
+  - field: sponsorLink
+    text: "[4] Sponsor link:                                 "
+  - field: contact
+    text: "[5] Contact info:                                 "
+  - field: date
+    text: "[6] Date (YYYY-MM-DDTHH:mm):                      "
+  - field: details
+    text: "[7] Details:                                      "
+  - field: location
+    text: "[8] Location:                                     "
+  - field: status
+    text: "[9] Event status:                                 "
+  - field: maxParticipants
+    text: "[10] Max participants:                            "
+  - field: registrationOpens
+    text: "[11] Registration opens (YYYY-MM-DDTHH:mm):       "
