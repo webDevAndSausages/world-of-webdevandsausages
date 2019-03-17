@@ -9,7 +9,7 @@ import Separator from '../../components/Separator'
 import Footer from '../../components/Footer'
 import Merchandise from './Merchandise'
 import PreviousEvents from './PreviousEvents'
-import Event from './CurrentEvent'
+import Event from './CurrentEventTerminal'
 import { MailingListForm } from './MailingListForm'
 import SectionTitle from '../../components/SectionTitle'
 

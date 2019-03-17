@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react'
-import { Prompt, Action, OnCmd } from '../../components/terminal'
+import { Prompt, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
 import {
@@ -7,17 +7,14 @@ import {
   RegistrationModificationType,
   FormState
 } from '../../models/RegistrationModification'
-import { Grid, Cell } from '../../components/layout'
+import { Grid, FormCell } from '../../components/layout'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import {
   RegistrationInput,
   RegistrationLabel,
-  FormButton,
   FormActionButtons
 } from './Registration'
 import { isToken } from '../../helpers/validation'
-
-import { MetaWrapper, Pre } from '../../components/DevTools'
 
 interface FormProps extends FormState {
   updateValue: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -40,10 +37,10 @@ export const Form: React.FC<FormProps> = ({
       $ mode: <span style={{ color: '#52bdf6' }}>{label}</span>
     </Prompt>
     <Grid columns={10} style={{ paddingTop: '20px' }}>
-      <Cell width={3}>
+      <FormCell width={3}>
         <RegistrationLabel valid={valid}>verification token</RegistrationLabel>
-      </Cell>
-      <Cell width={7}>
+      </FormCell>
+      <FormCell width={7}>
         <RegistrationInput
           id="verificationToken"
           type="text"
@@ -52,7 +49,7 @@ export const Form: React.FC<FormProps> = ({
           disabled={disabled}
           onKeyPress={handleSubmit}
         />
-      </Cell>
+      </FormCell>
     </Grid>
   </form>
 )
@@ -176,12 +173,12 @@ export const CancelRegistration = ({
               handleSubmit={onSubmit}
             />
             <Grid columns={10}>
-              <Cell width={3}>
+              <FormCell width={3}>
                 <Prompt>$ action: </Prompt>
-              </Cell>
-              <Cell width={7}>
+              </FormCell>
+              <FormCell width={7}>
                 <FormActionButtons dispatch={dispatch} onCommand={onCommand} />
-              </Cell>
+              </FormCell>
             </Grid>
           </>
         ),
@@ -194,16 +191,16 @@ export const CancelRegistration = ({
               handleSubmit={onSubmit}
             />
             <Grid columns={10}>
-              <Cell width={3}>
+              <FormCell width={3}>
                 <Prompt>$ action: </Prompt>
-              </Cell>
-              <Cell width={7}>
+              </FormCell>
+              <FormCell width={7}>
                 <FormActionButtons
                   valid
                   dispatch={dispatch}
                   onCommand={onCommand}
                 />
-              </Cell>
+              </FormCell>
             </Grid>
           </>
         ),
@@ -218,13 +215,13 @@ export const CancelRegistration = ({
                 handleSubmit={onSubmit}
               />
               <Grid columns={10}>
-                <Cell width={3}>
+                <FormCell width={3}>
                   <Prompt>$ result: </Prompt>
-                </Cell>
-                <Cell width={7} style={{ color: '#fff' }}>
+                </FormCell>
+                <FormCell width={7} style={{ color: '#fff' }}>
                   Your registration has been removed.{' '}
                   <RegistrationLabel valid>200</RegistrationLabel>
-                </Cell>
+                </FormCell>
               </Grid>
             </>
           )
@@ -239,13 +236,13 @@ export const CancelRegistration = ({
               handleSubmit={onSubmit}
             />
             <Grid columns={10}>
-              <Cell width={3}>
+              <FormCell width={3}>
                 <Prompt>$ result: </Prompt>
-              </Cell>
-              <Cell width={7} style={{ color: '#fff' }}>
+              </FormCell>
+              <FormCell width={7} style={{ color: '#fff' }}>
                 {values.error.message}{' '}
                 <RegistrationLabel valid>{values.status}</RegistrationLabel>
-              </Cell>
+              </FormCell>
             </Grid>
           </>
         ),
@@ -259,12 +256,12 @@ export const CancelRegistration = ({
               handleSubmit={onSubmit}
             />
             <Grid columns={10}>
-              <Cell width={3}>
+              <FormCell width={3}>
                 <Prompt>$ result: </Prompt>
-              </Cell>
-              <Cell width={7} style={{ color: '#fff' }}>
+              </FormCell>
+              <FormCell width={7} style={{ color: '#fff' }}>
                 LOADING <LoadingEllipsis />
-              </Cell>
+              </FormCell>
             </Grid>
           </>
         ),
@@ -278,12 +275,12 @@ export const CancelRegistration = ({
               handleSubmit={onSubmit}
             />
             <Grid columns={10}>
-              <Cell width={3}>
+              <FormCell width={3}>
                 <Prompt>$ result: </Prompt>
-              </Cell>
-              <Cell width={7} style={{ color: '#fff' }}>
+              </FormCell>
+              <FormCell width={7} style={{ color: '#fff' }}>
                 CANCELLED
-              </Cell>
+              </FormCell>
             </Grid>
           </>
         )

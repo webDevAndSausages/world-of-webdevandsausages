@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { Waiting, TerminalInputProps } from './CurrentEvent'
+import { Waiting, TerminalInputProps } from './CurrentEventTerminal'
 import { Out } from '../../components/terminal'
 import { SpecialMode } from './Registration'
 

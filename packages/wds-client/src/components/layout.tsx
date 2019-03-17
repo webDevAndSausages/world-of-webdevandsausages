@@ -74,4 +74,10 @@ const Cell = styled.section<{
   `};
 `
 
-export { Cell, Grid }
+const FormCell = styled(Cell)`
+  ${phone(css`
+    grid-column-end: span 10;
+  `)}
+`
+
+export { Cell, Grid, FormCell }

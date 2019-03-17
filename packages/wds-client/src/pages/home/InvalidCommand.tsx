@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { HelpOut } from './Help'
-import { Waiting, TerminalInputProps } from './CurrentEvent'
+import { Waiting, TerminalInputProps } from './CurrentEventTerminal'
 
 const Warning = styled.span`
   color: ${({ theme }) => theme.notificationError};
