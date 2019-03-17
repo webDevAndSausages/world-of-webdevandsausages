@@ -59,59 +59,59 @@ infix fun EventUpdateInDto.whenValid(task: () -> Response): Response {
 
     mapOf(
         maxParticipants to {
-            validator.forProperty { it.maxParticipants } rules {
+            validator.forProperty { maxParticipants } rules {
                 gt(0)
             } onError {
                 errorMessage("Max participants must be greater than 0")
             }
         },
         name to {
-            validator.forProperty { it.name } rules {
+            validator.forProperty { name } rules {
                 length(255)
             } onError {
                 errorMessage("Name max length is 255 chars")
             }
         },
         contact to {
-            validator.forProperty { it.contact } rules {
+            validator.forProperty { contact } rules {
                 length(255)
             } onError {
                 errorMessage("Contact max length is 255 chars")
             }
         },
         date to {
-            validator.forProperty { it.date } rules {
-                mustBe { it != null && it.after(Timestamp.valueOf(LocalDateTime.now())) }
+            validator.forProperty { date } rules {
+                mustBe { it!!.after(Timestamp.valueOf(LocalDateTime.now())) }
             } onError {
                 errorMessage("Date must be in the future")
             }
         },
         details to {
-            validator.forProperty { it.details } rules {
+            validator.forProperty { details } rules {
                 length(1024)
             } onError {
                 errorMessage("Details max length is 1024 chars")
             }
         },
         location to {
-            validator.forProperty { it.location } rules {
+            validator.forProperty { location } rules {
                 length(255)
             } onError {
                 errorMessage("Location max length is 255 chars")
             }
         },
         registrationOpens to {
-            validator.forProperty { it.registrationOpens } rules {
-                mustBe { it != null && it.after(Timestamp.valueOf(LocalDateTime.now())) }
+            validator.forProperty { registrationOpens } rules {
+                mustBe { it!!.after(Timestamp.valueOf(LocalDateTime.now())) }
             } onError {
                 errorMessage("Registration opens must be in the future")
             }
         },
         sponsorLink to {
-            validator.forProperty { it.registrationOpens } rules {
-                mustBe { it != null && it.after(Timestamp.valueOf(LocalDateTime.now())) }
+            validator.forProperty { sponsorLink } rules {
+                length(255)
             } onError {
-                errorMessage("Registration opens must be in the future")
+                errorMessage("SponsorLink max length is 255 chars")
             }
         }
     ).filter { it.key != null }.forEach { it.value() } // Filter out null values and execute validators for non-nulls
