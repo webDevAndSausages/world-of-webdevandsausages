@@ -41,7 +41,7 @@ export const Screen = styled.div`
   border-bottom-right-radius: 5px;
   min-height: 300px;
   max-height: 100%;
-  overflow: auto;
+  overflow: hidden;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 `
 

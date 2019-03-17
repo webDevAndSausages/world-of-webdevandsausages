@@ -1,6 +1,7 @@
 import styled, { css } from '../styles/styled-components'
 
 const PageWrapper = styled.div<{ background?: string }>`
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: top;

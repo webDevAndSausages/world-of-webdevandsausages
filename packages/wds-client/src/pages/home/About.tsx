@@ -41,8 +41,7 @@ const TagLine = styled.h3`
 `
 
 const MissionStatement = styled.div`
-  display: flex;
-  flex-direction: row;
+  display: block;
   margin: auto;
   width: 80%;
   line-height: 150%;
