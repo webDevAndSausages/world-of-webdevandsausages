@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useRef } from 'react'
+import React, { useReducer, useEffect, useRef, useState } from 'react'
 import styled, { css } from '../../styles/styled-components'
 import { tablet, phone } from '../../styles/helpers'
 import { Prompt, blink, OnCmd } from '../../components/terminal'
@@ -14,6 +14,37 @@ import lighten from 'polished/lib/color/lighten'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import { split, compose, join, pathOr, pathEq } from 'ramda'
 import { isEmail } from '../../helpers/validation'
+import { zip, interval } from 'rxjs'
+import { map } from 'rxjs/operators'
+
+import { ascii } from './ascii'
+
+const asciiArray = ascii.split('\n')
+const LINE_DISPLAY_DELAY = 100
+
+function AsciiSurprise() {
+  const [surprise, setState] = useState('')
+
+  useEffect(() => {
+    var events$ = zip(asciiArray, interval(LINE_DISPLAY_DELAY)).pipe(
+      map(val => setState(v => v + '\n' + val[0]))
+    )
+    const sub$ = events$.subscribe()
+    return () => sub$.unsubscribe()
+  }, [])
+
+  return (
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
+      <pre>{surprise}</pre>
+    </div>
+  )
+}
 
 const ShortCell = styled(FormCell)`
   ${tablet(css`
@@ -373,6 +404,7 @@ export const EventRegistration = ({
                   Please record the verification token for later use.
                 </LongCell>
               </Grid>
+              {!waiting && <AsciiSurprise />}
             </>
           )
         },
