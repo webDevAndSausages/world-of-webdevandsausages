@@ -63,71 +63,48 @@ infix fun EventUpdateInDto.whenValid(task: () -> Response): Response {
             errorMessage("Max participants must be greater than 0")
         }
     }
-
-    if (this.name != null) {
-        validator.forProperty { it.name } rules {
+    when {
+        name != null -> validator.forProperty { it.name } rules {
             length(255)
         } onError {
             errorMessage("Name max length is 255 chars")
         }
-    }
-
-    if (this.sponsor != null) {
-        validator.forProperty { it.sponsor } rules {
+        sponsor != null -> validator.forProperty { it.sponsor } rules {
             length(255)
         } onError {
             errorMessage("Sponsor max length is 255 chars")
         }
-    }
-
-    if (this.contact != null) {
-        validator.forProperty { it.contact } rules {
+        contact != null -> validator.forProperty { it.contact } rules {
             length(255)
         } onError {
             errorMessage("Contact max length is 255 chars")
         }
-    }
-
-    if (this.date != null) {
-        validator.forProperty { it.date } rules {
+        date != null -> validator.forProperty { it.date } rules {
             mustBe { it != null && it.after(Timestamp.valueOf(LocalDateTime.now())) }
         } onError {
             errorMessage("Date must be in the future")
         }
-    }
-
-    if (this.details != null) {
-        validator.forProperty { it.details } rules {
+        details != null -> validator.forProperty { it.details } rules {
             length(1024)
         } onError {
             errorMessage("Details max length is 1024 chars")
         }
-    }
-
-    if (this.location != null) {
-        validator.forProperty { it.location } rules {
+        location != null -> validator.forProperty { it.location } rules {
             length(255)
         } onError {
             errorMessage("Location max length is 255 chars")
         }
-    }
-
-    if (this.registrationOpens != null) {
-        validator.forProperty { it.registrationOpens } rules {
+        registrationOpens != null -> validator.forProperty { it.registrationOpens } rules {
             mustBe { it != null && it.after(Timestamp.valueOf(LocalDateTime.now())) }
         } onError {
             errorMessage("Registration opens must be in the future")
         }
-    }
-
-    if (this.sponsorLink != null) {
-        validator.forProperty { it.sponsorLink } rules {
+        sponsorLink != null -> validator.forProperty { it.sponsorLink } rules {
             length(255)
         } onError {
             errorMessage("SponsorLink max length is 256 chars")
         }
     }
-
     val validationResult = validator.validate()
 
     return when (validationResult.isValid) {
