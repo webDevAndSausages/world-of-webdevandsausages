@@ -100,13 +100,13 @@ export const Waiting: React.FC<TerminalInputProps> = ({
 interface TerminalState {
   current: any
   history: any[]
-  cmd?: string
+  cmd: string[]
 }
 
 const defaultState = {
   current: 0,
   history: [Waiting],
-  cmd: null
+  cmd: []
 }
 
 const updates = {
@@ -145,7 +145,7 @@ const updates = {
   },
   invalid: (state: TerminalState, cmd: string) => {
     state.history.push(InvalidCmd)
-    state.cmd = cmd
+    state.cmd[state.current] = cmd
     state.current++
   }
 }
@@ -189,7 +189,7 @@ const RegistrationConsole = ({
               onCommand={dispatch}
               eventId={event.id}
               active={i === consoleState.current}
-              cmd={consoleState.cmd}
+              cmd={consoleState.cmd[i - 1]}
             />
           )
         })}

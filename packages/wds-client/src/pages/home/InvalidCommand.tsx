@@ -9,6 +9,7 @@ const Warning = styled.span`
 
 interface InvalidCmdProps extends TerminalInputProps {
   cmd: string
+  index: number
 }
 
 export const InvalidCmd: React.FC<InvalidCmdProps> = ({ cmd, ...rest }) => (
