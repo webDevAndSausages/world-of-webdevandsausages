@@ -47,6 +47,7 @@ object PatchEvent {
             returning(Status.OK to "Event updated.")
             returning(Status.NOT_FOUND to "Event was not found")
             returning(Status.INTERNAL_SERVER_ERROR to "A database error occurred.")
+            returning(Status.UNPROCESSABLE_ENTITY to "Validation error")
         } bindContract Method.PATCH to ::handlepatchEvent
     }
 }
