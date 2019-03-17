@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css } from '../../styles/styled-components'
 import darken from 'polished/lib/color/darken'
 import produce from 'immer'
 
@@ -16,7 +16,7 @@ import { Help } from './Help'
 import { Prompt } from '../../components/terminal'
 
 import Spinner from '../../components/Spinner'
-import FutureEvent from './FutureEvent'
+import FutureEvent from './FutureEventTerminal'
 
 import {
   Terminal,

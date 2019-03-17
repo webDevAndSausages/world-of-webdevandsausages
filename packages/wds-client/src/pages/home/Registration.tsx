@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from 'react'
-import styled, { css } from 'styled-components'
-import { Prompt, blink, Action, OnCmd } from '../../components/terminal'
+import styled, { css } from '../../styles/styled-components'
+import { tablet, phone } from '../../styles/helpers'
+import { Prompt, blink, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
 import {
@@ -8,11 +9,31 @@ import {
   RegistrationType,
   FormState
 } from '../../models/Registration'
-import { Grid, Cell } from '../../components/layout'
+import { Grid, FormCell } from '../../components/layout'
 import lighten from 'polished/lib/color/lighten'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import { split, compose, join, pathOr, pathEq } from 'ramda'
 import { isEmail } from '../../helpers/validation'
+
+const ShortCell = styled(FormCell)`
+  ${tablet(css`
+    grid-column-end: span 3;
+  `)}
+  ${phone(css`
+    grid-column-end: span 10;
+  `)}
+`
+
+const LongCell = styled(FormCell)`
+  ${tablet(
+    css`
+      grid-column-end: span 7;
+    `
+  )}
+  ${phone(css`
+    grid-column-end: span 10;
+  `)}
+`
 
 export const SpecialMode = styled.span<{ blink?: boolean }>`
   ${({ blink: b }) =>
@@ -102,10 +123,10 @@ const Form: React.FC<FormProps> = ({
       $ mode: <span style={{ color: '#52bdf6' }}>REGISTER</span>
     </Prompt>
     <Grid columns={10} style={{ paddingTop: '20px' }}>
-      <Cell width={2}>
+      <ShortCell width={2}>
         <RegistrationLabel valid={valid}>email</RegistrationLabel>
-      </Cell>
-      <Cell width={8}>
+      </ShortCell>
+      <LongCell width={8}>
         <RegistrationInput
           id="email"
           type="email"
@@ -113,11 +134,11 @@ const Form: React.FC<FormProps> = ({
           onChange={updateValue}
           disabled={disabled}
         />
-      </Cell>
-      <Cell width={2}>
+      </LongCell>
+      <ShortCell width={2}>
         <RegistrationLabel valid={valid}>first name</RegistrationLabel>
-      </Cell>
-      <Cell width={8}>
+      </ShortCell>
+      <LongCell width={8}>
         <RegistrationInput
           id="firstName"
           type="text"
@@ -125,11 +146,11 @@ const Form: React.FC<FormProps> = ({
           onChange={updateValue}
           disabled={disabled}
         />
-      </Cell>
-      <Cell width={2}>
+      </LongCell>
+      <ShortCell width={2}>
         <RegistrationLabel valid={valid}>last name</RegistrationLabel>
-      </Cell>
-      <Cell width={8}>
+      </ShortCell>
+      <LongCell width={8}>
         <RegistrationInput
           id="lastName"
           type="text"
@@ -137,11 +158,11 @@ const Form: React.FC<FormProps> = ({
           onChange={updateValue}
           disabled={disabled}
         />
-      </Cell>
-      <Cell width={2}>
+      </LongCell>
+      <ShortCell width={2}>
         <RegistrationLabel valid={valid}>affiliation</RegistrationLabel>
-      </Cell>
-      <Cell width={8}>
+      </ShortCell>
+      <LongCell width={8}>
         <RegistrationInput
           id="affiliation"
           type="text"
@@ -149,7 +170,7 @@ const Form: React.FC<FormProps> = ({
           onChange={updateValue}
           disabled={disabled}
         />
-      </Cell>
+      </LongCell>
     </Grid>
   </form>
 )
@@ -270,137 +291,123 @@ export const EventRegistration = ({
   }, [request])
 
   return (
-    <div>
-      <Prompt>
-        {Registration.match(registrationState, {
-          Entering: values => (
-            <>
-              <Form {...values} updateValue={updateValue} />
-              <Grid columns={10}>
-                <Cell width={2}>
-                  <Prompt>$ action: </Prompt>
-                </Cell>
-                <Cell width={8}>
-                  <FormActionButtons
-                    onCommand={onCommand}
-                    dispatch={dispatch}
-                  />
-                </Cell>
-              </Grid>
-            </>
-          ),
-          EnteringValid: values => (
-            <>
-              <Form {...values} updateValue={updateValue} valid />
-              <Grid columns={10}>
-                <Cell width={2}>
-                  <Prompt>$ action: </Prompt>
-                </Cell>
-                <Cell width={8}>
-                  <FormActionButtons
-                    valid
-                    onCommand={onCommand}
-                    dispatch={dispatch}
-                  />
-                </Cell>
-              </Grid>
-            </>
-          ),
-          Success: values => {
-            const status = compose(
-              join(' '),
-              split('_'),
-              pathOr('REGISTERED', ['response', 'status'])
-            )(values)
+    <Prompt>
+      {Registration.match(registrationState, {
+        Entering: values => (
+          <>
+            <Form {...values} updateValue={updateValue} />
+            <Grid columns={10}>
+              <ShortCell width={2}>
+                <Prompt>$ action: </Prompt>
+              </ShortCell>
+              <LongCell width={8}>
+                <FormActionButtons onCommand={onCommand} dispatch={dispatch} />
+              </LongCell>
+            </Grid>
+          </>
+        ),
+        EnteringValid: values => (
+          <>
+            <Form {...values} updateValue={updateValue} valid />
+            <Grid columns={10}>
+              <ShortCell width={2}>
+                <Prompt>$ action: </Prompt>
+              </ShortCell>
+              <LongCell width={8}>
+                <FormActionButtons
+                  valid
+                  onCommand={onCommand}
+                  dispatch={dispatch}
+                />
+              </LongCell>
+            </Grid>
+          </>
+        ),
+        Success: values => {
+          const status = compose(
+            join(' '),
+            split('_'),
+            pathOr('REGISTERED', ['response', 'status'])
+          )(values)
 
-            const place = pathOr(null, ['response', 'orderNumber'], values)
+          const place = pathOr(null, ['response', 'orderNumber'], values)
 
-            const waiting = pathEq(
-              ['response', 'status'],
-              'WAIT_LISTED',
-              values
-            )
+          const waiting = pathEq(['response', 'status'], 'WAIT_LISTED', values)
 
-            return (
-              <>
-                <Form {...values} updateValue={updateValue} disabled valid />
-                <Grid columns={10}>
-                  <Cell width={2}>
-                    <Prompt>$ result: </Prompt>
-                  </Cell>
-                  <Cell width={8} style={{ color: '#fff' }}>
-                    You are {status}.{' '}
-                    {place &&
-                      waiting &&
-                      `You are number ${place} in the waiting list.`}
-                  </Cell>
-                  <Cell width={2} />
-                  <Cell width={8} style={{ color: '#fff' }}>
-                    Your registration token:{' '}
-                    <span style={{ color: '#52bdf6' }}>
-                      {pathOr(
-                        'MISSING',
-                        ['response', 'verificationToken'],
-                        values
-                      )}
-                    </span>
-                    .
-                  </Cell>
-                  <Cell width={2} />
-                  <Cell width={8} style={{ color: '#fff' }}>
-                    Please record the verification token for later use.
-                  </Cell>
-                </Grid>
-              </>
-            )
-          },
-          Failure: values => (
+          return (
             <>
               <Form {...values} updateValue={updateValue} disabled valid />
               <Grid columns={10}>
-                <Cell width={2}>
+                <ShortCell width={2}>
                   <Prompt>$ result: </Prompt>
-                </Cell>
-                <Cell width={8} style={{ color: '#fff' }}>
-                  {values.error.message}{' '}
-                  <RegistrationLabel valid>{values.status}</RegistrationLabel>
-                </Cell>
-              </Grid>
-            </>
-          ),
-          Loading: values => (
-            <>
-              <Form {...values} updateValue={updateValue} disabled valid />
-              <Grid columns={10}>
-                <Cell width={2}>
-                  <Prompt>$ result: </Prompt>
-                </Cell>
-                <Cell width={8} style={{ color: '#fff' }}>
-                  LOADING <LoadingEllipsis />
-                </Cell>
-              </Grid>
-            </>
-          ),
-          Cancelled: values => (
-            <>
-              <Form {...values} updateValue={updateValue} disabled valid />
-              <Grid columns={10}>
-                <Cell width={2}>
-                  <Prompt>$ result: </Prompt>
-                </Cell>
-                <Cell width={8} style={{ color: '#fff' }}>
-                  CANCELLED
-                </Cell>
+                </ShortCell>
+                <LongCell width={8} style={{ color: '#fff' }}>
+                  You are {status}.{' '}
+                  {place &&
+                    waiting &&
+                    `You are number ${place} in the waiting list.`}
+                </LongCell>
+                <ShortCell width={2} />
+                <LongCell width={8} style={{ color: '#fff' }}>
+                  Your registration token:{' '}
+                  <span style={{ color: '#52bdf6' }}>
+                    {pathOr(
+                      'MISSING',
+                      ['response', 'verificationToken'],
+                      values
+                    )}
+                  </span>
+                  .
+                </LongCell>
+                <ShortCell width={2} />
+                <LongCell width={8} style={{ color: '#fff' }}>
+                  Please record the verification token for later use.
+                </LongCell>
               </Grid>
             </>
           )
-        })}
-      </Prompt>
-      {/*<MetaWrapper>
-        <Pre>
-          <b>state:</b> {JSON.stringify(registrationState, null, 2)}
-        </Pre>
-      </MetaWrapper>*/}
-    </div>
+        },
+        Failure: values => (
+          <>
+            <Form {...values} updateValue={updateValue} disabled valid />
+            <Grid columns={10}>
+              <ShortCell width={2}>
+                <Prompt>$ result: </Prompt>
+              </ShortCell>
+              <LongCell width={8} style={{ color: '#fff' }}>
+                {values.error.message}{' '}
+                <RegistrationLabel valid>{values.status}</RegistrationLabel>
+              </LongCell>
+            </Grid>
+          </>
+        ),
+        Loading: values => (
+          <>
+            <Form {...values} updateValue={updateValue} disabled valid />
+            <Grid columns={10}>
+              <ShortCell width={2}>
+                <Prompt>$ result: </Prompt>
+              </ShortCell>
+              <LongCell width={8} style={{ color: '#fff' }}>
+                LOADING <LoadingEllipsis />
+              </LongCell>
+            </Grid>
+          </>
+        ),
+        Cancelled: values => (
+          <>
+            <Form {...values} updateValue={updateValue} disabled valid />
+            <Grid columns={10}>
+              <ShortCell width={2}>
+                <Prompt>$ result: </Prompt>
+              </ShortCell>
+              <LongCell width={8} style={{ color: '#fff' }}>
+                CANCELLED
+              </LongCell>
+            </Grid>
+          </>
+        )
+      })}
+    </Prompt>
   )
 }
