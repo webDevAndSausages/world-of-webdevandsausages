@@ -11,6 +11,8 @@ import { EventData, Event as EventType } from '../../models/Event'
 import { EventRegistration } from './Registration'
 import { CheckRegistration } from './CheckRegistration'
 import { CancelRegistration } from './CancelRegistration'
+import { InvalidCmd } from './InvalidCommand'
+import { Help } from './Help'
 import { Prompt } from '../../components/terminal'
 
 import Spinner from '../../components/Spinner'
@@ -80,21 +82,31 @@ const SponsorLogo = styled.img`
 const defaultPrompt =
   'Registration modes: register [r], modify [m], check [c], help [h]'
 
-interface TerminalState {
-  current: any
-  history: any[]
+export interface TerminalInputProps {
+  onCommand: (a: { type: Action; cmd?: string }) => void
+  active: boolean
 }
 
-const Waiting = ({ onCommand, active }) => (
+export const Waiting: React.FC<TerminalInputProps> = ({
+  onCommand,
+  active
+}) => (
   <>
     <Prompt>$ {defaultPrompt}</Prompt>
     <CursorInput onCommand={onCommand} active={active} />
   </>
 )
 
+interface TerminalState {
+  current: any
+  history: any[]
+  cmd?: string
+}
+
 const defaultState = {
   current: 0,
-  history: [Waiting]
+  history: [Waiting],
+  cmd: null
 }
 
 const updates = {
@@ -115,7 +127,8 @@ const updates = {
     state.current++
   },
   help: (state: TerminalState) => {
-    state.history.push(Waiting)
+    console.log('called')
+    state.history.push(Help)
     state.current++
   },
   back: (state: TerminalState) => {
@@ -130,14 +143,20 @@ const updates = {
       state.current++
     }
   },
-  error: (state: TerminalState) => {
-    state.history.push(Waiting)
+  invalid: (state: TerminalState, cmd: string) => {
+    state.history.push(InvalidCmd)
+    state.cmd = cmd
     state.current++
   }
 }
 
-const consoleReducer = (state: TerminalState, action: Action) =>
-  updates[action] ? produce(updates[action])(state) : defaultState
+const consoleReducer = (
+  state: TerminalState,
+  action: { type: Action; cmd: string }
+) =>
+  updates[action.type]
+    ? (produce as any)(updates[action.type])(state, action.cmd)
+    : defaultState
 
 const RegistrationConsole = ({
   event
@@ -163,13 +182,14 @@ const RegistrationConsole = ({
         <TerminalOut title="what" detail={event.details} />
         <TerminalOut title="where" detail={event.location} />
         <TerminalOut title="who" detail={event.contact} />
-        {consoleState.history.map((Component: any, i) => {
+        {consoleState.history.map((Component: any, i: number) => {
           return (
             <Component
               key={i}
               onCommand={dispatch}
               eventId={event.id}
               active={i === consoleState.current}
+              cmd={consoleState.cmd}
             />
           )
         })}

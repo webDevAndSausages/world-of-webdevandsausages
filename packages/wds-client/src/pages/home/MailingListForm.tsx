@@ -116,7 +116,7 @@ export function MailingListForm() {
             onBlur={() => {
               send({ type: 'EMAIL_BLUR' })
             }}
-            onKeyPress={e => {
+            onKeyPress={(e: React.KeyboardEvent<HTMLDivElement>) => {
               if (e.key === 'Enter') {
                 e.preventDefault()
                 send({ type: 'SUBMIT' })

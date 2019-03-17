@@ -55,7 +55,7 @@ export type Action =
   | 'modify'
   | 'check'
   | 'help'
-  | 'error'
+  | 'invalid'
   | 'back'
   | 'forward'
 
@@ -64,25 +64,27 @@ const commands: { [key: string]: Action } = {
   m: 'modify',
   c: 'check',
   h: 'help',
-  e: 'error',
+  i: 'invalid',
   b: 'back',
   f: 'forward'
 }
 
-const commandsRegex = /(r|register|m|modify|c|check|c|help)/
+const commandsRegex = /(r|register|m|modify|c|check|h|help)/
+
+export type OnCmd = (a: { type: Action; cmd?: string }) => void
 
 export const CursorInput = ({
   onCommand,
   active,
   onKeyDown
 }: {
-  onCommand: (a: Action) => void
+  onCommand: OnCmd
   active: boolean
-  onKeyDown?: (a: any) => void
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }) => {
   const [value, setValue] = useState('')
 
-  const onKeyDownDefault = (e: any) => {
+  const onKeyDownDefault = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!active) return
 
     const RETURN = e.keyCode === 13
@@ -91,16 +93,16 @@ export const CursorInput = ({
 
     if (RETURN) {
       if (value && commandsRegex.test(value)) {
-        return onCommand(commands[value[0]])
+        return onCommand({ type: commands[value[0]] })
       }
-      return onCommand('error')
+      return onCommand({ type: 'invalid', cmd: value })
     }
     // back event will propagate up to the page if no value entered and active
     if (value && BACK) {
-      return onCommand('back')
+      return onCommand({ type: 'back' })
     }
     if (FORWARD) {
-      return onCommand('forward')
+      return onCommand({ type: 'forward' })
     }
   }
 
@@ -108,7 +110,9 @@ export const CursorInput = ({
     <Cursor
       placeholder="_"
       value={value}
-      onChange={(e: any) => setValue(e.target.value.toLowerCase())}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        setValue(e.target.value.toLowerCase())
+      }
       blink={!value}
       onKeyDown={onKeyDown ? onKeyDown : onKeyDownDefault}
       autoFocus

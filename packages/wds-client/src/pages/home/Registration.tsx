@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { Prompt, blink, Action } from '../../components/terminal'
+import { Prompt, blink, Action, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
 import {
@@ -12,6 +12,7 @@ import { Grid, Cell } from '../../components/layout'
 import lighten from 'polished/lib/color/lighten'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import { split, compose, join, pathOr, pathEq } from 'ramda'
+import { isEmail } from '../../helpers/validation'
 
 export const SpecialMode = styled.span<{ blink?: boolean }>`
   ${({ blink: b }) =>
@@ -44,6 +45,35 @@ export const RegistrationInput = styled.input`
   }
 `
 
+interface FormActionButtonProps {
+  dispatch: (a: { type: ActionType; payload?: { [key: string]: any } }) => void
+  onCommand: OnCmd
+  valid?: boolean
+}
+
+export const FormActionButtons: React.FC<FormActionButtonProps> = ({
+  dispatch,
+  onCommand,
+  valid
+}) => (
+  <>
+    {valid && (
+      <FormButton onClick={() => dispatch({ type: 'ready' })}>
+        submit
+      </FormButton>
+    )}
+    <FormButton
+      onClick={() => {
+        dispatch({ type: 'cancel' })
+        onCommand({ type: 'wait' })
+      }}
+    >
+      cancel
+    </FormButton>
+    <FormButton onClick={() => dispatch({ type: 'reset' })}>reset</FormButton>
+  </>
+)
+
 export const RegistrationLabel = ({ valid, children }) => (
   <Prompt>
     <SpecialMode blink={!valid}> [</SpecialMode>
@@ -52,7 +82,13 @@ export const RegistrationLabel = ({ valid, children }) => (
   </Prompt>
 )
 
-const Form = ({
+interface FormProps extends FormState {
+  updateValue: (e: React.ChangeEvent<HTMLInputElement>) => void
+  valid?: boolean
+  disabled?: boolean
+}
+
+const Form: React.FC<FormProps> = ({
   email,
   firstName,
   lastName,
@@ -60,10 +96,6 @@ const Form = ({
   updateValue,
   valid,
   disabled
-}: FormState & {
-  updateValue: (e: any) => void
-  valid?: boolean
-  disabled?: boolean
 }) => (
   <form style={{ width: '100%', padding: '20px 0' }}>
     <Prompt>
@@ -135,9 +167,6 @@ export const FormButton = styled.button`
   }
 `
 
-const emailRegex = /^.+@.+\..+$/i
-export const isEmail = (value: string) => emailRegex.test(value)
-
 const updates = {
   set: (state: RegistrationType, payload: FormState) => {
     const isValid = typeof payload.email === 'string' && isEmail(payload.email)
@@ -193,14 +222,14 @@ export const EventRegistration = ({
   onCommand
 }: {
   eventId: number
-  onCommand: (v: Action) => void
+  onCommand: OnCmd
 }) => {
   const [registrationState, dispatch] = useReducer(
     registrationReducer,
     defaultState
   )
 
-  const updateValue = (e: any) =>
+  const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
       type: 'set',
       payload: { ...registrationState.value, [e.target.id]: e.target.value }
@@ -229,14 +258,14 @@ export const EventRegistration = ({
   useEffect(() => {
     if (ApiRequest.is.OK(request)) {
       dispatch({ type: 'success', payload: { data: request.data.registered } })
-      onCommand('wait')
+      onCommand({ type: 'wait' })
     }
     if (ApiRequest.is.NOT_OK(request)) {
       dispatch({
         type: 'failure',
         payload: { error: request.error, status: request.status }
       })
-      onCommand('wait')
+      onCommand({ type: 'wait' })
     }
   }, [request])
 
@@ -244,7 +273,22 @@ export const EventRegistration = ({
     <div>
       <Prompt>
         {Registration.match(registrationState, {
-          Entering: values => <Form {...values} updateValue={updateValue} />,
+          Entering: values => (
+            <>
+              <Form {...values} updateValue={updateValue} />
+              <Grid columns={10}>
+                <Cell width={2}>
+                  <Prompt>$ action: </Prompt>
+                </Cell>
+                <Cell width={8}>
+                  <FormActionButtons
+                    onCommand={onCommand}
+                    dispatch={dispatch}
+                  />
+                </Cell>
+              </Grid>
+            </>
+          ),
           EnteringValid: values => (
             <>
               <Form {...values} updateValue={updateValue} valid />
@@ -253,20 +297,11 @@ export const EventRegistration = ({
                   <Prompt>$ action: </Prompt>
                 </Cell>
                 <Cell width={8}>
-                  <FormButton onClick={() => dispatch({ type: 'ready' })}>
-                    submit
-                  </FormButton>
-                  <FormButton
-                    onClick={() => {
-                      dispatch({ type: 'cancel' })
-                      onCommand('wait')
-                    }}
-                  >
-                    cancel
-                  </FormButton>
-                  <FormButton onClick={() => dispatch({ type: 'reset' })}>
-                    reset
-                  </FormButton>
+                  <FormActionButtons
+                    valid
+                    onCommand={onCommand}
+                    dispatch={dispatch}
+                  />
                 </Cell>
               </Grid>
             </>

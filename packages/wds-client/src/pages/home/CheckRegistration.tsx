@@ -1,12 +1,16 @@
 import React, { useReducer, useEffect } from 'react'
-import { Prompt, Action } from '../../components/terminal'
+import { Prompt, Action, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
 import { RegistrationModification } from '../../models/RegistrationModification'
 import { Grid, Cell } from '../../components/layout'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import { split, compose, join, pathOr, pathEq } from 'ramda'
-import { RegistrationLabel, FormButton } from './Registration'
+import {
+  RegistrationLabel,
+  FormButton,
+  FormActionButtons
+} from './Registration'
 import { Form, registrationReducer, defaultState } from './CancelRegistration'
 
 import { MetaWrapper, Pre } from '../../components/DevTools'
@@ -16,11 +20,11 @@ export const CheckRegistration = ({
   onCommand
 }: {
   eventId: number
-  onCommand: (v: Action) => void
+  onCommand: OnCmd
 }) => {
   const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
 
-  const updateValue = (e: any) =>
+  const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
       type: 'set',
       payload: { ...checkState.value, [e.target.id]: e.target.value }
@@ -42,14 +46,14 @@ export const CheckRegistration = ({
   useEffect(() => {
     if (ApiRequest.is.OK(request)) {
       dispatch({ type: 'success', payload: { data: request.data.registered } })
-      onCommand('wait')
+      onCommand({ type: 'wait' })
     }
     if (ApiRequest.is.NOT_OK(request)) {
       dispatch({
         type: 'failure',
         payload: { error: request.error, status: request.status }
       })
-      onCommand('wait')
+      onCommand({ type: 'wait' })
     }
   }, [request])
 
@@ -68,12 +72,25 @@ export const CheckRegistration = ({
       <Prompt>
         {RegistrationModification.match(checkState, {
           Entering: values => (
-            <Form
-              {...values}
-              updateValue={updateValue}
-              handleSubmit={onSubmit}
-              label="CHECK REGISTRATION"
-            />
+            <>
+              <Form
+                {...values}
+                updateValue={updateValue}
+                handleSubmit={onSubmit}
+                label="CHECK REGISTRATION"
+              />
+              <Grid columns={10}>
+                <Cell width={3}>
+                  <Prompt>$ action: </Prompt>
+                </Cell>
+                <Cell width={7}>
+                  <FormActionButtons
+                    onCommand={onCommand}
+                    dispatch={dispatch}
+                  />
+                </Cell>
+              </Grid>
+            </>
           ),
           EnteringValid: values => (
             <>
@@ -89,20 +106,11 @@ export const CheckRegistration = ({
                   <Prompt>$ action: </Prompt>
                 </Cell>
                 <Cell width={7}>
-                  <FormButton onClick={() => dispatch({ type: 'ready' })}>
-                    submit
-                  </FormButton>
-                  <FormButton
-                    onClick={() => {
-                      dispatch({ type: 'cancel' })
-                      onCommand('wait')
-                    }}
-                  >
-                    cancel
-                  </FormButton>
-                  <FormButton onClick={() => dispatch({ type: 'reset' })}>
-                    reset
-                  </FormButton>
+                  <FormActionButtons
+                    valid
+                    onCommand={onCommand}
+                    dispatch={dispatch}
+                  />
                 </Cell>
               </Grid>
             </>
