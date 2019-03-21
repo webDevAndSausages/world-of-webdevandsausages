@@ -2,13 +2,14 @@ package org.webdevandsausages.events.service
 
 import arrow.core.Either
 import meta.enums.EventStatus
-import meta.tables.Event
 import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.EventUpdates
 import org.webdevandsausages.events.dao.field
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
+import org.webdevandsausages.events.dto.EventUpdateInDto
+import org.webdevandsausages.events.dto.toEventUpdates
 import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.utils.hasPassed
 import org.webdevandsausages.events.utils.threeDaysLater
@@ -98,6 +99,16 @@ class CreateEventService(val eventRepository: EventCRUD) {
     operator fun invoke(eventInDto: EventInDto): Either<EventError, EventDto> {
 
         return eventRepository.create(eventInDto).fold({
+            Either.Left(EventError.DatabaseError)
+        }, {
+            Either.Right(it)
+        })
+    }
+}
+
+class UpdateEventService(val eventRepository: EventCRUD) {
+    operator fun invoke(eventId: Long, eventInDto: EventUpdateInDto): Either<EventError, EventDto> {
+        return eventRepository.update(eventId, eventInDto.toEventUpdates()).fold({
             Either.Left(EventError.DatabaseError)
         }, {
             Either.Right(it)

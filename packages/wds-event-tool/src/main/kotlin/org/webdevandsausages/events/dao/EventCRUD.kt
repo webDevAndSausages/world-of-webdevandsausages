@@ -19,9 +19,13 @@ import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
+import org.webdevandsausages.events.dto.EventUpdateInDto
+import java.sql.Time
+import java.sql.Timestamp
 import kotlin.streams.toList
 
-typealias EventUpdates = List<Pair<TableField<EventRecord, Any>, Any>>
+typealias EventUpdate = Pair<TableField<EventRecord, Any>, Any>
+typealias EventUpdates = List<EventUpdate>
 
 class EventCRUD(configuration: Configuration) : EventDao(configuration) {
     val db = DSL.using(configuration())
@@ -69,6 +73,7 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                                 .or(hasStatus(EventStatus.CLOSED_WITH_FEEDBACK))
                         }
                     }
+                    .orderBy(Event.EVENT.ID) // This is a crucial step to prevent simpleflatmapper creating duplicates // Check: https://www.petrikainulainen.net/programming/jooq/jooq-tips-implementing-a-read-only-one-to-many-relationship/
                     .fetchResultSet()
             }
             val jdbcMapper = mapperInstance
@@ -82,22 +87,22 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
     }
 
     // can handle an arbitrary number of updates
-    fun update(id: Long?, updates: EventUpdates): Option<Int> {
-        val result = Try {
-            db.use { ctx ->
-                ctx
-                    .update(Event.EVENT)
-                    .set(updates[0].first, updates[0].second)
-                    .apply {
-                        updates.drop(1).forEach {
-                            set(it.first, it.second)
-                        }
+    fun update(id: Long?, updates: EventUpdates): Option<EventDto> {
+        val result = db.use { ctx ->
+            ctx
+                .update(Event.EVENT)
+                .set(updates[0].first, updates[0].second)
+                .apply {
+                    updates.drop(1).forEach {
+                        set(it.first, it.second)
                     }
-                    .where(Event.EVENT.ID.eq(id))
-                    .execute()
-            }
-        }.getOrDefault { 0 }
-        return if (result == 1) Some(1) else None
+                }
+                .where(Event.EVENT.ID.eq(id))
+                .returning()
+                .fetchOne().into(meta.tables.pojos.Event::class.java)
+        }
+
+        return findByIdOrLatest(result.id)
     }
 
     fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use { ctx ->
@@ -118,18 +123,6 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
 
     fun create(event: EventInDto): Option<EventDto> {
         return with(Event.EVENT) {
-            val (name,
-                contact,
-                sponsor,
-                date,
-                details,
-                location,
-                status,
-                maxParticipants,
-                registrationOpens,
-                volume,
-                sponsorLnk
-               ) = event
             db.use { ctx ->
                 ctx
                     .insertInto(
@@ -147,43 +140,27 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                         SPONSOR_LINK
                     )
                     .values(
-                        name,
-                        contact,
-                        sponsor,
-                        date,
-                        details,
-                        location,
-                        status,
-                        maxParticipants,
-                        registrationOpens,
-                        volume,
-                        sponsorLnk
+                        event.name,
+                        event.contact,
+                        event.sponsor,
+                        event.date,
+                        event.details,
+                        event.location,
+                        event.status,
+                        event.maxParticipants,
+                        event.registrationOpens,
+                        event.volume,
+                        event.sponsorLink
                     )
                     .returning()
                     .fetchOne()
             }.let {
                 EventDto(
-                    event = meta.tables.pojos.Event(
-                        it.id,
-                        it.name,
-                        it.sponsor,
-                        it.contact,
-                        it.date,
-                        it.details,
-                        it.location,
-                        it.status,
-                        it.maxParticipants,
-                        it.registrationOpens,
-                        it.createdOn,
-                        it.updatedOn,
-                        it.volume,
-                        it.sponsorLink
-                    )
+                    event = it.into(meta.tables.pojos.Event::class.java)
                 ).toOption()
             }
         }
     }
-
 }
 
 val EventCRUD.field get() = Event.EVENT

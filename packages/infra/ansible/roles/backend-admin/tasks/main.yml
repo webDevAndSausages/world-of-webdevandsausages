@@ -53,6 +53,62 @@
   tags:
     - add-event
 
+- name: Update event task block
+  block:
+    - name: Capture current timezone offset
+      shell: 'TZ=Europe/Helsinki date "+%z"'
+      register: tz_offset
+    - name: List events
+      uri:
+        url: http://localhost:5000/admin-api/events
+        body_format: json
+        method: GET
+        status_code: 200
+      register: result
+    - debug:
+        msg: "{{ lookup('template', 'list_events.j2') }}"
+    - name: Select event to update
+      prompt:
+        msg:
+          - say: "Event ID you wish to update?"
+            ask: eventId
+          - say: "Give a comma separated list of fields (field Id's e.g. 1,2,3) you wish to update?"
+            ask: fieldsList
+    - name: "Prompt new value"
+      prompt:
+        msg:
+          - say: "{{eventFieldMap[(item|int)].text}}"
+          - ask: "{{eventFieldMap[(item|int)].field}}"
+      loop: "{{fieldsList.split(',')|list}}"
+    - set_fact:
+        JS_NULL: "__NULL__"
+    - set_fact:
+        updateBody:
+          name: "{{name|default(JS_NULL)}}"
+          sponsor: "{{sponsor|default(JS_NULL)}}"
+          contact: "{{contact|default(JS_NULL)}}"
+          date: "{{date+tz_offset.stdout if date is defined else JS_NULL}}"
+          details: "{{details|default(JS_NULL)}}"
+          location: "{{location|default(JS_NULL)}}"
+          status: "{{status|default(JS_NULL)}}"
+          maxParticipants: "{{maxParticipants|default(JS_NULL)}}"
+          registrationOpens: "{{registrationOpens+tz_offset.stdout if registrationOpens is defined else JS_NULL}}"
+          volume: "{{volume|default(JS_NULL)}}"
+          sponsorLink: "{{sponsorLink|default(JS_NULL)}}"
+    - debug:
+        msg: "{{updateBody | dict2items | rejectattr('value', 'equalto', JS_NULL) | list | items2dict | to_json}}"
+    - name: Send HTTP request
+      uri:
+        url: "http://localhost:5000/admin-api/events/{{eventId}}"
+        method: PATCH
+        body_format: json
+        body: "{{updateBody | dict2items | rejectattr('value', 'equalto', JS_NULL) | list | items2dict | to_json}}"
+        status_code: 200
+      register: result
+    - debug:
+        msg: "{{ result.json | to_nice_json(indent=2) }}"
+  tags:
+    - update-event
 
 - name: Get event info task block
   block:

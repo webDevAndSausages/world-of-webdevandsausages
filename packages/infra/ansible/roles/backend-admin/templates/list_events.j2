@@ -1,0 +1,9 @@
+{% set events = result.json %}
+{% for event in events %}
+
+****************************************
+
+{% include "event.j2" %}
+
+****************************************
+{% endfor %}

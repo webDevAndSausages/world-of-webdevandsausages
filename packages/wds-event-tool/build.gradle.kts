@@ -96,6 +96,9 @@ dependencies {
     /* Arrow */
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
     implementation("io.arrow-kt:arrow-data:$arrowVersion")
+
+    /* Validation */
+    compile("com.markodevcic.kvalidation:KValidation:1.0.0")
     // use IO monads in future?
     // implementation("io.arrow-kt:arrow-effects:$arrowVersion")
     // implementation("io.arrow-kt:arrow-effects-instances:$arrowVersion")
