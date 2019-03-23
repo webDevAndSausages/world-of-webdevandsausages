@@ -1,15 +1,9 @@
 package org.webdevandsausages.events.dao
 
-import arrow.core.None
-import arrow.core.Option
-import arrow.core.Some
-import arrow.core.Try
-import arrow.core.getOrDefault
-import arrow.core.toOption
+import arrow.core.*
 import meta.enums.EventStatus
 import meta.tables.Event
 import meta.tables.Participant
-import meta.tables.daos.EventDao
 import meta.tables.records.EventRecord
 import org.jooq.Condition
 import org.jooq.Configuration
@@ -19,16 +13,14 @@ import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
-import org.webdevandsausages.events.dto.EventUpdateInDto
-import java.sql.Time
-import java.sql.Timestamp
 import kotlin.streams.toList
 
 typealias EventUpdate = Pair<TableField<EventRecord, Any>, Any>
 typealias EventUpdates = List<EventUpdate>
 
-class EventCRUD(configuration: Configuration) : EventDao(configuration) {
-    val db = DSL.using(configuration())
+class EventCRUD(configuration: Configuration) {
+    val db = DSL.using(configuration)
+
     val mapperInstance = JdbcMapperFactory.newInstance()
 
     fun findAllWithParticipants(status: String?): List<EventDto> {
