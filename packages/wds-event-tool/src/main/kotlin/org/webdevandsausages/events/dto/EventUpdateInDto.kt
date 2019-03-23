@@ -70,7 +70,7 @@ data class EventUpdateInDto(
                         },
                         date to {
                             validator.forProperty { date } rules {
-                                mustBe { it!!.after(Timestamp.valueOf(LocalDateTime.now())) }
+                                mustBe { (it!!.after(Timestamp.valueOf(LocalDateTime.now())) && !it.before(registrationOpens)) }
                             } onError {
                                 errorMessage("Date must be in the future")
                             }
@@ -91,7 +91,7 @@ data class EventUpdateInDto(
                         },
                         registrationOpens to {
                             validator.forProperty { registrationOpens } rules {
-                                mustBe { it!!.after(Timestamp.valueOf(LocalDateTime.now())) }
+                                mustBe { (it!!.after(Timestamp.valueOf(LocalDateTime.now())) && !it.after(date)) }
                             } onError {
                                 errorMessage("Registration opens must be in the future")
                             }
@@ -103,8 +103,7 @@ data class EventUpdateInDto(
                                 errorMessage("SponsorLink max length is 255 chars")
                             }
                         }
-                    ).filter { it.key != null }
-                        .forEach { it.value() } // Filter out null values and execute validators for non-nulls
+                    ).mapNotNull { it.value() }
 
                     val validationResult = validator.validate()
 

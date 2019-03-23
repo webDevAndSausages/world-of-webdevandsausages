@@ -32,6 +32,12 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): Either<EventError, EventDto> {
         logger.info("Opening event ${data.event.name}")
+
+        if (!eventCRUD.findByIdOrLatest().isEmpty()) {
+            logger.error("Cannot open event ${data.event.name} when another one is visible")
+            return Either.Left(EventError.MultipleOpen)
+        }
+
         eventCRUD.update(
             data.event.id,
             listOf(Pair(eventCRUD.field.STATUS, EventStatus.OPEN)) as EventUpdates
@@ -98,6 +104,10 @@ class GetEventByIdService(val eventRepository: EventCRUD) {
 class CreateEventService(val eventRepository: EventCRUD) {
     operator fun invoke(eventInDto: EventInDto): Either<EventError, EventDto> {
 
+        if (!eventInDto.status.isInvisible && !eventRepository.findByIdOrLatest().isEmpty()) {
+            return Either.Left(EventError.MultipleOpen)
+        }
+
         return eventRepository.create(eventInDto).fold({
             Either.Left(EventError.DatabaseError)
         }, {
@@ -108,6 +118,11 @@ class CreateEventService(val eventRepository: EventCRUD) {
 
 class UpdateEventService(val eventRepository: EventCRUD) {
     operator fun invoke(eventId: Long, eventInDto: EventUpdateInDto): Either<EventError, EventDto> {
+
+        if (eventInDto.status != null && !eventInDto.status.isInvisible && !eventRepository.findByIdOrLatest().isEmpty()) {
+            return Either.Left(EventError.MultipleOpen)
+        }
+
         return eventRepository.update(eventId, eventInDto.toEventUpdates()).fold({
             Either.Left(EventError.DatabaseError)
         }, {

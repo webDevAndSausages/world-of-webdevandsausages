@@ -1,36 +1,36 @@
 package org.webdevandsausages.events.controller
 
 import arrow.core.Either
-import meta.enums.EventStatus
-import meta.tables.pojos.Event
 import org.http4k.contract.ContractRoute
-import org.http4k.contract.bindContract
 import org.http4k.contract.meta
 import org.http4k.core.*
+import org.http4k.lens.string
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
-import org.webdevandsausages.events.dto.RegistrationOutDto
-import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.service.CreateEventService
-import org.webdevandsausages.events.utils.WDSJackson.auto
-import java.sql.Timestamp
 
 object PostEvent {
-    private val eventCreateRequestLens = Body.auto<EventInDto>().toLens()
+    private val eventCreateRequestLens =
+        Body.string(ContentType.APPLICATION_JSON).map { json -> EventInDto.from(json) }.toLens()
 
     fun route(createEvent: CreateEventService): ContractRoute {
 
         fun handlePostEvent(): HttpHandler = { req: Request ->
-            createEvent(eventCreateRequestLens(req)).let { reg ->
-                when (reg) {
-                    is Either.Left -> reg.a.toResponse()
-                    is Either.Right -> Router.eventResponseLens(
-                        reg.b,
-                        Response(Status.CREATED))
+            eventCreateRequestLens(req).fold(
+                { e -> e.toResponse() },
+                { r ->
+                    createEvent(r).fold(
+                        { err -> err.toResponse() },
+                        { data ->
+                            Router.eventResponseLens(
+                                data,
+                                Response(Status.CREATED)
+                            )
+                        }
+                    )
                 }
-            }
+            )
         }
 
         return "events" meta {

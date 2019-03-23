@@ -20,21 +20,24 @@ object PatchEvent {
         fun handlepatchEvent(eventId: Long): HttpHandler = lambda@{ req: Request ->
             /* TODO: When updating maxParticipants, this ticket
                    https://github.com/webDevAndSausages/world-of-webdevandsausages/issues/35 needs to be considered */
+
             val oldEvent = findByIdService(eventId)
             if (oldEvent is Either.Left) return@lambda oldEvent.a.toResponse()
-            val eitherValidatedOrError = eventUpdateRequestLens(req)
-            if (eitherValidatedOrError is Either.Left) return@lambda eitherValidatedOrError.a.toResponse()
 
-            val validatedEventUpdateInDto = (eitherValidatedOrError as Either.Right).b
-            updateEvent(eventId, validatedEventUpdateInDto).let { reg ->
-                when (reg) {
-                    is Either.Left -> reg.a.toResponse()
-                    is Either.Right -> Router.eventResponseLens(
-                        reg.b,
-                        Response(Status.OK)
+            eventUpdateRequestLens(req).fold(
+                { e -> e.toResponse() },
+                {
+                    updateEvent(eventId, it).fold(
+                        { err -> err.toResponse() },
+                        { data ->
+                            Router.eventResponseLens(
+                                data,
+                                Response(Status.CREATED)
+                            )
+                        }
                     )
                 }
-            }
+            )
         }
 
         return "events" / Router.eventIdParam meta {

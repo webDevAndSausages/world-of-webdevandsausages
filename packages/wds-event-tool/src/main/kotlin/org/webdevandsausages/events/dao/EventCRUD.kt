@@ -82,27 +82,32 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                     TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
             jdbcMapper.stream(resultSet).peek {
-            } .map { EventDto(it.first, it.second) }.toList().firstOrNull()
+            }.map { EventDto(it.first, it.second) }.toList().firstOrNull()
         }.getOrDefault { null }.toOption()
     }
 
     // can handle an arbitrary number of updates
     fun update(id: Long?, updates: EventUpdates): Option<EventDto> {
-        val result = db.use { ctx ->
-            ctx
-                .update(Event.EVENT)
-                .set(updates[0].first, updates[0].second)
-                .apply {
-                    updates.drop(1).forEach {
-                        set(it.first, it.second)
+        val result = Try {
+            db.use { ctx ->
+                ctx
+                    .update(Event.EVENT)
+                    .set(updates[0].first, updates[0].second)
+                    .apply {
+                        updates.drop(1).forEach {
+                            set(it.first, it.second)
+                        }
                     }
-                }
-                .where(Event.EVENT.ID.eq(id))
-                .returning()
-                .fetchOne().into(meta.tables.pojos.Event::class.java)
-        }
+                    .where(Event.EVENT.ID.eq(id))
+                    .returning()
+                    .fetchOne().into(meta.tables.pojos.Event::class.java)
+            }
+        }.toOption()
 
-        return findByIdOrLatest(result.id)
+        return when (result) {
+            is Some -> findByIdOrLatest(id)
+            is None -> result
+        }
     }
 
     fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use { ctx ->
@@ -116,49 +121,47 @@ class EventCRUD(configuration: Configuration) : EventDao(configuration) {
                 .into(meta.tables.pojos.Event::class.java)
         }.toOption()
         when (event) {
-            is Some ->findByIdOrLatest(event.t.id)
+            is Some -> findByIdOrLatest(event.t.id)
             is None -> event
         }
     }
 
     fun create(event: EventInDto): Option<EventDto> {
         return with(Event.EVENT) {
-            db.use { ctx ->
-                ctx
-                    .insertInto(
-                        Event.EVENT,
-                        NAME,
-                        SPONSOR,
-                        CONTACT,
-                        DATE,
-                        DETAILS,
-                        LOCATION,
-                        STATUS,
-                        MAX_PARTICIPANTS,
-                        REGISTRATION_OPENS,
-                        VOLUME,
-                        SPONSOR_LINK
-                    )
-                    .values(
-                        event.name,
-                        event.contact,
-                        event.sponsor,
-                        event.date,
-                        event.details,
-                        event.location,
-                        event.status,
-                        event.maxParticipants,
-                        event.registrationOpens,
-                        event.volume,
-                        event.sponsorLink
-                    )
-                    .returning()
-                    .fetchOne()
-            }.let {
-                EventDto(
-                    event = it.into(meta.tables.pojos.Event::class.java)
-                ).toOption()
-            }
+            Try {
+                db.use { ctx ->
+                    ctx
+                        .insertInto(
+                            Event.EVENT,
+                            NAME,
+                            SPONSOR,
+                            CONTACT,
+                            DATE,
+                            DETAILS,
+                            LOCATION,
+                            STATUS,
+                            MAX_PARTICIPANTS,
+                            REGISTRATION_OPENS,
+                            VOLUME,
+                            SPONSOR_LINK
+                        )
+                        .values(
+                            event.name,
+                            event.contact,
+                            event.sponsor,
+                            event.date,
+                            event.details,
+                            event.location,
+                            event.status,
+                            event.maxParticipants,
+                            event.registrationOpens,
+                            event.volume,
+                            event.sponsorLink
+                        )
+                        .returning()
+                        .fetchOne()
+                }
+            }.toOption().flatMap { r -> Some(EventDto(event = r.into(meta.tables.pojos.Event::class.java))) }
         }
     }
 }

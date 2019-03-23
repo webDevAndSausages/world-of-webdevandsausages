@@ -20,13 +20,19 @@ sealed class EventError {
     }
 
     object DatabaseError : EventError() {
-        val message = "A database error occurred."
+        val message = "A database error occurred. Ensure the volume number is unique."
         val code = ErrorCode.DATABASE_ERROR
         val status = Status.INTERNAL_SERVER_ERROR
     }
 
     class ValidationError(message: String) : EventError() {
         val message = message
+        val code = ErrorCode.VALIDATION_ERROR
+        val status = Status.UNPROCESSABLE_ENTITY
+    }
+
+    object MultipleOpen : EventError() {
+        val message = "Only one event can be open at a time."
         val code = ErrorCode.VALIDATION_ERROR
         val status = Status.UNPROCESSABLE_ENTITY
     }
@@ -43,6 +49,10 @@ fun EventError.toResponse(): Response = when (this) {
         }
     EventError.DatabaseError ->
         with(EventError.DatabaseError) {
+            errorResponseLens(ErrorOutDto(this.message, this.code), Response(this.status))
+        }
+    EventError.MultipleOpen ->
+        with(EventError.MultipleOpen) {
             errorResponseLens(ErrorOutDto(this.message, this.code), Response(this.status))
         }
     is EventError.ValidationError -> errorResponseLens(ErrorOutDto(this.message, this.code), Response(this.status))
