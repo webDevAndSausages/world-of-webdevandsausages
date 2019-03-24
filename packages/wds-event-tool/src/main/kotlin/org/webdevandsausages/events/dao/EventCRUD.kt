@@ -84,9 +84,7 @@ class EventCRUD(configuration: Configuration) {
     fun update(id: Long?, eventIn: EventUpdateInDto, context: DSLContext = db): Option<EventDto> {
         return context.transactionResult { configuration ->
             val transaction = DSL.using(configuration)
-            val selectQuery = transaction.selectQuery(Event.EVENT)
-            selectQuery.addConditions(DSL.and(Event.EVENT.ID.eq(id)))
-            val eventRecord = selectQuery.fetchOne()
+            val eventRecord = transaction.selectFrom(Event.EVENT).where(Event.EVENT.ID.eq(id)).fetchOne()
             eventRecord.from(eventIn)
             val nonNullFields = eventRecord.fields().filter { eventRecord.get(it) != null }
             eventRecord.store(nonNullFields)
