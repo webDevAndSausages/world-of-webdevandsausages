@@ -20,55 +20,13 @@ class ParticipantCRUD(configuration: Configuration) {
 
     val ParticipantRecord.fullName: String get() = getFullName(firstName, lastName)
 
-    fun create(registration: RegistrationInDto, context: DSLContext = db): Option<ParticipantDto> {
-        val (eventId, firstName, lastName, affiliation, email, verificationToken, orderNumber, status) = registration
-        return with(Participant.PARTICIPANT) {
-            context.use { ctx ->
-                ctx
-                    .insertInto(
-                        Participant.PARTICIPANT,
-                        FIRST_NAME,
-                        LAST_NAME,
-                        EMAIL,
-                        AFFILIATION,
-                        VERIFICATION_TOKEN,
-                        ORDER_NUMBER,
-                        EVENT_ID,
-                        STATUS
-                    )
-                    .values(
-                        firstName,
-                        lastName,
-                        email,
-                        affiliation,
-                        verificationToken,
-                        orderNumber,
-                        eventId,
-                        status
-                    )
-                    .returning(
-                        FIRST_NAME,
-                        LAST_NAME,
-                        EMAIL,
-                        AFFILIATION,
-                        VERIFICATION_TOKEN,
-                        STATUS,
-                        ORDER_NUMBER,
-                        CREATED_ON
-                    )
-                    .fetchOne()
-            }.let {
-                ParticipantDto(
-                    email = it.email,
-                    name = it.fullName,
-                    verificationToken = it.verificationToken,
-                    affiliation = it.affiliation,
-                    status = it.status,
-                    orderNumber = it.orderNumber,
-                    insertedOn = it.createdOn.prettified
-                ).toOption()
-            }
-        }
+    fun create(registration: RegistrationInDto, context: DSLContext = db): Option<ParticipantDto> = context.use { ctx ->
+        val participantRecord = ctx.newRecord(Participant.PARTICIPANT)
+        participantRecord.from(registration)
+        participantRecord.setVerificationToken(registration.registrationToken)
+        participantRecord.store()
+        participantRecord.refresh()
+        ParticipantDto(participantRecord.into(meta.tables.pojos.Participant::class.java)).toOption()
     }
 
     fun findByToken(token: String, context: DSLContext = db): Option<ParticipantDto> {
@@ -77,7 +35,7 @@ class ParticipantCRUD(configuration: Configuration) {
                 context.use { ctx ->
                     ctx
                         .selectFrom(this)
-                        .where(this.VERIFICATION_TOKEN.eq(token))
+                        .where(VERIFICATION_TOKEN.eq(token))
                         .fetchOne()
                 }?.let {
                     ParticipantDto(
