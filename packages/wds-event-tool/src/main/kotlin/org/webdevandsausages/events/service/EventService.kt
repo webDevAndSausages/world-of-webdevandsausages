@@ -9,7 +9,6 @@ import org.webdevandsausages.events.dao.field
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
 import org.webdevandsausages.events.dto.EventUpdateInDto
-import org.webdevandsausages.events.dto.toEventUpdates
 import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.utils.hasPassed
 import org.webdevandsausages.events.utils.threeDaysLater
@@ -34,7 +33,7 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         logger.info("Opening event ${data.event.name}")
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.OPEN)) as EventUpdates
+            EventUpdateInDto(status = EventStatus.OPEN)
         )
         return getLatest()
     }
@@ -44,7 +43,7 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         logger.info("Closing registration for event ${data.event.name}")
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates
+            EventUpdateInDto(status = EventStatus.CLOSED_WITH_FEEDBACK)
         )
         return getLatest()
     }
@@ -54,7 +53,7 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         logger.info("Closing feedback for event ${data.event.name}")
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED)) as EventUpdates
+            EventUpdateInDto(status = EventStatus.CLOSED)
         )
         return getLatest()
     }
@@ -108,7 +107,7 @@ class CreateEventService(val eventRepository: EventCRUD) {
 
 class UpdateEventService(val eventRepository: EventCRUD) {
     operator fun invoke(eventId: Long, eventInDto: EventUpdateInDto): Either<EventError, EventDto> {
-        return eventRepository.update(eventId, eventInDto.toEventUpdates()).fold({
+        return eventRepository.update(eventId, eventInDto).fold({
             Either.Left(EventError.DatabaseError)
         }, {
             Either.Right(it)

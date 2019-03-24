@@ -7,12 +7,14 @@ import meta.tables.Participant
 import meta.tables.records.EventRecord
 import org.jooq.Condition
 import org.jooq.Configuration
+import org.jooq.DSLContext
 import org.jooq.TableField
 import org.jooq.impl.DSL
 import org.simpleflatmapper.jdbc.JdbcMapperFactory
 import org.simpleflatmapper.util.TypeReference
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
+import org.webdevandsausages.events.dto.EventUpdateInDto
 import kotlin.streams.toList
 
 typealias EventUpdate = Pair<TableField<EventRecord, Any>, Any>
@@ -23,8 +25,8 @@ class EventCRUD(configuration: Configuration) {
 
     val mapperInstance = JdbcMapperFactory.newInstance()
 
-    fun findAllWithParticipants(status: String?): List<EventDto> {
-        val resultSet = db.use { ctx ->
+    fun findAllWithParticipants(status: String?, context: DSLContext = db): List<EventDto> {
+        val resultSet = context.use { ctx ->
             ctx.select()
                 .from(Event.EVENT)
                 .leftJoin(Participant.PARTICIPANT)
@@ -48,9 +50,9 @@ class EventCRUD(configuration: Configuration) {
 
     private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)
 
-    fun findByIdOrLatest(id: Long? = null): Option<EventDto> {
+    fun findByIdOrLatest(id: Long? = null, context: DSLContext = db): Option<EventDto> {
         return Try {
-            val resultSet = db.use { ctx ->
+            val resultSet = context.use { ctx ->
                 ctx.select()
                     .from(Event.EVENT)
                     .leftJoin(Participant.PARTICIPANT)
@@ -74,84 +76,49 @@ class EventCRUD(configuration: Configuration) {
                     TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
             jdbcMapper.stream(resultSet).peek {
-            } .map { EventDto(it.first, it.second) }.toList().firstOrNull()
+            }.map { EventDto(it.first, it.second) }.toList().firstOrNull()
         }.getOrDefault { null }.toOption()
     }
 
     // can handle an arbitrary number of updates
-    fun update(id: Long?, updates: EventUpdates): Option<EventDto> {
-        val result = db.use { ctx ->
-            ctx
-                .update(Event.EVENT)
-                .set(updates[0].first, updates[0].second)
-                .apply {
-                    updates.drop(1).forEach {
-                        set(it.first, it.second)
-                    }
-                }
-                .where(Event.EVENT.ID.eq(id))
-                .returning()
-                .fetchOne().into(meta.tables.pojos.Event::class.java)
-        }
-
-        return findByIdOrLatest(result.id)
-    }
-
-    fun findByParticipantToken(registrationToken: String): Option<EventDto> = db.use { ctx ->
-        val event = Try {
-            ctx.select(*Event.EVENT.fields())
-                .from(Event.EVENT)
-                .leftJoin(Participant.PARTICIPANT)
-                .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
-                .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
-                .fetchAny()
-                .into(meta.tables.pojos.Event::class.java)
-        }.toOption()
-        when (event) {
-            is Some ->findByIdOrLatest(event.t.id)
-            is None -> event
+    fun update(id: Long?, eventIn: EventUpdateInDto, context: DSLContext = db): Option<EventDto> {
+        return context.transactionResult { configuration ->
+            val transaction = DSL.using(configuration)
+            val selectQuery = transaction.selectQuery(Event.EVENT)
+            selectQuery.addConditions(DSL.and(Event.EVENT.ID.eq(id)))
+            val eventRecord = selectQuery.fetchOne()
+            eventRecord.from(eventIn)
+            val nonNullFields = eventRecord.fields().filter { eventRecord.get(it) != null }
+            eventRecord.store(nonNullFields)
+            findByIdOrLatest(id, transaction)
         }
     }
 
-    fun create(event: EventInDto): Option<EventDto> {
-        return with(Event.EVENT) {
-            db.use { ctx ->
-                ctx
-                    .insertInto(
-                        Event.EVENT,
-                        NAME,
-                        SPONSOR,
-                        CONTACT,
-                        DATE,
-                        DETAILS,
-                        LOCATION,
-                        STATUS,
-                        MAX_PARTICIPANTS,
-                        REGISTRATION_OPENS,
-                        VOLUME,
-                        SPONSOR_LINK
-                    )
-                    .values(
-                        event.name,
-                        event.contact,
-                        event.sponsor,
-                        event.date,
-                        event.details,
-                        event.location,
-                        event.status,
-                        event.maxParticipants,
-                        event.registrationOpens,
-                        event.volume,
-                        event.sponsorLink
-                    )
-                    .returning()
-                    .fetchOne()
-            }.let {
-                EventDto(
-                    event = it.into(meta.tables.pojos.Event::class.java)
-                ).toOption()
+    fun findByParticipantToken(registrationToken: String, context: DSLContext = db): Option<EventDto> =
+        context.use { ctx ->
+            val event = Try {
+                ctx.select(*Event.EVENT.fields())
+                    .from(Event.EVENT)
+                    .leftJoin(Participant.PARTICIPANT)
+                    .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
+                    .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
+                    .fetchAny()
+                    .into(meta.tables.pojos.Event::class.java)
+            }.toOption()
+            when (event) {
+                is Some -> findByIdOrLatest(event.t.id)
+                is None -> event
             }
         }
+
+    fun create(event: EventInDto, context: DSLContext = db): Option<EventDto> = context.use { ctx ->
+        val newRecord = ctx.newRecord(Event.EVENT)
+        newRecord.from(event)
+        newRecord.store()
+
+        EventDto(
+            event = newRecord.into(meta.tables.pojos.Event::class.java)
+        ).toOption()
     }
 }
 
