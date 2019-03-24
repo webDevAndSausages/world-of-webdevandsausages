@@ -11,16 +11,13 @@ import io.kotlintest.assertions.arrow.either.beRight
 import io.kotlintest.assertions.arrow.either.shouldBeRight
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import io.mockk.Called
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.spyk
-import io.mockk.verify
+import io.mockk.*
 import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
+import org.jooq.Configuration
+import org.jooq.impl.DSL
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
@@ -42,6 +39,8 @@ class CreateRegistrationServiceTest : StringSpec() {
                participantCRUD = mockk(relaxed = true),
                firebaseService = mockk(relaxed = true)
                )
+        every { unit.eventCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
+        every { unit.participantCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
     }
 
     private val TIMESTAMP = Timestamp.valueOf(LocalDateTime.now().minusDays(4))

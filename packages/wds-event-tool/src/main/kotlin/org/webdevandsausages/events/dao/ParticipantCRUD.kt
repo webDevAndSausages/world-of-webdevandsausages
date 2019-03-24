@@ -8,6 +8,7 @@ import meta.enums.ParticipantStatus
 import meta.tables.Participant
 import meta.tables.records.ParticipantRecord
 import org.jooq.Configuration
+import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
@@ -19,12 +20,13 @@ class ParticipantCRUD(configuration: Configuration) {
 
     val ParticipantRecord.fullName: String get() = getFullName(firstName, lastName)
 
-    fun create(registration: RegistrationInDto): Option<ParticipantDto> {
+    fun create(registration: RegistrationInDto, context: DSLContext = db): Option<ParticipantDto> {
         val (eventId, firstName, lastName, affiliation, email, verificationToken, orderNumber, status) = registration
         return with(Participant.PARTICIPANT) {
-            db.use { ctx ->
+            context.use { ctx ->
                 ctx
-                    .insertInto(Participant.PARTICIPANT,
+                    .insertInto(
+                        Participant.PARTICIPANT,
                         FIRST_NAME,
                         LAST_NAME,
                         EMAIL,
@@ -33,7 +35,7 @@ class ParticipantCRUD(configuration: Configuration) {
                         ORDER_NUMBER,
                         EVENT_ID,
                         STATUS
-                        )
+                    )
                     .values(
                         firstName,
                         lastName,
@@ -43,8 +45,17 @@ class ParticipantCRUD(configuration: Configuration) {
                         orderNumber,
                         eventId,
                         status
-                        )
-                    .returning(FIRST_NAME, LAST_NAME, EMAIL, AFFILIATION, VERIFICATION_TOKEN, STATUS, ORDER_NUMBER, CREATED_ON)
+                    )
+                    .returning(
+                        FIRST_NAME,
+                        LAST_NAME,
+                        EMAIL,
+                        AFFILIATION,
+                        VERIFICATION_TOKEN,
+                        STATUS,
+                        ORDER_NUMBER,
+                        CREATED_ON
+                    )
                     .fetchOne()
             }.let {
                 ParticipantDto(
@@ -55,15 +66,15 @@ class ParticipantCRUD(configuration: Configuration) {
                     status = it.status,
                     orderNumber = it.orderNumber,
                     insertedOn = it.createdOn.prettified
-                    ).toOption()
+                ).toOption()
             }
         }
     }
 
-    fun findByToken(token: String): Option<ParticipantDto> {
+    fun findByToken(token: String, context: DSLContext = db): Option<ParticipantDto> {
         return Try {
             with(Participant.PARTICIPANT) {
-                db.use { ctx ->
+                context.use { ctx ->
                     ctx
                         .selectFrom(this)
                         .where(this.VERIFICATION_TOKEN.eq(token))
@@ -76,17 +87,20 @@ class ParticipantCRUD(configuration: Configuration) {
                         status = it.status,
                         orderNumber = it.orderNumber / 1000,
                         affiliation = it.affiliation
-                        )
+                    )
                 }
             }
         }.getOrDefault { null }.toOption()
     }
 
-    fun updateStatus(id: Long, status: ParticipantStatus): Option<meta.tables.pojos.Participant> = db.use { ctx ->
-        ctx.update(Participant.PARTICIPANT).set(Participant.PARTICIPANT.STATUS, status).where(
+    fun updateStatus(
+        id: Long,
+        status: ParticipantStatus,
+        context: DSLContext = db
+    ): Option<meta.tables.pojos.Participant> =
+        context.update(Participant.PARTICIPANT).set(Participant.PARTICIPANT.STATUS, status).where(
             Participant
                 .PARTICIPANT.ID.eq(id)
         ).returning().fetchOne().into(meta.tables.pojos.Participant::class.java).toOption()
-    }
 
 }
