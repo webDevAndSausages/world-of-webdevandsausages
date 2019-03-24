@@ -16,7 +16,6 @@ import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
-import kotlin.math.exp
 
 class PostRegistrationEndpointTest : StringSpec() {
     lateinit var router: Router

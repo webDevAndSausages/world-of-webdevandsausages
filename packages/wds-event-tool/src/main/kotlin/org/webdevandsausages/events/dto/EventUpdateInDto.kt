@@ -72,7 +72,7 @@ data class EventUpdateInDto(
                             validator.forProperty { date } rules {
                                 mustBe { (it!!.after(Timestamp.valueOf(LocalDateTime.now())) && !it.before(registrationOpens)) }
                             } onError {
-                                errorMessage("Date must be in the future")
+                                errorMessage("Date must be in the future and after the registration opens date")
                             }
                         },
                         details to {
