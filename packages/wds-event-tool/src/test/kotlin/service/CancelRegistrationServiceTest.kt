@@ -23,6 +23,11 @@ import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
+import org.jooq.Configuration
+import org.jooq.Context
+import org.jooq.impl.DSL
+import org.jooq.tools.jdbc.MockConfiguration
+import org.jooq.tools.jdbc.MockExecuteContext
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.error.RegistrationCancellationError
@@ -40,6 +45,9 @@ class CancelRegistrationServiceTest : StringSpec() {
             participantCRUD = mockk(relaxed = true),
             emailService = mockk(relaxed = true)
         )
+
+        every { unit.participantCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
+        every { unit.eventCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
     }
 
     private val TIMESTAMP = Timestamp.valueOf(LocalDateTime.now().minusDays(4))

@@ -9,11 +9,14 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkClass
 import io.mockk.slot
 import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
+import org.jooq.Configuration
+import org.jooq.impl.DSL
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.service.GetRegistrationService
@@ -73,6 +76,8 @@ class GetRegistrationServiceTest : StringSpec() {
             participantCRUD = mockk(relaxed = true),
             logger = mockk(relaxed = true)
             )
+        every { unit.eventCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
+        every { unit.participantCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
     }
 
     init {
