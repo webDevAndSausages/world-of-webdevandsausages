@@ -94,19 +94,15 @@ class EventCRUD(configuration: Configuration) {
 
     fun findByParticipantToken(registrationToken: String, context: DSLContext = db): Option<EventDto> =
         context.use { ctx ->
-            val event = Try {
-                ctx.select(*Event.EVENT.fields())
-                    .from(Event.EVENT)
-                    .leftJoin(Participant.PARTICIPANT)
-                    .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
-                    .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
-                    .fetchAny()
-                    .into(meta.tables.pojos.Event::class.java)
-            }.toOption()
-            when (event) {
-                is Some -> findByIdOrLatest(event.t.id)
-                is None -> event
-            }
+            ctx.select(*Event.EVENT.fields())
+                .from(Event.EVENT)
+                .leftJoin(Participant.PARTICIPANT)
+                .on(Event.EVENT.ID.eq(Participant.PARTICIPANT.EVENT_ID))
+                .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
+                .fetchAny()
+                .into(meta.tables.pojos.Event::class.java)
+        }.toOption().flatMap {
+            findByIdOrLatest(it.id)
         }
 
     fun create(event: EventInDto, context: DSLContext = db): Option<EventDto> = context.use { ctx ->
