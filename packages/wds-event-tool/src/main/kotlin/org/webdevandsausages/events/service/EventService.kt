@@ -9,7 +9,6 @@ import org.webdevandsausages.events.dao.field
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
 import org.webdevandsausages.events.dto.EventUpdateInDto
-import org.webdevandsausages.events.dto.toEventUpdates
 import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.utils.hasPassed
 import org.webdevandsausages.events.utils.threeDaysLater
@@ -32,9 +31,15 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): Either<EventError, EventDto> {
         logger.info("Opening event ${data.event.name}")
+
+        if (!eventCRUD.findByIdOrLatest().isEmpty()) {
+            logger.error("Cannot open event ${data.event.name} when another one is visible")
+            return Either.Left(EventError.MultipleOpen)
+        }
+
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.OPEN)) as EventUpdates
+            EventUpdateInDto(status = EventStatus.OPEN)
         )
         return getLatest()
     }
@@ -44,7 +49,7 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         logger.info("Closing registration for event ${data.event.name}")
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED_WITH_FEEDBACK)) as EventUpdates
+            EventUpdateInDto(status = EventStatus.CLOSED_WITH_FEEDBACK)
         )
         return getLatest()
     }
@@ -54,7 +59,7 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         logger.info("Closing feedback for event ${data.event.name}")
         eventCRUD.update(
             data.event.id,
-            listOf(Pair(eventCRUD.field.STATUS, EventStatus.CLOSED)) as EventUpdates
+            EventUpdateInDto(status = EventStatus.CLOSED)
         )
         return getLatest()
     }
@@ -98,6 +103,10 @@ class GetEventByIdService(val eventRepository: EventCRUD) {
 class CreateEventService(val eventRepository: EventCRUD) {
     operator fun invoke(eventInDto: EventInDto): Either<EventError, EventDto> {
 
+        if (!eventInDto.status.isInvisible && !eventRepository.findByIdOrLatest().isEmpty()) {
+            return Either.Left(EventError.MultipleOpen)
+        }
+
         return eventRepository.create(eventInDto).fold({
             Either.Left(EventError.DatabaseError)
         }, {
@@ -108,7 +117,12 @@ class CreateEventService(val eventRepository: EventCRUD) {
 
 class UpdateEventService(val eventRepository: EventCRUD) {
     operator fun invoke(eventId: Long, eventInDto: EventUpdateInDto): Either<EventError, EventDto> {
-        return eventRepository.update(eventId, eventInDto.toEventUpdates()).fold({
+
+        if (eventInDto.status != null && !eventInDto.status.isInvisible && !eventRepository.findByIdOrLatest().isEmpty()) {
+            return Either.Left(EventError.MultipleOpen)
+        }
+
+        return eventRepository.update(eventId, eventInDto).fold({
             Either.Left(EventError.DatabaseError)
         }, {
             Either.Right(it)

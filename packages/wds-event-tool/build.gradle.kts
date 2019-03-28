@@ -22,7 +22,7 @@ val flywayCoreVersion = "5.2.4"
 val postgresqlDriverVersion = "42.2.5"
 val jooqVersion = "3.10.1"
 val arrowVersion = "0.8.2"
-val mockkVersion = "1.8.13.kotlin13"
+val mockkVersion = "1.9.2"
 
 plugins {
     kotlin("jvm") version "1.3.20"

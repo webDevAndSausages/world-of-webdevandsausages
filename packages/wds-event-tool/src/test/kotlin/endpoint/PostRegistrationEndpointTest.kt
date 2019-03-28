@@ -16,7 +16,6 @@ import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
-import kotlin.math.exp
 
 class PostRegistrationEndpointTest : StringSpec() {
     lateinit var router: Router
@@ -135,7 +134,7 @@ class PostRegistrationEndpointTest : StringSpec() {
             every { router.createRegistration(any()) } returns Either.left(EventError.DatabaseError)
             val expectedResponseBody = """
                 {
-                  "message": "A database error occurred.",
+                  "message": "A database error occurred. Ensure the volume number is unique.",
                   "code": "DATABASE_ERROR"
                 }
           """.trimIndent()

@@ -15,10 +15,10 @@ val mapper = KotlinModule()
     .registerModule(JodaModule())
     .disableDefaultTyping()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
+    .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true)
     .configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true)
     .configure(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS, true)
-    .configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+    .configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
 
 fun String.toJsonTree() = mapper.readTree(this)
 
