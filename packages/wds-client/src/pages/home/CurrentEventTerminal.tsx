@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useContext } from 'react'
 import styled, { css } from '../../styles/styled-components'
 import darken from 'polished/lib/color/darken'
 import produce from 'immer'

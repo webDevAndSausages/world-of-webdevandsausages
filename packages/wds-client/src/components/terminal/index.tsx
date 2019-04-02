@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled, { css } from 'styled-components'
 import darken from 'polished/lib/color/darken'
 import { toRem, phone, tablet } from '../../styles/helpers'
@@ -6,14 +6,23 @@ import { theme } from '../../styles/theme'
 export * from './Input'
 export * from './Output'
 import { TabBar } from './TabBar'
+import { UiContext } from '../../App'
 
-export const TerminalWrapper = styled.article`
+export const TerminalWrapper = styled.article<{ isExpanded: boolean }>`
   font-family: Inconsolata;
   font-size: 1.2rem;
   text-align: left;
   margin: auto;
   padding-top: 1rem;
   width: 60%;
+  ${({ isExpanded }) =>
+    isExpanded &&
+    css`
+      width: 100%;
+      z-index: 100;
+      top: 0;
+      transition: width 600ms ease-out;
+    `}
   @media (max-width: ${1600 / 18}em) {
     width: 70%;
   }
@@ -26,15 +35,21 @@ export const TerminalWrapper = styled.article`
   color: ${darken(0.2, theme.iconsColor)};
 `
 
-export const Screen = styled.div`
+export const Screen = styled.div<{ isExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   ${({ theme }) =>
     css`
-      background: #4e4e4e};
+      background: ${darken(0.1, theme.secondaryBlue)};
     `};
   box-sizing: border-box;
   max-width: 1000px;
+  ${({ isExpanded }) =>
+    isExpanded &&
+    css`
+      max-width: 95%;
+      height: 100%;
+    `}
   margin: 0 auto;
   padding: 20px;
   border-bottom-left-radius: 5px;
@@ -46,10 +61,17 @@ export const Screen = styled.div`
 `
 
 export const Terminal = ({ children }) => {
+  const { isTerminalExpanded, toggleTerminalSize, ...rest } = useContext(
+    UiContext
+  )
+  console.log({ isTerminalExpanded, toggleTerminalSize, ...rest })
   return (
-    <TerminalWrapper>
-      <TabBar />
-      <Screen>{children}</Screen>
+    <TerminalWrapper isExpanded={isTerminalExpanded}>
+      <TabBar
+        isExpanded={isTerminalExpanded}
+        toggleTerminalSize={toggleTerminalSize}
+      />
+      <Screen isExpanded={isTerminalExpanded}>{children}</Screen>
     </TerminalWrapper>
   )
 }

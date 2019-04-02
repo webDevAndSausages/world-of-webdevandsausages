@@ -10,7 +10,7 @@ import {
   FormState
 } from '../../models/Registration'
 import { Grid, FormCell } from '../../components/layout'
-import lighten from 'polished/lib/color/lighten'
+import darken from 'polished/lib/color/darken'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
 import { split, compose, join, pathOr, pathEq } from 'ramda'
 import { isEmail } from '../../helpers/validation'
@@ -75,16 +75,14 @@ export const SpecialMode = styled.span<{ blink?: boolean }>`
   color: ${({ theme }) => theme.primaryBlue};
 `
 
-const inputColor = lighten(0.2, '#4e4e4e')
-
 export const RegistrationInput = styled.input`
   width: 100%;
   padding: 3px;
   color: #fff;
-  background: ${lighten(0.2, '#4e4e4e')};
+  background: ${({ theme }) => darken(0.08, theme.secondaryBlue)};
   border: none;
-  box-shadow: none;
-  width: 100%;
+  box-shadow: inset 0 0 4px hsl(0, 0%, 80%);
+  width: 95%;
   padding-left: 5px;
   outline: none;
   ::placeholder {
@@ -92,8 +90,10 @@ export const RegistrationInput = styled.input`
   }
   &:-webkit-autofill {
     -webkit-text-fill-color: #fff;
-    box-shadow: 0 0 0px 1000px ${inputColor} inset;
-    -webkit-box-shadow: 0 0 0px 1000px ${inputColor} inset;
+    box-shadow: 0 0 0px 1000px
+      ${({ theme }) => darken(0.08, theme.secondaryBlue)} inset;
+    -webkit-box-shadow: 0 0 0px 1000px
+      ${({ theme }) => darken(0.08, theme.secondaryBlue)} inset;
   }
 `
 
@@ -386,6 +386,7 @@ export const EventRegistration = ({
                   {place &&
                     waiting &&
                     `You are number ${place} in the waiting list.`}
+                  <RegistrationLabel valid>200</RegistrationLabel>
                 </LongCell>
                 <ShortCell width={2} />
                 <LongCell width={8} style={{ color: '#fff' }}>

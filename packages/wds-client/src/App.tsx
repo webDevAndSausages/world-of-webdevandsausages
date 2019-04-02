@@ -17,7 +17,10 @@ const defaultUiState = {
   theme: Theme.Reversed,
   showMobileNav: false,
   showSidebar: false,
-  isSideClosed: true
+  isSideClosed: true,
+  isTerminalExpanded: false,
+  toggleTerminalSize: null,
+  setTheme: null
 }
 
 export const EventContext = createContext<RequestFromApi>(
@@ -35,10 +38,18 @@ function App() {
   const { request } = useApi('currentEvent', true)
   const [uiState, setUIState] = useState(defaultUiState)
   const setTheme = (theme: Theme) => setUIState(assoc('theme', theme, uiState))
+  const toggleTerminalSize = () => {
+    setUIState(
+      assoc('isTerminalExpanded', !uiState.isTerminalExpanded, uiState)
+    )
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <EventContext.Provider value={request}>
-        <UiContext.Provider value={uiState}>
+        <UiContext.Provider
+          value={{ ...uiState, setTheme, toggleTerminalSize }}
+        >
           <ScrollWatcher>
             {({ isScrolled }: { isScrolled: boolean }) => (
               <Nav
@@ -54,22 +65,22 @@ function App() {
               />
             )}
           </ScrollWatcher>
+          <GlobalStyles />
+          <Switch>
+            <Route
+              path="/about"
+              render={() => {
+                return <About />
+              }}
+            />
+            <Route
+              path="/"
+              render={() => {
+                return <Home setTheme={setTheme} />
+              }}
+            />
+          </Switch>
         </UiContext.Provider>
-        <GlobalStyles />
-        <Switch>
-          <Route
-            path="/about"
-            render={() => {
-              return <About />
-            }}
-          />
-          <Route
-            path="/"
-            render={() => {
-              return <Home setTheme={setTheme} />
-            }}
-          />
-        </Switch>
       </EventContext.Provider>
     </ThemeProvider>
   )
