@@ -8,4 +8,7 @@ export interface UI {
   showMobileNav: boolean
   showSidebar: boolean
   isSideClosed: boolean
+  isTerminalExpanded: boolean
+  toggleTerminalSize?: () => void
+  setTheme?: (theme: Theme) => void
 }

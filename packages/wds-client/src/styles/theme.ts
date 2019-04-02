@@ -16,6 +16,7 @@ export interface ThemeInterface {
   normalFont: string
   navHeight: number
   sidebarWidth: number
+  terminalGray: string
   pagePadding: number
 }
 
@@ -37,5 +38,6 @@ export const theme = {
   normalFont: 'museo_sans500, sans-serif',
   navHeight: 66,
   sidebarWidth: 300,
+  terminalGray: '#bbbbbb',
   pagePadding: 20
 }
