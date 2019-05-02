@@ -1,6 +1,8 @@
 package org.webdevandsausages.events.service
 
 import arrow.core.Either
+import arrow.core.getOrElse
+import arrow.core.some
 import meta.enums.EventStatus
 import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventCRUD
@@ -118,7 +120,10 @@ class CreateEventService(val eventRepository: EventCRUD) {
 class UpdateEventService(val eventRepository: EventCRUD) {
     operator fun invoke(eventId: Long, eventInDto: EventUpdateInDto): Either<EventError, EventDto> {
 
-        if (eventInDto.status != null && !eventInDto.status.isInvisible && !eventRepository.findByIdOrLatest().isEmpty()) {
+        val latestEvent = eventRepository.findByIdOrLatest();
+        if (eventInDto.status != null && !eventInDto.status.isInvisible && !latestEvent.isEmpty() &&
+            (latestEvent.orNull()?.event?.id == eventId && latestEvent.orNull()?.event?.status != EventStatus.VISIBLE
+                    && latestEvent.orNull()?.event?.status != EventStatus.OPEN)) {
             return Either.Left(EventError.MultipleOpen)
         }
 
