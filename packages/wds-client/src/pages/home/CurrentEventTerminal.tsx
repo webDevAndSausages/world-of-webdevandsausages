@@ -182,7 +182,7 @@ const RegistrationConsole = ({
         <TerminalOut title="what" detail={event.details} />
         <TerminalOut title="where" detail={event.location} />
         <TerminalOut title="who" detail={event.contact} />
-        {consoleState.history.map((Component: any, i: number) => {
+        {event.status !== 'VISIBLE' && consoleState.history.map((Component: any, i: number) => {
           return (
             <Component
               key={i}
