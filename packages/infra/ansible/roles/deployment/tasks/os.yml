@@ -1,0 +1,52 @@
+---
+
+- name: Install and configure Ubuntu firewall
+  include_tasks: firewall.yml
+  tags:
+    - firewall
+
+#- name: Install Python 3 Pip
+#  apt:
+#    name: python3-pip
+#    state: latest
+#    update_cache: yes
+#  tags:
+#    - pip
+
+- name: Upgrade pip
+  pip:
+    name: pip
+    executable: pip3
+    state: latest
+
+- name: Install Docker CE
+  include_role:
+    name: geerlingguy.docker
+  vars:
+    docker_install_compose: true
+    docker_package_state: latest
+    docker_service_state: started
+    docker_service_enabled: true
+    docker_restart_handler_state: restarted
+  notify: Ensure docker daemon is running
+  tags:
+    - docker_ce
+
+- name: pip Install docker compose
+  pip:
+    name: docker-compose
+    executable: pip
+  tags:
+    - docker_ce
+
+- name: Make sure rsync is installed
+  apt:
+    name: rsync
+
+- include_tasks: certbot.yml
+  tags:
+    - certbot
+
+- include_tasks: hardening.yml
+  tags:
+    - hardening

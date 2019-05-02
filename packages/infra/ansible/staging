@@ -1,0 +1,5 @@
+[staging]
+default ansible_host=142.93.105.15 ansible_connection=ssh
+
+[staging:vars]
+nginx_ssl_domain=test.webdevandsausages.org

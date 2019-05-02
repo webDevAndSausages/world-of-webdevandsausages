@@ -11,6 +11,12 @@
   tags:
     - backend
 
+# create a directory if it doesn't exist
+- file:
+    path: /opt/postgresql/data
+    state: directory
+    mode: 0777
+
 - name: Run docker compose up
   docker_service:
     project_src: /opt/wds-event-tool

@@ -7,6 +7,9 @@ services:
       - "45433:5432"
     networks:
       - backend
+    volumes:
+      - /opt/postgresql:/var/lib/postgresql
+      - /opt/postgresql/data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: wds

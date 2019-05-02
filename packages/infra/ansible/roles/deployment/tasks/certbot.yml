@@ -29,11 +29,6 @@
     name: python-certbot-nginx
     state: latest
 
-- name: Install certbot route53 dns plugin
-  pip:
-    name: certbot-dns-route53
-    executable: pip3
-
 - name: Install cronjob for renewing certificates with certbot
   become: yes
   cron:
