@@ -32,7 +32,7 @@ object PatchEvent {
                         { data ->
                             Router.eventResponseLens(
                                 data,
-                                Response(Status.CREATED)
+                                Response(Status.OK)
                             )
                         }
                     )
