@@ -4,11 +4,7 @@ import { tablet, phone } from '../../styles/helpers'
 import { Prompt, blink, OnCmd } from '../../components/terminal'
 import { useApi, endpoints } from '../../hooks/useApi'
 import { ApiRequest } from '../../models/ApiRequest'
-import {
-  Registration,
-  RegistrationType,
-  FormState
-} from '../../models/Registration'
+import { Registration, RegistrationType, FormState } from '../../models/Registration'
 import { Grid, FormCell } from '../../components/layout'
 import darken from 'polished/lib/color/darken'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
@@ -90,10 +86,8 @@ export const RegistrationInput = styled.input`
   }
   &:-webkit-autofill {
     -webkit-text-fill-color: #fff;
-    box-shadow: 0 0 0px 1000px
-      ${({ theme }) => darken(0.08, theme.secondaryBlue)} inset;
-    -webkit-box-shadow: 0 0 0px 1000px
-      ${({ theme }) => darken(0.08, theme.secondaryBlue)} inset;
+    box-shadow: 0 0 0px 1000px ${({ theme }) => darken(0.08, theme.secondaryBlue)} inset;
+    -webkit-box-shadow: 0 0 0px 1000px ${({ theme }) => darken(0.08, theme.secondaryBlue)} inset;
   }
 `
 
@@ -109,11 +103,7 @@ export const FormActionButtons: React.FC<FormActionButtonProps> = ({
   valid
 }) => (
   <>
-    {valid && (
-      <FormButton onClick={() => dispatch({ type: 'ready' })}>
-        submit
-      </FormButton>
-    )}
+    {valid && <FormButton onClick={() => dispatch({ type: 'ready' })}>submit</FormButton>}
     <FormButton
       onClick={() => {
         dispatch({ type: 'cancel' })
@@ -126,8 +116,14 @@ export const FormActionButtons: React.FC<FormActionButtonProps> = ({
   </>
 )
 
-export const RegistrationLabel = ({ valid, children }) => (
-  <Prompt>
+interface RegistrationLabelProps {
+  valid: boolean
+  children: any
+  htmlFor?: string
+}
+
+export const RegistrationLabel = ({ valid, children, htmlFor }: RegistrationLabelProps) => (
+  <Prompt htmlFor={htmlFor}>
     <SpecialMode blink={!valid}> [</SpecialMode>
     {children}
     <SpecialMode blink={!valid}>]</SpecialMode>
@@ -157,7 +153,9 @@ const Form: React.FC<FormProps> = ({
     </Prompt>
     <Grid columns={10} style={{ paddingTop: '20px' }}>
       <ShortCell width={2}>
-        <RegistrationLabel valid={valid}>email</RegistrationLabel>
+        <RegistrationLabel htmlFor="email" valid={valid}>
+          email
+        </RegistrationLabel>
       </ShortCell>
       <LongCell width={8}>
         <RegistrationInput
@@ -167,10 +165,13 @@ const Form: React.FC<FormProps> = ({
           onChange={updateValue}
           disabled={disabled}
           ref={inputRef}
+          aria-invalid={!valid}
         />
       </LongCell>
       <ShortCell width={2}>
-        <RegistrationLabel valid={valid}>first name</RegistrationLabel>
+        <RegistrationLabel htmlFor="firstName" valid={valid}>
+          first name
+        </RegistrationLabel>
       </ShortCell>
       <LongCell width={8}>
         <RegistrationInput
@@ -179,10 +180,13 @@ const Form: React.FC<FormProps> = ({
           value={firstName}
           onChange={updateValue}
           disabled={disabled}
+          aria-invalid={!valid}
         />
       </LongCell>
       <ShortCell width={2}>
-        <RegistrationLabel valid={valid}>last name</RegistrationLabel>
+        <RegistrationLabel htmlFor="lastName" valid={valid}>
+          last name
+        </RegistrationLabel>
       </ShortCell>
       <LongCell width={8}>
         <RegistrationInput
@@ -191,10 +195,13 @@ const Form: React.FC<FormProps> = ({
           value={lastName}
           onChange={updateValue}
           disabled={disabled}
+          aria-invalid={!valid}
         />
       </LongCell>
       <ShortCell width={2}>
-        <RegistrationLabel valid={valid}>affiliation</RegistrationLabel>
+        <RegistrationLabel htmlFor="affiliation" valid={valid}>
+          affiliation
+        </RegistrationLabel>
       </ShortCell>
       <LongCell width={8}>
         <RegistrationInput
@@ -203,6 +210,7 @@ const Form: React.FC<FormProps> = ({
           value={affiliation}
           onChange={updateValue}
           disabled={disabled}
+          aria-invalid={!valid}
         />
       </LongCell>
     </Grid>
@@ -231,10 +239,8 @@ const updates = {
     }
     return Registration.Entering(newState)
   },
-  ready: (state: RegistrationType) =>
-    Registration.EnteringValid({ ...state.value, ready: true }),
-  loading: (state: RegistrationType) =>
-    Registration.Loading({ ...state.value, ready: false }),
+  ready: (state: RegistrationType) => Registration.EnteringValid({ ...state.value, ready: true }),
+  loading: (state: RegistrationType) => Registration.Loading({ ...state.value, ready: false }),
   success: (state: RegistrationType, { data }) =>
     Registration.Success({ ...state.value, response: data }),
   failure: (state: RegistrationType, payload: { error: any; status: number }) =>
@@ -255,22 +261,12 @@ const defaultState = Registration.Entering({
   ready: false
 })
 
-type ActionType =
-  | 'set'
-  | 'success'
-  | 'failure'
-  | 'ready'
-  | 'reset'
-  | 'cancel'
-  | 'loading'
+type ActionType = 'set' | 'success' | 'failure' | 'ready' | 'reset' | 'cancel' | 'loading'
 
 const registrationReducer = (
   state: RegistrationType,
   action: { type: ActionType; payload?: any }
-) =>
-  updates[action.type]
-    ? updates[action.type](state, action.payload)
-    : defaultState
+) => (updates[action.type] ? updates[action.type](state, action.payload) : defaultState)
 
 export const EventRegistration = ({
   eventId,
@@ -279,10 +275,7 @@ export const EventRegistration = ({
   eventId: number
   onCommand: OnCmd
 }) => {
-  const [registrationState, dispatch] = useReducer(
-    registrationReducer,
-    defaultState
-  )
+  const [registrationState, dispatch] = useReducer(registrationReducer, defaultState)
 
   const inputRef = useRef(null)
 
@@ -299,13 +292,7 @@ export const EventRegistration = ({
   const { request, query } = useApi(endpoints.register(eventId), false, 'post')
 
   useEffect(() => {
-    const {
-      ready,
-      email,
-      firstName,
-      lastName,
-      affiliation
-    } = registrationState.value
+    const { ready, email, firstName, lastName, affiliation } = registrationState.value
     if (ready && Registration.is.EnteringValid(registrationState)) {
       query({
         method: 'post',
@@ -354,11 +341,7 @@ export const EventRegistration = ({
                 <Prompt>$ action: </Prompt>
               </ShortCell>
               <LongCell width={8}>
-                <FormActionButtons
-                  valid
-                  onCommand={onCommand}
-                  dispatch={dispatch}
-                />
+                <FormActionButtons valid onCommand={onCommand} dispatch={dispatch} />
               </LongCell>
             </Grid>
           </>
@@ -383,20 +366,14 @@ export const EventRegistration = ({
                 </ShortCell>
                 <LongCell width={8} style={{ color: '#fff' }}>
                   You are {status}.{' '}
-                  {place &&
-                    waiting &&
-                    `You are number ${place} in the waiting list.`}
+                  {place && waiting && `You are number ${place} in the waiting list.`}
                   <RegistrationLabel valid>200</RegistrationLabel>
                 </LongCell>
                 <ShortCell width={2} />
                 <LongCell width={8} style={{ color: '#fff' }}>
                   Your registration token:{' '}
                   <span style={{ color: '#52bdf6' }}>
-                    {pathOr(
-                      'MISSING',
-                      ['response', 'verificationToken'],
-                      values
-                    )}
+                    {pathOr('MISSING', ['response', 'verificationToken'], values)}
                   </span>
                   .
                 </LongCell>
@@ -417,8 +394,7 @@ export const EventRegistration = ({
                 <Prompt>$ result: </Prompt>
               </ShortCell>
               <LongCell width={8} style={{ color: '#fff' }}>
-                {values.error.message}{' '}
-                <RegistrationLabel valid>{values.status}</RegistrationLabel>
+                {values.error.message} <RegistrationLabel valid>{values.status}</RegistrationLabel>
               </LongCell>
             </Grid>
           </>

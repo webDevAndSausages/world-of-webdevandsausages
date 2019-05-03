@@ -107,16 +107,20 @@ export const CursorInput = ({
   }
 
   return (
-    <Cursor
-      placeholder="_"
-      value={value}
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-        setValue(e.target.value.toLowerCase())
-      }
-      blink={!value}
-      onKeyDown={onKeyDown ? onKeyDown : onKeyDownDefault}
-      autoFocus
-      disabled={!active}
-    />
+    <React.Fragment>
+      <label id="terminal-command-input-label" htmlFor="terminal-command-input" />
+      <Cursor
+        id="terminal-command-input"
+        placeholder="_"
+        value={value}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setValue(e.target.value.toLowerCase())
+        }
+        blink={!value}
+        onKeyDown={onKeyDown ? onKeyDown : onKeyDownDefault}
+        autoFocus
+        disabled={!active}
+      />
+    </React.Fragment>
   )
 }
