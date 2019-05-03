@@ -63,9 +63,9 @@ data class EventUpdateInDto(
                         },
                         contact to {
                             validator.forProperty { contact } rules {
-                                length(255)
+                                length(1024)
                             } onError {
-                                errorMessage("Contact max length is 255 chars")
+                                errorMessage("Contact max length is 1024 chars")
                             }
                         },
                         date to {
