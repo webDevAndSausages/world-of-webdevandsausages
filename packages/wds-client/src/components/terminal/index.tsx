@@ -5,6 +5,7 @@ import { toRem, phone, tablet } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
 export * from './Input'
 export * from './Output'
+export * from './Link'
 import { TabBar } from './TabBar'
 import { UiContext } from '../../App'
 
@@ -61,16 +62,11 @@ export const Screen = styled.div<{ isExpanded: boolean }>`
 `
 
 export const Terminal = ({ children }) => {
-  const { isTerminalExpanded, toggleTerminalSize, ...rest } = useContext(
-    UiContext
-  )
-  console.log({ isTerminalExpanded, toggleTerminalSize, ...rest })
+  const { isTerminalExpanded, toggleTerminalSize } = useContext(UiContext)
+
   return (
     <TerminalWrapper isExpanded={isTerminalExpanded}>
-      <TabBar
-        isExpanded={isTerminalExpanded}
-        toggleTerminalSize={toggleTerminalSize}
-      />
+      <TabBar isExpanded={isTerminalExpanded} toggleTerminalSize={toggleTerminalSize} />
       <Screen isExpanded={isTerminalExpanded}>{children}</Screen>
     </TerminalWrapper>
   )

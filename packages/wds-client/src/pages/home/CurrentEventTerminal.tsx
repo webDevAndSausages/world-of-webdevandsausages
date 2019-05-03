@@ -18,12 +18,7 @@ import { Prompt } from '../../components/terminal'
 import Spinner from '../../components/Spinner'
 import FutureEvent from './FutureEventTerminal'
 
-import {
-  Terminal,
-  CursorInput,
-  TerminalOut,
-  Action
-} from '../../components/terminal'
+import { Terminal, CursorInput, TerminalOut, Action } from '../../components/terminal'
 
 const InnerWrapper = styled.div<any>`
   display: flex;
@@ -79,18 +74,14 @@ const SponsorLogo = styled.img`
   }
 `
 
-const defaultPrompt =
-  'Registration modes: register [r], modify [m], check [c], help [h]'
+const defaultPrompt = 'Registration modes: register [r], modify [m], check [c], help [h]'
 
 export interface TerminalInputProps {
   onCommand: (a: { type: Action; cmd?: string }) => void
   active: boolean
 }
 
-export const Waiting: React.FC<TerminalInputProps> = ({
-  onCommand,
-  active
-}) => (
+export const Waiting: React.FC<TerminalInputProps> = ({ onCommand, active }) => (
   <>
     <Prompt>$ {defaultPrompt}</Prompt>
     <CursorInput onCommand={onCommand} active={active} />
@@ -127,7 +118,6 @@ const updates = {
     state.current++
   },
   help: (state: TerminalState) => {
-    console.log('called')
     state.history.push(Help)
     state.current++
   },
@@ -150,20 +140,10 @@ const updates = {
   }
 }
 
-const consoleReducer = (
-  state: TerminalState,
-  action: { type: Action; cmd: string }
-) =>
-  updates[action.type]
-    ? (produce as any)(updates[action.type])(state, action.cmd)
-    : defaultState
+const consoleReducer = (state: TerminalState, action: { type: Action; cmd: string }) =>
+  updates[action.type] ? (produce as any)(updates[action.type])(state, action.cmd) : defaultState
 
-const RegistrationConsole = ({
-  event
-}: {
-  event: EventData
-  children?: any
-}) => {
+const RegistrationConsole = ({ event }: { event: EventData; children?: any }) => {
   const [consoleState, dispatch] = useReducer(consoleReducer, defaultState)
 
   return (
@@ -171,9 +151,7 @@ const RegistrationConsole = ({
       <SponsorAnnouncement>Sponsored by</SponsorAnnouncement>
       {event.sponsor && (
         <a href={event.sponsorLink || null}>
-          <SponsorLogo
-            src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`}
-          />
+          <SponsorLogo src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`} />
         </a>
       )}
       <Terminal>
@@ -182,17 +160,18 @@ const RegistrationConsole = ({
         <TerminalOut title="what" detail={event.details} />
         <TerminalOut title="where" detail={event.location} />
         <TerminalOut title="contact" detail={event.contact} />
-        {event.status !== 'VISIBLE' && consoleState.history.map((Component: any, i: number) => {
-          return (
-            <Component
-              key={i}
-              onCommand={dispatch}
-              eventId={event.id}
-              active={i === consoleState.current}
-              cmd={consoleState.cmd[i - 1]}
-            />
-          )
-        })}
+        {event.status !== 'VISIBLE' &&
+          consoleState.history.map((Component: any, i: number) => {
+            return (
+              <Component
+                key={i}
+                onCommand={dispatch}
+                eventId={event.id}
+                active={i === consoleState.current}
+                cmd={consoleState.cmd[i - 1]}
+              />
+            )
+          })}
       </Terminal>
     </div>
   )

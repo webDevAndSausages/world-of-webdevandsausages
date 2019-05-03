@@ -17,6 +17,7 @@ export interface ThemeInterface {
   navHeight: number
   sidebarWidth: number
   terminalGray: string
+  terminalLinkColor: string
   pagePadding: number
 }
 
@@ -39,5 +40,6 @@ export const theme = {
   navHeight: 66,
   sidebarWidth: 300,
   terminalGray: '#bbbbbb',
+  terminalLinkColor: '#cdee69',
   pagePadding: 20
 }

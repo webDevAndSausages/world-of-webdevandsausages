@@ -5,7 +5,8 @@ import { config } from '../config'
 
 const headers = {
   Accept: 'application/json',
-  'wds-key': 'WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27',
+  'wds-key': 'wds-secret',
+  // 'WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27',
   'Content-Type': 'application/json'
 }
 
@@ -15,8 +16,7 @@ export const endpoints = {
   register: (id: number) => `${config.API_ROOT}events/${id}/registrations`,
   checkRegistration: (id: number, token: string) =>
     `${config.API_ROOT}events/${id}/registrations/${token}`,
-  cancelRegistration: (token: string) =>
-    `${config.API_ROOT}events/registrations/${token}`
+  cancelRegistration: (token: string) => `${config.API_ROOT}events/registrations/${token}`
 }
 
 type Method = 'get' | 'post' | 'delete'
@@ -24,9 +24,7 @@ type Method = 'get' | 'post' | 'delete'
 // otherwise call the returned with payload and or url with params, e.g. query({payload, url})
 // to trigger request
 export function useApi(endpoint: string, immediate = true, method = 'get') {
-  const [request, setRequestState] = useState<RequestFromApi>(
-    ApiRequest.NOT_ASKED()
-  )
+  const [request, setRequestState] = useState<RequestFromApi>(ApiRequest.NOT_ASKED())
   const mountedRef = useRef(false)
   const [query, setQuery] = useState({
     endpoint,

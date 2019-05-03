@@ -22,6 +22,14 @@ export const Out = styled.div`
     css`
       color: #fff;
     `};
+  a {
+    color: white;
+    border-bottom: 1px ${({ theme }) => theme.white} dashed;
+    text-decoration: none;
+  }
+  p {
+    line-height: 2;
+  }
 `
 
 const Md = styled(Markdown)`
@@ -30,13 +38,7 @@ const Md = styled(Markdown)`
   }
 `
 
-export const TerminalOut = ({
-  title,
-  detail
-}: {
-  title: string
-  detail: string
-}) => (
+export const TerminalOut = ({ title, detail }: { title: string; detail: string }) => (
   <>
     <Prompt>
       <PromptLabel /> {title}
