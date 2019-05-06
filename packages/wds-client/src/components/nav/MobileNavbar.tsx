@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import styled, { css } from '../../styles/styled-components'
 import darken from 'polished/lib/color/darken'
-import R from 'ramda'
 import { toRem, tablet, phone } from '../../styles/helpers'
-import NavLinks, { NavSeparator } from './NavLinks'
+import NavLinks from './NavLinks'
 import SocialLinks from './SocialLinks'
 import Logo from './Logo'
 import Svg from '../Svg'
@@ -43,6 +42,9 @@ const Wrapper = styled.div<any>`
 
 const SecondaryMenu = styled.div<any>`
   position: absolute;
+  background: red;
+  display: flex;
+  justify-content: space-between;
   ${({ theme }) =>
     css`
       top: ${toRem(theme.navHeight)};
@@ -137,12 +139,7 @@ interface Props {
   toggleNav: boolean
 }
 
-const MobileNavbar = ({
-  showMobileNav,
-  isScrolled,
-  reverseTheme,
-  toggleNav
-}: Props) => (
+const MobileNavbar = ({ showMobileNav, isScrolled, reverseTheme, toggleNav }: Props) => (
   <Wrapper>
     <Logo />
 
@@ -152,11 +149,7 @@ const MobileNavbar = ({
       </MenuIconWrapper>
     </NavButton>
 
-    <SecondaryMenu
-      open={showMobileNav}
-      isScrolled={isScrolled}
-      reverse={reverseTheme}
-    >
+    <SecondaryMenu open={showMobileNav} isScrolled={isScrolled} reverse={reverseTheme}>
       <NavLinks />
       <SocialLinks />
     </SecondaryMenu>

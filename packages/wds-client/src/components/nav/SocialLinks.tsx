@@ -2,12 +2,20 @@ import React from 'react'
 import styled from '../../styles/styled-components'
 import { toRem } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
+import { tablet, phone } from '../../styles/helpers'
 
 const Wrapper = styled.nav`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   flex: 1 1 auto;
   padding-top: 8px;
+  ${tablet(`
+    margin-right: 20px;
+  `)}
+  ${phone(`
+    margin-left: 0px;
+  `)}
 `
 
 const SocialLink = styled.a<any>`
@@ -85,24 +93,18 @@ const Youtube = () => (
   >
     <title>Web Dev & Sausages on YouTube</title>
     <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
-    <polygon
-      fill="#5b5b5b"
-      points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"
-    />
+    <polygon fill="#5b5b5b" points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" />
   </Svg>
 )
 const SocialLinks = props => (
-  <Wrapper {...props}>
+  <Wrapper {...props} id="social-links">
     <SocialLink href="https://twitter.com/webdevnsausages/">
       <Twitter />
     </SocialLink>
     <SocialLink href="https://www.facebook.com/webDevAndSausages/">
       <Facebook />
     </SocialLink>
-    <SocialLink
-      href="https://www.youtube.com/user/Vancampit/videos"
-      fill="none"
-    >
+    <SocialLink href="https://www.youtube.com/user/Vancampit/videos" fill="none">
       <Youtube />
     </SocialLink>
     <SocialLink href="https://github.com/webDevAndSausages">
