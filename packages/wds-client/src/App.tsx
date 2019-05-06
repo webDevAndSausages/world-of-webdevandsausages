@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState } from 'react'
 import { createGlobalStyle } from './styles/styled-components'
 import { ThemeProvider } from './styles/styled-components'
 import { theme } from './styles/theme'
@@ -23,9 +23,7 @@ const defaultUiState = {
   setTheme: null
 }
 
-export const EventContext = createContext<RequestFromApi>(
-  ApiRequest.NOT_ASKED()
-)
+export const EventContext = createContext<RequestFromApi>(ApiRequest.NOT_ASKED())
 export const UiContext = createContext<UI>(defaultUiState)
 
 const GlobalStyles = createGlobalStyle`
@@ -39,17 +37,13 @@ function App() {
   const [uiState, setUIState] = useState(defaultUiState)
   const setTheme = (theme: Theme) => setUIState(assoc('theme', theme, uiState))
   const toggleTerminalSize = () => {
-    setUIState(
-      assoc('isTerminalExpanded', !uiState.isTerminalExpanded, uiState)
-    )
+    setUIState(assoc('isTerminalExpanded', !uiState.isTerminalExpanded, uiState))
   }
 
   return (
     <ThemeProvider theme={theme}>
       <EventContext.Provider value={request}>
-        <UiContext.Provider
-          value={{ ...uiState, setTheme, toggleTerminalSize }}
-        >
+        <UiContext.Provider value={{ ...uiState, setTheme, toggleTerminalSize }}>
           <ScrollWatcher>
             {({ isScrolled }: { isScrolled: boolean }) => (
               <Nav

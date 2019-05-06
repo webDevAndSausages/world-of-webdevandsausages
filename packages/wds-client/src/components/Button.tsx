@@ -152,7 +152,7 @@ const StyledButton = styled.button<StyledButtonProps>`
 `
 
 interface ButtonProps extends StyledButtonProps {
-  type?: string
+  type?: 'submit' | 'button' | 'reset'
   id?: string
   primary?: boolean
   white?: boolean
