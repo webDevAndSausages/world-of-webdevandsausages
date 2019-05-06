@@ -15,4 +15,4 @@ fi
 
 # Otherwise do a full deploy on a freshly created server
 ansible-galaxy install -r requirements.yml
-env ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -v -i "$1" playbook.yml
+env ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -v -i "$1" playbook.yml $TAG_FILTER

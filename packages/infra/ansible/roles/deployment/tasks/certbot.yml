@@ -5,6 +5,8 @@
     name: software-properties-common
     state: latest
     update_cache: yes
+  tags:
+    - certbot
 
 - name: Add universe repository
   apt_repository:
@@ -13,21 +15,29 @@
     - 'deb http://archive.ubuntu.com/ubuntu/ bionic universe'
     - 'deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe'
     - 'deb http://security.ubuntu.com/ubuntu/ bionic-security universe'
+  tags:
+    - certbot
 
 - name: Add certbot repository
   apt_repository:
     repo: ppa:certbot/certbot
+  tags:
+    - certbot
 
 - name: Update the repository cache and install certbot
   apt:
     name: certbot
     state: latest
     update_cache: yes
+  tags:
+    - certbot
 
 - name: Install python-certbot-nginx
   apt:
     name: python-certbot-nginx
     state: latest
+  tags:
+    - certbot
 
 - name: Install cronjob for renewing certificates with certbot
   become: yes
@@ -36,3 +46,5 @@
     minute: 0
     hour: 0
     job: certbot renew
+  tags:
+    - certbot

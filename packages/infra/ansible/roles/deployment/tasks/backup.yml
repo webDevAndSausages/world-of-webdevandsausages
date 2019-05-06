@@ -1,0 +1,10 @@
+---
+
+- name: Install cronjob for backing up database every hour
+  become: yes
+  cron:
+    name: backup database every hour
+    special_time: hourly
+    job: docker exec wds-event-tool_db_1 bash -c "pg_dump -U wds wds_db > /var/lib/postgresql/dump.sql" && aws s3 cp /opt/postgresql/dump.sql s3://wds-production/db_dump.sql
+  tags:
+    - backup

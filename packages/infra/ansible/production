@@ -1,5 +1,5 @@
 [production]
-default ansible_host=104.248.36.65 ansible_connection=ssh
+default ansible_host=www.webdevandsausages.org ansible_connection=ssh
 
 [production:vars]
 nginx_ssl_domain=www.webdevandsausages.org

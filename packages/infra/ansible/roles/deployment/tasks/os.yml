@@ -39,13 +39,16 @@
   tags:
     - docker_ce
 
+- name: pip Install AWS CLI
+  pip:
+    name: awscli
+    executable: pip
+  tags:
+    - aws
+
 - name: Make sure rsync is installed
   apt:
     name: rsync
-
-- include_tasks: certbot.yml
-  tags:
-    - certbot
 
 - include_tasks: hardening.yml
   tags:

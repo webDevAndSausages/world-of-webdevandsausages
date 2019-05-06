@@ -3,6 +3,12 @@
 - include_tasks: os.yml
   tags:
     - os
+- include_tasks: certbot.yml
+  tags:
+    - certbot
+- include_tasks: backup.yml
+  tags:
+    - backup
 - include_tasks: nginx.yml
   tags:
     - nginx
