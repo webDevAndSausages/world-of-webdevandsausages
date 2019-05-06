@@ -4,12 +4,19 @@ import { NavLink as Link } from 'react-router-dom'
 import { toRem } from '../../styles/helpers'
 import darken from 'polished/lib/color/darken'
 import transparentize from 'polished/lib/color/transparentize'
+import { tablet, phone } from '../../styles/helpers'
 
 const Wrapper = styled.nav`
   display: flex;
   align-items: center;
   flex: 0 0 auto;
   margin-left: 40px;
+  ${tablet(`
+    margin-left: 20px;
+  `)}
+  ${phone(`
+    margin-left: 0px;
+  `)}
 `
 
 const NavLink = styled(Link)<any>`
