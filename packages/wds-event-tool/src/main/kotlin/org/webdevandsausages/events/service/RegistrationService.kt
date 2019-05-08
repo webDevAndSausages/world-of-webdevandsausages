@@ -45,7 +45,7 @@ class CreateRegistrationService(
                 )
                 else -> {
                     val event = eventData.t.event
-                    val numRegistered = eventData.t.participants.size
+                    val numRegistered = eventData.t.participants.filter { it.status == ParticipantStatus.REGISTERED }.size
                     // postgres trigger should flip status to full when limit is hit
                     val status =
                         if (numRegistered < event.maxParticipants) ParticipantStatus.REGISTERED else ParticipantStatus.WAIT_LISTED
