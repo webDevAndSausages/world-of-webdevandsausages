@@ -101,15 +101,16 @@ interface FormActionButtonProps {
 export const FormActionButtons: React.FC<FormActionButtonProps> = ({
   dispatch,
   onCommand,
-  valid,
-  btnRef
+  valid
 }) => (
   <>
-    {valid && (
-      <FormButton onClick={() => dispatch({ type: 'ready' })} ref={btnRef}>
-        submit
-      </FormButton>
-    )}
+    <FormButton
+      onClick={() => dispatch({ type: 'ready' })}
+      disabled={!valid}
+      className={!valid ? 'disabled-btn' : ''}
+    >
+      submit
+    </FormButton>
     <FormButton
       onClick={() => {
         dispatch({ type: 'cancel' })
@@ -229,10 +230,15 @@ export const FormButton = styled.button`
   -webkit-user-drag: none;
   user-select: none;
   zoom: 1;
-  &:hover {
+  &:hover:not(.disabled-btn) {
     background: ${({ theme }) => theme.primaryOrange};
     transform: scale(1.05);
     transition: 0.1s ease;
+  }
+  &:disabled {
+    background: light-gray;
+    color: ${({ theme }) => theme.subduedTexTColor};
+    cursor: not-allowed;
   }
 `
 

@@ -20,7 +20,6 @@ export const CheckRegistration = ({
 }) => {
   const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
   const inputRef = useRef(null)
-  const btnRef = useRef(null)
 
   useEffect(() => {
     if (checkToken) {
@@ -31,10 +30,8 @@ export const CheckRegistration = ({
   useEffect(() => {
     if (!checkToken) {
       inputRef.current.focus()
-    } else {
-      btnRef.current && btnRef.current.focus()
     }
-  }, [checkToken, btnRef.current])
+  }, [checkToken])
 
   const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
@@ -96,7 +93,7 @@ export const CheckRegistration = ({
                 <Prompt>$ action: </Prompt>
               </FormCell>
               <FormCell width={7}>
-                <FormActionButtons onCommand={onCommand} dispatch={dispatch} btnRef={btnRef} />
+                <FormActionButtons onCommand={onCommand} dispatch={dispatch} />
               </FormCell>
             </Grid>
           </>

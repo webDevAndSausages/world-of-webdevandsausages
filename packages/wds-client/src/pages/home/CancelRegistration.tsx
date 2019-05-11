@@ -101,7 +101,6 @@ export const CancelRegistration = ({
   cancelToken: string | null
 }) => {
   const inputRef = useRef(null)
-  const btnRef = useRef(null)
 
   const [cancelState, dispatch] = useReducer(registrationReducer, defaultState)
 
@@ -114,10 +113,8 @@ export const CancelRegistration = ({
   useEffect(() => {
     if (!cancelToken) {
       inputRef.current.focus()
-    } else {
-      btnRef.current && btnRef.current.focus()
     }
-  }, [cancelToken, btnRef.current])
+  }, [cancelToken])
 
   const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
@@ -181,7 +178,7 @@ export const CancelRegistration = ({
                 <Prompt>$ action: </Prompt>
               </FormCell>
               <FormCell width={7}>
-                <FormActionButtons dispatch={dispatch} onCommand={onCommand} btnRef={btnRef} />
+                <FormActionButtons dispatch={dispatch} onCommand={onCommand} />
               </FormCell>
             </Grid>
           </>
