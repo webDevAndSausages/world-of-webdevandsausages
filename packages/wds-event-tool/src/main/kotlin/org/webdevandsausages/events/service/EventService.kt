@@ -1,19 +1,14 @@
 package org.webdevandsausages.events.service
 
 import arrow.core.Either
-import arrow.core.getOrElse
-import arrow.core.some
+import arrow.core.Some
 import meta.enums.EventStatus
 import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventCRUD
-import org.webdevandsausages.events.dao.EventUpdates
-import org.webdevandsausages.events.dao.field
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
 import org.webdevandsausages.events.dto.EventUpdateInDto
 import org.webdevandsausages.events.error.EventError
-import org.webdevandsausages.events.utils.hasPassed
-import org.webdevandsausages.events.utils.threeDaysLater
 
 class GetEventsService(val eventRepository: EventCRUD) {
     operator fun invoke(status: String?): List<EventDto> {
@@ -33,8 +28,9 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): Either<EventError, EventDto> {
         logger.info("Opening event ${data.event.name}")
+        val latestEvent = eventCRUD.findByIdOrLatest()
 
-        if (!eventCRUD.findByIdOrLatest().isEmpty()) {
+        if (latestEvent is Some && latestEvent.t.event.id != data.event.id) {
             logger.error("Cannot open event ${data.event.name} when another one is visible")
             return Either.Left(EventError.MultipleOpen)
         }
@@ -81,12 +77,17 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
                 val registrationOpens = it.event.registrationOpens
                 val date = it.event.date
 
-                return when {
+                return Either.Right(it)
+                // TODO: These automatic status changes need to be tested properly before rushing to production
+                // Currently this event will disappear on the day of the event as it's no longer open and visible.
+                // Requires end-to-end testing.
+
+                /* return when {
                     status.isVisibleStatus && registrationOpens.hasPassed -> openEvent(it)
                     status.canRegister && date.hasPassed -> closeRegistration(it)
                     status.isOpenFeedbackStatus && date.threeDaysLater -> closeFeedback(it)
                     else -> Either.Right(it)
-                }
+                } */
             }
         )
     }
@@ -123,7 +124,8 @@ class UpdateEventService(val eventRepository: EventCRUD) {
         val latestEvent = eventRepository.findByIdOrLatest();
         if (eventInDto.status != null && !eventInDto.status.isInvisible && !latestEvent.isEmpty() &&
             (latestEvent.orNull()?.event?.id == eventId && latestEvent.orNull()?.event?.status != EventStatus.VISIBLE
-                    && latestEvent.orNull()?.event?.status != EventStatus.OPEN)) {
+                    && latestEvent.orNull()?.event?.status != EventStatus.OPEN)
+        ) {
             return Either.Left(EventError.MultipleOpen)
         }
 
