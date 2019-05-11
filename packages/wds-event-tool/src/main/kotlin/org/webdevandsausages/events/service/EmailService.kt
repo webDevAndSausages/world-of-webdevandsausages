@@ -19,6 +19,11 @@ import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.utils.prettified
 
+val SUBJECT_INTRO = "Web Dev and Sausages:"
+
+val WAIT_LISTED_SUBJECT  = "$SUBJECT_INTRO You are currently on the waiting list."
+val REGISTERED_SUBJECT = "$SUBJECT_INTRO You are successfully registered!"
+
 class EmailService(private val secrets: Secrets?) {
     private val logger: Logger = LoggerFactory.getLogger("email service")
 
@@ -76,13 +81,15 @@ class EmailService(private val secrets: Secrets?) {
         }
 
     fun sendRegistrationEmail(event: Event, status: ParticipantStatus, participantDto: ParticipantDto) {
+        val subject = if (status == ParticipantStatus.WAIT_LISTED) WAIT_LISTED_SUBJECT else REGISTERED_SUBJECT
         val sponsor = if (event.sponsor != null) event.sponsor else "Anonymous"
         val emailData = mapOf(
             "action" to status.toText,
             "datetime" to event.date.prettified,
             "location" to event.location,
             "token" to participantDto.verificationToken,
-            "sponsor" to sponsor
+            "sponsor" to sponsor,
+            "subject" to subject
         )
 
         logger.info("Dispatching registration email to ${participantDto.email}")
