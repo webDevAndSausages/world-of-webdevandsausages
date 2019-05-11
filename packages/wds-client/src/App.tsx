@@ -67,12 +67,7 @@ function App() {
                 return <About />
               }}
             />
-            <Route
-              path="/"
-              render={() => {
-                return <Home setTheme={setTheme} />
-              }}
-            />
+            <Route path="/" render={props => <Home setTheme={setTheme} {...props} />} />
           </Switch>
         </UiContext.Provider>
       </EventContext.Provider>

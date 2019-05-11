@@ -95,15 +95,21 @@ interface FormActionButtonProps {
   dispatch: (a: { type: ActionType; payload?: { [key: string]: any } }) => void
   onCommand: OnCmd
   valid?: boolean
+  btnRef?: React.Ref<any>
 }
 
 export const FormActionButtons: React.FC<FormActionButtonProps> = ({
   dispatch,
   onCommand,
-  valid
+  valid,
+  btnRef
 }) => (
   <>
-    {valid && <FormButton onClick={() => dispatch({ type: 'ready' })}>submit</FormButton>}
+    {valid && (
+      <FormButton onClick={() => dispatch({ type: 'ready' })} ref={btnRef}>
+        submit
+      </FormButton>
+    )}
     <FormButton
       onClick={() => {
         dispatch({ type: 'cancel' })

@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from 'react'
+import React, { useReducer, useEffect } from 'react'
 import styled, { css } from '../../styles/styled-components'
 import darken from 'polished/lib/color/darken'
 import produce from 'immer'
@@ -7,7 +7,7 @@ import format from 'date-fns/format'
 import { over, lensProp } from 'ramda'
 import { toRem, phone, tablet } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
-import { EventData, Event as EventType } from '../../models/Event'
+import { EventData, Event as EventType, CurrentEvent } from '../../models/Event'
 import { EventRegistration } from './Registration'
 import { CheckRegistration } from './CheckRegistration'
 import { CancelRegistration } from './CancelRegistration'
@@ -74,7 +74,7 @@ const SponsorLogo = styled.img`
   }
 `
 
-const defaultPrompt = 'Registration modes: register [r], modify [m], check [c], help [h]'
+const defaultPrompt = 'Registration modes: register [r], cancel [x], check [c], help [h]'
 
 export interface TerminalInputProps {
   onCommand: (a: { type: Action; cmd?: string }) => void
@@ -92,12 +92,14 @@ interface TerminalState {
   current: any
   history: any[]
   cmd: string[]
+  token: string | null
 }
 
 const defaultState = {
   current: 0,
   history: [Waiting],
-  cmd: []
+  cmd: [],
+  token: null
 }
 
 const updates = {
@@ -109,13 +111,19 @@ const updates = {
     state.history.push(EventRegistration)
     state.current++
   },
-  modify: (state: TerminalState) => {
+  cancel: (state: TerminalState, _cmd?: string, payload?: string) => {
     state.history.push(CancelRegistration)
     state.current++
+    if (payload) {
+      state.token = payload
+    }
   },
-  check: (state: TerminalState) => {
+  check: (state: TerminalState, _cmd?: string, payload?: string) => {
     state.history.push(CheckRegistration)
     state.current++
+    if (payload) {
+      state.token = payload
+    }
   },
   help: (state: TerminalState) => {
     state.history.push(Help)
@@ -140,11 +148,32 @@ const updates = {
   }
 }
 
-const consoleReducer = (state: TerminalState, action: { type: Action; cmd: string }) =>
-  updates[action.type] ? (produce as any)(updates[action.type])(state, action.cmd) : defaultState
+const consoleReducer = (
+  state: TerminalState,
+  action: { type: Action; cmd: string; payload?: any }
+) =>
+  updates[action.type]
+    ? (produce as any)(updates[action.type])(state, action.cmd, action.payload)
+    : defaultState
 
-const RegistrationConsole = ({ event }: { event: EventData; children?: any }) => {
+const RegistrationConsole = ({
+  event,
+  checkToken,
+  cancelToken
+}: {
+  event: EventData
+  children?: any
+  checkToken?: string | null
+  cancelToken?: string | null
+}) => {
   const [consoleState, dispatch] = useReducer(consoleReducer, defaultState)
+  useEffect(() => {
+    if (checkToken) {
+      dispatch({ type: 'check', cmd: 'c', payload: checkToken })
+    } else if (cancelToken) {
+      dispatch({ type: 'cancel', cmd: 'x', payload: cancelToken })
+    }
+  }, [checkToken, cancelToken])
 
   return (
     <div id="current-event-console">
@@ -169,6 +198,8 @@ const RegistrationConsole = ({ event }: { event: EventData; children?: any }) =>
                 eventId={event.id}
                 active={i === consoleState.current}
                 cmd={consoleState.cmd[i - 1]}
+                checkToken={checkToken}
+                cancelToken={cancelToken}
               />
             )
           })}
@@ -183,7 +214,14 @@ const Loading = () => (
   </InnerWrapper>
 )
 
-function Event(event: any) {
+interface ParamProps {
+  checkToken: string | null
+  cancelToken: string | null
+}
+
+type Props = CurrentEvent & ParamProps
+
+function Event(event: Props) {
   return (
     <>
       {event &&
@@ -191,11 +229,17 @@ function Event(event: any) {
           LOADING: () => <Loading />,
           NONE: () => <FutureEvent />,
           ERROR: () => <FutureEvent />,
-          default: ({ data }: any) => {
+          default: ({ data, checkToken, cancelToken }: any) => {
             const formattedData = over(lensProp('date'), date =>
               format(date, 'MMMM Do, YYYY, HH:mm')
             )(data)
-            return <RegistrationConsole event={formattedData} />
+            return (
+              <RegistrationConsole
+                event={formattedData}
+                checkToken={checkToken}
+                cancelToken={cancelToken}
+              />
+            )
           }
         })}
     </>

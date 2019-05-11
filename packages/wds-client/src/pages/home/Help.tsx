@@ -32,10 +32,9 @@ export const Help: React.FC<TerminalInputProps> = props => (
     <div style={{ padding: '20px 0' }}>
       <HelpOutTitle>Web dev & sausages cli usage</HelpOutTitle>
       <HelpOut>
-        This is a tool for registering, cancelling (modifying), and checking the
-        status and existance of your event registration. Both Cancelling and
-        checking your registration require a verification token that you
-        received upon registering.
+        This is a tool for registering, cancelling (modifying), and checking the status and
+        existance of your event registration. Both Cancelling and checking your registration require
+        a verification token that you received upon registering.
       </HelpOut>
       <HelpOutForCmd
         cmd="r|register"
@@ -45,7 +44,7 @@ export const Help: React.FC<TerminalInputProps> = props => (
         press 'cancel'."
       />
       <HelpOutForCmd
-        cmd="m|modify"
+        cmd="x|cancel"
         help="To cancel your registration, enter a valid
                verification token (check your email)."
       />

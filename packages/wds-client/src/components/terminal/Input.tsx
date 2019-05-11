@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 export const blink = keyframes`
@@ -52,7 +52,7 @@ export const Cursor = styled.input<{
 export type Action =
   | 'wait'
   | 'register'
-  | 'modify'
+  | 'cancel'
   | 'check'
   | 'help'
   | 'invalid'
@@ -61,7 +61,7 @@ export type Action =
 
 const commands: { [key: string]: Action } = {
   r: 'register',
-  m: 'modify',
+  x: 'cancel',
   c: 'check',
   h: 'help',
   i: 'invalid',
@@ -69,7 +69,7 @@ const commands: { [key: string]: Action } = {
   f: 'forward'
 }
 
-const commandsRegex = /(r|register|m|modify|c|check|h|help)/
+const commandsRegex = /(r|register|x|cancel|c|check|h|help)/
 
 export type OnCmd = (a: { type: Action; cmd?: string }) => void
 
@@ -83,6 +83,12 @@ export const CursorInput = ({
   onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
 }) => {
   const [value, setValue] = useState('')
+
+  useEffect(() => {
+    if (!active && !value) {
+      setValue('auto mode change -->')
+    }
+  }, [value, active])
 
   const onKeyDownDefault = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!active) return
@@ -111,7 +117,7 @@ export const CursorInput = ({
       <label id="terminal-command-input-label" htmlFor="terminal-command-input" />
       <Cursor
         id="terminal-command-input"
-        placeholder="_"
+        placeholder={!active ? '' : '_'}
         value={value}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setValue(e.target.value.toLowerCase())

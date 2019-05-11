@@ -11,17 +11,30 @@ import { Form, registrationReducer, defaultState } from './CancelRegistration'
 
 export const CheckRegistration = ({
   eventId,
-  onCommand
+  onCommand,
+  checkToken
 }: {
   eventId: number
   onCommand: OnCmd
+  checkToken: string | null
 }) => {
   const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
   const inputRef = useRef(null)
+  const btnRef = useRef(null)
 
   useEffect(() => {
-    inputRef.current.focus()
-  }, [])
+    if (checkToken) {
+      dispatch({ type: 'set', payload: { verificationToken: checkToken } })
+    }
+  }, [checkToken])
+
+  useEffect(() => {
+    if (!checkToken) {
+      inputRef.current.focus()
+    } else {
+      btnRef.current && btnRef.current.focus()
+    }
+  }, [checkToken, btnRef.current])
 
   const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
@@ -83,7 +96,7 @@ export const CheckRegistration = ({
                 <Prompt>$ action: </Prompt>
               </FormCell>
               <FormCell width={7}>
-                <FormActionButtons onCommand={onCommand} dispatch={dispatch} />
+                <FormActionButtons onCommand={onCommand} dispatch={dispatch} btnRef={btnRef} />
               </FormCell>
             </Grid>
           </>
@@ -102,11 +115,7 @@ export const CheckRegistration = ({
                 <Prompt>$ action: </Prompt>
               </FormCell>
               <FormCell width={7}>
-                <FormActionButtons
-                  valid
-                  onCommand={onCommand}
-                  dispatch={dispatch}
-                />
+                <FormActionButtons valid onCommand={onCommand} dispatch={dispatch} />
               </FormCell>
             </Grid>
           </>
@@ -135,9 +144,7 @@ export const CheckRegistration = ({
                 </FormCell>
                 <FormCell width={7} style={{ color: '#fff' }}>
                   You are {status}.{' '}
-                  {place &&
-                    waiting &&
-                    `You are number ${place} in the waiting list.`}
+                  {place && waiting && `You are number ${place} in the waiting list.`}
                 </FormCell>
               </Grid>
             </>
@@ -158,8 +165,7 @@ export const CheckRegistration = ({
                 <Prompt>$ result: </Prompt>
               </FormCell>
               <FormCell width={7} style={{ color: '#fff' }}>
-                {values.error.message}{' '}
-                <RegistrationLabel valid>{values.status}</RegistrationLabel>
+                {values.error.message} <RegistrationLabel valid>{values.status}</RegistrationLabel>
               </FormCell>
             </Grid>
           </>

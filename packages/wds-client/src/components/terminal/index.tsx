@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import styled, { css } from 'styled-components'
 import darken from 'polished/lib/color/darken'
-import { toRem, phone, tablet } from '../../styles/helpers'
+import { phone, tablet } from '../../styles/helpers'
 import { theme } from '../../styles/theme'
 export * from './Input'
 export * from './Output'

@@ -9,11 +9,7 @@ import {
 } from '../../models/RegistrationModification'
 import { Grid, FormCell } from '../../components/layout'
 import { LoadingEllipsis } from '../../components/LoadingEllipsis'
-import {
-  RegistrationInput,
-  RegistrationLabel,
-  FormActionButtons
-} from './Registration'
+import { RegistrationInput, RegistrationLabel, FormActionButtons } from './Registration'
 import { isToken } from '../../helpers/validation'
 
 interface FormProps extends FormState {
@@ -60,8 +56,7 @@ export const Form: React.FC<FormProps> = ({
 export const updates = {
   set: (state: RegistrationModificationType, payload: FormState) => {
     const isValid =
-      typeof payload.verificationToken === 'string' &&
-      isToken(payload.verificationToken)
+      typeof payload.verificationToken === 'string' && isToken(payload.verificationToken)
     const newState = { ...state.value, ...payload }
     if (isValid) {
       return RegistrationModification.EnteringValid(newState)
@@ -74,18 +69,14 @@ export const updates = {
     RegistrationModification.Loading({ ...state.value, ready: false }),
   success: (state: RegistrationModificationType, { data }) =>
     RegistrationModification.Success({ ...state.value, response: data }),
-  failure: (
-    state: RegistrationModificationType,
-    payload: { error: any; status: number }
-  ) =>
+  failure: (state: RegistrationModificationType, payload: { error: any; status: number }) =>
     RegistrationModification.Failure({
       ...state.value,
       error: payload.error,
       status: payload.status
     }),
   reset: (_state: RegistrationModificationType) => defaultState,
-  cancel: (state: RegistrationModificationType) =>
-    RegistrationModification.Cancelled(state.value)
+  cancel: (state: RegistrationModificationType) => RegistrationModification.Cancelled(state.value)
 }
 
 export const defaultState = RegistrationModification.Entering({
@@ -93,56 +84,59 @@ export const defaultState = RegistrationModification.Entering({
   ready: false
 })
 
-export type ActionType =
-  | 'set'
-  | 'success'
-  | 'failure'
-  | 'ready'
-  | 'reset'
-  | 'cancel'
-  | 'loading'
+export type ActionType = 'set' | 'success' | 'failure' | 'ready' | 'reset' | 'cancel' | 'loading'
 
 export const registrationReducer = (
   state: RegistrationModificationType,
   action: { type: ActionType; payload?: any }
-) =>
-  updates[action.type]
-    ? updates[action.type](state, action.payload)
-    : defaultState
+) => (updates[action.type] ? updates[action.type](state, action.payload) : defaultState)
 
 export const CancelRegistration = ({
   eventId,
-  onCommand
+  onCommand,
+  cancelToken
 }: {
   eventId: number
   onCommand: OnCmd
+  cancelToken: string | null
 }) => {
   const inputRef = useRef(null)
+  const btnRef = useRef(null)
+
+  const [cancelState, dispatch] = useReducer(registrationReducer, defaultState)
 
   useEffect(() => {
-    inputRef.current.focus()
-  }, [])
+    if (cancelToken) {
+      dispatch({ type: 'set', payload: { verificationToken: cancelToken } })
+    }
+  }, [cancelToken])
 
-  const [checkState, dispatch] = useReducer(registrationReducer, defaultState)
+  useEffect(() => {
+    if (!cancelToken) {
+      inputRef.current.focus()
+    } else {
+      btnRef.current && btnRef.current.focus()
+    }
+  }, [cancelToken, btnRef.current])
 
   const updateValue = (e: React.ChangeEvent<HTMLInputElement>) =>
     dispatch({
       type: 'set',
-      payload: { ...checkState.value, [e.target.id]: e.target.value }
+      payload: { ...cancelState.value, [e.target.id]: e.target.value }
     })
 
   const { request, query } = useApi(endpoints.register(eventId), false, 'post')
 
   useEffect(() => {
-    const { ready, verificationToken } = checkState.value
-    if (ready && RegistrationModification.is.EnteringValid(checkState)) {
+    const { ready, verificationToken } = cancelState.value
+    if (ready && RegistrationModification.is.EnteringValid(cancelState)) {
       query({
         method: 'delete',
         endpoint: endpoints.cancelRegistration(verificationToken)
       })
       dispatch({ type: 'loading' })
     }
-  }, [checkState])
+  }, [cancelState])
 
   useEffect(() => {
     if (ApiRequest.is.OK(request)) {
@@ -165,7 +159,7 @@ export const CancelRegistration = ({
     if (e.key === 'Enter') {
       e.preventDefault()
       e.stopPropagation()
-      if (RegistrationModification.is.EnteringValid(checkState)) {
+      if (RegistrationModification.is.EnteringValid(cancelState)) {
         dispatch({ type: 'ready' })
       }
     }
@@ -173,7 +167,7 @@ export const CancelRegistration = ({
 
   return (
     <Prompt>
-      {RegistrationModification.match(checkState, {
+      {RegistrationModification.match(cancelState, {
         Entering: values => (
           <>
             <Form
@@ -187,29 +181,20 @@ export const CancelRegistration = ({
                 <Prompt>$ action: </Prompt>
               </FormCell>
               <FormCell width={7}>
-                <FormActionButtons dispatch={dispatch} onCommand={onCommand} />
+                <FormActionButtons dispatch={dispatch} onCommand={onCommand} btnRef={btnRef} />
               </FormCell>
             </Grid>
           </>
         ),
         EnteringValid: values => (
           <>
-            <Form
-              {...values}
-              updateValue={updateValue}
-              valid
-              handleSubmit={onSubmit}
-            />
+            <Form {...values} updateValue={updateValue} valid handleSubmit={onSubmit} />
             <Grid columns={10}>
               <FormCell width={3}>
                 <Prompt>$ action: </Prompt>
               </FormCell>
               <FormCell width={7}>
-                <FormActionButtons
-                  valid
-                  dispatch={dispatch}
-                  onCommand={onCommand}
-                />
+                <FormActionButtons valid dispatch={dispatch} onCommand={onCommand} />
               </FormCell>
             </Grid>
           </>
@@ -217,13 +202,7 @@ export const CancelRegistration = ({
         Success: values => {
           return (
             <>
-              <Form
-                {...values}
-                updateValue={updateValue}
-                disabled
-                valid
-                handleSubmit={onSubmit}
-              />
+              <Form {...values} updateValue={updateValue} disabled valid handleSubmit={onSubmit} />
               <Grid columns={10}>
                 <FormCell width={3}>
                   <Prompt>$ result: </Prompt>
@@ -238,33 +217,20 @@ export const CancelRegistration = ({
         },
         Failure: values => (
           <>
-            <Form
-              {...values}
-              updateValue={updateValue}
-              disabled
-              valid
-              handleSubmit={onSubmit}
-            />
+            <Form {...values} updateValue={updateValue} disabled valid handleSubmit={onSubmit} />
             <Grid columns={10}>
               <FormCell width={3}>
                 <Prompt>$ result: </Prompt>
               </FormCell>
               <FormCell width={7} style={{ color: '#fff' }}>
-                {values.error.message}{' '}
-                <RegistrationLabel valid>{values.status}</RegistrationLabel>
+                {values.error.message} <RegistrationLabel valid>{values.status}</RegistrationLabel>
               </FormCell>
             </Grid>
           </>
         ),
         Loading: values => (
           <>
-            <Form
-              {...values}
-              updateValue={updateValue}
-              disabled
-              valid
-              handleSubmit={onSubmit}
-            />
+            <Form {...values} updateValue={updateValue} disabled valid handleSubmit={onSubmit} />
             <Grid columns={10}>
               <FormCell width={3}>
                 <Prompt>$ result: </Prompt>
@@ -277,13 +243,7 @@ export const CancelRegistration = ({
         ),
         Cancelled: values => (
           <>
-            <Form
-              {...values}
-              updateValue={updateValue}
-              disabled
-              valid
-              handleSubmit={onSubmit}
-            />
+            <Form {...values} updateValue={updateValue} disabled valid handleSubmit={onSubmit} />
             <Grid columns={10}>
               <FormCell width={3}>
                 <Prompt>$ result: </Prompt>

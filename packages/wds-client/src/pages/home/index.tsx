@@ -16,6 +16,9 @@ import SectionTitle from '../../components/SectionTitle'
 import bgImage from '../../images/sausage-bg.svg'
 import { Theme } from '../../models/UI'
 import { mapRequestToEvent } from '../../models/Event'
+import { RouteComponentProps } from 'react-router'
+
+import useURLSearchParam from '../../hooks/useURLSearchParam'
 
 const TopSection = styled.div<any>`
   padding: ${p => `${toRem(p.theme.navHeight)} ${toRem(p.theme.pagePadding)}}`};
@@ -52,11 +55,19 @@ const CurrentEventWrapper = styled.section`
   padding: 2rem 0 3rem;
 `
 
-export function Home({ setTheme }: { setTheme: Function }) {
+interface HomeProps extends RouteComponentProps {
+  setTheme: Function
+}
+
+export function Home({ setTheme, location }: HomeProps) {
   const event = useContext(EventContext)
   useEffect(() => {
     setTheme(Theme.Standard)
   }, [])
+
+  const checkToken = useURLSearchParam(location.search, 'check', 'current-event-console')
+  const cancelToken = useURLSearchParam(location.search, 'cancel', 'current-event-console')
+
   return (
     <PageWrapper>
       <TopSection isExpandedMobileNav={false}>
@@ -66,7 +77,7 @@ export function Home({ setTheme }: { setTheme: Function }) {
       </TopSection>
       <SectionTitle>Our Next Meetup</SectionTitle>
       <CurrentEventWrapper>
-        <Event {...mapRequestToEvent(event)} />
+        <Event {...mapRequestToEvent(event)} checkToken={checkToken} cancelToken={cancelToken} />
       </CurrentEventWrapper>
       <PreviousEventsWrapper>
         <PreviousEvents />
