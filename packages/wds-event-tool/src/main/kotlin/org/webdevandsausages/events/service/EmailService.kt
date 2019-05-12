@@ -2,7 +2,12 @@ package org.webdevandsausages.events.service
 
 import arrow.core.Try
 import arrow.core.getOrDefault
-import com.sendgrid.*
+import com.sendgrid.Email
+import com.sendgrid.Mail
+import com.sendgrid.Method
+import com.sendgrid.Personalization
+import com.sendgrid.Request
+import com.sendgrid.SendGrid
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import meta.enums.ParticipantStatus
@@ -16,7 +21,7 @@ import org.webdevandsausages.events.utils.prettified
 
 val SUBJECT_INTRO = "Web Dev and Sausages:"
 
-val WAIT_LISTED_SUBJECT = "$SUBJECT_INTRO You are currently on the waiting list."
+val WAIT_LISTED_SUBJECT  = "$SUBJECT_INTRO You are currently on the waiting list."
 val REGISTERED_SUBJECT = "$SUBJECT_INTRO You are successfully registered!"
 
 class EmailService(private val secrets: Secrets?) {
@@ -80,7 +85,7 @@ class EmailService(private val secrets: Secrets?) {
         val sponsor = if (event.sponsor != null) event.sponsor else "Anonymous"
         val emailData = mapOf(
             "action" to status.toText,
-            "datetime" to "Thu, 23 May 2019, 06:00 PM", // TODO: Make this work universally with timestamp prettifier
+            "datetime" to event.date.prettified,
             "location" to event.location,
             "token" to participantDto.verificationToken,
             "sponsor" to sponsor,
