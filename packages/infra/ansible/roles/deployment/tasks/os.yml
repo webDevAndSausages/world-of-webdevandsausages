@@ -50,6 +50,10 @@
   apt:
     name: rsync
 
+- name: set timezone to Europe/Helsinki
+  timezone:
+    name: Europe/Helsinki
+
 - include_tasks: hardening.yml
   tags:
     - hardening
