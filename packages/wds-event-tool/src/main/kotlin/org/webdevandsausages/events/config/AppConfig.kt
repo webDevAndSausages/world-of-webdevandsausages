@@ -31,6 +31,8 @@ data class AppConfig(
         val mapper = ObjectMapper(YAMLFactory()) // Enable YAML parsing
         mapper.registerModule(KotlinModule())
         secrets = "secrets.yaml".asResourceStream()?.use { mapper.readValue(it, Secrets::class.java) }
+        println("loading secrets")
+        println(secrets)
     }
 }
 
