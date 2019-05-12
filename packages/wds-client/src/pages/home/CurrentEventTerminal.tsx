@@ -1,24 +1,24 @@
-import React, { useReducer, useEffect } from 'react'
-import styled, { css } from '../../styles/styled-components'
+import React, {useReducer, useEffect} from 'react'
+import styled, {css} from '../../styles/styled-components'
 import darken from 'polished/lib/color/darken'
 import produce from 'immer'
 
 import format from 'date-fns/format'
-import { over, lensProp } from 'ramda'
-import { toRem, phone, tablet } from '../../styles/helpers'
-import { theme } from '../../styles/theme'
-import { EventData, Event as EventType, CurrentEvent } from '../../models/Event'
-import { EventRegistration } from './Registration'
-import { CheckRegistration } from './CheckRegistration'
-import { CancelRegistration } from './CancelRegistration'
-import { InvalidCmd } from './InvalidCommand'
-import { Help } from './Help'
-import { Prompt } from '../../components/terminal'
+import {over, lensProp} from 'ramda'
+import {toRem, phone, tablet} from '../../styles/helpers'
+import {theme} from '../../styles/theme'
+import {EventData, Event as EventType, CurrentEvent} from '../../models/Event'
+import {EventRegistration} from './Registration'
+import {CheckRegistration} from './CheckRegistration'
+import {CancelRegistration} from './CancelRegistration'
+import {InvalidCmd} from './InvalidCommand'
+import {Help} from './Help'
+import {Prompt} from '../../components/terminal'
 
 import Spinner from '../../components/Spinner'
 import FutureEvent from './FutureEventTerminal'
 
-import { Terminal, CursorInput, TerminalOut, Action } from '../../components/terminal'
+import {Terminal, CursorInput, TerminalOut, Action} from '../../components/terminal'
 
 const InnerWrapper = styled.div<any>`
   display: flex;
@@ -58,7 +58,7 @@ export const EventWrapper = styled.article`
 const SponsorAnnouncement = styled.h3`
   font-size: 1.5em;
   font-family: museo_sans500_Italic, sans-serif;
-  ${({ theme }) =>
+  ${({theme}) =>
     css`
       color: ${theme.primaryOrange};
     `};
@@ -81,11 +81,11 @@ export interface TerminalInputProps {
   active: boolean
 }
 
-export const Waiting: React.FC<TerminalInputProps> = ({ onCommand, active }) => (
-  <>
-    <Prompt>$ {defaultPrompt}</Prompt>
-    <CursorInput onCommand={onCommand} active={active} />
-  </>
+export const Waiting: React.FC<TerminalInputProps> = ({onCommand, active}) => (
+    <>
+      <Prompt>$ {defaultPrompt}</Prompt>
+      <CursorInput onCommand={onCommand} active={active}/>
+    </>
 )
 
 interface TerminalState {
@@ -149,18 +149,18 @@ const updates = {
 }
 
 const consoleReducer = (
-  state: TerminalState,
-  action: { type: Action; cmd: string; payload?: any }
+    state: TerminalState,
+    action: { type: Action; cmd: string; payload?: any }
 ) =>
-  updates[action.type]
-    ? (produce as any)(updates[action.type])(state, action.cmd, action.payload)
-    : defaultState
+    updates[action.type]
+        ? (produce as any)(updates[action.type])(state, action.cmd, action.payload)
+        : defaultState
 
 const RegistrationConsole = ({
-  event,
-  checkToken,
-  cancelToken
-}: {
+                               event,
+                               checkToken,
+                               cancelToken
+                             }: {
   event: EventData
   children?: any
   checkToken?: string | null
@@ -169,49 +169,52 @@ const RegistrationConsole = ({
   const [consoleState, dispatch] = useReducer(consoleReducer, defaultState)
   useEffect(() => {
     if (checkToken) {
-      dispatch({ type: 'check', cmd: 'c', payload: checkToken })
+      dispatch({type: 'check', cmd: 'c', payload: checkToken})
     } else if (cancelToken) {
-      dispatch({ type: 'cancel', cmd: 'x', payload: cancelToken })
+      dispatch({type: 'cancel', cmd: 'x', payload: cancelToken})
     }
   }, [checkToken, cancelToken])
 
   return (
-    <div id="current-event-console">
-      <SponsorAnnouncement>Sponsored by</SponsorAnnouncement>
-      {event.sponsor && (
-        <a href={event.sponsorLink || null}>
-          <SponsorLogo src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`} />
-        </a>
-      )}
-      <Terminal>
-        <TerminalOut title="which" detail={`Volume ${event.volume}`} />
-        <TerminalOut title="when" detail={event.date} />
-        <TerminalOut title="what" detail={event.details} />
-        <TerminalOut title="where" detail={event.location} />
-        <TerminalOut title="contact" detail={event.contact} />
-        {event.status !== 'VISIBLE' &&
+      <div id="current-event-console">
+        <SponsorAnnouncement>Sponsored by</SponsorAnnouncement>
+        {event.sponsor && (
+            <a href={event.sponsorLink || null}>
+              <SponsorLogo src={`/sponsor-logos/${event.sponsor.toLowerCase()}-logo.svg`}/>
+            </a>
+        )}
+        <Terminal>
+          <TerminalOut title="which" detail={`Volume ${event.volume}`}/>
+          <TerminalOut title="when" detail={event.date}/>
+          <TerminalOut title="what" detail={event.details}/>
+          <TerminalOut title="where" detail={event.location}/>
+          <TerminalOut title="contact" detail={event.contact}/>
+          {event.status !== 'VISIBLE' &&
           consoleState.history.map((Component: any, i: number) => {
             return (
-              <Component
-                key={i}
-                onCommand={dispatch}
-                eventId={event.id}
-                active={i === consoleState.current}
-                cmd={consoleState.cmd[i - 1]}
-                checkToken={checkToken}
-                cancelToken={cancelToken}
-              />
+                <Component
+                    key={i}
+                    onCommand={dispatch}
+                    eventId={event.id}
+                    active={i === consoleState.current}
+                    cmd={consoleState.cmd[i - 1]}
+                    checkToken={checkToken}
+                    cancelToken={cancelToken}
+                />
             )
           })}
-      </Terminal>
-    </div>
+          {event.status === 'VISIBLE' && <TerminalOut title="where can I register?"
+                                                      detail={`Registration is not open yet, it'll open soon!
+                                                      Watch our social media and mailing list for more details.`}/>}
+        </Terminal>
+      </div>
   )
 }
 
 const Loading = () => (
-  <InnerWrapper>
-    <Spinner />
-  </InnerWrapper>
+    <InnerWrapper>
+      <Spinner/>
+    </InnerWrapper>
 )
 
 interface ParamProps {
@@ -223,26 +226,26 @@ type Props = CurrentEvent & ParamProps
 
 function Event(event: Props) {
   return (
-    <>
-      {event &&
+      <>
+        {event &&
         EventType.match(event, {
-          LOADING: () => <Loading />,
-          NONE: () => <FutureEvent />,
-          ERROR: () => <FutureEvent />,
-          default: ({ data, checkToken, cancelToken }: any) => {
+          LOADING: () => <Loading/>,
+          NONE: () => <FutureEvent/>,
+          ERROR: () => <FutureEvent/>,
+          default: ({data, checkToken, cancelToken}: any) => {
             const formattedData = over(lensProp('date'), date =>
-              format(date, 'MMMM Do, YYYY, HH:mm')
+                format(date, 'MMMM Do, YYYY, HH:mm')
             )(data)
             return (
-              <RegistrationConsole
-                event={formattedData}
-                checkToken={checkToken}
-                cancelToken={cancelToken}
-              />
+                <RegistrationConsole
+                    event={formattedData}
+                    checkToken={checkToken}
+                    cancelToken={cancelToken}
+                />
             )
           }
         })}
-    </>
+      </>
   )
 }
 
