@@ -17,8 +17,10 @@
 	import storage from './localStorage'
 	import {db} from './firebase'
 
-	// prop
+	// props
 	export let feedbackOffset = 700
+	export let autoOpen = true
+	export let autoOpenDelay = 8000
 	// state
 	let autoOpened = false
 	let rating = 0
@@ -37,7 +39,7 @@
 			if (isHidden && !$store.init && !$hide) {
 				store.actions.show()
 			}
-	 }, 2000)
+	 }, autoOpenDelay)
 
 	onMount(() => {
 		!$hide && document.addEventListener('scroll', handleScroll, listenerConfig)

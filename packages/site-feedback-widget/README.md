@@ -2,7 +2,21 @@
 
 ## Adding to a website
 
-Include `sfw-bundle.js` and `sfw-bundle.css` in your public directory and add then to the `index.html`. The styles are scope and should not effect the main site.
+Include `sfw-bundle.js` and `sfw-bundle.css` in your public directory and add then to the `index.html`. The initialize the widget in a script:
+
+```html
+<script>
+  // options passed here are the defaults
+  // if you do not pass options
+  site_feedback_widget({
+  	feedbackOffset: 700,
+  	autoOpen: true,
+  	autoOpenDelay = 8000
+  })
+</script>
+```
+
+The styles are scoped and should not effect the main site.
 
 ## Getting started
 
