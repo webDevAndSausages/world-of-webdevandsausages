@@ -56,11 +56,14 @@ class CreateRegistrationService(
                     val result = participantCRUD.create(registrationWithToken)
 
                     if (result is Some) {
-                        emailService.sendRegistrationEmail(event, status, result.t)
-                        logger.info("Dispatching participant to firebase mailing list")
-                        if (registration.subscribe != null && registration.subscribe) {
-                            firebaseService.upsertParticipantToMailingList(result.t)
-                        }
+                        Thread {
+                            emailService.sendRegistrationEmail(event, status, result.t)
+                            logger.info("Dispatching participant to firebase mailing list")
+                            if (registration.subscribe != null && registration.subscribe) {
+                                firebaseService.upsertParticipantToMailingList(result.t)
+                            }
+                        }.start()
+
                     }
                     return when (result) {
                         is Some -> {
