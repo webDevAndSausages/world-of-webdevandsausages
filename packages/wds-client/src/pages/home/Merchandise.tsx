@@ -48,7 +48,8 @@ const MERCH = [
   'mugs',
   'beer',
   'hoodie',
-  'halloween_stuff'
+  'halloween_stuff',
+  'towel'
 ]
 
 const Merchandise = () => (
