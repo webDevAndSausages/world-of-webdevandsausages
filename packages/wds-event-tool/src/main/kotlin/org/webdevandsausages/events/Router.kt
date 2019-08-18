@@ -18,7 +18,6 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
-import org.jooq.impl.DSL.createSchema
 import org.webdevandsausages.events.config.Secrets
 import org.webdevandsausages.events.controller.*
 import org.webdevandsausages.events.dto.*
