@@ -89,7 +89,8 @@ class Router(
             GetEvents(getEvents),
             GetEvent(getEventById),
             GetRegistration(getRegistration),
-            PostRegistration(createRegistration)
+            PostRegistration(createRegistration),
+            DeleteRegistration(cancelRegistration)
         )
     )
 
@@ -109,7 +110,7 @@ class Router(
         GetCurrentEvent(getCurrentEvent).route,
         GetRegistration(getRegistration).route,
         PostRegistration(createRegistration).route,
-        DeleteRegistration.route(cancelRegistration),
+        DeleteRegistration(cancelRegistration).route,
         GetUser.route(getRegistration)
     )
 
