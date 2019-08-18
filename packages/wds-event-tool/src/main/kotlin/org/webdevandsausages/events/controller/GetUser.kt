@@ -26,14 +26,14 @@ object GetUser {
                         is Either.Right -> Router.registrationResponseLens(
                             RegistrationOutDto(it.b),
                             Response(Status.OK)
-                            )
+                        )
                     }
                 }
             }
 
-        return  "user" / Router.verificationTokenParam meta {
+        return "user" / Router.verificationTokenParam meta {
             summary = "Get user by verification token"
-            returning( Status.OK to "User found.")
+            returning(Status.OK to "User found.")
             returning(Status.NOT_FOUND to "The user does not exist.")
             returning(Status.NOT_FOUND to "The user was not found with that token.")
             returning(Status.INTERNAL_SERVER_ERROR to "A database error occurred.")

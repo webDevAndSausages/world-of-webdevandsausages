@@ -3,8 +3,11 @@ package org.webdevandsausages.events.graphql
 import com.apurebase.kgraphql.KGraphQL
 import com.apurebase.kgraphql.schema.Schema
 import meta.enums.EventStatus
+import meta.enums.ParticipantStatus
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.dto.EventOutDto
+import org.webdevandsausages.events.dto.RegistrationInDto
+import org.webdevandsausages.events.dto.RegistrationOutDto
 import java.sql.Timestamp
 
 fun createSchema(configs: List<ApiRouteWithGraphqlConfig>
@@ -19,6 +22,10 @@ fun createSchema(configs: List<ApiRouteWithGraphqlConfig>
             configs.forEach { it.config(this) }
 
             type<EventOutDto>()
+
+            type<RegistrationOutDto>()
+
+            inputType<RegistrationInDto>()
 
             stringScalar<Timestamp> {
                 deserialize = { ts : String -> Timestamp.valueOf(ts) }
@@ -50,6 +57,22 @@ fun createSchema(configs: List<ApiRouteWithGraphqlConfig>
                 }
                 value(EventStatus.VISIBLE){
                     description = "Event is visible but not open for registration"
+                }
+            }
+
+            enum<ParticipantStatus> {
+                description = "Status of participant in event"
+                value(ParticipantStatus.REGISTERED){
+                    description = "Accepted into an event"
+                }
+                value(ParticipantStatus.WAIT_LISTED){
+                    description = "In line for an event"
+                }
+                value(ParticipantStatus.CANCELLED){
+                    description = "Cancelled participation"
+                }
+                value(ParticipantStatus.ORGANIZER){
+                    description = "Accepted as organizer"
                 }
             }
         }

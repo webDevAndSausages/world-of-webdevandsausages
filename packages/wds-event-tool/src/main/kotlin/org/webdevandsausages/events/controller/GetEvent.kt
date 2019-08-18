@@ -49,7 +49,7 @@ object GetEvent : ApiRouteWithGraphqlConfig {
     } bindContract GET to ::handleGetEventById
 
     override val config: SchemaBuilder<Unit>.() -> Unit = {
-        query("events") {
+        query("getEvent") {
             resolver { id: Long ->
                 getEventById!!(id).fold(
                     { throw it },
