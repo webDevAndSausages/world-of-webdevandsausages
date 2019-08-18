@@ -18,9 +18,11 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
+import org.jooq.impl.DSL.createSchema
 import org.webdevandsausages.events.config.Secrets
 import org.webdevandsausages.events.controller.*
 import org.webdevandsausages.events.dto.*
+import org.webdevandsausages.events.graphql.*
 import org.webdevandsausages.events.service.*
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
@@ -74,26 +76,35 @@ class Router(
                         NoSecurity,
                         *getAdminApiRoutes().toTypedArray()
                     ),
+                    "/graphql" bind GraphqlRouter(getGraphqlSchemas()),
                     "/" bind static(ResourceLoader.Classpath("public"))
                 )
             )
 
     }
 
+    private fun getGraphqlSchemas() = createSchema(
+        listOf(
+            GetCurrentEvent(getCurrentEvent),
+            GetEvents(getEvents),
+            GetEvent(getEventById)
+        )
+    )
+
     private fun getAdminApiRoutes() = listOf(
         "/{any:.*}" bindContract OPTIONS to ok(),
         PostEvent.route(createEvent),
         AdminGetEventInfo.route(getEventById),
         PatchEvent.route(updateEvent, getEventById),
-        GetEvents.route(getEvents),
-        GetCurrentEvent.route(getCurrentEvent)
+        GetEvents(getEvents).route,
+        GetCurrentEvent(getCurrentEvent).route
     )
 
     private fun getApiRoutes() = listOf(
         "/{any:.*}" bindContract OPTIONS to ok(),
-        GetEvents.route(getEvents),
-        GetEvent.route(getEventById),
-        GetCurrentEvent.route(getCurrentEvent),
+        GetEvents(getEvents).route,
+        GetEvent(getEventById).route,
+        GetCurrentEvent(getCurrentEvent).route,
         GetRegistration.route(getRegistration),
         PostRegistration.route(createRegistration),
         DeleteRegistration.route(cancelRegistration),

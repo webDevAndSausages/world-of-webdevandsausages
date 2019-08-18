@@ -6,35 +6,26 @@ import org.http4k.core.Status
 import org.webdevandsausages.events.Router.Companion.errorResponseLens
 import org.webdevandsausages.events.dto.ErrorOutDto
 
-sealed class EventError {
-    object NotFound : EventError() {
-        val message = "The event is closed or non-existent."
+sealed class EventError(override val message: String = "", val status: Status) : Throwable(message) {
+    object NotFound : EventError("The event is closed or non-existent.", Status.NOT_FOUND) {
         val code = ErrorCode.EVENT_CLOSED_OR_MISSING
-        val status = Status.NOT_FOUND
     }
 
-    object AlreadyRegistered : EventError() {
-        val message = "The email is already registered."
+    object AlreadyRegistered : EventError("The email is already registered.", Status.BAD_REQUEST) {
         val code = ErrorCode.ALREADY_REGISTERED
-        val status = Status.BAD_REQUEST
     }
 
-    object DatabaseError : EventError() {
-        val message = "A database error occurred. Ensure the volume number is unique."
+    object DatabaseError :
+        EventError("A database error occurred. Ensure the volume number is unique.", Status.INTERNAL_SERVER_ERROR) {
         val code = ErrorCode.DATABASE_ERROR
-        val status = Status.INTERNAL_SERVER_ERROR
     }
 
-    class ValidationError(message: String) : EventError() {
-        val message = message
+    class ValidationError(message: String) : EventError(message, Status.UNPROCESSABLE_ENTITY) {
         val code = ErrorCode.VALIDATION_ERROR
-        val status = Status.UNPROCESSABLE_ENTITY
     }
 
-    object MultipleOpen : EventError() {
-        val message = "Only one event can be open at a time."
+    object MultipleOpen : EventError("Only one event can be open at a time.", Status.UNPROCESSABLE_ENTITY) {
         val code = ErrorCode.VALIDATION_ERROR
-        val status = Status.UNPROCESSABLE_ENTITY
     }
 }
 
@@ -57,3 +48,4 @@ fun EventError.toResponse(): Response = when (this) {
         }
     is EventError.ValidationError -> errorResponseLens(ErrorOutDto(this.message, this.code), Response(this.status))
 }
+

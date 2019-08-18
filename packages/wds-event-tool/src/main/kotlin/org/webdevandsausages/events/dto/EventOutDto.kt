@@ -1,6 +1,9 @@
 package org.webdevandsausages.events.dto
 
 import meta.enums.EventStatus
+import org.http4k.core.Response
+import org.http4k.core.Status
+import org.webdevandsausages.events.controller.GetCurrentEvent.EventLens
 import java.sql.Timestamp
 
 data class EventOutDto(

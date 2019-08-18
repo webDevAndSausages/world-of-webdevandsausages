@@ -23,6 +23,7 @@ val postgresqlDriverVersion = "42.2.5"
 val jooqVersion = "3.10.1"
 val arrowVersion = "0.8.2"
 val mockkVersion = "1.9.2"
+val KGraphQLVersion = "0.6.4"
 
 plugins {
     kotlin("jvm") version "1.3.20"
@@ -81,7 +82,6 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-
     /* firebase */
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
@@ -93,6 +93,8 @@ dependencies {
     implementation("org.jooq", "jooq", jooqVersion)
     implementation("org.simpleflatmapper", "sfm-jooq", "6.0.13")
     jooqGeneratorRuntime("org.postgresql:postgresql:$postgresqlDriverVersion")
+    /* graphql */
+    implementation("com.apurebase:kgraphql:$KGraphQLVersion")
     /* Arrow */
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
     implementation("io.arrow-kt:arrow-data:$arrowVersion")
