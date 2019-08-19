@@ -113,6 +113,7 @@ dependencies {
     testImplementation("io.kotlintest:kotlintest-assertions-arrow:3.1.11")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-dsl:$mockkVersion")
+    testImplementation("org.http4k:http4k-testing-hamkrest:$http4kVersion")
 }
 
 val jooqConfig = Configuration()
