@@ -8,6 +8,8 @@ import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
+import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.error.RegistrationError
 import java.sql.Timestamp
 
 fun createSchema(configs: List<ApiRouteWithGraphqlConfig>
@@ -24,8 +26,6 @@ fun createSchema(configs: List<ApiRouteWithGraphqlConfig>
             type<EventOutDto>()
 
             type<RegistrationOutDto>()
-
-            inputType<RegistrationInDto>()
 
             stringScalar<Timestamp> {
                 deserialize = { ts : String -> Timestamp.valueOf(ts) }

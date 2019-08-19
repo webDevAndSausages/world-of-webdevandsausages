@@ -6,23 +6,20 @@ import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
 
-sealed class RegistrationError(override val message: String = "", val status: Status = Status.INTERNAL_SERVER_ERROR) :
-    Throwable(message) {
-    object EventNotFound : RegistrationError("The event does not exist.", Status.NOT_FOUND) {
-        val code = ErrorCode.NOT_FOUND
-    }
+sealed class RegistrationError(
+    message: String,
+    status: Status = Status.INTERNAL_SERVER_ERROR,
+    code: ErrorCode = ErrorCode.DATABASE_ERROR
+) :
+    WDSException(message, status, code) {
+    object EventNotFound : RegistrationError("The event does not exist.", Status.NOT_FOUND, ErrorCode.NOT_FOUND)
 
-    object DatabaseError : RegistrationError("A database error occurred.", Status.INTERNAL_SERVER_ERROR) {
-        val code = ErrorCode.DATABASE_ERROR
-    }
+    object DatabaseError : RegistrationError("A database error occurred.")
 
-    object EventClosed : RegistrationError("The event is closed.", Status.GONE) {
-        val code = ErrorCode.EVENT_CLOSED_OR_MISSING
-    }
+    object EventClosed : RegistrationError("The event is closed.", Status.GONE, ErrorCode.EVENT_CLOSED_OR_MISSING)
 
-    object ParticipantNotFound : RegistrationError("The participant was not found with that token.", Status.NOT_FOUND) {
-        val code = ErrorCode.NOT_FOUND
-    }
+    object ParticipantNotFound :
+        RegistrationError("The participant was not found with that token.", Status.NOT_FOUND, ErrorCode.NOT_FOUND)
 }
 
 fun RegistrationError.toResponse(): Response = when (this) {

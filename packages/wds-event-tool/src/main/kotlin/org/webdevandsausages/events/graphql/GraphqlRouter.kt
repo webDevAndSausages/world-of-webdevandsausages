@@ -6,6 +6,7 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.error.WDSException
 import org.webdevandsausages.events.utils.WDSJackson.auto
 import org.webdevandsausages.events.utils.toJson
 
@@ -24,20 +25,22 @@ object GraphqlRouter {
     operator fun invoke(schema: Schema): RoutingHttpHandler = routes(
         "/" bind Method.POST to { req: Request ->
             val (query, variables) = queryLens(req)
-            val res = schema.runCatching {
-                execute(query, variables.toJson()).let {
-                    Response(Status.OK).body(it)
-                }
-            }
-            res.fold(onSuccess = { it }, onFailure = {
-                Response(it.getStatus()).body(
-                    """
+            schema.run {
+                try {
+                    execute(query, variables.toJson()).let {
+                        Response(Status.OK).body(it)
+                    }
+                } catch (e: WDSException) {
+                    Response(e.status).body(
+                        """
                         {
-                            "errors": "${it.message}"
+                            "errors": "${e.message}",
+                            "code": "${e.code}"
                         }
                     """.trimIndent()
-                )
-            })
+                    )
+                }
+            }
         }
     )
 }

@@ -6,35 +6,43 @@ import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
 
-sealed class RegistrationCancellationError(override val message: String = "", val status: Status) : Throwable(message) {
-    object EventNotFound : RegistrationCancellationError("The event is closed or non-existent.", Status.NOT_FOUND) {
-        val code = ErrorCode.EVENT_CLOSED_OR_MISSING
-    }
+sealed class RegistrationCancellationError(
+    message: String,
+    status: Status = Status.INTERNAL_SERVER_ERROR,
+    code: ErrorCode = ErrorCode.SHOULD_NEVER_HAPPEN
+) : WDSException(message, status, code) {
+    object EventNotFound : RegistrationCancellationError(
+        "The event is closed or non-existent.",
+        Status.NOT_FOUND,
+        ErrorCode.EVENT_CLOSED_OR_MISSING
+    )
 
-    object DatabaseError : RegistrationCancellationError("A database error occurred.", Status.INTERNAL_SERVER_ERROR) {
-        val code = ErrorCode.DATABASE_ERROR
-    }
+    object DatabaseError : RegistrationCancellationError(
+        "A database error occurred.",
+        Status.INTERNAL_SERVER_ERROR,
+        ErrorCode.DATABASE_ERROR
+    )
 
-    object EventClosed : RegistrationCancellationError("The event is closed.", Status.NOT_FOUND) {
-        val code = ErrorCode.NOT_FOUND
-    }
+    object EventClosed : RegistrationCancellationError("The event is closed.", Status.NOT_FOUND, ErrorCode.NOT_FOUND)
 
     object ParticipantNotFound :
-        RegistrationCancellationError("A registration was not found with provided token.", Status.NOT_FOUND) {
-        val code = ErrorCode.PARTICIPANT_NOT_FOUND
-    }
+        RegistrationCancellationError(
+            "A registration was not found with provided token.",
+            Status.NOT_FOUND,
+            ErrorCode.PARTICIPANT_NOT_FOUND
+        )
 
     object ParticipantAlreadyCancelled :
-        RegistrationCancellationError("This registration was already cancelled.", Status.UNPROCESSABLE_ENTITY) {
-        val code = ErrorCode.ALREADY_CANCELLED
-    }
+        RegistrationCancellationError(
+            "This registration was already cancelled.",
+            Status.UNPROCESSABLE_ENTITY,
+            ErrorCode.ALREADY_CANCELLED
+        )
+
 
     object ShouldNeverHappen : RegistrationCancellationError(
-        "Something weird happened. Should never happen, lol",
-        Status.INTERNAL_SERVER_ERROR
-    ) {
-        val code = ErrorCode.SHOULD_NEVER_HAPPEN
-    }
+        "Something weird happened. Should never happen, lol"
+    )
 }
 
 fun RegistrationCancellationError.toResponse(): Response = when (this) {
