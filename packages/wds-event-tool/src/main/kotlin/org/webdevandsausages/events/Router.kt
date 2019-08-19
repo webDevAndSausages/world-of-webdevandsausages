@@ -89,7 +89,8 @@ class Router(
             GetEvent(getEventById),
             GetRegistration(getRegistration),
             PostRegistration(createRegistration),
-            DeleteRegistration(cancelRegistration)
+            DeleteRegistration(cancelRegistration),
+            GetUser(getRegistration)
         )
     )
 
@@ -110,7 +111,7 @@ class Router(
         GetRegistration(getRegistration).route,
         PostRegistration(createRegistration).route,
         DeleteRegistration(cancelRegistration).route,
-        GetUser.route(getRegistration)
+        GetUser(getRegistration).route
     )
 
     private fun ok() = { _: Request -> Response(OK) }

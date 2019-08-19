@@ -1,6 +1,5 @@
 package org.webdevandsausages.events.controller
 
-import arrow.core.Either
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.meta
 import org.http4k.core.Body

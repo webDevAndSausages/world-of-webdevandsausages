@@ -1,6 +1,5 @@
 package org.webdevandsausages.events.controller
 
-import arrow.core.Either
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.div
@@ -16,7 +15,6 @@ import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.service.GetEventByIdService
-import org.webdevandsausages.events.service.GetEventsService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object GetEvent : ApiRouteWithGraphqlConfig {
