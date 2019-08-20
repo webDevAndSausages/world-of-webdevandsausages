@@ -11,6 +11,7 @@ import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import io.mockk.every
+import io.mockk.slot
 import meta.tables.pojos.Event
 import org.http4k.core.*
 import org.http4k.hamkrest.hasBody
@@ -24,7 +25,7 @@ import java.time.LocalDateTime
 import org.webdevandsausages.events.graphql.Query
 import org.webdevandsausages.events.utils.toJson
 
-class EventResolversTest : StringSpec() {
+class EventGraphqlEndpoinntTest : StringSpec() {
     lateinit var router: Router
 
     override fun beforeTest(description: Description) {
@@ -62,6 +63,7 @@ class EventResolversTest : StringSpec() {
 
             val resp = router(null)(request)
 
+            @Language("JSON")
            val expected = """
             {
               "data" : {
@@ -89,6 +91,57 @@ class EventResolversTest : StringSpec() {
 
             resp.status.shouldBe(Status.NOT_FOUND)
             resp.bodyString().shouldContain(EventError.NotFound.message)
+        }
+
+        "allEvents resolver should accept variable and return event list with names" {
+            // val paramSlot = slot<String>()
+            every { router.getEvents(any()) } returns listOf(
+                EventDto(
+                    event = Event(
+                        1,
+                        "test_event",
+                        "sponsor",
+                        "esa",
+                        TIMESTAMP,
+                        "details",
+                        "tamperee",
+                        EventStatus.OPEN,
+                        50,
+                        TIMESTAMP,
+                        TIMESTAMP,
+                        TIMESTAMP,
+                        1,
+                        null
+                    )
+                )
+            )
+
+            val variables = """
+                {
+                    "status": "open"
+                }
+            """.trimIndent()
+
+            val query = Query("query allEvents(\$status: String){allEvents(status:\$status){name}}", variables).toJson()
+
+            val request = Request(Method.POST, "/graphql").body(query)
+
+            val resp = router(null)(request)
+
+            @Language("JSON")
+            val expectedBody = """
+                {
+                  "data" : {
+                    "allEvents" : [ {
+                      "name" : "test_event"
+                    } ]
+                  }
+                }
+            """.trimIndent()
+
+            resp.status.shouldBe(Status.OK)
+           // paramSlot.captured.shouldBe("open")
+            assertThat(resp, hasBody(expectedBody))
         }
     }
 }
