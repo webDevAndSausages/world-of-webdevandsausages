@@ -2,20 +2,15 @@ package endpoint
 
 import meta.enums.EventStatus
 import arrow.core.Either
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import io.kotlintest.Description
 import io.kotlintest.matchers.string.shouldContain
-import io.kotlintest.matchers.string.shouldNotContain
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import io.mockk.every
-import io.mockk.slot
 import meta.tables.pojos.Event
 import org.http4k.core.*
 import org.http4k.hamkrest.hasBody
-import org.http4k.lens.string
 import org.intellij.lang.annotations.Language
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventDto
@@ -64,7 +59,7 @@ class EventGraphqlEndpoinntTest : StringSpec() {
             val resp = router(null)(request)
 
             @Language("JSON")
-           val expected = """
+            val expected = """
             {
               "data" : {
                 "currentEvent" : {
@@ -140,7 +135,7 @@ class EventGraphqlEndpoinntTest : StringSpec() {
             """.trimIndent()
 
             resp.status.shouldBe(Status.OK)
-           // paramSlot.captured.shouldBe("open")
+            // paramSlot.captured.shouldBe("open")
             assertThat(resp, hasBody(expectedBody))
         }
     }
