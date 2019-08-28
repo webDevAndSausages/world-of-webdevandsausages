@@ -1,7 +1,7 @@
 import {readable} from 'svelte/store'
 import {of} from 'rxjs'
 import {ajax} from 'rxjs/ajax'
-import {startWith, catchError, map, tap, pluck} from 'rxjs/operators'
+import {startWith, catchError, map, pluck} from 'rxjs/operators'
 import config from './config'
 import daggy from 'daggy'
 
@@ -16,7 +16,7 @@ const headers = {
 const Result = daggy.taggedSum('Result', {
 	NotAsked: [],
 	Pending: [],
-	Success: ['data'],
+	Ok: ['data'],
 	Failure: ['error'],
 })
 
@@ -26,18 +26,12 @@ export const event = readable(Result.NotAsked, async set => {
 		headers,
 	}).pipe(
 		pluck('response'),
-		tap(console.log),
-		map(v => Result.Success(v)),
-		catchError(error => {
-			console.log(error)
-			return of(Result.Failure(error))
-		}),
+		map(v => Result.Ok(v)),
+		catchError(error => of(Result.Failure(error))),
 		startWith(Result.Pending)
 	)
 
-	const subscription = source.subscribe(v => {
-		set(v)
-	})
+	const subscription = source.subscribe(set)
 
 	return () => subscription.dispose()
 })

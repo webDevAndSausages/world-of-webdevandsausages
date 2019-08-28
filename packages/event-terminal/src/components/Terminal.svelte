@@ -1,11 +1,11 @@
 <script>
-	import {event} from './eventStore.js'
+  import EventDetails from './EventDetails.svelte'
+  import TerminalContainer from './TerminalContainer.svelte'
 </script>
 
-<style>
-	h1 {
-		color: purple;
-	}
-</style>
 
-<pre>{$event}</pre>
+<TerminalContainer>
+  <span slot="details">
+    <EventDetails />
+  </span>
+</TerminalContainer>
