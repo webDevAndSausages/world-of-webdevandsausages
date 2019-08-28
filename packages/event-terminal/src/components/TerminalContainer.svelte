@@ -1,15 +1,12 @@
 <script>
-	import {scale} from 'svelte/animation'
-	import {quintOut} from 'svelte/easing'
-	let containerClass = 'centered'
-
-	function toggle() {
-		if (containerClass === 'centered') {
-			containerClass = 'full'
-		} else {
-			containerClass = 'centered'
-		}
-	}
+  import {setContext} from 'svelte'
+  import Controls from './Controls.svelte'
+  import {controlsStore as store} from './controlsStore'
+  let containerClass = 'centered'
+  
+  setContext('controlsStore', store)
+  
+  $: containerClass = $store.open ?  'full' : 'centered container-centered-back'
 </script>
 
 <style>
@@ -17,9 +14,12 @@
 		position: absolute;
 		left: 0;
 		top: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 10;
+		overflow: hidden;
+		transform: scale(100%);
+		transition: all 1s;
 	}
 
 	.container-centered {
@@ -27,33 +27,41 @@
 		margin: 10%;
 	}
 
+	.container-centered-back {
+		transform: scale(50%);
+		transition: all 1s;
+	}
+
 	.container-centered.screen {
 		height: 100%;
 	}
 
 	.screen {
-		--border-color: red;
-		--border-width: 2px;
-		--font-family: Inconsolata;
-		--font-size: 1.2rem;
-		padding: 30px;
-		border: var(--border-width) solid var(--border-color);
+		padding: 15px;
+		border: var(--term-border-width) solid var(--term-border-color);
 		color: white;
 		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
 			0 6px 6px rgba(0, 0, 0, 0.23);
-		background-color: black;
+		background-color: var(--term-background-color);
 		height: 100%;
+    border-radius: 8px;
+	}
+  
+  .container-full .screen {
+		border-radius: 0;
 	}
 
 	button {
-		background: green;
+		background: var(--term-color);
 		padding: 20px;
 	}
 </style>
 
-<div class="container container-{containerClass}" transition:scale>
+<div class="container container-{containerClass}">
 	<div class="screen">
+    <div class="controls-container">
+      <Controls />
+    </div>
 		<slot name="details">No current event</slot>
-		<button on:click="{toggle}">full</button>
 	</div>
 </div>

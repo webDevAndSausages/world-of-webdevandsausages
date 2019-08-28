@@ -20,18 +20,21 @@ const Result = daggy.taggedSum('Result', {
 	Failure: ['error'],
 })
 
-export const event = readable(Result.NotAsked, async set => {
-	const source = ajax({
-		url: `${config.API_ROOT}events/current`,
-		headers,
-	}).pipe(
-		pluck('response'),
-		map(v => Result.Ok(v)),
-		catchError(error => of(Result.Failure(error))),
-		startWith(Result.Pending)
-	)
+export const createStore = () =>
+	readable(Result.NotAsked, async set => {
+		const source = ajax({
+			url: `${config.API_ROOT}events/current`,
+			headers,
+		}).pipe(
+			pluck('response'),
+			map(v => Result.Ok(v)),
+			catchError(error => of(Result.Failure(error))),
+			startWith(Result.Pending)
+		)
 
-	const subscription = source.subscribe(set)
+		const subscription = source.subscribe(set)
 
-	return () => subscription.dispose()
-})
+		return () => subscription.dispose()
+	})
+
+export const event = createStore()

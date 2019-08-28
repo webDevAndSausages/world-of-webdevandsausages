@@ -8,8 +8,8 @@ const app = express()
 
 // Init `sirv` handler
 const assets = sirv('public', {
-	maxAge: 31536000, // 1Y
-	immutable: true,
+	single: true,
+	dev: true,
 })
 
 app.use(cors())
