@@ -1,18 +1,18 @@
-import svelte from 'rollup-plugin-svelte';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
-import pkg from './package.json';
-import autoPreprocess from 'svelte-preprocess';
-import babel from 'rollup-plugin-babel';
-import replace from 'rollup-plugin-replace';
+import svelte from 'rollup-plugin-svelte'
+import resolve from 'rollup-plugin-node-resolve'
+import commonjs from 'rollup-plugin-commonjs'
+import livereload from 'rollup-plugin-livereload'
+import {terser} from 'rollup-plugin-terser'
+import pkg from './package.json'
+import autoPreprocess from 'svelte-preprocess'
+import babel from 'rollup-plugin-babel'
+import replace from 'rollup-plugin-replace'
 
-const production = !process.env.ROLLUP_WATCH;
+const production = !process.env.ROLLUP_WATCH
 const name = pkg.name
 	.replace(/^(@\S+\/)?(svelte-)?(\S+)/, '$3')
-	.replace(/^\w/, (m) => m.toUpperCase())
-	.replace(/-\w/g, (m) => m[1].toUpperCase());
+	.replace(/^\w/, m => m.toUpperCase())
+	.replace(/-\w/g, m => m[1].toUpperCase())
 
 export default {
 	input: !production ? 'src/main.js' : 'src/components/components.module.js',
@@ -56,8 +56,11 @@ export default {
 			 **/
 			preprocess: autoPreprocess({
 				postcss: true,
-				scss: { includePaths: ['src', 'node_modules'] },
 			}),
+
+			css: css => {
+				css.write('public/bundle.css')
+			},
 		}),
 
 		// If you have external dependencies installed from
@@ -70,15 +73,11 @@ export default {
 			include: ['node_modules/**'],
 		}),
 
-		// Watch the `public` directory and refresh the
-		// browser on changes when not in production
 		!production && livereload('public'),
 
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
 		production && terser(),
 	],
 	watch: {
 		clearScreen: false,
 	},
-};
+}
