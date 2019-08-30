@@ -23,7 +23,6 @@
 	}
 
 	.container-centered {
-		dispay: flex;
 		margin: 10%;
 	}
 

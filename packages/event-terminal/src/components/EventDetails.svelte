@@ -1,5 +1,6 @@
 <script>
 	import {createEventStore} from './eventStore.js'
+	import Spinner from './Spinner.svelte'
 	let result
 	let error
 	let loading
@@ -22,7 +23,7 @@
 
 <div>
 	{#if loading}
-	<p>...loading</p>
+	<Spinner show={true} />
 	{:else if result}
 	<pre>{result}</pre>
 	{:else if error}
