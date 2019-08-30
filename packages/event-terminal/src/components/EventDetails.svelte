@@ -25,7 +25,7 @@
 	{#if loading}
 	<Spinner show={true} />
 	{:else if result}
-	<pre>{result}</pre>
+	<pre class="p-5">{result}</pre>
 	{:else if error}
 	<pre>{error}</pre>
 	{/if}

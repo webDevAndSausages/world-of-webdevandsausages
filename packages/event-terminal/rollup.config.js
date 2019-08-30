@@ -5,6 +5,7 @@ import livereload from 'rollup-plugin-livereload'
 import {terser} from 'rollup-plugin-terser'
 import pkg from './package.json'
 import autoPreprocess from 'svelte-preprocess'
+import postcss from "rollup-plugin-postcss";
 import babel from 'rollup-plugin-babel'
 import replace from 'rollup-plugin-replace'
 
@@ -61,6 +62,9 @@ export default {
 			css: css => {
 				css.write('public/bundle.css')
 			},
+		}),
+		postcss({
+			extract: "public/utils.css"
 		}),
 
 		// If you have external dependencies installed from

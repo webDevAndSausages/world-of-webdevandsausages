@@ -1,5 +1,8 @@
 <script>
   export let show = false
+
+  // terminal spinner frames here: 
+  // https://github.com/sindresorhus/cli-spinners/blob/master/spinners.json
   let frames = [
 			"-",
 			"\\",
