@@ -1,9 +1,10 @@
 import {readable} from 'svelte/store'
 import {of} from 'rxjs'
 import {ajax} from 'rxjs/ajax'
-import {startWith, catchError, map, pluck} from 'rxjs/operators'
+import {startWith, catchError, map, pluck, switchMap} from 'rxjs/operators'
 import config from './config'
 import daggy from 'daggy'
+import {has, is, both} from 'ramda'
 
 const headers = {
 	Accept: 'application/json',
@@ -20,15 +21,25 @@ const Result = daggy.taggedSum('Result', {
 	Failure: ['error'],
 })
 
-export const createStore = () =>
+const isEvent = both(is(Object), has('status'))
+
+// if the event is passed in, e.g. server side rendering
+// then we can skip fetching it
+export const createEventStore = event =>
 	readable(Result.NotAsked, async set => {
-		const source = ajax({
-			url: `${config.API_ROOT}events/current`,
-			headers,
-		}).pipe(
-			pluck('response'),
-			map(v => Result.Ok(v)),
-			catchError(error => of(Result.Failure(error))),
+		const source = of(event).pipe(
+			switchMap(event =>
+				isEvent(event)
+					? of(Result.Ok(event))
+					: ajax({
+							url: `${config.API_ROOT}events/current`,
+							headers,
+					  }).pipe(
+							pluck('response'),
+							map(v => Result.Ok(v)),
+							catchError(error => of(Result.Failure(error)))
+					  )
+			),
 			startWith(Result.Pending)
 		)
 
@@ -36,5 +47,3 @@ export const createStore = () =>
 
 		return () => subscription.dispose()
 	})
-
-export const event = createStore()

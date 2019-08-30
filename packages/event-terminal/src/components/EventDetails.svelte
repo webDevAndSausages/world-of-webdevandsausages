@@ -1,16 +1,21 @@
 <script>
-	import {event} from './eventStore.js'
+	import {createEventStore} from './eventStore.js'
 	let result
 	let error
 	let loading
+	// if the event is not passed a prop
+	// the store will fetch it
+	export let eventData = null
+	const event = createEventStore(eventData)
+
 	$: $event.cata({
 		NotAsked: () => {},
 		Pending: () => 'loading',
 		Ok: data => {
 			result = JSON.stringify(data, null, 2)
 		},
-		Failure: error => {
-			error = error
+		Failure: err => {
+			error = err
 		},
 	})
 </script>
