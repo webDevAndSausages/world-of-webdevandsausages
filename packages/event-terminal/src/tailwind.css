@@ -1,3 +1,46 @@
+:root {
+	--term-brand-primary: #00bcdd;
+	--term-brand-secondary: #ff00ff;
+	--term-border-color: red;
+	--term-border-width: none;
+	--term-font-family: Inconsolata;
+	--term-font-size: 1.2rem;
+	--term-background-color: black;
+	--term-detail-text-color: white;
+	--term-expander-color: #191919;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&display=swap');
+
+.terminal-full {
+	@apply absolute top-0 left-0 bottom-0 right-0 z-10 overflow-hidden;
+	transform: scale(1);
+	transition: all 1s;
+}
+
+.terminal-centered {
+	margin: 10%;
+}
+
+.terminal-centered-return {
+	transition: all 1s;
+}
+
+.container-centered.screen {
+	height: 100%;
+}
+
+.screen {
+	border: var(--term-border-width) solid var(--term-border-color);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+	height: 100%;
+	border-radius: 8px;
+}
+
+.terminal-full .screen {
+	border-radius: 0;
+}

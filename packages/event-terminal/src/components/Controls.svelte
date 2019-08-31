@@ -18,7 +18,6 @@
 	.h-line {
 		width: 16px;
 		height: 2px;
-		background: red;
 		opacity: 0.8;
 		position: relative;
 		top: -10px !important;
@@ -28,7 +27,6 @@
 	.v-line {
 		width: 2px;
 		height: 16px;
-		background: red;
 		opacity: 0.8;
 		position: relative;
 		top: -19px !important;
@@ -42,12 +40,12 @@
 	}
 </style>
 
-<div class="term-controls">
+<div class="term-controls p-1">
 	<div class="term-expander" on:click="{store.actions.toggleExpander}">
 		<div class="circle"></div>
-		<div class="h-line"></div>
+		<div class="h-line bg-term-brand-2"></div>
 		{#if $store.open}
-		<div class="v-line"></div>
+		<div class="v-line bg-term-brand-2"></div>
 		{/if}
 	</div>
 </div>

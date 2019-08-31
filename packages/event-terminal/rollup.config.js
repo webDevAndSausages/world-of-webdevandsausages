@@ -5,7 +5,7 @@ import livereload from 'rollup-plugin-livereload'
 import {terser} from 'rollup-plugin-terser'
 import pkg from './package.json'
 import autoPreprocess from 'svelte-preprocess'
-import postcss from "rollup-plugin-postcss";
+import postcss from 'rollup-plugin-postcss'
 import babel from 'rollup-plugin-babel'
 import replace from 'rollup-plugin-replace'
 
@@ -51,10 +51,9 @@ export default {
 			// enable run-time checks when not in production
 			dev: !production,
 
-			/**
-			 * Auto preprocess supported languages with
-			 * '<template>'/'external src files' support
-			 **/
+			// for better intellisense it may help to move this
+			// to svelte.config.js and import here, especially
+			// if other preprocessers added
 			preprocess: autoPreprocess({
 				postcss: true,
 			}),
@@ -63,15 +62,11 @@ export default {
 				css.write('public/bundle.css')
 			},
 		}),
+
 		postcss({
-			extract: "public/utils.css"
+			extract: 'public/utils.css',
 		}),
 
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration —
-		// consult the documentation for details:
-		// https://github.com/rollup/rollup-plugin-commonjs
 		resolve(),
 		commonjs({
 			include: ['node_modules/**'],

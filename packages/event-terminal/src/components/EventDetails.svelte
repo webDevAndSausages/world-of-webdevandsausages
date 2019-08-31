@@ -1,19 +1,19 @@
 <script>
-	import {createEventStore} from './eventStore.js'
+	import {getContext} from 'svelte'
 	import Spinner from './Spinner.svelte'
+	import TerminalOut from './TerminalOut.svelte'
+
 	let result
 	let error
 	let loading
-	// if the event is not passed a prop
-	// the store will fetch it
-	export let eventData = null
-	const event = createEventStore(eventData)
+
+	const event = getContext('eventStore')
 
 	$: $event.cata({
 		NotAsked: () => {},
 		Pending: () => 'loading',
 		Ok: data => {
-			result = JSON.stringify(data, null, 2)
+			result = data
 		},
 		Failure: err => {
 			error = err
@@ -21,11 +21,17 @@
 	})
 </script>
 
-<div>
+<div class="font-term">
 	{#if loading}
 	<Spinner show={true} />
 	{:else if result}
-	<pre class="p-5">{result}</pre>
+	<div class="p-5">
+		<h2 class="p-2 text-lg font-bold text-term-brand-1">VOLUME {result.volume}</h2>
+		<TerminalOut title="When" detail={result.date} />
+		<TerminalOut title="What" detail={result.details} html />
+		<TerminalOut title="Where" detail={result.location} />
+		<TerminalOut title="Contact" detail={result.contact} html />
+	</div>
 	{:else if error}
 	<pre>{error}</pre>
 	{/if}
