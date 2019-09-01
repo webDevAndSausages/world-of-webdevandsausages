@@ -5,6 +5,12 @@
 
 	const event = getContext('eventStore')
 
+	function getPixelWidthOfText(txt) {
+		let ruler = document.getElementById('ruler')
+		ruler.innerText = txt
+		return ruler.offsetWidth
+	}
+
 	let commandButtons = [
 		{
 			text: 'register',
@@ -15,7 +21,7 @@
 		{
 			text: 'cancel',
 			cmd: 'x',
-			clickHandler: () => {},
+			clickHandler: () => console.log('cancel'),
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL'),
 		},
 		{
@@ -35,6 +41,13 @@
 	$: visibleCmdButtons = $event.okOrNull($event)
 		? commandButtons.filter(({show}) => show($event.okOrNull($event)))
 		: []
+
+	let cmdInputValue = ''
+	let cmdInputWidth = 20
+	function updateInputSize(e) {
+		cmdInputWidth = getPixelWidthOfText(cmdInputValue) + 10
+	}
+	$: style = `width:${cmdInputWidth}px;`
 </script>
 
 <style>
@@ -43,7 +56,7 @@
 		display: inline-block;
 		letter-spacing: 0.075em;
 		padding: 0.25rem 0.5rem;
-		margin: auto 1em 1em;
+		margin: -1em 1em 1em;
 		position: relative;
 		align-self: center;
 		border: 1px var(--term-brand-primary) solid;
@@ -122,17 +135,85 @@
 		height: 102%;
 		border-image-slice: 1;
 	}
+
+	@keyframes blink {
+		0% {
+			opacity: 0;
+		}
+		40% {
+			opacity: 0;
+		}
+		50% {
+			opacity: 1;
+		}
+		90% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+
+	#cmd-input {
+		background-color: #000;
+    color: #fff;
+    padding-left: 10px;
+    cursor: none;
+	}
+
+	.cursor {
+		padding-top: 12px;
+		height: 22px;
+		width: 10px;
+    animation: 1s blink 1s infinite;
+    pointer-events: none;
+  }
+  
+  .initial-cursor {
+    margin-left: -10px;
+  }
+
+	/* this span is just used to measure the length of the input and shouldn't be visible */
+	#ruler {
+		position: absolute;
+		right: -1000px;
+	}
 </style>
 
-<div class="pl-6 pt-0 mt-0 pb-4 text-term-brand-2 flex">
-	<div class="fix-initial" style="min-width: 60px;">
-		$ cmds:
+<div class="pl-6 pt-0 mt-0 pb-4 text-term-brand-2">
+	<div class="flex">
+		<div class="flex-initial" style="min-width: 60px;">
+			$ cmds:
+		</div>
+		<div class="flex-initial">
+			{#each visibleCmdButtons as b, i}
+			<button
+				class="text-md text-term-brand-2"
+				on:click|preventDefault="{b.clickHandler}"
+				tabindex="{i}"
+			>
+				[<span class="text-term-brand-1">{b.cmd}</span>] {b.text}
+			</button>
+			{/each}
+		</div>
 	</div>
-	<div class="fix-initial">
-		{#each visibleCmdButtons as b}
-		<button class="text-md text-term-brand-2" on:click="{b.clickHandler}">
-			[<span class="text-term-brand-1">{b.cmd}</span>] {b.text}
-		</button>
-		{/each}
+	<div class="flex">
+		<div class="flex-initial pr-2">
+			$ root@webdev:
+		</div>
+		<div class="flex-initial">
+			<span class="input-wrapper flex">
+				<input
+					id="cmd-input"
+					name="command"
+					bind:value="{cmdInputValue}"
+					style="{style}"
+					className="bg-term-base"
+          on:keyup="{updateInputSize}"
+				/>
+				<span class="cursor bg-term-brand-2" class:initial-cursor={cmdInputValue === ''}></span>
+			</span>
+			<span id="ruler"></span>
+		</div>
 	</div>
 </div>

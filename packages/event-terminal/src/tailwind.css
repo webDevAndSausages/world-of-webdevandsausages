@@ -23,7 +23,13 @@
 }
 
 .terminal-centered {
-	margin: 10%;
+	margin: 20px 10%;
+}
+
+@media (max-width: 650px) {
+	.terminal-centered {
+		margin: 20px 2%;
+	}
 }
 
 .terminal-centered-return {

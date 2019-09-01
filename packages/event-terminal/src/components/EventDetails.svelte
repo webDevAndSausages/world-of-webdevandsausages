@@ -26,7 +26,7 @@
 	<Spinner show={true} />
 	{:else if result}
 	<div class="p-5">
-		<h2 class="p-2 text-lg font-bold text-term-brand-1">VOLUME {result.volume}</h2>
+		<h2 class="p-2 text-lg font-bold text-term-brand-1">~ VOLUME {result.volume} ~</h2>
 		<TerminalOut title="When" detail={result.date} />
 		<TerminalOut title="What" detail={result.details} html />
 		<TerminalOut title="Where" detail={result.location} />
