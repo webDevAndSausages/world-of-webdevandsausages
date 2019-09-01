@@ -1,39 +1,34 @@
 <script>
 	import {getContext} from 'svelte'
-	import {showForStatusOf} from './utils'
-	import {Result} from './models/Result'
+	import {showForStatusOf, getPixelWidthOfText} from './utils'
+  import {Result} from './models/Result'
+  import {isValidCmd} from './utils'
+  
+  // TODO: inactive state
+  export let active;
 
-	const event = getContext('eventStore')
-
-	function getPixelWidthOfText(txt) {
-		let ruler = document.getElementById('ruler')
-		ruler.innerText = txt
-		return ruler.offsetWidth
-	}
+  const event = getContext('eventStore')
+  const {cmds} = getContext('terminalStore')
 
 	let commandButtons = [
 		{
 			text: 'register',
 			cmd: 'r',
-			clickHandler: () => {},
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST'),
 		},
 		{
 			text: 'cancel',
 			cmd: 'x',
-			clickHandler: () => console.log('cancel'),
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL'),
 		},
 		{
 			text: 'check',
 			cmd: 'c',
-			clickHandler: () => {},
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL'),
 		},
 		{
 			text: 'help',
 			cmd: 'h',
-			clickHandler: () => {},
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL'),
 		},
 	]
@@ -42,12 +37,40 @@
 		? commandButtons.filter(({show}) => show($event.okOrNull($event)))
 		: []
 
+  // handle size of terminal input
 	let cmdInputValue = ''
-	let cmdInputWidth = 20
-	function updateInputSize(e) {
+  let cmdInputWidth = 20
+  
+	function updateInputSize() {
 		cmdInputWidth = getPixelWidthOfText(cmdInputValue) + 10
-	}
-	$: style = `width:${cmdInputWidth}px;`
+  }
+  $: style = `width:${cmdInputWidth}px;`
+
+  function onCmd(cmd) {
+    const c = cmd.trim()
+    if (c.length && isValidCmd(c)) {
+      const cmdLetter = c.slice(0, 1).toLowerCase()
+      switch(cmdLetter) {
+        case 'r':
+          return cmds.register()
+        case 'x':
+          return cmds.cancel()
+        case 'c':
+          return cmds.check()
+        case 'h':
+          return cmds.help()
+        default:
+          return cmds.invalid({cmd})
+      }
+    } else if (c.length) {
+      return cmds.invalid({cmd})
+    }
+    return 
+  }
+  
+  function handleCmdInput(e) {
+    if(e.keyCode === 13) onCmd(cmdInputValue)
+  }
 </script>
 
 <style>
@@ -180,7 +203,7 @@
 	}
 </style>
 
-<div class="pl-6 pt-0 mt-0 pb-4 text-term-brand-2">
+<div class="pl-6 pt-4 pb-4 text-term-brand-2">
 	<div class="flex">
 		<div class="flex-initial" style="min-width: 60px;">
 			$ cmds:
@@ -189,7 +212,7 @@
 			{#each visibleCmdButtons as b, i}
 			<button
 				class="text-md text-term-brand-2"
-				on:click|preventDefault="{b.clickHandler}"
+				on:click|preventDefault="{() => onCmd(b.cmd)}"
 				tabindex="{i}"
 			>
 				[<span class="text-term-brand-1">{b.cmd}</span>] {b.text}
@@ -210,6 +233,7 @@
 					style="{style}"
 					className="bg-term-base"
           on:keyup="{updateInputSize}"
+          on:keydown="{handleCmdInput}"
 				/>
 				<span class="cursor bg-term-brand-2" class:initial-cursor={cmdInputValue === ''}></span>
 			</span>

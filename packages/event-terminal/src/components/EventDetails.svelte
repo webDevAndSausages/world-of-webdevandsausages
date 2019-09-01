@@ -25,7 +25,7 @@
 	{#if loading}
 	<Spinner show={true} />
 	{:else if result}
-	<div class="p-5">
+	<div class="pl-5 pr-5 pt-2">
 		<h2 class="p-2 text-lg font-bold text-term-brand-1">~ VOLUME {result.volume} ~</h2>
 		<TerminalOut title="When" detail={result.date} />
 		<TerminalOut title="What" detail={result.details} html />
