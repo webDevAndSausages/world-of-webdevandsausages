@@ -1,5 +1,18 @@
 import {map} from 'rxjs/operators'
-import {has, is, both, over, lensProp, propOr, compose, contains} from 'ramda'
+import {
+	has,
+	is,
+	both,
+	over,
+	lensProp,
+	propOr,
+	compose,
+	contains,
+	lte,
+	length,
+	always,
+	ifElse,
+} from 'ramda'
 import format from 'date-fns/format'
 import produce from 'immer'
 
@@ -31,3 +44,31 @@ export function getPixelWidthOfText(txt) {
 const commandsRegex = /^(r|register|x|cancel|c|check|h|help)$/
 
 export const isValidCmd = value => commandsRegex.test(value)
+
+export const normalizeCmd = cmd =>
+	cmd
+		.trim()
+		.slice(0, 1)
+		.toLowerCase()
+
+const commands = {
+	r: 'register',
+	x: 'cancel',
+	c: 'check',
+	h: 'help',
+}
+
+export const getFullCmd = cmd => {
+	const c = normalizeCmd(cmd)
+	return commands[c]
+}
+
+const emailRegex = /^.+@.+\..+$/i
+const isEmail = value => emailRegex.test(value)
+const minLen = compose(
+	lte(1),
+	length
+)
+const createValidator = (cond, msg) => ifElse(cond, always(null), always(msg))
+export const validateEmail = createValidator(isEmail, 'Invalid email')
+export const validateName = createValidator(minLen, 'A little longer please')

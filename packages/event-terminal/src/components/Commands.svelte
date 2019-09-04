@@ -2,7 +2,8 @@
 	import {getContext} from 'svelte'
 	import {showForStatusOf, getPixelWidthOfText} from './utils'
   import {Result} from './models/Result'
-  import {isValidCmd} from './utils'
+	import {isValidCmd, getFullCmd, normalizeCmd} from './utils'
+	import CmdButton from './CmdButton.svelte'
   
   // TODO: inactive state
   export let active;
@@ -47,9 +48,9 @@
   $: style = `width:${cmdInputWidth}px;`
 
   function onCmd(cmd) {
-    const c = cmd.trim()
+    const c = cmd ? cmd.trim().toLowerCase() : ''
     if (c.length && isValidCmd(c)) {
-      const cmdLetter = c.slice(0, 1).toLowerCase()
+      const cmdLetter = normalizeCmd(c)
       switch(cmdLetter) {
         case 'r':
           return cmds.register()
@@ -71,94 +72,15 @@
   function handleCmdInput(e) {
     if(e.keyCode === 13) onCmd(cmdInputValue)
   }
+
+  function handleBtnClick(cmd) {
+    if (!active) return
+    if (isValidCmd(cmd.trim().toLowerCase())) cmdInputValue = getFullCmd(cmd)
+    onCmd(cmd)
+  }
 </script>
 
 <style>
-	button {
-		cursor: pointer;
-		display: inline-block;
-		letter-spacing: 0.075em;
-		padding: 0.25rem 0.5rem;
-		margin: -1em 1em 1em;
-		position: relative;
-		align-self: center;
-		border: 1px var(--term-brand-primary) solid;
-		border-image: linear-gradient(
-			45deg,
-			var(--term-brand-primary) 0%,
-			var(--term-brand-secondary) 100%
-		);
-		border-image-slice: 1 1 0 0;
-		z-index: 1;
-		box-shadow: -0.5em 0.5em rgba(16, 24, 50, 0);
-		transform-origin: left bottom;
-		transition: all 200ms ease-in-out;
-	}
-	button:before,
-	button:after {
-		border: 1px var(--term-brand-primary) solid;
-		content: '';
-		display: block;
-		position: absolute;
-		z-index: -1;
-	}
-
-	button:before {
-		border-image: linear-gradient(
-			45deg,
-			var(--term-brand-primary) 0%,
-			#0097dd 100%
-		);
-		border-image-slice: 1 1 1 1;
-		left: -0.28em;
-		top: 0.094em;
-		width: 0.33em;
-		height: 101%;
-		transform: skewY(-45deg);
-	}
-
-	button:after {
-		border-image: linear-gradient(
-			45deg,
-			var(--term-brand-primary) 0%,
-			var(--term-brand-secondary) 100%
-		);
-		border-image-slice: 1 1 1 0;
-		bottom: -0.27em;
-		right: 0.092em;
-		width: 102%;
-		height: 0.33em;
-		transform: skewX(-45deg);
-	}
-
-	button:hover {
-		background-size: 90%;
-		transform: translate(0.2em, -0.2em);
-		box-shadow: -1em 1em 0.15em rgba(16, 24, 50, 0.1);
-	}
-
-	button:hover::after {
-		background-size: 100%;
-		background-image: linear-gradient(
-			45deg,
-			var(--term-brand-primary) 0%,
-			var(--term-brand-secondary) 101%
-		);
-		width: 101%;
-		border-image-slice: 1;
-	}
-
-	button:hover::before {
-		background-size: 100%;
-		background-image: linear-gradient(
-			45deg,
-			var(--term-brand-primary) 0%,
-			#0097dd 102%
-		);
-		height: 102%;
-		border-image-slice: 1;
-	}
-
 	@keyframes blink {
 		0% {
 			opacity: 0;
@@ -178,10 +100,7 @@
 	}
 
 	#cmd-input {
-		background-color: #000;
-    color: #fff;
     padding-left: 10px;
-    cursor: none;
 	}
 
 	.cursor {
@@ -198,25 +117,25 @@
 
 	/* this span is just used to measure the length of the input and shouldn't be visible */
 	#ruler {
-		position: absolute;
 		right: -1000px;
 	}
 </style>
 
 <div class="pl-6 pt-4 pb-4 text-term-brand-2">
 	<div class="flex">
-		<div class="flex-initial" style="min-width: 60px;">
+		<div class="flex-initial text-term-brand-2" style="min-width: 60px;">
 			$ cmds:
 		</div>
 		<div class="flex-initial">
 			{#each visibleCmdButtons as b, i}
-			<button
-				class="text-md text-term-brand-2"
-				on:click|preventDefault="{() => onCmd(b.cmd)}"
-				tabindex="{i}"
-			>
-				[<span class="text-term-brand-1">{b.cmd}</span>] {b.text}
-			</button>
+				<CmdButton cmd={b.cmd}
+					tabindex="{i}"
+					disabled={!active}
+					active={active}
+					on:cmd='{({detail}) => handleBtnClick(detail)}'
+				>
+					{b.text}
+				</CmdButton>
 			{/each}
 		</div>
 	</div>
@@ -225,19 +144,24 @@
 			$ root@webdev:
 		</div>
 		<div class="flex-initial">
-			<span class="input-wrapper flex">
-				<input
-					id="cmd-input"
-					name="command"
-					bind:value="{cmdInputValue}"
-					style="{style}"
-					className="bg-term-base"
-          on:keyup="{updateInputSize}"
-          on:keydown="{handleCmdInput}"
-				/>
-				<span class="cursor bg-term-brand-2" class:initial-cursor={cmdInputValue === ''}></span>
-			</span>
-			<span id="ruler"></span>
+      {#if active}
+        <span class="input-wrapper flex">
+          <input
+            id="cmd-input"
+            name="command"
+            bind:value="{cmdInputValue}"
+            style="{style}"
+            class="bg-term-base text-term-output"
+            on:keyup="{updateInputSize}"
+            on:keydown="{handleCmdInput}"
+            disabled={!active}
+          />
+          <span class="cursor bg-term-brand-2" class:initial-cursor={cmdInputValue === ''}></span>
+        </span>
+        <span id="ruler" class="absolute"></span>
+      {:else}
+        <div class="output text-term-output pl-5">{cmdInputValue}</div>
+      {/if}
 		</div>
 	</div>
 </div>

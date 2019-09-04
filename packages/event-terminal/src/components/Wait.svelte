@@ -4,4 +4,6 @@
   export let active
 </script>
 
-<Commands active={active} />
+<div class="w-full">
+  <Commands active={active} />
+</div>

@@ -9,8 +9,8 @@
 		$ {title}
 	</h3>
 	{#if html}
-	<p class="p-2">{@html detail}</p>
+	<p class="p-2 text-term-output">{@html detail}</p>
 	{:else}
-	<p class="p-2">{detail}</p>
+	<p class="p-2 text-term-output">{detail}</p>
 	{/if}
 </div>

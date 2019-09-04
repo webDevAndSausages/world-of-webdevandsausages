@@ -6,7 +6,7 @@
 	--term-font-family: Inconsolata;
 	--term-font-size: 1.2rem;
 	--term-background-color: black;
-	--term-detail-text-color: white;
+	--term-output-text-color: white;
 	--term-expander-color: #191919;
 }
 
@@ -49,4 +49,8 @@
 
 .terminal-full .screen {
 	border-radius: 0;
+}
+
+.term-title {
+	@apply p-2 text-lg font-bold text-term-brand-1;
 }

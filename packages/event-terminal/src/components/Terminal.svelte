@@ -8,8 +8,10 @@
   
   // if the event is not passed a prop
 	// the store will fetch it
-  export let event
+  export let event = null
   const eventStore = createEventStore(event)
+
+  $: showInteractiveTerminal = $eventStore.okOrNull($eventStore)
 
   setContext('eventStore', eventStore)
   setContext('terminalStore', terminalStore)
@@ -20,9 +22,11 @@
   <span slot="details">
     <EventDetails />
   </span>
-  <div slot="output">
-    {#each $terminalStore.history as h, i}
-      <svelte:component this={h} active={$terminalStore.currentIdx === i} />
-    {/each}
-  </div>
+    <div slot="output">
+    {#if showInteractiveTerminal}
+      {#each $terminalStore.history as h, i}
+        <svelte:component this={h} active={$terminalStore.currentIdx === i} />
+      {/each}
+    {/if}
+    </div>
 </TerminalContainer>

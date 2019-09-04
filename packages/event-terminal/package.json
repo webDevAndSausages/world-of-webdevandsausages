@@ -17,6 +17,7 @@
 		"babel-jest": "24.9.0",
 		"compression": "1.7.4",
 		"cors": "2.8.5",
+		"cssnano": "4.1.10",
 		"eslint": "6.2.2",
 		"eslint-config-prettier": "6.1.0",
 		"eslint-plugin-jest": "22.15.2",
@@ -42,7 +43,9 @@
 		"rollup-plugin-terser": "5.1.1",
 		"sirv": "0.4.2",
 		"svelte": "3.9.1",
-		"svelte-preprocess": "2.15.1"
+		"svelte-preprocess": "2.15.1",
+		"tailwindcss-elevation": "0.3.2",
+		"tinycolor2": "1.4.1"
 	},
 	"scripts": {
 		"lint": "eslint --color ./**/*.js",
@@ -81,6 +84,7 @@
 	},
 	"dependencies": {
 		"@fullhuman/postcss-purgecss": "1.2.0",
+		"classcat": "4.0.2",
 		"daggy": "1.4.0",
 		"date-fns": "2.0.1",
 		"immer": "3.2.0",
