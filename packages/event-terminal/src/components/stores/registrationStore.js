@@ -1,5 +1,5 @@
 import {writable, derived} from 'svelte/store'
-import {mapActions, validateEmail, validateName} from '../utils'
+import {validateEmail, validateName} from '../utils'
 import {Result} from '../models/Result'
 import {evolve, always} from 'ramda'
 
@@ -10,30 +10,12 @@ const initialFormValues = {
 	affiliation: '',
 }
 
-const initialState = {
+export const initialState = {
 	values: initialFormValues,
 	result: Result.NotAsked,
 }
 
-// add components
-const actions = {
-	submit: state => {
-		state.values = {...state.form}
-		state.result = Result.Pending
-	},
-	reset: state => {
-		state.values = initialFormValues
-		state.result = Result.NotAsked
-	},
-}
-
-function reduce(actions, initialState) {
-	const store = writable(initialState)
-	const mappedActions = mapActions(actions, store)
-	return {...store, cmds: mappedActions}
-}
-
-export const registrationStore = reduce(actions, initialState)
+export const registrationStore = writable(initialState)
 
 const validations = {
 	email: validateEmail,

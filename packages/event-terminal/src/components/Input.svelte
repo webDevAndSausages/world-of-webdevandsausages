@@ -17,16 +17,15 @@
 	export let error = null
 	export let type = 'text'
 	export let loading = false
+	export let maxChars = null
+	export let disabled = false
 
 	let _id
-
-	onMount(() => {
-		_id = !id && label ? label.split(' ').join('-') : id
-	})
-
 	let focused = false
+	let focusChange = 0
 	let labelClasses = ''
 	let inputClasses = ''
+	let inputEl
 	$: labelOnTop = focused || value
 	$: labelClasses = cc([
 		{
@@ -40,8 +39,24 @@
 		'outline-none px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 bg-black text-white bg-transparent',
 	])
 
-	let focusChange = 0
+	onMount(() => {
+		_id = !id && label ? label.split(' ').join('-') : id
+
+		if (maxChars != null) inputEl.setAttribute('maxlength', maxChars)
+
+		document.addEventListener('reset', reset, {passive: true})
+
+		return () =>
+			document.removeEventListener('reset', reset, {passive: true})
+	})
+
 	$: showError = focusChange >= 2
+
+	function reset() {
+		focused = false
+		focusChange = 0
+		value = ''
+	}
 
 	function toggleFocused() {
 		focused = !focused
@@ -88,6 +103,11 @@
 		);
 		border-image-slice: 1 1 1 1;
 	}
+
+	input.disabled {
+		opacity: 0.7;
+		cursor: not-allowed !important;
+	}
 </style>
 
 <div class="mt-1 relative pb-4">
@@ -113,6 +133,7 @@
 		{/if}
 		<input
 			id="{_id}"
+			bind:this="{inputEl}"
 			aria-label="{label}"
 			class="{inputClasses}"
 			on:focus="{toggleFocused}"
@@ -121,6 +142,9 @@
 			{value}
 			on:input="{onInput}"
 			class:active="{labelOnTop}"
+			class:disabled="{disabled}"
+			{disabled}
+			accesskey="r"
 		/>
 	</div>
 	{#if showError && error}

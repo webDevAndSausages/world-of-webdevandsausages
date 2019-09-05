@@ -1,4 +1,3 @@
-import {map} from 'rxjs/operators'
 import {
 	has,
 	is,
@@ -18,8 +17,8 @@ import produce from 'immer'
 
 export const isEvent = both(is(Object), has('status'))
 
-export const formatDate = map(
-	over(lensProp('date'), date => format(date, 'MMMM do, yyyy, HH:mm'))
+export const formatDate = over(lensProp('date'), date =>
+	format(date, 'MMMM do, yyyy, HH:mm')
 )
 
 export const showForStatusOf = (...statuses) =>

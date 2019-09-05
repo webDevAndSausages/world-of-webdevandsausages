@@ -128,10 +128,10 @@
 		</div>
 		<div class="flex-initial">
 			{#each visibleCmdButtons as b, i}
-				<CmdButton cmd={b.cmd}
+				<CmdButton
+					cmd={b.cmd}
 					tabindex="{i}"
 					disabled={!active}
-					active={active}
 					on:cmd='{({detail}) => handleBtnClick(detail)}'
 				>
 					{b.text}

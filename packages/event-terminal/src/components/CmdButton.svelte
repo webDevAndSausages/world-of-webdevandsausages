@@ -1,26 +1,28 @@
 <script>
 	import {createEventDispatcher} from 'svelte'
+	import {pick} from 'ramda'
 	export let cmd
-	export let active = true
-	export let disabled = !active
-	export let style
+	export let disabled = false
+	export let style = ''
+	export let tabindex = null
+	export let type = 'button'
 
 	const dispatch = createEventDispatcher()
 </script>
 
 <style>
-	button {
+	button.term {
 		cursor: pointer;
 		display: inline-block;
 		letter-spacing: 0.075em;
 		padding: 0.25rem 0.5rem;
-		margin: -1em 1em 1em;
+		margin: -0.2em 1em 1em;
 		position: relative;
 		align-self: center;
 		z-index: 1;
 	}
 
-	button {
+	button.term {
 		border: 1px var(--term-brand-primary) solid;
 		border-image: linear-gradient(
 			45deg,
@@ -33,8 +35,8 @@
 		transition: all 200ms ease-in-out;
 	}
 
-	button:before,
-	button:after {
+	button.term:before,
+	button.term:after {
 		border: 1px var(--term-brand-primary) solid;
 		content: '';
 		display: block;
@@ -42,7 +44,7 @@
 		z-index: -1;
 	}
 
-	button:before {
+	button.term:before {
 		border-image: linear-gradient(
 			45deg,
 			var(--term-brand-primary) 0%,
@@ -56,7 +58,7 @@
 		transform: skewY(-45deg);
 	}
 
-	button:after {
+	button.term:after {
 		border-image: linear-gradient(
 			45deg,
 			var(--term-brand-primary) 0%,
@@ -70,13 +72,13 @@
 		transform: skewX(-45deg);
 	}
 
-	button.active:hover {
+	button.term.active:hover {
 		background-size: 90%;
 		transform: translate(0.2em, -0.2em);
 		box-shadow: -1em 1em 0.15em rgba(16, 24, 50, 0.1);
 	}
 
-	button.active:hover::after {
+	button.term.active:hover::after {
 		background-size: 100%;
 		background-image: linear-gradient(
 			45deg,
@@ -87,7 +89,7 @@
 		border-image-slice: 1;
 	}
 
-	button.active:hover::before {
+	button.term.active:hover::before {
 		background-size: 100%;
 		background-image: linear-gradient(
 			45deg,
@@ -98,26 +100,18 @@
 		border-image-slice: 1;
 	}
 
-	button.disabled {
+	button.term.disabled {
 		cursor: not-allowed;
-		background: none;
-		border-color: gray;
-	}
-
-	button.disabled:before,
-	button.disabled:after {
-		background: gray;
-		border-color: gray;
+		opacity: 0.6;
 	}
 </style>
 
 <button
-	{...$$props}
-	class="text-md text-term-brand-2"
+	class="term text-md text-term-brand-2"
 	on:click|preventDefault="{() => dispatch('cmd', cmd)}"
 	class:disabled="{disabled}"
-	class:active="{active}"
-	style="{style}"
+	class:active="{!disabled}"
+	{type}
 >
 	[<span class="text-term-brand-1">{cmd}</span>] <slot></slot>
 </button>

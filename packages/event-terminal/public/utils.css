@@ -8579,6 +8579,23 @@ video {
   color: var(--term-brand-primary);
 }
 
+/* Change Autocomplete styles in Chrome*/
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid #000;
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  transition: #000 5000s ease-in-out 0s;
+}
+
 @media (min-width: 640px) {
   .sm\:sr-only {
     position: absolute;

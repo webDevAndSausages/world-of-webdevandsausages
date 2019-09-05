@@ -1,41 +1,26 @@
 import {readable} from 'svelte/store'
-import {of} from 'rxjs'
-import {ajax} from 'rxjs/ajax'
-import {startWith, catchError, map, pluck, switchMap} from 'rxjs/operators'
+import ky from 'ky'
+import api from '../api'
 import config from '../config'
 import {Result} from '../models/Result'
 import {isEvent, formatDate} from '../utils'
 
-const headers = {
-	Accept: 'application/json',
-	'wds-key': 'WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27',
-	'Content-Type': 'application/json',
-	crossDomain: true,
-	withCredentials: true,
-}
-
-// if the event is passed in, e.g. server side rendering
+// if the event is passed in, e.g. ssr
 // then we can skip fetching it
 export const createEventStore = event =>
-	readable(Result.NotAsked, async set => {
-		const source = of(event).pipe(
-			switchMap(event =>
-				isEvent(event)
-					? of(Result.Ok(event).pipe(formatDate))
-					: ajax({
-							url: `${config.API_ROOT}events/current`,
-							headers,
-					  }).pipe(
-							pluck('response'),
-							formatDate,
-							map(v => Result.Ok(v)),
-							catchError(error => of(Result.Failure(error)))
-					  )
-			),
-			startWith(Result.Pending)
-		)
+	readable(Result.Pending, async set => {
+		if (isEvent(event)) {
+			set(Result.Ok(event))
+		} else {
+			const response = await ky(api.currentEvent, {
+				method: 'GET',
+				headers: config.headers,
+			})
 
-		const subscription = source.subscribe(set)
-
-		return () => subscription.dispose()
+			if (!response.ok) {
+				set(Result.Error(response.statusText))
+			}
+			const parsed = await response.json()
+			set(Result.Ok(formatDate(parsed)))
+		}
 	})
