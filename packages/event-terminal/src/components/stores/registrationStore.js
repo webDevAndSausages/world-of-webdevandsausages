@@ -1,7 +1,8 @@
-import {writable, derived} from 'svelte/store'
+import {writable, derived, readable} from 'svelte/store'
 import {validateEmail, validateName} from '../utils'
 import {Result} from '../models/Result'
-import {evolve, always} from 'ramda'
+import {evolve, always, identity} from 'ramda'
+import {successAscii} from '../ascii/success'
 
 const initialFormValues = {
 	email: '',
@@ -27,6 +28,21 @@ const validations = {
 export const validationStore = derived(registrationStore, $r => {
 	const errors = evolve(validations, $r.values)
 	const errorResults = Object.values(errors)
-	const isValid = errorResults.filter(Boolean).length === errorResults.length
+	const isValid = errorResults.filter(identity).length === 0
 	return {errors, isValid}
+})
+
+const LINE_DISPLAY_DELAY = 200
+
+export const successAsciiStore = readable('', set => {
+	const successArray = successAscii.split('\n')
+	function getLines(initial) {
+		setTimeout(() => {
+			const nextLine = initial + '\n' + successArray[0]
+			set(nextLine)
+			successArray.shift()
+			if (successArray.length > 0) getLines(nextLine)
+		}, LINE_DISPLAY_DELAY)
+	}
+	getLines('')
 })

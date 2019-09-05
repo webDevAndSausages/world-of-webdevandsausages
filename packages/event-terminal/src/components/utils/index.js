@@ -50,16 +50,27 @@ export const normalizeCmd = cmd =>
 		.slice(0, 1)
 		.toLowerCase()
 
-const commands = {
+const terminalCommands = {
 	r: 'register',
 	x: 'cancel',
 	c: 'check',
 	h: 'help',
 }
 
-export const getFullCmd = cmd => {
+const registrationCommands = {
+	s: 'submit',
+	x: 'cancel',
+	r: 'reset',
+}
+
+export const getFullTerminalCmd = cmd => {
 	const c = normalizeCmd(cmd)
-	return commands[c]
+	return terminalCommands[c]
+}
+
+export const getFullRegistrationCmd = cmd => {
+	const c = normalizeCmd(cmd)
+	return registrationCommands[c]
 }
 
 const emailRegex = /^.+@.+\..+$/i

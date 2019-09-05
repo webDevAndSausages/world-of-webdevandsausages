@@ -1,8 +1,9 @@
 <script>
-	import {getContext} from 'svelte'
+	import {getContext, onMount, onDestroy} from 'svelte'
 	import {writable} from 'svelte/store'
 	import Input from './Input.svelte'
 	import CmdButton from './CmdButton.svelte'
+	import CmdInput from './CmdInput.svelte'
 	import ky from 'ky'
 	import config from './config'
 	import api from './api'
@@ -11,7 +12,14 @@
 		registrationStore,
 		validationStore,
 		initialState,
+		successAsciiStore,
 	} from './stores/registrationStore'
+	import {getFullRegistrationCmd, normalizeCmd} from './utils'
+
+	const {cmds} = getContext('terminalStore')
+	const event = getContext('eventStore')
+
+	let subscription = null
 
 	export let active
 
@@ -20,8 +28,9 @@
 	let successData = null
 	let failureMsg = null
 	let failureStatus = null
+	let success = ''
+	let cmdInputValue = ''
 
-	let event = getContext('eventStore')
 	let eventId = $event.okOrNull($event).id
 	async function submit(_ev) {
 		if (!eventId) return
@@ -48,15 +57,44 @@
 		$result = Result.Ok(parsed)
 	}
 
-	const cmds = {
-		r: () => {
-			document.getElementById('registration').reset()
-		},
-		s: submit,
-	}
+	const cmdsMap = {
+			r: () => {
+				document.getElementById('registration').reset()
+			},
+			s: submit,
+			x: cmds.wait
+		}
+
+	function onCmd(cmd) {
+			const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
+			console.log(c)
+			if (c.length) {
+				switch (c) {
+					case 'r':
+						return cmdsMap.r()
+					case 's':
+						return cmdsMap.s()
+					case 'x':
+						return cmds.wait()
+					default:
+						return cmds.invalid({ cmd })
+				}
+			} else if (c.length) {
+				return cmds.invalid({ cmd })
+			}
+			return
+		}
 
 	function handleBtnClick(cmd) {
-		cmds[cmd] && cmds[cmd]()
+		if(cmdsMap[cmd]) {
+			cmdsMap[cmd]()
+			cmdInputValue = getFullRegistrationCmd(cmd)
+		}
+	}
+
+	function getMsg() {
+		// must be manual, with  autosubribe $, the whole message is created before rendering
+		successAsciiStore.subscribe(val => (success = val))
 	}
 
 	$: $result.cata({
@@ -66,6 +104,7 @@
 			resultLoading = false
 			successData = data
 			active = false
+			getMsg()
 		},
 		Failure: error => {
 			resultLoading = false
@@ -76,91 +115,109 @@
 			active = false
 		},
 	})
+
+	onDestroy(() => {
+		subscription.unsubscribe && subscription.unsubscribe()
+	})
 </script>
 
 <style>
 	.registration {
 	}
+
+	.success-ascii {
+		min-height: 200px;
+	}
 </style>
 
-<form
-	on:submit|preventDefault="{submit}"
-	class="registration flex-col m-5"
-	id="registration"
->
-	<h2 class="term-title mb-5">~ REGISTRATION ~</h2>
-	<fieldset class="flex-1">
-		<Input
-			label="email"
-			type="email"
-			bind:value="{$registrationStore.values.email}"
-			error="{$validationStore.errors.email}"
-			disabled="{!active}"
-		/>
-	</fieldset>
-	<fieldset class="flex-1">
-		<Input
-			label="first name"
-			bind:value="{$registrationStore.values.firstName}"
-			error="{$validationStore.errors.firstName}"
-			disabled="{!active}"
-		/>
-	</fieldset>
-	<fieldset class="flex-1">
-		<Input
-			label="last name"
-			bind:value="{$registrationStore.values.lastName}"
-			error="{$validationStore.errors.lastName}"
-			disabled="{!active}"
-		/>
-	</fieldset>
-	<fieldset class="flex-1">
-		<Input
-			label="affiliation"
-			bind:value="{$registrationStore.values.affiliation}"
-			error="{$validationStore.errors.affiliation}"
-			disabled="{!active}"
-		/>
-	</fieldset>
-	<div class="flex-initial pt-5">
-		<div class="flex align-middle">
-			<div
-				class="flex-initial text-term-brand-2"
-				style="min-width: 60px;"
-			>
-				$ cmds:
+<div class="registration flex-col m-5">
+	<form
+		on:submit|preventDefault="{submit}"
+		id="registration"
+	>
+		<h2 class="term-title mb-5">~ REGISTRATION ~</h2>
+		<fieldset class="flex-1">
+			<Input
+				label="email"
+				type="email"
+				bind:value="{$registrationStore.values.email}"
+				error="{$validationStore.errors.email}"
+				disabled="{!active}"
+			/>
+		</fieldset>
+		<fieldset class="flex-1">
+			<Input
+				label="first name"
+				bind:value="{$registrationStore.values.firstName}"
+				error="{$validationStore.errors.firstName}"
+				disabled="{!active}"
+			/>
+		</fieldset>
+		<fieldset class="flex-1">
+			<Input
+				label="last name"
+				bind:value="{$registrationStore.values.lastName}"
+				error="{$validationStore.errors.lastName}"
+				disabled="{!active}"
+			/>
+		</fieldset>
+		<fieldset class="flex-1">
+			<Input
+				label="affiliation"
+				bind:value="{$registrationStore.values.affiliation}"
+				error="{$validationStore.errors.affiliation}"
+				disabled="{!active}"
+			/>
+		</fieldset>
+		<div class="flex-initial pt-5">
+			<div class="flex align-middle">
+				<div
+					class="flex-initial text-term-brand-2"
+					style="min-width: 60px;"
+				>
+					$ cmds:
+				</div>
+				<CmdButton
+					cmd="s"
+					type="submit"
+					tabindex="1"
+					on:cmd="{({detail}) => handleBtnClick(detail)}"
+					disabled="{!active || !$validationStore.isValid}"
+				>
+					submit
+				</CmdButton>
+				<CmdButton
+					cmd="r"
+					type="reset"
+					tabindex="2"
+					on:cmd="{({detail}) => handleBtnClick(detail)}"
+					disabled="{!active}"
+				>
+					reset
+				</CmdButton>
+				<CmdButton
+					cmd="x"
+					tabindex="3"
+					on:cmd="{({detail}) => handleBtnClick(detail)}"
+					disabled="{!active}"
+				>
+					cancel
+				</CmdButton>
 			</div>
-			<CmdButton
-				cmd="s"
-				type="submit"
-				tabindex="1"
-				on:cmd="{({detail}) => handleBtnClick(detail)}"
-				disabled="{!active}"
-			>
-				save
-			</CmdButton>
-			<CmdButton
-				cmd="r"
-				type="reset"
-				tabindex="2"
-				on:cmd="{({detail}) => handleBtnClick(detail)}"
-				disabled="{!active}"
-			>
-				reset
-			</CmdButton>
-			<CmdButton
-				cmd="x"
-				tabindex="3"
-				on:cmd="{({detail}) => handleBtnClick(detail)}"
-				disabled="{!active}"
-			>
-				close
-			</CmdButton>
 		</div>
-	</div>
-</form>
-<div style="color:white;">
+	</form>
+	{#if $validationStore.isValid}
+		<CmdInput on:cmd="{({detail}) => onCmd(detail)}" bind:value={cmdInputValue} active={active} />
+	{/if}
+</div>
+
+<div>
 	{#if resultLoading} loading... {/if} {#if successData}
-	<pre>{JSON.stringify(successData, null, 2)}</pre>
-	{/if} {#if failureMsg} {failureStatus}: {failureMsg} {/if}
+	<div class="ml-16 success-ascii text-term-brand-2">
+		<pre>{success}</pre>
+	</div>
+	{/if}
+	<div>
+		{#if failureMsg} {failureStatus}: {failureMsg} {/if}
+	</div>
 </div>

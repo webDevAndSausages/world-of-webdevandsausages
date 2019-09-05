@@ -144,7 +144,6 @@
 			class:active="{labelOnTop}"
 			class:disabled="{disabled}"
 			{disabled}
-			accesskey="r"
 		/>
 	</div>
 	{#if showError && error}
