@@ -1,5 +1,8 @@
 <script>
+  import cc from 'classcat'
   export let show = false
+  export let className = ""
+
 
   // terminal spinner frames here: 
   // https://github.com/sindresorhus/cli-spinners/blob/master/spinners.json
@@ -30,8 +33,12 @@
     font-size: 30px;
     padding: 20px;
   }
+  .prompt {
+    color: var(--term-brand-secondary);
+    font-size: 16px;
+  }
 </style>
 
-<div class="term-spinner">
-  {frames[currentFrame]}
+<div class={cc(["term-spinner", className])}>
+  <span class="prompt">$</span> {frames[currentFrame]}
 </div>

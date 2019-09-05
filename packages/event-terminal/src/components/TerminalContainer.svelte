@@ -13,6 +13,9 @@
 
 <div class="terminal-{containerClass}">
 	<div class="screen p-3 text-term-text bg-term-base">
+		<div class="controls-container">
+			<Controls />
+		</div>
 		<slot name="details">No current event</slot>
 		<slot name="output"></slot>
 	</div>

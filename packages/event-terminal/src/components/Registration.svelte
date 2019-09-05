@@ -2,6 +2,7 @@
 	import {getContext, onMount, onDestroy} from 'svelte'
 	import {writable} from 'svelte/store'
 	import Input from './Input.svelte'
+	import Spinner from './Spinner.svelte'
 	import CmdButton from './CmdButton.svelte'
 	import CmdInput from './CmdInput.svelte'
 	import ky from 'ky'
@@ -67,7 +68,6 @@
 
 	function onCmd(cmd) {
 			const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
-			console.log(c)
 			if (c.length) {
 				switch (c) {
 					case 'r':
@@ -77,10 +77,10 @@
 					case 'x':
 						return cmds.wait()
 					default:
-						return cmds.invalid({ cmd })
+						return cmds.invalid({cmd})
 				}
 			} else if (c.length) {
-				return cmds.invalid({ cmd })
+				return cmds.invalid({cmd})
 			}
 			return
 		}
@@ -95,6 +95,7 @@
 	function getMsg() {
 		// must be manual, with  autosubribe $, the whole message is created before rendering
 		successAsciiStore.subscribe(val => (success = val))
+		setTimeout(() => cmds.wait(), 3000)
 	}
 
 	$: $result.cata({
@@ -130,7 +131,7 @@
 	}
 </style>
 
-<div class="registration flex-col m-5">
+<div class="registration flex-col mt-5 ml-5 mr-5 mb-0 pb-0">
 	<form
 		on:submit|preventDefault="{submit}"
 		id="registration"
@@ -211,13 +212,26 @@
 	{/if}
 </div>
 
-<div>
-	{#if resultLoading} loading... {/if} {#if successData}
-	<div class="ml-16 success-ascii text-term-brand-2">
-		<pre>{success}</pre>
+{#if resultLoading}
+	<div class="text-term-brand-1">
+			<Spinner show={true} />
 	</div>
-	{/if}
-	<div>
-		{#if failureMsg} {failureStatus}: {failureMsg} {/if}
+{/if} 
+	
+{#if successData}
+	<div class="flex flex-col lg:flex-row mb-5">
+		<div class="ml-16 success-ascii text-term-brand-2 flex-initial">
+			<pre>{success}</pre>
+		</div>
+		<div class="ml-16 mr-16 success-ascii text-term-brand-2 flex-initial pt-5">
+			asdassadasasda
+			adasdasasdasdasdasdasdadasdasda
+			sdadasdsadasdasdasdasdasd
+			dasdasasdasdas
+		</div>
 	</div>
-</div>
+{/if}
+
+{#if failureMsg} 
+	<div>{failureStatus}: {failureMsg}</div>
+{/if}

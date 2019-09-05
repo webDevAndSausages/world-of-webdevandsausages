@@ -23,7 +23,7 @@
 
 <div class="font-term">
 	{#if loading}
-	<Spinner show={true} />
+		<Spinner show={true} />
 	{:else if result}
 	<div class="pl-5 pr-5 pt-2">
 		<h2 class="term-title">~ VOLUME {result.volume} ~</h2>
