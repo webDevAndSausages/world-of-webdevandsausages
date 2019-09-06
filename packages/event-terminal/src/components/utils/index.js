@@ -10,7 +10,7 @@ import {
 	lte,
 	length,
 	always,
-	ifElse,
+	ifElse
 } from 'ramda'
 import format from 'date-fns/format'
 import produce from 'immer'
@@ -34,8 +34,8 @@ export const mapActions = (actions, state) =>
 		return acc
 	}, {})
 
-export function getPixelWidthOfText(txt) {
-	let ruler = document.getElementById('ruler')
+export const getPixelWidthOfText = id => txt => {
+	let ruler = document.getElementById(id)
 	ruler.innerText = txt
 	return ruler.offsetWidth
 }
@@ -75,10 +75,11 @@ export const getFullRegistrationCmd = cmd => {
 
 const emailRegex = /^.+@.+\..+$/i
 const isEmail = value => emailRegex.test(value)
-const minLen = compose(
-	lte(1),
+const minLen = (min) => compose(
+	lte(min),
 	length
 )
 const createValidator = (cond, msg) => ifElse(cond, always(null), always(msg))
 export const validateEmail = createValidator(isEmail, 'Invalid email')
-export const validateName = createValidator(minLen, 'A little longer please')
+export const validateName = createValidator(minLen(1), 'A little longer please')
+export const isValidToken = createValidator(both(contains('-'), minLen(5)),'Invalid token format')

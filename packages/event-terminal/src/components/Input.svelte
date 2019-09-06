@@ -46,16 +46,17 @@
 
 		document.addEventListener('reset', reset, {passive: true})
 
-		return () =>
-			document.removeEventListener('reset', reset, {passive: true})
+		return () => document.removeEventListener('reset', reset, {passive: true})
 	})
 
-	$: showError = focusChange >= 2
+	$: showError = focusChange >= 2 && !disabled
 
 	function reset() {
-		focused = false
-		focusChange = 0
-		value = ''
+		if (!disabled) {
+			focused = false
+			focusChange = 0
+			value = ''
+		}
 	}
 
 	function toggleFocused() {
@@ -111,42 +112,39 @@
 </style>
 
 <div class="mt-1 relative pb-4">
-	<div class="relative" class:text-error-500="{error}">
+	<div class="relative" class:text-error-500={error}>
 		{#if labelOnTop}
-		<label
-			class="{labelClasses}"
-			for="{_id}"
-			in:receive="{{key:_id}}"
-			out:send="{{key:_id}}"
-		>
-			<div>$ {label}</div>
-		</label>
+			<label
+				class={labelClasses}
+				for={_id}
+				in:receive={{key: _id}}
+				out:send={{key: _id}}>
+				<div>$ {label}</div>
+			</label>
 		{:else}
-		<label
-			class="{labelClasses}"
-			for="{_id}"
-			in:receive="{{key:_id}}"
-			out:send="{{key:_id}}"
-		>
-			{label}
-		</label>
+			<label
+				class={labelClasses}
+				for={_id}
+				in:receive={{key: _id}}
+				out:send={{key: _id}}>
+				{label}
+			</label>
 		{/if}
 		<input
-			id="{_id}"
-			bind:this="{inputEl}"
-			aria-label="{label}"
-			class="{inputClasses}"
-			on:focus="{toggleFocused}"
-			on:blur="{toggleFocused}"
-			type="{type}"
+			id={_id}
+			bind:this={inputEl}
+			aria-label={label}
+			class={inputClasses}
+			on:focus={toggleFocused}
+			on:blur={toggleFocused}
+			{type}
 			{value}
-			on:input="{onInput}"
-			class:active="{labelOnTop}"
-			class:disabled="{disabled}"
-			{disabled}
-		/>
+			on:input={onInput}
+			class:active={labelOnTop}
+			class:disabled
+			{disabled} />
 	</div>
 	{#if showError && error}
-	<span class="text-yellow-300 text-sm">{error}</span>
+		<span class="text-term-error text-sm">{error}</span>
 	{/if}
 </div>

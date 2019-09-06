@@ -108,10 +108,12 @@
 
 <button
 	class="term text-md text-term-brand-2"
-	on:click|preventDefault="{() => dispatch('cmd', cmd)}"
-	class:disabled="{disabled}"
-	class:active="{!disabled}"
-	{type}
->
-	[<span class="text-term-brand-1">{cmd}</span>] <slot></slot>
+	on:click|preventDefault={() => dispatch('cmd', cmd)}
+	class:disabled
+	class:active={!disabled}
+	{type}>
+	[
+	<span class="text-term-brand-1">{cmd}</span>
+	]
+	<slot />
 </button>

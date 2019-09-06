@@ -1,7 +1,9 @@
 :root {
 	--term-brand-primary: #00bcdd;
 	--term-brand-secondary: #ff00ff;
-	--term-border-color: red;
+	--term-error: #fefb67;
+	--term-success: #5ff967;
+	--term-border-color: none;
 	--term-border-width: none;
 	--term-font-family: Inconsolata;
 	--term-font-size: 1.2rem;

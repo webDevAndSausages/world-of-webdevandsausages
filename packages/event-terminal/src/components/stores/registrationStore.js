@@ -1,6 +1,5 @@
 import {writable, derived, readable} from 'svelte/store'
 import {validateEmail, validateName} from '../utils'
-import {Result} from '../models/Result'
 import {evolve, always, identity} from 'ramda'
 import {successAscii} from '../ascii/success'
 
@@ -12,11 +11,10 @@ const initialFormValues = {
 }
 
 export const initialState = {
-	values: initialFormValues,
-	result: Result.NotAsked,
+	values: initialFormValues
 }
 
-export const registrationStore = writable(initialState)
+export const createFormValuesStore = () => writable(initialState)
 
 const validations = {
 	email: validateEmail,
@@ -25,7 +23,7 @@ const validations = {
 	affiliation: always(null),
 }
 
-export const validationStore = derived(registrationStore, $r => {
+export const createValidationStore = formValuesStore => derived(formValuesStore, $r => {
 	const errors = evolve(validations, $r.values)
 	const errorResults = Object.values(errors)
 	const isValid = errorResults.filter(identity).length === 0

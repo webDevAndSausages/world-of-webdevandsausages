@@ -2,6 +2,7 @@
 	import {getContext} from 'svelte'
 	import Spinner from './Spinner.svelte'
 	import TerminalOut from './TerminalOut.svelte'
+	import TerminalTitle from './TerminalTitle.svelte'
 
 	let result
 	let error
@@ -11,12 +12,14 @@
 
 	$: $event.cata({
 		NotAsked: () => {},
-		Pending: () => 'loading',
+		Pending: () => (loading = true),
 		Ok: data => {
 			result = data
+			loading = false
 		},
 		Failure: err => {
 			error = err
+			loading = false
 		},
 	})
 </script>
@@ -25,14 +28,12 @@
 	{#if loading}
 		<Spinner show={true} />
 	{:else if result}
-	<div class="pl-5 pr-5 pt-2">
-		<h2 class="term-title">~ VOLUME {result.volume} ~</h2>
+		<TerminalTitle>VOLUME {result.volume}</TerminalTitle>
 		<TerminalOut title="When" detail={result.date} />
 		<TerminalOut title="What" detail={result.details} html />
 		<TerminalOut title="Where" detail={result.location} />
 		<TerminalOut title="Contact" detail={result.contact} html />
-	</div>
 	{:else if error}
-	<pre>{error}</pre>
+		<pre>{error}</pre>
 	{/if}
 </div>

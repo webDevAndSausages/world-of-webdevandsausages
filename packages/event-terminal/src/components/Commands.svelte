@@ -71,23 +71,25 @@
 	}
 </script>
 
-<div class="pl-6 pt-4 pb-4 text-term-brand-2">
+<div class="pl-2 pr-2 pt-4 pb-4 text-term-brand-2">
 	<div class="flex">
 		<div class="flex-initial text-term-brand-2" style="min-width: 60px;">
 			$ cmds:
 		</div>
 		<div class="flex-initial">
 			{#each visibleCmdButtons as b, i}
-			<CmdButton
-				cmd="{b.cmd}"
-				tabindex="{i}"
-				disabled="{!active}"
-				on:cmd="{({detail}) => handleBtnClick(detail)}"
-			>
-				{b.text}
-			</CmdButton>
+				<CmdButton
+					cmd={b.cmd}
+					tabindex={i}
+					disabled={!active}
+					on:cmd={({detail}) => handleBtnClick(detail)}>
+					{b.text}
+				</CmdButton>
 			{/each}
 		</div>
 	</div>
-	<CmdInput on:cmd="{({detail}) => onCmd(detail)}" bind:value={cmdInputValue} active={active} />
+	<CmdInput
+		on:cmd={({detail}) => onCmd(detail)}
+		bind:value={cmdInputValue}
+		{active} />
 </div>

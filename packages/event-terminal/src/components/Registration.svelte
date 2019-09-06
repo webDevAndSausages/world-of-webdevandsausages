@@ -1,36 +1,59 @@
 <script>
-	import {getContext, onMount, onDestroy} from 'svelte'
+	import {getContext, onMount, onDestroy, tick} from 'svelte'
 	import {writable} from 'svelte/store'
 	import Input from './Input.svelte'
 	import Spinner from './Spinner.svelte'
 	import CmdButton from './CmdButton.svelte'
 	import CmdInput from './CmdInput.svelte'
+	import TerminalTitle from './TerminalTitle.svelte'
+	import SuccessOut from './SuccessOut.svelte'
+	import FailureOut from './FailureOut.svelte'
 	import ky from 'ky'
 	import config from './config'
 	import api from './api'
 	import {Result} from './models/Result'
 	import {
-		registrationStore,
-		validationStore,
+		createFormValuesStore,
+		createValidationStore,
 		initialState,
 		successAsciiStore,
 	} from './stores/registrationStore'
 	import {getFullRegistrationCmd, normalizeCmd} from './utils'
+
+	onMount(() => {
+		cmdsMap.r()
+	})
+
+	/*
+		async function scroll() {
+			await tick()
+			const resultId = `result-${index}`
+			const elem = document.getElementById(resultId);
+			if(elem) {
+				elem.scrollIntoView()
+			}
+		}
+	*/
+
+	const formValuesStore = createFormValuesStore()
+	const validationStore = createValidationStore(formValuesStore)
 
 	const {cmds} = getContext('terminalStore')
 	const event = getContext('eventStore')
 
 	let subscription = null
 
-	export let active
+	export let active = true
+	export let index
+	export let id
 
 	let result = writable(Result.NotAsked)
 	let resultLoading = null
 	let successData = null
-	let failureMsg = null
-	let failureStatus = null
+	let failureData = null
 	let success = ''
 	let cmdInputValue = ''
+	let formId = `registration-${index}`
 
 	let eventId = $event.okOrNull($event).id
 	async function submit(_ev) {
@@ -38,7 +61,7 @@
 		const response = await ky(api.register(eventId), {
 			method: 'POST',
 			headers: config.headers,
-			body: JSON.stringify($registrationStore.values),
+			body: JSON.stringify($formValuesStore.values),
 			hooks: {
 				afterResponse: [
 					async (_input, _options, response) => {
@@ -59,34 +82,34 @@
 	}
 
 	const cmdsMap = {
-			r: () => {
-				document.getElementById('registration').reset()
-			},
-			s: submit,
-			x: cmds.wait
-		}
+		r: () => {
+			document.getElementById(formId).reset()
+		},
+		s: submit,
+		x: cmds.wait,
+	}
 
 	function onCmd(cmd) {
-			const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
-			if (c.length) {
-				switch (c) {
-					case 'r':
-						return cmdsMap.r()
-					case 's':
-						return cmdsMap.s()
-					case 'x':
-						return cmds.wait()
-					default:
-						return cmds.invalid({cmd})
-				}
-			} else if (c.length) {
-				return cmds.invalid({cmd})
+		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
+		if (c.length) {
+			switch (c) {
+				case 'r':
+					return cmdsMap.r()
+				case 's':
+					return cmdsMap.s()
+				case 'x':
+					return cmds.wait()
+				default:
+					return cmds.invalid({cmd})
 			}
-			return
+		} else if (c.length) {
+			return cmds.invalid({cmd})
 		}
+		return
+	}
 
 	function handleBtnClick(cmd) {
-		if(cmdsMap[cmd]) {
+		if (cmdsMap[cmd]) {
 			cmdsMap[cmd]()
 			cmdInputValue = getFullRegistrationCmd(cmd)
 		}
@@ -103,17 +126,26 @@
 		Pending: () => (resultLoading = true),
 		Ok: data => {
 			resultLoading = false
-			successData = data
+			successData = {
+				...data.registered,
+				displayStatus: data.registered.status.split('_').join('-'),
+			}
 			active = false
-			getMsg()
+			if (successData.status === 'REGISTERED') {
+				getMsg()
+			} else {
+				cmds.wait()
+			}
 		},
 		Failure: error => {
 			resultLoading = false
-			failureMsg = error.message
-				? error.message
-				: 'A mysterious error occurred on the server.'
-			failureStatus = error.status
-			active = false
+			failureData = {
+				message: error.message
+					? error.message
+					: 'A mysterious error occurred on the server.',
+				status: error.status,
+			}
+			cmds.wait()
 		},
 	})
 
@@ -131,107 +163,109 @@
 	}
 </style>
 
-<div class="registration flex-col mt-5 ml-5 mr-5 mb-0 pb-0">
-	<form
-		on:submit|preventDefault="{submit}"
-		id="registration"
-	>
-		<h2 class="term-title mb-5">~ REGISTRATION ~</h2>
+<TerminalTitle>REGISTRATION</TerminalTitle>
+<div {id} class="registration flex-col p-2 pt-4">
+	<form on:submit|preventDefault={submit} id={formId}>
 		<fieldset class="flex-1">
 			<Input
 				label="email"
 				type="email"
-				bind:value="{$registrationStore.values.email}"
-				error="{$validationStore.errors.email}"
-				disabled="{!active}"
-			/>
+				bind:value={$formValuesStore.values.email}
+				error={$validationStore.errors.email}
+				disabled={!active} />
 		</fieldset>
 		<fieldset class="flex-1">
 			<Input
 				label="first name"
-				bind:value="{$registrationStore.values.firstName}"
-				error="{$validationStore.errors.firstName}"
-				disabled="{!active}"
-			/>
+				bind:value={$formValuesStore.values.firstName}
+				error={$validationStore.errors.firstName}
+				disabled={!active} />
 		</fieldset>
 		<fieldset class="flex-1">
 			<Input
 				label="last name"
-				bind:value="{$registrationStore.values.lastName}"
-				error="{$validationStore.errors.lastName}"
-				disabled="{!active}"
-			/>
+				bind:value={$formValuesStore.values.lastName}
+				error={$validationStore.errors.lastName}
+				disabled={!active} />
 		</fieldset>
 		<fieldset class="flex-1">
 			<Input
 				label="affiliation"
-				bind:value="{$registrationStore.values.affiliation}"
-				error="{$validationStore.errors.affiliation}"
-				disabled="{!active}"
-			/>
+				bind:value={$formValuesStore.values.affiliation}
+				error={$validationStore.errors.affiliation}
+				disabled={!active} />
 		</fieldset>
 		<div class="flex-initial pt-5">
 			<div class="flex align-middle">
-				<div
-					class="flex-initial text-term-brand-2"
-					style="min-width: 60px;"
-				>
+				<div class="flex-initial text-term-brand-2" style="min-width: 60px;">
 					$ cmds:
 				</div>
 				<CmdButton
 					cmd="s"
 					type="submit"
 					tabindex="1"
-					on:cmd="{({detail}) => handleBtnClick(detail)}"
-					disabled="{!active || !$validationStore.isValid}"
-				>
+					on:cmd={({detail}) => handleBtnClick(detail)}
+					disabled={!active || !$validationStore.isValid}>
 					submit
 				</CmdButton>
 				<CmdButton
 					cmd="r"
 					type="reset"
 					tabindex="2"
-					on:cmd="{({detail}) => handleBtnClick(detail)}"
-					disabled="{!active}"
-				>
+					on:cmd={({detail}) => handleBtnClick(detail)}
+					disabled={!active}>
 					reset
 				</CmdButton>
 				<CmdButton
 					cmd="x"
 					tabindex="3"
-					on:cmd="{({detail}) => handleBtnClick(detail)}"
-					disabled="{!active}"
-				>
+					on:cmd={({detail}) => handleBtnClick(detail)}
+					disabled={!active}>
 					cancel
 				</CmdButton>
 			</div>
 		</div>
 	</form>
 	{#if $validationStore.isValid}
-		<CmdInput on:cmd="{({detail}) => onCmd(detail)}" bind:value={cmdInputValue} active={active} />
+		<CmdInput
+			on:cmd={({detail}) => onCmd(detail)}
+			bind:value={cmdInputValue}
+			active={!!active}
+			{index} />
 	{/if}
 </div>
 
-{#if resultLoading}
-	<div class="text-term-brand-1">
-			<Spinner show={true} />
-	</div>
-{/if} 
-	
-{#if successData}
-	<div class="flex flex-col lg:flex-row mb-5">
-		<div class="ml-16 success-ascii text-term-brand-2 flex-initial">
-			<pre>{success}</pre>
-		</div>
-		<div class="ml-16 mr-16 success-ascii text-term-brand-2 flex-initial pt-5">
-			asdassadasasda
-			adasdasasdasdasdasdasdadasdasda
-			sdadasdsadasdasdasdasdasd
-			dasdasasdasdas
-		</div>
-	</div>
-{/if}
+<section id={`result-${index}`}>
+	{#if resultLoading}
+		<Spinner show={true} />
+	{/if}
 
-{#if failureMsg} 
-	<div>{failureStatus}: {failureMsg}</div>
-{/if}
+	{#if successData}
+		<div class="flex flex-col text-white pb-8">
+			<SuccessOut>
+				<div class="flex-initial">You are {successData.displayStatus}</div>
+				{#if successData.status === 'WAIT_LISTED' && successData.orderNumber}
+					<div class="flex-initial pt-1">
+						You are number {successData.orderNumber} in the waiting list.
+					</div>
+				{/if}
+				<div class="flex-initial pt-1">
+					Your verification token:
+					<span class="text-term-brand-2 pl-2">
+						{successData.verificationToken}
+					</span>
+				</div>
+			</SuccessOut>
+			{#if successData.status === 'REGISTERED'}
+				<div
+					class="flex w-full justify-center success-ascii text-term-brand-1 -m-6">
+					<pre>{success}</pre>
+				</div>
+			{/if}
+		</div>
+	{/if}
+
+	{#if failureData}
+		<FailureOut status={failureData.status} message={failureData.message} />
+	{/if}
+</section>

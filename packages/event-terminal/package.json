@@ -10,6 +10,7 @@
 		"@babel/plugin-syntax-dynamic-import": "7.2.0",
 		"@babel/plugin-transform-runtime": "7.5.5",
 		"@babel/preset-env": "7.5.5",
+		"@fullhuman/postcss-purgecss": "1.2.0",
 		"@testing-library/jest-dom": "4.1.0",
 		"@testing-library/svelte": "1.8.0",
 		"@types/jest": "24.0.18",
@@ -23,7 +24,6 @@
 		"eslint-plugin-jest": "22.15.2",
 		"eslint-plugin-svelte3": "2.7.3",
 		"express": "4.17.1",
-		"@fullhuman/postcss-purgecss": "1.2.0",
 		"http-proxy-middleware": "0.19.1",
 		"husky": "3.0.4",
 		"jest": "24.9.0",
@@ -34,6 +34,7 @@
 		"postcss": "7.0.17",
 		"postcss-import": "12.0.1",
 		"prettier": "1.18.2",
+		"prettier-plugin-svelte": "0.7.0",
 		"rollup": "1.20.2",
 		"rollup-plugin-babel": "4.3.3",
 		"rollup-plugin-commonjs": "10.0.2",
@@ -50,13 +51,16 @@
 		"tinycolor2": "1.4.1"
 	},
 	"scripts": {
-		"lint": "eslint --color ./**/*.js",
+		"lint": "eslint --color ./src/**/*.js",
 		"test": "jest --verbose",
 		"autobuild": "rollup -c -w",
 		"start:dev": "node devServer.js",
 		"dev": "run-p start:dev autobuild",
 		"build": "rollup -c",
-		"prepublishOnly": "npm run build"
+		"prepublishOnly": "npm run build",
+		"format-svelte": "prettier --write --plugin-search-dir=. ./src/**/*.svelte",
+		"format-js": "prettier --config ./.prettierrc --write ./src/**/*.js",
+		"format": "npm run format-svelte && npm run format-js"
 	},
 	"browserslist": [
 		"defaults"

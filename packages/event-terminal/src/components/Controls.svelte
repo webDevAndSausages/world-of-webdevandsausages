@@ -41,11 +41,11 @@
 </style>
 
 <div class="term-controls p-1">
-	<div class="term-expander" on:click="{store.actions.toggleExpander}">
-		<div class="circle"></div>
-		<div class="h-line bg-term-brand-2"></div>
+	<div class="term-expander" on:click={store.actions.toggleExpander}>
+		<div class="circle" />
+		<div class="h-line bg-term-brand-2" />
 		{#if $store.open}
-		<div class="v-line bg-term-brand-2"></div>
+			<div class="v-line bg-term-brand-2" />
 		{/if}
 	</div>
 </div>

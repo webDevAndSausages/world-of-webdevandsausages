@@ -1,7 +1,9 @@
 :root {
   --term-brand-primary: #00bcdd;
   --term-brand-secondary: #ff00ff;
-  --term-border-color: red;
+  --term-error: #fefb67;
+  --term-success: #5ff967;
+  --term-border-color: none;
   --term-border-width: none;
   --term-font-family: Inconsolata;
   --term-font-size: 1.2rem;
@@ -1064,6 +1066,14 @@ video {
   background-color: var(--term-brand-secondary);
 }
 
+.bg-term-success {
+  background-color: var(--term-success);
+}
+
+.bg-term-error {
+  background-color: var(--term-error);
+}
+
 .bg-term-base {
   background-color: var(--term-background-color);
 }
@@ -1452,6 +1462,14 @@ video {
   background-color: var(--term-brand-secondary);
 }
 
+.hover\:bg-term-success:hover {
+  background-color: var(--term-success);
+}
+
+.hover\:bg-term-error:hover {
+  background-color: var(--term-error);
+}
+
 .hover\:bg-term-base:hover {
   background-color: var(--term-background-color);
 }
@@ -1838,6 +1856,14 @@ video {
 
 .focus\:bg-term-brand-2:focus {
   background-color: var(--term-brand-secondary);
+}
+
+.focus\:bg-term-success:focus {
+  background-color: var(--term-success);
+}
+
+.focus\:bg-term-error:focus {
+  background-color: var(--term-error);
 }
 
 .focus\:bg-term-base:focus {
@@ -2308,6 +2334,14 @@ video {
   border-color: var(--term-brand-secondary);
 }
 
+.border-term-success {
+  border-color: var(--term-success);
+}
+
+.border-term-error {
+  border-color: var(--term-error);
+}
+
 .border-term-base {
   border-color: var(--term-background-color);
 }
@@ -2696,6 +2730,14 @@ video {
   border-color: var(--term-brand-secondary);
 }
 
+.hover\:border-term-success:hover {
+  border-color: var(--term-success);
+}
+
+.hover\:border-term-error:hover {
+  border-color: var(--term-error);
+}
+
 .hover\:border-term-base:hover {
   border-color: var(--term-background-color);
 }
@@ -3082,6 +3124,14 @@ video {
 
 .focus\:border-term-brand-2:focus {
   border-color: var(--term-brand-secondary);
+}
+
+.focus\:border-term-success:focus {
+  border-color: var(--term-success);
+}
+
+.focus\:border-term-error:focus {
+  border-color: var(--term-error);
 }
 
 .focus\:border-term-base:focus {
@@ -6292,6 +6342,14 @@ video {
   color: var(--term-brand-secondary);
 }
 
+.placeholder-term-success::placeholder {
+  color: var(--term-success);
+}
+
+.placeholder-term-error::placeholder {
+  color: var(--term-error);
+}
+
 .placeholder-term-base::placeholder {
   color: var(--term-background-color);
 }
@@ -6678,6 +6736,14 @@ video {
 
 .focus\:placeholder-term-brand-2:focus::placeholder {
   color: var(--term-brand-secondary);
+}
+
+.focus\:placeholder-term-success:focus::placeholder {
+  color: var(--term-success);
+}
+
+.focus\:placeholder-term-error:focus::placeholder {
+  color: var(--term-error);
 }
 
 .focus\:placeholder-term-base:focus::placeholder {
@@ -7306,6 +7372,14 @@ video {
   color: var(--term-brand-secondary);
 }
 
+.text-term-success {
+  color: var(--term-success);
+}
+
+.text-term-error {
+  color: var(--term-error);
+}
+
 .text-term-base {
   color: var(--term-background-color);
 }
@@ -7694,6 +7768,14 @@ video {
   color: var(--term-brand-secondary);
 }
 
+.hover\:text-term-success:hover {
+  color: var(--term-success);
+}
+
+.hover\:text-term-error:hover {
+  color: var(--term-error);
+}
+
 .hover\:text-term-base:hover {
   color: var(--term-background-color);
 }
@@ -8080,6 +8162,14 @@ video {
 
 .focus\:text-term-brand-2:focus {
   color: var(--term-brand-secondary);
+}
+
+.focus\:text-term-success:focus {
+  color: var(--term-success);
+}
+
+.focus\:text-term-error:focus {
+  color: var(--term-error);
 }
 
 .focus\:text-term-base:focus {
@@ -9039,6 +9129,14 @@ select:-webkit-autofill:focus {
     background-color: var(--term-brand-secondary);
   }
 
+  .sm\:bg-term-success {
+    background-color: var(--term-success);
+  }
+
+  .sm\:bg-term-error {
+    background-color: var(--term-error);
+  }
+
   .sm\:bg-term-base {
     background-color: var(--term-background-color);
   }
@@ -9427,6 +9525,14 @@ select:-webkit-autofill:focus {
     background-color: var(--term-brand-secondary);
   }
 
+  .sm\:hover\:bg-term-success:hover {
+    background-color: var(--term-success);
+  }
+
+  .sm\:hover\:bg-term-error:hover {
+    background-color: var(--term-error);
+  }
+
   .sm\:hover\:bg-term-base:hover {
     background-color: var(--term-background-color);
   }
@@ -9813,6 +9919,14 @@ select:-webkit-autofill:focus {
 
   .sm\:focus\:bg-term-brand-2:focus {
     background-color: var(--term-brand-secondary);
+  }
+
+  .sm\:focus\:bg-term-success:focus {
+    background-color: var(--term-success);
+  }
+
+  .sm\:focus\:bg-term-error:focus {
+    background-color: var(--term-error);
   }
 
   .sm\:focus\:bg-term-base:focus {
@@ -10283,6 +10397,14 @@ select:-webkit-autofill:focus {
     border-color: var(--term-brand-secondary);
   }
 
+  .sm\:border-term-success {
+    border-color: var(--term-success);
+  }
+
+  .sm\:border-term-error {
+    border-color: var(--term-error);
+  }
+
   .sm\:border-term-base {
     border-color: var(--term-background-color);
   }
@@ -10671,6 +10793,14 @@ select:-webkit-autofill:focus {
     border-color: var(--term-brand-secondary);
   }
 
+  .sm\:hover\:border-term-success:hover {
+    border-color: var(--term-success);
+  }
+
+  .sm\:hover\:border-term-error:hover {
+    border-color: var(--term-error);
+  }
+
   .sm\:hover\:border-term-base:hover {
     border-color: var(--term-background-color);
   }
@@ -11057,6 +11187,14 @@ select:-webkit-autofill:focus {
 
   .sm\:focus\:border-term-brand-2:focus {
     border-color: var(--term-brand-secondary);
+  }
+
+  .sm\:focus\:border-term-success:focus {
+    border-color: var(--term-success);
+  }
+
+  .sm\:focus\:border-term-error:focus {
+    border-color: var(--term-error);
   }
 
   .sm\:focus\:border-term-base:focus {
@@ -14267,6 +14405,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .sm\:placeholder-term-success::placeholder {
+    color: var(--term-success);
+  }
+
+  .sm\:placeholder-term-error::placeholder {
+    color: var(--term-error);
+  }
+
   .sm\:placeholder-term-base::placeholder {
     color: var(--term-background-color);
   }
@@ -14653,6 +14799,14 @@ select:-webkit-autofill:focus {
 
   .sm\:focus\:placeholder-term-brand-2:focus::placeholder {
     color: var(--term-brand-secondary);
+  }
+
+  .sm\:focus\:placeholder-term-success:focus::placeholder {
+    color: var(--term-success);
+  }
+
+  .sm\:focus\:placeholder-term-error:focus::placeholder {
+    color: var(--term-error);
   }
 
   .sm\:focus\:placeholder-term-base:focus::placeholder {
@@ -15281,6 +15435,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .sm\:text-term-success {
+    color: var(--term-success);
+  }
+
+  .sm\:text-term-error {
+    color: var(--term-error);
+  }
+
   .sm\:text-term-base {
     color: var(--term-background-color);
   }
@@ -15669,6 +15831,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .sm\:hover\:text-term-success:hover {
+    color: var(--term-success);
+  }
+
+  .sm\:hover\:text-term-error:hover {
+    color: var(--term-error);
+  }
+
   .sm\:hover\:text-term-base:hover {
     color: var(--term-background-color);
   }
@@ -16055,6 +16225,14 @@ select:-webkit-autofill:focus {
 
   .sm\:focus\:text-term-brand-2:focus {
     color: var(--term-brand-secondary);
+  }
+
+  .sm\:focus\:text-term-success:focus {
+    color: var(--term-success);
+  }
+
+  .sm\:focus\:text-term-error:focus {
+    color: var(--term-error);
   }
 
   .sm\:focus\:text-term-base:focus {
@@ -16950,6 +17128,14 @@ select:-webkit-autofill:focus {
     background-color: var(--term-brand-secondary);
   }
 
+  .md\:bg-term-success {
+    background-color: var(--term-success);
+  }
+
+  .md\:bg-term-error {
+    background-color: var(--term-error);
+  }
+
   .md\:bg-term-base {
     background-color: var(--term-background-color);
   }
@@ -17338,6 +17524,14 @@ select:-webkit-autofill:focus {
     background-color: var(--term-brand-secondary);
   }
 
+  .md\:hover\:bg-term-success:hover {
+    background-color: var(--term-success);
+  }
+
+  .md\:hover\:bg-term-error:hover {
+    background-color: var(--term-error);
+  }
+
   .md\:hover\:bg-term-base:hover {
     background-color: var(--term-background-color);
   }
@@ -17724,6 +17918,14 @@ select:-webkit-autofill:focus {
 
   .md\:focus\:bg-term-brand-2:focus {
     background-color: var(--term-brand-secondary);
+  }
+
+  .md\:focus\:bg-term-success:focus {
+    background-color: var(--term-success);
+  }
+
+  .md\:focus\:bg-term-error:focus {
+    background-color: var(--term-error);
   }
 
   .md\:focus\:bg-term-base:focus {
@@ -18194,6 +18396,14 @@ select:-webkit-autofill:focus {
     border-color: var(--term-brand-secondary);
   }
 
+  .md\:border-term-success {
+    border-color: var(--term-success);
+  }
+
+  .md\:border-term-error {
+    border-color: var(--term-error);
+  }
+
   .md\:border-term-base {
     border-color: var(--term-background-color);
   }
@@ -18582,6 +18792,14 @@ select:-webkit-autofill:focus {
     border-color: var(--term-brand-secondary);
   }
 
+  .md\:hover\:border-term-success:hover {
+    border-color: var(--term-success);
+  }
+
+  .md\:hover\:border-term-error:hover {
+    border-color: var(--term-error);
+  }
+
   .md\:hover\:border-term-base:hover {
     border-color: var(--term-background-color);
   }
@@ -18968,6 +19186,14 @@ select:-webkit-autofill:focus {
 
   .md\:focus\:border-term-brand-2:focus {
     border-color: var(--term-brand-secondary);
+  }
+
+  .md\:focus\:border-term-success:focus {
+    border-color: var(--term-success);
+  }
+
+  .md\:focus\:border-term-error:focus {
+    border-color: var(--term-error);
   }
 
   .md\:focus\:border-term-base:focus {
@@ -22178,6 +22404,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .md\:placeholder-term-success::placeholder {
+    color: var(--term-success);
+  }
+
+  .md\:placeholder-term-error::placeholder {
+    color: var(--term-error);
+  }
+
   .md\:placeholder-term-base::placeholder {
     color: var(--term-background-color);
   }
@@ -22564,6 +22798,14 @@ select:-webkit-autofill:focus {
 
   .md\:focus\:placeholder-term-brand-2:focus::placeholder {
     color: var(--term-brand-secondary);
+  }
+
+  .md\:focus\:placeholder-term-success:focus::placeholder {
+    color: var(--term-success);
+  }
+
+  .md\:focus\:placeholder-term-error:focus::placeholder {
+    color: var(--term-error);
   }
 
   .md\:focus\:placeholder-term-base:focus::placeholder {
@@ -23192,6 +23434,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .md\:text-term-success {
+    color: var(--term-success);
+  }
+
+  .md\:text-term-error {
+    color: var(--term-error);
+  }
+
   .md\:text-term-base {
     color: var(--term-background-color);
   }
@@ -23580,6 +23830,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .md\:hover\:text-term-success:hover {
+    color: var(--term-success);
+  }
+
+  .md\:hover\:text-term-error:hover {
+    color: var(--term-error);
+  }
+
   .md\:hover\:text-term-base:hover {
     color: var(--term-background-color);
   }
@@ -23966,6 +24224,14 @@ select:-webkit-autofill:focus {
 
   .md\:focus\:text-term-brand-2:focus {
     color: var(--term-brand-secondary);
+  }
+
+  .md\:focus\:text-term-success:focus {
+    color: var(--term-success);
+  }
+
+  .md\:focus\:text-term-error:focus {
+    color: var(--term-error);
   }
 
   .md\:focus\:text-term-base:focus {
@@ -24861,6 +25127,14 @@ select:-webkit-autofill:focus {
     background-color: var(--term-brand-secondary);
   }
 
+  .lg\:bg-term-success {
+    background-color: var(--term-success);
+  }
+
+  .lg\:bg-term-error {
+    background-color: var(--term-error);
+  }
+
   .lg\:bg-term-base {
     background-color: var(--term-background-color);
   }
@@ -25249,6 +25523,14 @@ select:-webkit-autofill:focus {
     background-color: var(--term-brand-secondary);
   }
 
+  .lg\:hover\:bg-term-success:hover {
+    background-color: var(--term-success);
+  }
+
+  .lg\:hover\:bg-term-error:hover {
+    background-color: var(--term-error);
+  }
+
   .lg\:hover\:bg-term-base:hover {
     background-color: var(--term-background-color);
   }
@@ -25635,6 +25917,14 @@ select:-webkit-autofill:focus {
 
   .lg\:focus\:bg-term-brand-2:focus {
     background-color: var(--term-brand-secondary);
+  }
+
+  .lg\:focus\:bg-term-success:focus {
+    background-color: var(--term-success);
+  }
+
+  .lg\:focus\:bg-term-error:focus {
+    background-color: var(--term-error);
   }
 
   .lg\:focus\:bg-term-base:focus {
@@ -26105,6 +26395,14 @@ select:-webkit-autofill:focus {
     border-color: var(--term-brand-secondary);
   }
 
+  .lg\:border-term-success {
+    border-color: var(--term-success);
+  }
+
+  .lg\:border-term-error {
+    border-color: var(--term-error);
+  }
+
   .lg\:border-term-base {
     border-color: var(--term-background-color);
   }
@@ -26493,6 +26791,14 @@ select:-webkit-autofill:focus {
     border-color: var(--term-brand-secondary);
   }
 
+  .lg\:hover\:border-term-success:hover {
+    border-color: var(--term-success);
+  }
+
+  .lg\:hover\:border-term-error:hover {
+    border-color: var(--term-error);
+  }
+
   .lg\:hover\:border-term-base:hover {
     border-color: var(--term-background-color);
   }
@@ -26879,6 +27185,14 @@ select:-webkit-autofill:focus {
 
   .lg\:focus\:border-term-brand-2:focus {
     border-color: var(--term-brand-secondary);
+  }
+
+  .lg\:focus\:border-term-success:focus {
+    border-color: var(--term-success);
+  }
+
+  .lg\:focus\:border-term-error:focus {
+    border-color: var(--term-error);
   }
 
   .lg\:focus\:border-term-base:focus {
@@ -30089,6 +30403,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .lg\:placeholder-term-success::placeholder {
+    color: var(--term-success);
+  }
+
+  .lg\:placeholder-term-error::placeholder {
+    color: var(--term-error);
+  }
+
   .lg\:placeholder-term-base::placeholder {
     color: var(--term-background-color);
   }
@@ -30475,6 +30797,14 @@ select:-webkit-autofill:focus {
 
   .lg\:focus\:placeholder-term-brand-2:focus::placeholder {
     color: var(--term-brand-secondary);
+  }
+
+  .lg\:focus\:placeholder-term-success:focus::placeholder {
+    color: var(--term-success);
+  }
+
+  .lg\:focus\:placeholder-term-error:focus::placeholder {
+    color: var(--term-error);
   }
 
   .lg\:focus\:placeholder-term-base:focus::placeholder {
@@ -31103,6 +31433,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .lg\:text-term-success {
+    color: var(--term-success);
+  }
+
+  .lg\:text-term-error {
+    color: var(--term-error);
+  }
+
   .lg\:text-term-base {
     color: var(--term-background-color);
   }
@@ -31491,6 +31829,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .lg\:hover\:text-term-success:hover {
+    color: var(--term-success);
+  }
+
+  .lg\:hover\:text-term-error:hover {
+    color: var(--term-error);
+  }
+
   .lg\:hover\:text-term-base:hover {
     color: var(--term-background-color);
   }
@@ -31877,6 +32223,14 @@ select:-webkit-autofill:focus {
 
   .lg\:focus\:text-term-brand-2:focus {
     color: var(--term-brand-secondary);
+  }
+
+  .lg\:focus\:text-term-success:focus {
+    color: var(--term-success);
+  }
+
+  .lg\:focus\:text-term-error:focus {
+    color: var(--term-error);
   }
 
   .lg\:focus\:text-term-base:focus {
@@ -32772,6 +33126,14 @@ select:-webkit-autofill:focus {
     background-color: var(--term-brand-secondary);
   }
 
+  .xl\:bg-term-success {
+    background-color: var(--term-success);
+  }
+
+  .xl\:bg-term-error {
+    background-color: var(--term-error);
+  }
+
   .xl\:bg-term-base {
     background-color: var(--term-background-color);
   }
@@ -33160,6 +33522,14 @@ select:-webkit-autofill:focus {
     background-color: var(--term-brand-secondary);
   }
 
+  .xl\:hover\:bg-term-success:hover {
+    background-color: var(--term-success);
+  }
+
+  .xl\:hover\:bg-term-error:hover {
+    background-color: var(--term-error);
+  }
+
   .xl\:hover\:bg-term-base:hover {
     background-color: var(--term-background-color);
   }
@@ -33546,6 +33916,14 @@ select:-webkit-autofill:focus {
 
   .xl\:focus\:bg-term-brand-2:focus {
     background-color: var(--term-brand-secondary);
+  }
+
+  .xl\:focus\:bg-term-success:focus {
+    background-color: var(--term-success);
+  }
+
+  .xl\:focus\:bg-term-error:focus {
+    background-color: var(--term-error);
   }
 
   .xl\:focus\:bg-term-base:focus {
@@ -34016,6 +34394,14 @@ select:-webkit-autofill:focus {
     border-color: var(--term-brand-secondary);
   }
 
+  .xl\:border-term-success {
+    border-color: var(--term-success);
+  }
+
+  .xl\:border-term-error {
+    border-color: var(--term-error);
+  }
+
   .xl\:border-term-base {
     border-color: var(--term-background-color);
   }
@@ -34404,6 +34790,14 @@ select:-webkit-autofill:focus {
     border-color: var(--term-brand-secondary);
   }
 
+  .xl\:hover\:border-term-success:hover {
+    border-color: var(--term-success);
+  }
+
+  .xl\:hover\:border-term-error:hover {
+    border-color: var(--term-error);
+  }
+
   .xl\:hover\:border-term-base:hover {
     border-color: var(--term-background-color);
   }
@@ -34790,6 +35184,14 @@ select:-webkit-autofill:focus {
 
   .xl\:focus\:border-term-brand-2:focus {
     border-color: var(--term-brand-secondary);
+  }
+
+  .xl\:focus\:border-term-success:focus {
+    border-color: var(--term-success);
+  }
+
+  .xl\:focus\:border-term-error:focus {
+    border-color: var(--term-error);
   }
 
   .xl\:focus\:border-term-base:focus {
@@ -38000,6 +38402,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .xl\:placeholder-term-success::placeholder {
+    color: var(--term-success);
+  }
+
+  .xl\:placeholder-term-error::placeholder {
+    color: var(--term-error);
+  }
+
   .xl\:placeholder-term-base::placeholder {
     color: var(--term-background-color);
   }
@@ -38386,6 +38796,14 @@ select:-webkit-autofill:focus {
 
   .xl\:focus\:placeholder-term-brand-2:focus::placeholder {
     color: var(--term-brand-secondary);
+  }
+
+  .xl\:focus\:placeholder-term-success:focus::placeholder {
+    color: var(--term-success);
+  }
+
+  .xl\:focus\:placeholder-term-error:focus::placeholder {
+    color: var(--term-error);
   }
 
   .xl\:focus\:placeholder-term-base:focus::placeholder {
@@ -39014,6 +39432,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .xl\:text-term-success {
+    color: var(--term-success);
+  }
+
+  .xl\:text-term-error {
+    color: var(--term-error);
+  }
+
   .xl\:text-term-base {
     color: var(--term-background-color);
   }
@@ -39402,6 +39828,14 @@ select:-webkit-autofill:focus {
     color: var(--term-brand-secondary);
   }
 
+  .xl\:hover\:text-term-success:hover {
+    color: var(--term-success);
+  }
+
+  .xl\:hover\:text-term-error:hover {
+    color: var(--term-error);
+  }
+
   .xl\:hover\:text-term-base:hover {
     color: var(--term-background-color);
   }
@@ -39788,6 +40222,14 @@ select:-webkit-autofill:focus {
 
   .xl\:focus\:text-term-brand-2:focus {
     color: var(--term-brand-secondary);
+  }
+
+  .xl\:focus\:text-term-success:focus {
+    color: var(--term-success);
+  }
+
+  .xl\:focus\:text-term-error:focus {
+    color: var(--term-error);
   }
 
   .xl\:focus\:text-term-base:focus {
