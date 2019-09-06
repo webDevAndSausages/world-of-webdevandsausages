@@ -8,6 +8,7 @@
 
 	// TODO: inactive state
 	export let active
+	export let index
 
 	const event = getContext('eventStore')
 	const {cmds} = getContext('terminalStore')
@@ -91,5 +92,6 @@
 	<CmdInput
 		on:cmd={({detail}) => onCmd(detail)}
 		bind:value={cmdInputValue}
+		{index}
 		{active} />
 </div>

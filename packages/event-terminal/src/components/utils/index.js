@@ -83,3 +83,5 @@ const createValidator = (cond, msg) => ifElse(cond, always(null), always(msg))
 export const validateEmail = createValidator(isEmail, 'Invalid email')
 export const validateName = createValidator(minLen(1), 'A little longer please')
 export const isValidToken = createValidator(both(contains('-'), minLen(5)),'Invalid token format')
+
+export const isString = is(String)

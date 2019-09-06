@@ -3,13 +3,11 @@
 	import {writable} from 'svelte/store'
 	import Input from './Input.svelte'
 	import Spinner from './Spinner.svelte'
-	import CmdButton from './CmdButton.svelte'
 	import CmdInput from './CmdInput.svelte'
 	import TerminalTitle from './TerminalTitle.svelte'
 	import FailureOut from './FailureOut.svelte'
-	import SuccessOut from './SuccessOut.svelte'
-	import ky from 'ky'
-	import config from './config'
+  import SuccessOut from './SuccessOut.svelte'
+  import FormButtons from './FormButtons.svelte'
 	import api from './api'
 	import {Result} from './models/Result'
 	import {
@@ -17,6 +15,7 @@
 		createTokenValidationStore,
 	} from './stores/tokenStore'
 	import {getFullRegistrationCmd, normalizeCmd} from './utils'
+	import {createRequest} from './utils/request'
 
 	onMount(() => {
 		cmdsMap.r()
@@ -52,28 +51,20 @@
 	let formId = `check-${index}`
 
 	let eventId = $event.okOrNull($event).id
+
 	async function submit(_ev) {
 		if (!eventId) return
-		const response = await ky(api.checkRegistration(eventId, $token.trim()), {
-			method: 'GET',
-			headers: config.headers,
-			hooks: {
-				afterResponse: [
-					async (_input, _options, response) => {
-						if (response.status >= 400) {
-							const errorParsed = await response.json()
-							$result = Result.Failure({
-								...errorParsed,
-								status: response.status,
-							})
-						}
-					},
-				],
-			},
-		})
-
-		const parsed = await response.json()
-		$result = Result.Ok(parsed)
+		const response = await createRequest(
+			api.checkRegistration(eventId, $token.trim()),
+			'GET',
+			result
+		)
+		try {
+			const parsed = await response.json()
+			$result = Result.Ok(parsed)
+		} catch (e) {
+			console.log('Failed to parse response')
+		}
 	}
 
 	const cmdsMap = {
@@ -135,15 +126,6 @@
 	})
 </script>
 
-<style>
-	.registration {
-	}
-
-	.success-ascii {
-		min-height: 200px;
-	}
-</style>
-
 <TerminalTitle>CHECK YOUR REGISTRATION</TerminalTitle>
 <div {id} class="registration flex-col p-2 pt-4">
 	<form on:submit|preventDefault={submit} id={formId}>
@@ -153,37 +135,8 @@
 				bind:value={$token}
 				error={$tokenError}
 				disabled={!active} />
-		</fieldset>
-		<div class="flex-initial pt-5">
-			<div class="flex align-middle">
-				<div class="flex-initial text-term-brand-2" style="min-width: 60px;">
-					$ cmds:
-				</div>
-				<CmdButton
-					cmd="s"
-					type="submit"
-					tabindex="1"
-					on:cmd={({detail}) => handleBtnClick(detail)}
-					disabled={!active || $tokenError}>
-					submit
-				</CmdButton>
-				<CmdButton
-					cmd="r"
-					type="reset"
-					tabindex="2"
-					on:cmd={({detail}) => handleBtnClick(detail)}
-					disabled={!active}>
-					reset
-				</CmdButton>
-				<CmdButton
-					cmd="x"
-					tabindex="3"
-					on:cmd={({detail}) => handleBtnClick(detail)}
-					disabled={!active}>
-					cancel
-				</CmdButton>
-			</div>
-		</div>
+    </fieldset>
+    <FormButtons handleClick={handleBtnClick} disabled={!active || $tokenError} />
 	</form>
 	{#if !$tokenError}
 		<CmdInput

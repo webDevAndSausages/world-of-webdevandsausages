@@ -3,7 +3,7 @@
 	import {writable} from 'svelte/store'
 	import Input from './Input.svelte'
 	import Spinner from './Spinner.svelte'
-	import CmdButton from './CmdButton.svelte'
+  import FormButtons from './FormButtons.svelte'
 	import CmdInput from './CmdInput.svelte'
 	import TerminalTitle from './TerminalTitle.svelte'
 	import SuccessOut from './SuccessOut.svelte'
@@ -66,7 +66,12 @@
 				afterResponse: [
 					async (_input, _options, response) => {
 						if (response.status >= 400) {
-							const errorParsed = await response.json()
+							try {
+								error = await response.json()
+							} catch (e) {
+								console.log('Failed to parse response')
+							}
+
 							$result = Result.Failure({
 								...errorParsed,
 								status: response.status,
@@ -77,8 +82,12 @@
 			},
 		})
 
-		const parsed = await response.json()
-		$result = Result.Ok(parsed)
+		try {
+			const parsed = await response.json()
+			$result = Result.Ok(parsed)
+		} catch (e) {
+			console.log('Failed to parse response')
+		}
 	}
 
 	const cmdsMap = {
@@ -164,6 +173,7 @@
 </style>
 
 <TerminalTitle>REGISTRATION</TerminalTitle>
+
 <div {id} class="registration flex-col p-2 pt-4">
 	<form on:submit|preventDefault={submit} id={formId}>
 		<fieldset class="flex-1">
@@ -195,37 +205,9 @@
 				error={$validationStore.errors.affiliation}
 				disabled={!active} />
 		</fieldset>
-		<div class="flex-initial pt-5">
-			<div class="flex align-middle">
-				<div class="flex-initial text-term-brand-2" style="min-width: 60px;">
-					$ cmds:
-				</div>
-				<CmdButton
-					cmd="s"
-					type="submit"
-					tabindex="1"
-					on:cmd={({detail}) => handleBtnClick(detail)}
-					disabled={!active || !$validationStore.isValid}>
-					submit
-				</CmdButton>
-				<CmdButton
-					cmd="r"
-					type="reset"
-					tabindex="2"
-					on:cmd={({detail}) => handleBtnClick(detail)}
-					disabled={!active}>
-					reset
-				</CmdButton>
-				<CmdButton
-					cmd="x"
-					tabindex="3"
-					on:cmd={({detail}) => handleBtnClick(detail)}
-					disabled={!active}>
-					cancel
-				</CmdButton>
-			</div>
-		</div>
+		<FormButtons handleClick={handleBtnClick} disabled={!active || !$validationStore.isValid} />		
 	</form>
+	
 	{#if $validationStore.isValid}
 		<CmdInput
 			on:cmd={({detail}) => onCmd(detail)}
