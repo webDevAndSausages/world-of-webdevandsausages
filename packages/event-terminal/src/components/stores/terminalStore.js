@@ -40,12 +40,14 @@ const actions = {
 	},
 	help: state => {
 		state.history.push(Help)
-		state.currentIdx++
+		state.history.push(Wait)
+		state.currentIdx += 2
 	},
 	invalid: (state, {cmd}) => {
 		state.history.push(Invalid)
-		state.cmd[state.currentIdx] = cmd
-		state.current++
+		state.history.push(Wait)
+		state.cmd = cmd
+		state.currentIdx += 2
 	},
 }
 

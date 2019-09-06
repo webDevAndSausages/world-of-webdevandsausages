@@ -5,8 +5,9 @@
 	export let active
 	export let index
 	export let showReadOnlyCursor = false
-	// handle size of terminal input
 	export let value = ''
+
+	// handle size of terminal input with cursor
 	let cmdInputWidth = 20
 	let rulerId = `ruler-${index}`
 	let getWidth = getPixelWidthOfText(rulerId)
@@ -63,7 +64,7 @@
 	}
 
 	/* this span is just used to measure the length of the input and shouldn't be visible */
-	#ruler {
+	.ruler {
 		right: -1000px;
 	}
 </style>
@@ -86,17 +87,17 @@
 					class="cursor bg-term-brand-2"
 					class:initial-cursor={value === ''} />
 			</span>
-			<span id={rulerId} class="absolute" />
-		{:else}
+			<span id={rulerId} class="absolute ruler" />
+		{:else if showReadOnlyCursor}
 			<span class="input-wrapper flex">
 				<div class="output text-term-output pl-5">{value}</div>
-				{#if showReadOnlyCursor}
-					<span
-						class="cursor bg-term-brand-2"
-						class:initial-cursor={value === ''} />
-					<span id={rulerId} class="absolute" />
-				{/if}
+				<span
+					class="cursor bg-term-brand-2"
+					class:initial-cursor={value === ''} />
+				<span id={rulerId} class="absolute ruler" />
 			</span>
+		{:else}
+			<div class="output text-term-output pl-5">{value}</div>
 		{/if}
 	</div>
 </div>

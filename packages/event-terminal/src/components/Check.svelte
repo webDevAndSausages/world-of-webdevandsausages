@@ -42,7 +42,7 @@
 	export let index
 	export let id
 
-	let result = writable(Result.NotAsked)
+	let result = writable(Result.None)
 	let resultLoading = null
 	let successData = null
 	let failureData = null

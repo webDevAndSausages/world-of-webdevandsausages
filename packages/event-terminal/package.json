@@ -60,7 +60,7 @@
 		"prepublishOnly": "npm run build",
 		"format-svelte": "prettier --write --plugin-search-dir=. ./src/**/*.svelte",
 		"format-js": "prettier --config ./.prettierrc --write ./src/**/*.js",
-		"format": "npm run format-svelte && npm run format-js"
+		"format": "npm --scripts-prepend-node-path=true run format-svelte && npm run format-js"
 	},
 	"browserslist": [
 		"defaults"
