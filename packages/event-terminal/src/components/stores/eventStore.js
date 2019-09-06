@@ -12,15 +12,20 @@ export const createEventStore = event =>
 		if (isEvent(event)) {
 			set(Result.Ok(event))
 		} else {
-			const response = await ky(api.currentEvent, {
-				method: 'GET',
-				headers: config.headers,
-			})
+			try {
+				const response = await ky(api.currentEvent, {
+					method: 'GET',
+					headers: config.headers,
+				})
 
-			if (!response.ok) {
-				set(Result.Error(response.statusText))
+				if (!response.ok) {
+					set(Result.Error(response.statusText))
+				}
+				const parsed = await response.json()
+				set(Result.Ok(formatDate(parsed)))
+			} catch(e) {
+				// 404 goes here
+				set(Result.None)
 			}
-			const parsed = await response.json()
-			set(Result.Ok(formatDate(parsed)))
 		}
 	})

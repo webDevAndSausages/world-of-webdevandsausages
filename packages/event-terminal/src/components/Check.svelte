@@ -6,8 +6,8 @@
 	import CmdInput from './CmdInput.svelte'
 	import TerminalTitle from './TerminalTitle.svelte'
 	import FailureOut from './FailureOut.svelte'
-  import SuccessOut from './SuccessOut.svelte'
-  import FormButtons from './FormButtons.svelte'
+	import SuccessOut from './SuccessOut.svelte'
+	import FormButtons from './FormButtons.svelte'
 	import api from './api'
 	import {Result} from './models/Result'
 	import {
@@ -102,7 +102,7 @@
 	}
 
 	$: $result.cata({
-		NotAsked: () => {},
+		None: () => {},
 		Pending: () => (resultLoading = true),
 		Ok: data => {
 			resultLoading = false
@@ -135,8 +135,10 @@
 				bind:value={$token}
 				error={$tokenError}
 				disabled={!active} />
-    </fieldset>
-    <FormButtons handleClick={handleBtnClick} disabled={!active || $tokenError} />
+		</fieldset>
+		<FormButtons
+			handleClick={handleBtnClick}
+			disabled={!active || $tokenError} />
 	</form>
 	{#if !$tokenError}
 		<CmdInput

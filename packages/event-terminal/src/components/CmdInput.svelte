@@ -4,6 +4,7 @@
 
 	export let active
 	export let index
+	export let showReadOnlyCursor = false
 	// handle size of terminal input
 	export let value = ''
 	let cmdInputWidth = 20
@@ -87,7 +88,15 @@
 			</span>
 			<span id={rulerId} class="absolute" />
 		{:else}
-			<div class="output text-term-output pl-5">{value}</div>
+			<span class="input-wrapper flex">
+				<div class="output text-term-output pl-5">{value}</div>
+				{#if showReadOnlyCursor}
+					<span
+						class="cursor bg-term-brand-2"
+						class:initial-cursor={value === ''} />
+					<span id={rulerId} class="absolute" />
+				{/if}
+			</span>
 		{/if}
 	</div>
 </div>

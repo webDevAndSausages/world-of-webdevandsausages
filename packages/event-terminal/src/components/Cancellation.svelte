@@ -101,7 +101,7 @@
 	}
 
 	$: $result.cata({
-		NotAsked: () => {},
+		None: () => {},
 		Pending: () => (resultLoading = true),
 		Ok: data => {
 			resultLoading = false
@@ -132,7 +132,9 @@
 				error={$tokenError}
 				disabled={!active} />
 		</fieldset>
-    <FormButtons handleClick={handleBtnClick} disabled={!active || $tokenError} />
+		<FormButtons
+			handleClick={handleBtnClick}
+			disabled={!active || $tokenError} />
 	</form>
 	{#if !$tokenError}
 		<CmdInput

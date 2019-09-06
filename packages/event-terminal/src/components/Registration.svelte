@@ -3,7 +3,7 @@
 	import {writable} from 'svelte/store'
 	import Input from './Input.svelte'
 	import Spinner from './Spinner.svelte'
-  import FormButtons from './FormButtons.svelte'
+	import FormButtons from './FormButtons.svelte'
 	import CmdInput from './CmdInput.svelte'
 	import TerminalTitle from './TerminalTitle.svelte'
 	import SuccessOut from './SuccessOut.svelte'
@@ -131,7 +131,7 @@
 	}
 
 	$: $result.cata({
-		NotAsked: () => {},
+		None: () => {},
 		Pending: () => (resultLoading = true),
 		Ok: data => {
 			resultLoading = false
@@ -205,9 +205,11 @@
 				error={$validationStore.errors.affiliation}
 				disabled={!active} />
 		</fieldset>
-		<FormButtons handleClick={handleBtnClick} disabled={!active || !$validationStore.isValid} />		
+		<FormButtons
+			handleClick={handleBtnClick}
+			disabled={!active || !$validationStore.isValid} />
 	</form>
-	
+
 	{#if $validationStore.isValid}
 		<CmdInput
 			on:cmd={({detail}) => onCmd(detail)}

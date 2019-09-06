@@ -1,7 +1,7 @@
 import daggy from 'daggy'
 
 export const Result = daggy.taggedSum('Result', {
-	NotAsked: [],
+	None: [],
 	Pending: [],
 	Ok: ['data'],
 	Failure: ['error'],
@@ -9,7 +9,7 @@ export const Result = daggy.taggedSum('Result', {
 
 Result.prototype.okOrNull = function() {
 	return this.cata({
-		NotAsked: () => null,
+		None: () => null,
 		Pending: () => null,
 		Ok: data => data,
 		Failure: () => null,
