@@ -91,7 +91,7 @@ class EventCRUD(configuration: Configuration) {
         }
     }
 
-    fun findByParticipantToken(registrationToken: String, context: DSLContext = db): Option<EventDto> =
+    fun findByParticipantToken(registrationToken: String, context: DSLContext = db): Option<EventDto> = Try {
         context.use { ctx ->
             ctx.select(*Event.EVENT.fields())
                 .from(Event.EVENT)
@@ -100,9 +100,10 @@ class EventCRUD(configuration: Configuration) {
                 .where(Participant.PARTICIPANT.VERIFICATION_TOKEN.eq(registrationToken))
                 .fetchAny()
                 .into(meta.tables.pojos.Event::class.java)
-        }.toOption().flatMap {
-             findByIdOrLatest(it.id)
         }
+    }.toOption().flatMap {
+        findByIdOrLatest(it.id)
+    }
 
     fun create(event: EventInDto, context: DSLContext = db): Option<EventDto> = context.use { ctx ->
         val newRecord = ctx.newRecord(Event.EVENT)

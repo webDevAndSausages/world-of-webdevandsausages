@@ -1,6 +1,10 @@
 <script>
 	import {getContext, onMount, onDestroy, tick} from 'svelte'
 	import {writable} from 'svelte/store'
+	// api call
+	import api from './api'
+	import {apiGet} from './utils/request'
+	// components
 	import Input from './Input.svelte'
 	import Spinner from './Spinner.svelte'
 	import CmdInput from './CmdInput.svelte'
@@ -8,14 +12,14 @@
 	import FailureOut from './FailureOut.svelte'
 	import SuccessOut from './SuccessOut.svelte'
 	import FormButtons from './FormButtons.svelte'
-	import api from './api'
+	// models & stores
 	import {Result} from './models/Result'
 	import {
 		createTokenStore,
 		createTokenValidationStore,
 	} from './stores/tokenStore'
+
 	import {getFullRegistrationCmd, normalizeCmd} from './utils'
-	import {createRequest} from './utils/request'
 
 	onMount(() => {
 		cmdsMap.r()
@@ -54,17 +58,7 @@
 
 	async function submit(_ev) {
 		if (!eventId) return
-		const response = await createRequest(
-			api.checkRegistration(eventId, $token.trim()),
-			'GET',
-			result
-		)
-		try {
-			const parsed = await response.json()
-			$result = Result.Ok(parsed)
-		} catch (e) {
-			console.log('Failed to parse response')
-		}
+		$result = await apiGet(api.checkRegistration(eventId, $token.trim()))
 	}
 
 	const cmdsMap = {
@@ -138,7 +132,8 @@
 		</fieldset>
 		<FormButtons
 			handleClick={handleBtnClick}
-			disabled={!active || $tokenError} />
+			submitDisabled={$tokenError}
+			readOnly={!active} />
 	</form>
 	{#if !$tokenError}
 		<CmdInput

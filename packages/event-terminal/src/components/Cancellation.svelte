@@ -1,6 +1,10 @@
 <script>
 	import {getContext, onMount, onDestroy, tick} from 'svelte'
 	import {writable} from 'svelte/store'
+	// api
+	import api from './api'
+	import {apiDelete} from './utils/request'
+	// components
 	import Input from './Input.svelte'
 	import Spinner from './Spinner.svelte'
 	import FormButtons from './FormButtons.svelte'
@@ -8,14 +12,13 @@
 	import TerminalTitle from './TerminalTitle.svelte'
 	import FailureOut from './FailureOut.svelte'
 	import SuccessOut from './SuccessOut.svelte'
-	import api from './api'
+	// model & store
 	import {Result} from './models/Result'
 	import {
 		createTokenStore,
 		createTokenValidationStore,
 	} from './stores/tokenStore'
 	import {getFullRegistrationCmd, normalizeCmd} from './utils'
-	import {createRequest} from './utils/request'
 
 	onMount(() => {
 		cmdsMap.r()
@@ -51,19 +54,10 @@
 	let formId = `cancellation-${index}`
 
 	let eventId = $event.okOrNull($event).id
+
 	async function submit(_ev) {
 		if (!eventId) return
-		const response = await createRequest(
-			api.cancelRegistration($token.trim()),
-			'DELETE',
-			$result
-		)
-		try {
-			const parsed = await response.json()
-			$result = Result.Ok(parsed)
-		} catch (e) {
-			console.log('Failed to parse response')
-		}
+		$result = await apiDelete(api.cancelRegistration($token.trim()))
 	}
 
 	const cmdsMap = {
@@ -134,7 +128,8 @@
 		</fieldset>
 		<FormButtons
 			handleClick={handleBtnClick}
-			disabled={!active || $tokenError} />
+			submitDisabled={$tokenError}
+			readOnly={!active} />
 	</form>
 	{#if !$tokenError}
 		<CmdInput

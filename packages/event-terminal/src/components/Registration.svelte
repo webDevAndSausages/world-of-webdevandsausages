@@ -1,6 +1,7 @@
 <script>
 	import {getContext, onMount, onDestroy, tick} from 'svelte'
 	import {writable} from 'svelte/store'
+	// components
 	import Input from './Input.svelte'
 	import Spinner from './Spinner.svelte'
 	import FormButtons from './FormButtons.svelte'
@@ -8,16 +9,18 @@
 	import TerminalTitle from './TerminalTitle.svelte'
 	import SuccessOut from './SuccessOut.svelte'
 	import FailureOut from './FailureOut.svelte'
-	import ky from 'ky'
-	import config from './config'
+	// api request
+	import {apiPost} from './utils/request'
 	import api from './api'
 	import {Result} from './models/Result'
+	// stores
 	import {
 		createFormValuesStore,
 		createValidationStore,
 		initialState,
 		successAsciiStore,
 	} from './stores/registrationStore'
+
 	import {getFullRegistrationCmd, normalizeCmd} from './utils'
 
 	onMount(() => {
@@ -58,36 +61,7 @@
 	let eventId = $event.okOrNull($event).id
 	async function submit(_ev) {
 		if (!eventId) return
-		const response = await ky(api.register(eventId), {
-			method: 'POST',
-			headers: config.headers,
-			body: JSON.stringify($formValuesStore.values),
-			hooks: {
-				afterResponse: [
-					async (_input, _options, response) => {
-						if (response.status >= 400) {
-							try {
-								error = await response.json()
-							} catch (e) {
-								console.log('Failed to parse response')
-							}
-
-							$result = Result.Failure({
-								...errorParsed,
-								status: response.status,
-							})
-						}
-					},
-				],
-			},
-		})
-
-		try {
-			const parsed = await response.json()
-			$result = Result.Ok(parsed)
-		} catch (e) {
-			console.log('Failed to parse response')
-		}
+		$result = await apiPost(api.register(eventId), $formValuesStore.values)
 	}
 
 	const cmdsMap = {
@@ -207,7 +181,8 @@
 		</fieldset>
 		<FormButtons
 			handleClick={handleBtnClick}
-			disabled={!active || !$validationStore.isValid} />
+			submitDisabled={!$validationStore.isValid}
+			readOnly={!active} />
 	</form>
 
 	{#if $validationStore.isValid}
