@@ -11,9 +11,9 @@
 		const elem = document.getElementById(lastId)
 		if (elem) {
 			elem.scrollIntoView({
-        start: 'block',
-        bahavior: 'smooth'
-      })
+				start: 'block',
+				bahavior: 'smooth',
+			})
 		}
 	}
 

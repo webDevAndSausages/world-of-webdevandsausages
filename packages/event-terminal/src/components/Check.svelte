@@ -1,5 +1,5 @@
 <script>
-	import {getContext, tick, onMount} from 'svelte'
+	import {getContext, tick} from 'svelte'
 	import {writable} from 'svelte/store'
 	// api call
 	import api from './api'
@@ -17,13 +17,7 @@
 	import {
 		createTokenStore,
 		createTokenValidationStore,
-  } from './stores/tokenStore'
-  
-  let formEl
-
-	onMount(() => {
-		formEl.reset()
-	})
+	} from './stores/tokenStore'
 
 	import {getFullFormCmd, normalizeCmd} from './utils'
 
@@ -41,10 +35,10 @@
 		await tick()
 		const elem = document.getElementById(id)
 		if (elem) {
-      elem.scrollIntoView({
-        start: 'block',
-        bahavior: 'smooth'
-      })
+			elem.scrollIntoView({
+				start: 'block',
+				bahavior: 'smooth',
+			})
 		}
 	}
 
@@ -72,7 +66,7 @@
 		if (c.length) {
 			switch (c) {
 				case 'r':
-          return cmds.reset({component: 'Check'})
+					return cmds.reset({component: 'Check'})
 				case 's':
 					return submit()
 				case 'x':
@@ -84,9 +78,9 @@
 			return cmds.invalid({cmd})
 		}
 		return
-  }
-  
-  const validCmds = ['r', 's', 'x']
+	}
+
+	const validCmds = ['r', 's', 'x']
 
 	function handleBtnClick(cmd) {
 		if (validCmds.includes(cmd)) {
@@ -123,7 +117,7 @@
 <section {id}>
 	<TerminalTitle>CHECK YOUR REGISTRATION</TerminalTitle>
 	<div class="registration flex-col p-2 pt-4">
-		<form on:submit|preventDefault={submit} id={formId} bind:this={formEl}>
+		<form id={formId}>
 			<fieldset class="flex-1">
 				<Input
 					label="verification token"

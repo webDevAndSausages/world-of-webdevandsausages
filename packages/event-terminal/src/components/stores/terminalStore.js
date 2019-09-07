@@ -16,7 +16,7 @@ const formComponentMap = {
 const initialState = {
 	currentIdx: 0,
 	history: [Wait],
-	cmd: [],
+	cmd: null,
 	token: null,
 }
 

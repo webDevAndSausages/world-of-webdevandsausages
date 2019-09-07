@@ -1,5 +1,5 @@
 <script>
-	import {getContext, tick, onMount} from 'svelte'
+	import {getContext, tick} from 'svelte'
 	import {writable} from 'svelte/store'
 	// api
 	import api from './api'
@@ -18,7 +18,7 @@
 		createTokenStore,
 		createTokenValidationStore,
 	} from './stores/tokenStore'
-  import {getFullFormCmd, normalizeCmd} from './utils'
+	import {getFullFormCmd, normalizeCmd} from './utils'
 
 	const token = createTokenStore()
 	const tokenError = createTokenValidationStore(token)
@@ -35,9 +35,9 @@
 		const elem = document.getElementById(id)
 		if (elem) {
 			elem.scrollIntoView({
-        start: 'block',
-        bahavior: 'smooth'
-      })
+				start: 'block',
+				bahavior: 'smooth',
+			})
 		}
 	}
 	// any props which make cause something to appear in the terminal
@@ -50,12 +50,8 @@
 	let failureData = null
 	let success = ''
 	let cmdInputValue = ''
-  let formId = `cancellation-${index}`
-  let formEl
-
-  onMount(() => {
-    formEl.reset()
-  })
+	let formId = `cancellation-${index}`
+	let formEl
 
 	let eventId = $event.okOrNull($event).id
 
@@ -81,11 +77,11 @@
 			return cmds.invalid({cmd})
 		}
 		return
-  }
-  
-   const validCmds = ['r', 's', 'x']
+	}
 
-  function handleBtnClick(cmd) {
+	const validCmds = ['r', 's', 'x']
+
+	function handleBtnClick(cmd) {
 		if (validCmds.includes(cmd)) {
 			onCmd(cmd)
 			cmdInputValue = getFullFormCmd(cmd)
@@ -117,7 +113,7 @@
 <section {id}>
 	<TerminalTitle>CANCEL YOUR REGISTRATION</TerminalTitle>
 	<div {id} class="cancellation flex-col p-2 pt-4">
-		<form on:submit|preventDefault={submit} id={formId} bind:this={formEl}>
+		<form id={formId}>
 			<fieldset class="flex-1">
 				<Input
 					label="verification token"

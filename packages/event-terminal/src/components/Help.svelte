@@ -1,9 +1,9 @@
 <script>
 	import CmdHelp from './CmdHelp.svelte'
 	import TerminalTitle from './TerminalTitle.svelte'
-  export let index
-  export let id
-  export let active
+	export let index
+	export let id
+	export let active
 </script>
 
 <section {id}>

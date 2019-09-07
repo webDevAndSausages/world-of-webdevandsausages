@@ -1,9 +1,9 @@
 <script>
-  import smoothscroll from 'smoothscroll-polyfill'
-  smoothscroll.polyfill()
+	import smoothscroll from 'smoothscroll-polyfill'
+	smoothscroll.polyfill()
 	import {setContext} from 'svelte'
 	import 'simplebar'
-  import 'simplebar/dist/simplebar.css'
+	import 'simplebar/dist/simplebar.css'
 	import EventDetails from './EventDetails.svelte'
 	import TerminalContainer from './TerminalContainer.svelte'
 	import Commands from './Commands.svelte'
@@ -13,13 +13,13 @@
 	// if the event is not passed a prop
 	// the store will fetch it
 	export let event = null
-  const eventStore = createEventStore(event)
-  let components = []
+	const eventStore = createEventStore(event)
+	let components = []
 
-  $: showInteractiveTerminal = $eventStore.okOrNull($eventStore)
-  // this ensures an update when the array size does not change but an item is switched
-  // ie for reseting a component
-  $: components = [...$terminalStore.history]
+	$: showInteractiveTerminal = $eventStore.okOrNull($eventStore)
+	// this ensures an update when the array size does not change but an item is switched
+	// ie for reseting a component
+	$: components = [...$terminalStore.history]
 
 	setContext('eventStore', eventStore)
 	setContext('terminalStore', terminalStore)
@@ -30,8 +30,9 @@
 		<EventDetails />
 	</span>
 	<div slot="output">
-		{#if showInteractiveTerminal}
-			{#each components as h, i}
+    {#if showInteractiveTerminal}
+      <!-- (i) adds key to the component and ensures a new instance is rendered -->
+			{#each components as h, i (i)}
 				<svelte:component
 					this={h}
 					active={$terminalStore.currentIdx === i}

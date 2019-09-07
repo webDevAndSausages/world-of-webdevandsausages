@@ -1,5 +1,5 @@
 <script>
-	import {getContext, onMount, tick} from 'svelte'
+	import {getContext, tick} from 'svelte'
 	import {writable} from 'svelte/store'
 	// components
 	import Input from './Input.svelte'
@@ -29,12 +29,6 @@
 	const {cmds} = getContext('terminalStore')
 	const event = getContext('eventStore')
 
-	let formEl
-
-	onMount(() => {
-		formEl.reset()
-	})
-
 	export let active = true
 	export let index
 	export let id
@@ -58,9 +52,9 @@
 		const elem = document.getElementById(formId)
 		if (elem) {
 			elem.scrollIntoView({
-        start: 'block',
-        bahavior: 'smooth'
-      })
+				start: 'block',
+				bahavior: 'smooth',
+			})
 		}
 	}
 	// any props which make cause something to appear in the terminal
@@ -145,7 +139,7 @@
 	<TerminalTitle>REGISTRATION</TerminalTitle>
 
 	<div class="registration flex-col p-2 pt-4">
-		<form on:submit|preventDefault={submit} id={formId} bind:this={formEl}>
+		<form id={formId}>
 			<fieldset class="flex-1">
 				<Input
 					label="email"
