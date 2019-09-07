@@ -1,5 +1,5 @@
 <script>
-	import {getContext, onMount, onDestroy, tick} from 'svelte'
+	import {getContext, tick, onMount} from 'svelte'
 	import {writable} from 'svelte/store'
 	// api
 	import api from './api'
@@ -18,22 +18,7 @@
 		createTokenStore,
 		createTokenValidationStore,
 	} from './stores/tokenStore'
-	import {getFullRegistrationCmd, normalizeCmd} from './utils'
-
-	onMount(() => {
-		cmdsMap.r()
-	})
-
-	/*
-	async function scroll() {
-		await tick()
-		const resultId = `result-${index}`
-		const elem = document.getElementById(resultId);
-		if(elem) {
-			elem.scrollIntoView()
-		}
-  }
-  */
+  import {getFullFormCmd, normalizeCmd} from './utils'
 
 	const token = createTokenStore()
 	const tokenError = createTokenValidationStore(token)
@@ -45,13 +30,32 @@
 	export let index
 	export let id
 
+	async function scroll() {
+		await tick()
+		const elem = document.getElementById(id)
+		if (elem) {
+			elem.scrollIntoView({
+        start: 'block',
+        bahavior: 'smooth'
+      })
+		}
+	}
+	// any props which make cause something to appear in the terminal
+	// include here to trigger a scroll
+	$: ($result || $tokenError) && scroll()
+
 	let result = writable(Result.None)
 	let resultLoading = null
 	let successData = null
 	let failureData = null
 	let success = ''
 	let cmdInputValue = ''
-	let formId = `cancellation-${index}`
+  let formId = `cancellation-${index}`
+  let formEl
+
+  onMount(() => {
+    formEl.reset()
+  })
 
 	let eventId = $event.okOrNull($event).id
 
@@ -60,22 +64,14 @@
 		$result = await apiDelete(api.cancelRegistration($token.trim()))
 	}
 
-	const cmdsMap = {
-		r: () => {
-			document.getElementById(formId).reset()
-		},
-		s: submit,
-		x: cmds.wait,
-	}
-
 	function onCmd(cmd) {
 		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
 		if (c.length) {
 			switch (c) {
 				case 'r':
-					return cmdsMap.r()
+					return cmds.reset({component: 'Check'})
 				case 's':
-					return cmdsMap.s()
+					return submit()
 				case 'x':
 					return cmds.wait()
 				default:
@@ -85,12 +81,14 @@
 			return cmds.invalid({cmd})
 		}
 		return
-	}
+  }
+  
+   const validCmds = ['r', 's', 'x']
 
-	function handleBtnClick(cmd) {
-		if (cmdsMap[cmd]) {
-			cmdsMap[cmd]()
-			cmdInputValue = getFullRegistrationCmd(cmd)
+  function handleBtnClick(cmd) {
+		if (validCmds.includes(cmd)) {
+			onCmd(cmd)
+			cmdInputValue = getFullFormCmd(cmd)
 		}
 	}
 
@@ -116,46 +114,48 @@
 	})
 </script>
 
-<TerminalTitle>CANCEL YOUR REGISTRATION</TerminalTitle>
-<div {id} class="cancellation flex-col p-2 pt-4">
-	<form on:submit|preventDefault={submit} id={formId}>
-		<fieldset class="flex-1">
-			<Input
-				label="verification token"
-				bind:value={$token}
-				error={$tokenError}
-				disabled={!active} />
-		</fieldset>
-		<FormButtons
-			handleClick={handleBtnClick}
-			submitDisabled={$tokenError}
-			readOnly={!active} />
-	</form>
-	{#if !$tokenError}
-		<CmdInput
-			on:cmd={({detail}) => onCmd(detail)}
-			bind:value={cmdInputValue}
-			active={!!active}
-			{index} />
-	{/if}
-</div>
+<section {id}>
+	<TerminalTitle>CANCEL YOUR REGISTRATION</TerminalTitle>
+	<div {id} class="cancellation flex-col p-2 pt-4">
+		<form on:submit|preventDefault={submit} id={formId} bind:this={formEl}>
+			<fieldset class="flex-1">
+				<Input
+					label="verification token"
+					bind:value={$token}
+					error={$tokenError}
+					disabled={!active} />
+			</fieldset>
+			<FormButtons
+				handleClick={handleBtnClick}
+				submitDisabled={$tokenError}
+				readOnly={!active} />
+		</form>
+		{#if !$tokenError}
+			<CmdInput
+				on:cmd={({detail}) => onCmd(detail)}
+				bind:value={cmdInputValue}
+				active={!!active}
+				{index} />
+		{/if}
+	</div>
 
-<section id={`result-${index}`}>
-	{#if resultLoading}
-		<Spinner show={true} />
-	{/if}
+	<div id={`result-${index}`}>
+		{#if resultLoading}
+			<Spinner show={true} />
+		{/if}
 
-	{#if successData}
-		<div class="flex flex-col text-white pb-4">
-			<SuccessOut>
-				<div class="flex-initial">
-					Your registration is {successData.status}.
-				</div>
-			</SuccessOut>
-		</div>
-	{/if}
+		{#if successData}
+			<div class="flex flex-col text-white pb-4">
+				<SuccessOut>
+					<div class="flex-initial">
+						Your registration is {successData.status}.
+					</div>
+				</SuccessOut>
+			</div>
+		{/if}
 
-	{#if failureData}
-		<FailureOut status={failureData.status} message={failureData.message} />
-	{/if}
+		{#if failureData}
+			<FailureOut status={failureData.status} message={failureData.message} />
+		{/if}
+	</div>
 </section>

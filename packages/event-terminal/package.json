@@ -45,6 +45,7 @@
 		"rollup-plugin-svelte": "5.1.0",
 		"rollup-plugin-terser": "5.1.1",
 		"sirv": "0.4.2",
+		"smoothscroll-polyfill": "0.4.4",
 		"svelte": "3.9.1",
 		"svelte-preprocess": "2.15.1",
 		"tailwindcss-elevation": "0.3.2",
@@ -95,6 +96,7 @@
 		"immer": "3.2.0",
 		"ky": "0.13.0",
 		"ramda": "0.26.1",
+		"simplebar": "4.3.0-alpha.0",
 		"tailwindcss": "1.1.2"
 	}
 }

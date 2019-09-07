@@ -18,41 +18,6 @@
 
 @import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&display=swap');
 
-.terminal-full {
-	@apply absolute top-0 left-0 bottom-0 right-0 z-10 overflow-hidden;
-	transform: scale(1);
-	transition: all 1s;
-}
-
-.terminal-centered {
-	margin: 20px 10%;
-}
-
-@media (max-width: 650px) {
-	.terminal-centered {
-		margin: 20px 2%;
-	}
-}
-
-.terminal-centered-return {
-	transition: all 1s;
-}
-
-.container-centered.screen {
-	height: 100%;
-}
-
-.screen {
-	border: var(--term-border-width) solid var(--term-border-color);
-	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-	height: 100%;
-	border-radius: 8px;
-}
-
-.terminal-full .screen {
-	border-radius: 0;
-}
-
 .term-title {
 	@apply p-2 text-lg font-bold text-term-brand-1;
 }
@@ -71,4 +36,15 @@ select:-webkit-autofill:focus {
 	-webkit-text-fill-color: #fff;
 	-webkit-box-shadow: 0 0 0px 1000px #000 inset;
 	transition: #000 5000s ease-in-out 0s;
+}
+
+.simplebar-scrollbar:before {
+  background: var(--term-brand-secondary);
+}
+.simplebar-scrollbar {
+  width: 10px;
+}
+
+.simplebar-track .simplebar-scrollbar.simplebar-visible:before {
+  opacity: 0.7;
 }

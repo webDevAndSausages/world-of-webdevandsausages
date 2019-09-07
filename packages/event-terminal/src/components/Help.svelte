@@ -1,14 +1,12 @@
 <script>
 	import CmdHelp from './CmdHelp.svelte'
 	import TerminalTitle from './TerminalTitle.svelte'
-	export let index
+  export let index
+  export let id
+  export let active
 </script>
 
-<style>
-
-</style>
-
-<div id={`help-${index}`}>
+<section {id}>
 	<TerminalTitle>Web Dev & Sausages CLI commands</TerminalTitle>
 	<div class="p-2 text-term-output">
 		You may register for, cancel your registration (modifying), or check your
@@ -32,4 +30,4 @@
 		enter your valid verification token." />
 	<CmdHelp cmd="h|help" help="Return you to this help page." />
 
-</div>
+</section>

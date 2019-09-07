@@ -1,6 +1,6 @@
 <script>
+	import {tick, onMount} from 'svelte'
 	import {crossfade, scale} from 'svelte/transition'
-	import {onMount} from 'svelte'
 	import {fly} from 'svelte/transition'
 	import {quadOut} from 'svelte/easing'
 	import cc from 'classcat'
@@ -26,6 +26,16 @@
 	let labelClasses = ''
 	let inputClasses = ''
 	let inputEl
+	let showError = false
+	let resetting
+
+	onMount(() => {
+		value = ''
+		focused = false
+		focusChange = 0
+		inputEl.blur()
+	})
+
 	$: labelOnTop = focused || value
 	$: labelClasses = cc([
 		{
@@ -43,21 +53,9 @@
 		_id = !id && label ? label.split(' ').join('-') : id
 
 		if (maxChars != null) inputEl.setAttribute('maxlength', maxChars)
-
-		document.addEventListener('reset', reset, {passive: true})
-
-		return () => document.removeEventListener('reset', reset, {passive: true})
 	})
 
 	$: showError = focusChange >= 2 && !disabled
-
-	function reset() {
-		if (!disabled) {
-			focused = false
-			focusChange = 0
-			value = ''
-		}
-	}
 
 	function toggleFocused() {
 		focused = !focused

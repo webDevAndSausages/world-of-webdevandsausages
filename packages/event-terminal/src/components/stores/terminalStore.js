@@ -7,6 +7,12 @@ import Registration from '../Registration.svelte'
 import Cancellation from '../Cancellation.svelte'
 import Check from '../Check.svelte'
 
+const formComponentMap = {
+	Registration,
+	Cancellation,
+	Check
+}
+
 const initialState = {
 	currentIdx: 0,
 	history: [Wait],
@@ -49,6 +55,10 @@ const actions = {
 		state.cmd = cmd
 		state.currentIdx += 2
 	},
+	reset: (state, {component}) => {
+		state.history.push(formComponentMap[component])
+		state.currentIdx++
+	}
 }
 
 function reduce(actions, initialState) {

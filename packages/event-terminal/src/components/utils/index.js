@@ -57,7 +57,7 @@ const terminalCommands = {
 	h: 'help',
 }
 
-const registrationCommands = {
+const formCommands = {
 	s: 'submit',
 	x: 'cancel',
 	r: 'reset',
@@ -68,9 +68,9 @@ export const getFullTerminalCmd = cmd => {
 	return terminalCommands[c]
 }
 
-export const getFullRegistrationCmd = cmd => {
+export const getFullFormCmd = cmd => {
 	const c = normalizeCmd(cmd)
-	return registrationCommands[c]
+	return formCommands[c]
 }
 
 const emailRegex = /^.+@.+\..+$/i
