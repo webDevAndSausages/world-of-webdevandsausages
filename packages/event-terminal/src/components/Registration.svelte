@@ -67,8 +67,11 @@
 		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
 		if (c.length) {
 			switch (c) {
-				case 'r':
-					return cmds.reset({component: 'Registration'})
+				case 'r': {
+						$formValuesStore.validationOff = true
+						cmds.reset({component: 'Registration'})
+						return 
+					}
 				case 's':
 					return submit()
 				case 'x':

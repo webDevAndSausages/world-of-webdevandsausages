@@ -8,6 +8,7 @@ const initialFormValues = {
 	firstName: '',
 	lastName: '',
 	affiliation: '',
+	validationOff: false
 }
 
 export const initialState = {
@@ -27,7 +28,7 @@ export const createValidationStore = formValuesStore => derived(formValuesStore,
 	const errors = evolve(validations, $r.values)
 	const errorResults = Object.values(errors)
 	const isValid = errorResults.filter(identity).length === 0
-	return {errors, isValid}
+	return $r.validationOff ? {errors: {}, isValid: true} : {errors, isValid}
 })
 
 const LINE_DISPLAY_DELAY = 200

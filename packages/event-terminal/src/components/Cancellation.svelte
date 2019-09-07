@@ -20,8 +20,8 @@
 	} from './stores/tokenStore'
 	import {getFullFormCmd, normalizeCmd} from './utils'
 
-	const token = createTokenStore()
-	const tokenError = createTokenValidationStore(token)
+	const tokenStore = createTokenStore()
+	const tokenError = createTokenValidationStore(tokenStore)
 
 	const {cmds} = getContext('terminalStore')
 	const event = getContext('eventStore')
@@ -57,15 +57,18 @@
 
 	async function submit(_ev) {
 		if (!eventId) return
-		$result = await apiDelete(api.cancelRegistration($token.trim()))
+		$result = await apiDelete(api.cancelRegistration($tokenStore.token.trim()))
 	}
 
 	function onCmd(cmd) {
 		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
 		if (c.length) {
 			switch (c) {
-				case 'r':
-					return cmds.reset({component: 'Check'})
+				case 'r': {
+            $tokenError.validationOff = true
+						cmds.reset({component: 'Cancellation'})
+						return 
+					}
 				case 's':
 					return submit()
 				case 'x':
@@ -117,7 +120,7 @@
 			<fieldset class="flex-1">
 				<Input
 					label="verification token"
-					bind:value={$token}
+					bind:value={$tokenStore.token}
 					error={$tokenError}
 					disabled={!active} />
 			</fieldset>
