@@ -56,6 +56,7 @@
     "sirv": "0.4.2",
     "svelte": "3.9.1",
     "svelte-preprocess": "2.15.1",
+    "tailwindcss": "1.1.2",
     "tailwindcss-elevation": "0.3.2",
     "tinycolor2": "1.4.1"
   },
@@ -106,8 +107,7 @@
     "ky": "0.13.0",
     "ramda": "0.26.1",
 		"simplebar": "4.3.0-alpha.0",
-		"smoothscroll-polyfill": "0.4.4",
-    "tailwindcss": "1.1.2"
+		"smoothscroll-polyfill": "0.4.4"
   },
   "bugs": {
     "url": "https://github.com/webDevAndSausages/world-of-webdevandsausages/issues"
