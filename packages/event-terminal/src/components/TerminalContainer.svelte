@@ -35,14 +35,8 @@
 	}
 
 	.terminal-centered {
-		margin: 20px 10%;
+		position: relative;
 		max-height: 600px;
-	}
-
-	@media (max-width: 650px) {
-		.terminal-centered {
-			margin: 20px 2%;
-		}
 	}
 
 	.terminal-centered-return {

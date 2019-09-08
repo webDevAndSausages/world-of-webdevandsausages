@@ -3,4 +3,18 @@
 	import './tailwind.css'
 </script>
 
-<Terminal />
+<style>
+	.terminal-wrapper {
+		margin: 20px 10%;
+	}
+
+	@media (max-width: 650px) {
+		.terminal-wrapper {
+			margin: 20px 2%;
+		}
+	}
+</style>
+
+<div class="terminal-wrapper">
+	<Terminal />
+</div>

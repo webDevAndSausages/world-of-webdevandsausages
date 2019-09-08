@@ -1,81 +1,48 @@
-_Psst — looking for an app template? Go here --> [sveltejs/template](https://github.com/sveltejs/template)_
+# `@webdevandsauages/event-terminal`
 
----
-
-# Svelte 3 Component Template
-
-[![Known Vulnerabilities](https://snyk.io/test/github/YogliB/svelte-component-template/badge.svg)](https://snyk.io/test/github/YogliB/svelte-component-template) [![Build Status](https://travis-ci.org/YogliB/svelte-component-template.svg?branch=master)](https://travis-ci.org/YogliB/svelte-component-template)
+### This is component is intended for use in [webdevandsausages.org](webdevandsausages.org) and is not suitable for other projects. The original boilerplate is from [svelte component template](https://github.com/YogliB/svelte-component-template).
 
 ## Table of Contents
 
-1. [Template Types](#options)
-2. [Features](#features)
-3. [Getting started](#getting-started)
-4. [Developing](#developing)
-5. [Consuming components](#consuming-components)
-6. [Backward Compatibility](#backward-compatibility)
-7. [Preprocessors](#preprocessors)
-8. [Publishing to npm](publishing-to-npm)
-9. [Credits & Inspiration](#credits-&-inspiration)
+1. [Getting started](#getting-started)
+2. [Developing](#developing)
+3. [Consuming components](#consuming-components)
+4. [Backward Compatibility](#backward-compatibility)
+5. [Preprocessors](#preprocessors)
 
-##
 
--   Regular (You're here)
--   [Minimal](https://github.com/YogliB/svelte-component-template/tree/minimal)
--   [Monorepo](https://github.com/YogliB/svelte-component-template/tree/monorepo)
-
-## Features
-
--   Autoprefixing
--   Formating
--   Linting
--   Preprocessing
--   Testing
-
-## Getting Started
-
-1. Choose your template (regular/monorepo)
-
-2. Clone it with [degit](https://github.com/Rich-Harris/degit):
-
-The _regular_ version:
+## Getting Started usin the component
 
 ```bash
-npx degit YogliB/svelte-component-template my-new-component
+npm i @webdevandsauages/event-terminal --save
 ```
 
-The _minimal_ version:
+### Include in your project
 
-```bash
-npx degit YogliB/svelte-component-template my-new-component#minimal
+```js
+<script>
+  import {Terminal} from '@webdevandsausages/event-terminal'
+</script>
+
+<style>
+	.terminal-wrapper {
+		margin: 20px 10%;
+	}
+
+	@media (max-width: 650px) {
+		.terminal-wrapper {
+			margin: 20px 2%;
+		}
+	}
+</style>
+
+<div class="terminal-wrapper">
+ /* it is possible to pass in the event here and the component will not fetch it itself */
+	{#if process.browser}
+		<Terminal event={null} />
+	{/if}
+</div>
 ```
-
-or the _monorepo_ version:
-
-```bash
-npx degit YogliB/svelte-component-template#monorepo my-new-component-library
-```
-
-2. `cd` into the folder and install the `node_modules`:
-
-```bash
-cd my-new-component
-npm ci
-git init
-```
-
-For _monorepo_:
-
-```bash
-npm run bootstrap
-```
-
--   The `ci` command makes sure your packages match the one in the `package-lock.json` (See [here](https://docs.npmjs.com/cli/ci.html)).
-
-3. Run `npm init`, to configure the project.
-4. Replace this `README` with your own.
-
-Your component's source code lives in `src/components/[MyComponent].svelte` or `packages/*` if you chose the monorepo option.
 
 ## Developing
 
@@ -91,7 +58,9 @@ npm run dev
 
 4. Make sure your component is imported and nested in `src/App.svelte`.
 
-5. Navigate to [localhost:5000](http://localhost:5000) to see your components live.
+5. Navigate to [localhost:3000](http://localhost:3000) to see your components live.
+
+6. In development the express dev server will proxy `/api` requests to[localhost:5000](http://localhost:5000)
 
 ## Consuming Components
 
@@ -119,19 +88,3 @@ This template comes with the [svelte-preprocess](https://github.com/kaisermann/s
 1. [Install the required preprocessors.](https://github.com/kaisermann/svelte-preprocess#installation)
 2. [Enable the preprocessor in the component.](https://github.com/kaisermann/svelte-preprocess#preprocessors-support)
 
-## Publishing to [npm](https://www.npmjs.com)
-
--   [Creating and publishing scoped public packages](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages)
--   [Creating and publishing unscoped public packages](https://docs.npmjs.com/creating-and-publishing-unscoped-public-packages)
-
-## Contributing
-
-All contributions are welcome! 😊
-
-Just make sure you read [this](https://github.com/YogliB/svelte-component-template/blob/master/CONTRIBUTING.md) before contributing.
-
-## Credits & Inspiration
-
--   Official [component-template](https://github.com/sveltejs/component-template) by @Rich-Harris
--   Official [app-template](https://github.com/sveltejs/template) by @Rich-Harris
--   [This](https://github.com/sveltejs/component-template/pull/5) PR by @sisou
