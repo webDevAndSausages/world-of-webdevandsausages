@@ -5,6 +5,7 @@ module.exports = {
 				term: [ 'var(--term-font-family)', 'monospace' ]
 			},
 			colors: {
+				base: 'var(--background)',
 				term: {
 					'brand-1': 'var(--term-brand-primary)',
 					'brand-2': 'var(--term-brand-secondary)',

@@ -4,7 +4,7 @@
 
 <style>
 	nav {
-		border-bottom: 1px solid rgba(255,62,0,0.1);
+		border-bottom: 1px solid var(--term-brand-primary);
 		font-weight: 300;
 		padding: 0 1em;
 	}
@@ -36,20 +36,19 @@
 		content: '';
 		width: calc(100% - 1em);
 		height: 2px;
-		background-color: rgb(255,62,0);
+		background-color: var(--term-brand-secondary);
 		display: block;
 		bottom: -1px;
 	}
 
 	a {
 		text-decoration: none;
-		padding: 1em 0.5em;
-		display: block;
+		@apply block pt-3 pb-3 pl-2 pr-2 text-white;
 	}
 </style>
 
 <nav>
-	<ul class="bg-red">
+	<ul>
 		<li><a class='{segment === undefined ? "selected" : ""}' href='.'>home</a></li>
 		<li><a class='{segment === "about" ? "selected" : ""}' href='about'>about</a></li>
 

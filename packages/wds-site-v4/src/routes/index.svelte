@@ -28,10 +28,10 @@
 	}
 </style>
 
-<h1>Great success!</h1>
+<h1 class="text-center text-term-brand-1">WEB DEV & SAUSAGES</h1>
 
 <div class="terminal-wrapper">
-	/* TODO: animations when expanding to full-screen broken */
+	<!-- TODO: animations when expanding to full-screen broken -->
 	<Terminal />
 </div>
 

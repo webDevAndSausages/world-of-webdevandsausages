@@ -5,8 +5,11 @@
 </script>
 
 <style>
+	:global(body) {
+		@apply bg-base;
+	}
 	main {
-		@apply relative bg-white p-8 my-0 w-full;
+		@apply relative p-8 my-0 w-full h-full;
 		box-sizing: border-box;
 	}
 </style>

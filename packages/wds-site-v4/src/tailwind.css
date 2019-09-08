@@ -4,6 +4,7 @@
 @import "tailwindcss/utilities";
 
 :root {
+	--background: #161616;
 	--term-brand-primary: #00bcdd;
 	--term-brand-secondary: #ff00ff;
 	--term-error: #fefb67;
