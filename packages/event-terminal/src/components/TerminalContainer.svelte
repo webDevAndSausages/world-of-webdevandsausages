@@ -27,11 +27,27 @@
 </script>
 
 <style>
+	@keyframes expand {
+		from {
+			transform: scale3d(0.9, 0.9, 0.9);
+		}
+	}
+
+	@keyframes retract {
+		from {
+			transform: scale3d(1.02, 1.02, 1.02);
+		}
+		50% {
+			transform: scale3d(0.98, 0.98, 0.98);
+		}
+		to {
+			transform: scale3d(1, 1, 1);
+		}
+	}
+
 	.terminal-full {
+		animation: expand 0.3s linear;
 		@apply fixed top-0 left-0 z-10 w-full h-full;
-		transform: scale(1);
-		transition: all 1s;
-		overflow: auto;
 	}
 
 	.terminal-centered {
@@ -40,12 +56,12 @@
 	}
 
 	.terminal-centered-return {
-		transition: all 1s;
+		animation: retract 0.3s ease-in;
 	}
 
 	.screen {
 		border: var(--term-border-width) solid var(--term-border-color);
-		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+		box-shadow: 0 10px 20px rgba(2, 1, 1, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 		border-radius: 8px;
 	}
 
@@ -65,9 +81,10 @@
 </style>
 
 <div
-	class="terminal-{containerClass} relative"
+	class="terminal-{containerClass}"
 	data-simplebar
-	data-simplebar-auto-hide="false">
+	data-simplebar-auto-hide="false"
+	>
 	<div class="controls-container absolute">
 		<Controls />
 	</div>

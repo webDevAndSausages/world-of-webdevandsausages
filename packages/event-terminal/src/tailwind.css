@@ -1,4 +1,5 @@
 :root {
+	--background: #161616;
 	--term-brand-primary: #00bcdd;
 	--term-brand-secondary: #ff00ff;
 	--term-error: #fefb67;
@@ -39,12 +40,12 @@ select:-webkit-autofill:focus {
 }
 
 .simplebar-scrollbar:before {
-  background: var(--term-brand-secondary);
+	background: var(--term-brand-secondary);
 }
 .simplebar-scrollbar {
-  width: 10px;
+	width: 10px;
 }
 
 .simplebar-track .simplebar-scrollbar.simplebar-visible:before {
-  opacity: 0.7;
+	opacity: 0.7;
 }

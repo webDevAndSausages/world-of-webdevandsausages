@@ -201,7 +201,8 @@
 							You are number {successData.orderNumber} in the waiting list.
 						</div>
 					{/if}
-					<div class="flex-initial pt-1">
+					<!-- z-index hack so text is copyable with negative margin on ascii printout -->
+					<div class="flex-initial pt-1 z-10">
 						Your verification token:
 						<span class="text-term-brand-2 pl-2">
 							{successData.verificationToken}
