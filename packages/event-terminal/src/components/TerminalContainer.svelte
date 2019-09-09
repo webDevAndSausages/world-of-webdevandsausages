@@ -52,7 +52,7 @@
 
 	.terminal-centered {
 		position: relative;
-		max-height: 600px;
+		height: 600px;
 	}
 
 	.terminal-centered-return {
@@ -83,8 +83,7 @@
 <div
 	class="terminal-{containerClass}"
 	data-simplebar
-	data-simplebar-auto-hide="false"
-	>
+	data-simplebar-auto-hide="false">
 	<div class="controls-container absolute">
 		<Controls />
 	</div>

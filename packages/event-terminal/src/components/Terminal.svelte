@@ -30,8 +30,8 @@
 		<EventDetails />
 	</span>
 	<div slot="output">
-    {#if showInteractiveTerminal}
-      <!-- (i) adds key to the component and ensures a new instance is rendered -->
+		{#if showInteractiveTerminal}
+			<!-- (i) adds key to the component and ensures a new instance is rendered -->
 			{#each components as h, i (i)}
 				<svelte:component
 					this={h}

@@ -68,10 +68,10 @@
 		if (c.length) {
 			switch (c) {
 				case 'r': {
-						$formValuesStore.validationOff = true
-						cmds.reset({component: 'Registration'})
-						return 
-					}
+					$formValuesStore.validationOff = true
+					cmds.reset({component: 'Registration'})
+					return
+				}
 				case 's':
 					return submit()
 				case 'x':

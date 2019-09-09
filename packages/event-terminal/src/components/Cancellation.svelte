@@ -65,10 +65,10 @@
 		if (c.length) {
 			switch (c) {
 				case 'r': {
-            $tokenError.validationOff = true
-						cmds.reset({component: 'Cancellation'})
-						return 
-					}
+					$tokenError.validationOff = true
+					cmds.reset({component: 'Cancellation'})
+					return
+				}
 				case 's':
 					return submit()
 				case 'x':

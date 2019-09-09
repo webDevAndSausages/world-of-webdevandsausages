@@ -58,7 +58,9 @@
 
 	async function submit(_ev) {
 		if (!eventId) return
-		$result = await apiGet(api.checkRegistration(eventId, $tokenStore.token.trim()))
+		$result = await apiGet(
+			api.checkRegistration(eventId, $tokenStore.token.trim())
+		)
 	}
 
 	function onCmd(cmd) {
@@ -66,10 +68,10 @@
 		if (c.length) {
 			switch (c) {
 				case 'r': {
-						$tokenError.validationOff = true
-						cmds.reset({component: 'Check'})
-						return 
-					}
+					$tokenError.validationOff = true
+					cmds.reset({component: 'Check'})
+					return
+				}
 				case 's':
 					return submit()
 				case 'x':

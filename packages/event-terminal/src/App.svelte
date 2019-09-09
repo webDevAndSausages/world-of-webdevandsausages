@@ -1,5 +1,6 @@
 <script>
 	import {Terminal} from './components/components.module.js'
+	import {SsrTerminal} from './components/components.module.js'
 	import './tailwind.css'
 </script>
 
@@ -18,3 +19,9 @@
 <div class="terminal-wrapper">
 	<Terminal />
 </div>
+
+<!--
+<div class="terminal-wrapper">
+	<SsrTerminal event={null}/>
+</div>
+-->
