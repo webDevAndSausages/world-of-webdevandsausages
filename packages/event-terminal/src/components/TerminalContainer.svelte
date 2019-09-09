@@ -65,10 +65,6 @@
 		border-radius: 8px;
 	}
 
-	.container-centered .screen {
-		height: 100%;
-	}
-
 	.terminal-full .screen {
 		border-radius: 0;
 		min-height: 100vh;
