@@ -1,8 +1,6 @@
 <script>
-	import {setContext, tick} from 'svelte'
 	import TerminalTitle from './TerminalTitle.svelte'
 	import TerminalOut from './TerminalOut.svelte'
-	import Spinner from './Spinner.svelte'
 
 	export let event = null
 </script>

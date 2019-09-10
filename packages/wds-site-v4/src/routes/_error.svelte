@@ -1,12 +1,13 @@
 <script>
-	export let status;
-	export let error;
+	export let status
+	export let error
 
-	const dev = process.env.NODE_ENV === 'development';
+	const dev = process.env.NODE_ENV === 'development'
 </script>
 
 <style>
-	h1, p {
+	h1,
+	p {
 		@apply mx-auto my-0;
 	}
 
