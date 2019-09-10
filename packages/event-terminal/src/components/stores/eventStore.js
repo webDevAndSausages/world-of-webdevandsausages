@@ -1,21 +1,21 @@
-import {readable} from 'svelte/store'
+import { readable } from 'svelte/store'
 import ky from 'ky'
 import api from '../api'
 import config from '../config'
-import {Result} from '../models/Result'
-import {isEvent, formatDate} from '../utils'
+import { Result } from '../models/Result'
+import { isEvent, formatDate } from '../utils'
 
 // if the event is passed in, e.g. ssr
 // then we can skip fetching it
-export const createEventStore = event =>
-	readable(Result.Pending, async set => {
+export const createEventStore = (event) =>
+	readable(Result.Pending, async (set) => {
 		if (isEvent(event)) {
-			set(Result.Ok(event))
+			set(Result.Ok(formatDate(event)))
 		} else {
 			try {
 				const response = await ky(api.currentEvent, {
 					method: 'GET',
-					headers: config.headers,
+					headers: config.headers
 				})
 
 				if (!response.ok) {
@@ -23,7 +23,7 @@ export const createEventStore = event =>
 				}
 				const parsed = await response.json()
 				set(Result.Ok(formatDate(parsed)))
-			} catch(e) {
+			} catch (e) {
 				// 404 goes here
 				set(Result.None)
 			}
