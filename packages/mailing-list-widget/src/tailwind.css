@@ -1,0 +1,51 @@
+:root {
+	--background: #161616;
+	--term-brand-primary: #00bcdd;
+	--term-brand-secondary: #ff00ff;
+	--term-error: #fefb67;
+	--term-success: #5ff967;
+	--term-border-color: none;
+	--term-border-width: none;
+	--term-font-family: Inconsolata;
+	--term-font-size: 1.2rem;
+	--term-background-color: black;
+	--term-output-text-color: white;
+	--term-expander-color: #191919;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&display=swap');
+
+.term-title {
+	@apply p-2 text-lg font-bold text-term-brand-1;
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+	border: 1px solid #000;
+	-webkit-text-fill-color: #fff;
+	-webkit-box-shadow: 0 0 0px 1000px #000 inset;
+	transition: #000 5000s ease-in-out 0s;
+}
+
+.simplebar-scrollbar:before {
+	background: var(--term-brand-secondary);
+}
+.simplebar-scrollbar {
+	width: 10px;
+}
+
+.simplebar-track .simplebar-scrollbar.simplebar-visible:before {
+	opacity: 0.7;
+}
