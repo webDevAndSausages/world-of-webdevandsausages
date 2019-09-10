@@ -8,6 +8,7 @@
 	.term-expander {
 		height: 20px;
 		width: 20px;
+		cursor: pointer;
 	}
 
 	.term-expander:hover .h-line,
