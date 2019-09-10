@@ -7,14 +7,14 @@
 
 <style>
 	button:hover {
-		background: #00b3ce;
+		opacity: 0.9;
 	}
 </style>
 
 {#if $stateMachine === 'idle'}
 	<button
 		transition:fly={{duration: 500, y: -200, opacity: 0.5, easing: quintOut}}
-		class="bg-term-brand-1 py-2 px-4 uppercase text-md font-bold relative
+		class="bg-term-brand-2 py-2 px-4 uppercase text-md font-bold relative
 		overflow-hidden text-white transition hover:elevation-5 elevation-3 w-full"
 		on:click={start}>
 		<slot />

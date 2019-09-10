@@ -1,6 +1,7 @@
 <script>
-	import {stateMachine, form} from './stores/use-machine.js'
-	import {fly, crossfade, scale} from 'svelte/transition'
+  import {stateMachine, form} from './stores/use-machine.js'
+  import Send from './svg/Send.svelte'
+ 	import {fly, crossfade, scale} from 'svelte/transition'
 	import {linear} from 'svelte/easing'
 	import cc from 'classcat'
 
@@ -17,14 +18,14 @@
 	$: labelOnTop = focused || $form.email
 	$: labelClasses = cc([
 		{
-			'ml-6 p-1 pt-0 text-term-brand-2 text-xs label-top bg-black h-3 z-30': labelOnTop,
+			'ml-6 p-1 pt-0 text-term-brand-2 text-xs label-top bg-white h-3 z-30': labelOnTop,
 			'pb-2 px-4 pt-2': !labelOnTop,
 		},
 		'absolute top-0 label-transition block pointer-events-none cursor-text text-term-brand-1 block',
 	])
 	$: inputClasses = cc([
 		{},
-		'outline-none px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 bg-black text-white bg-transparent',
+		'outline-none px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 text-white bg-transparent',
 	])
 
 	$: showError = focusChange >= 2 && $form.error
@@ -44,7 +45,6 @@
 		line-height: 0.05;
 		top: -5;
 		left: 0;
-		background-color: #000;
 	}
 
 	.input-transition {
@@ -74,7 +74,7 @@
 	input.disabled {
 		opacity: 0.7;
 		cursor: not-allowed !important;
-	}
+  }
 </style>
 
 {#if $stateMachine === 'active' || $stateMachine === 'warning'}
@@ -108,7 +108,9 @@
 				type="email"
 				bind:value={$form.email}
 				class:active={labelOnTop} />
-		</div>
+    </div>
+    <Send />
+    <div class="text-xs absolute bottom-0 right-0 -mb-1">ESC to exit</div>
 		{#if $form.error && showError}
 			<span class="text-term-error text-sm">{$form.error}</span>
 		{/if}
