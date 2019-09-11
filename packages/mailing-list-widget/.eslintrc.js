@@ -17,4 +17,7 @@ module.exports = {
 		sourceType: 'module',
 	},
 	plugins: ['svelte3', 'jest'],
-};
+	globals: {
+		ENVIRONMENT: true,
+	},
+}

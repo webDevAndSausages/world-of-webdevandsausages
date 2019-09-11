@@ -1,5 +1,4 @@
 <script>
-	import {onMount} from 'svelte'
 	import {stateMachine, form} from './stores'
 	import Send from './svg/Send.svelte'
 	import {fly, crossfade, scale} from 'svelte/transition'
@@ -27,7 +26,6 @@
 	let result = Result.None
 	let show = false
 	let focused = false
-	let showError = false
 	let focusChange = 0
 	let labelOnTop = false
 
@@ -142,7 +140,7 @@
 <svelte:window on:keydown={onEscape} />
 {#if show}
 	<div
-		class="mt-1 relative pb-4"
+		class="relative"
 		transition:fly={{duration: 100, y: 100, opacity: 0.0, easing: linear}}>
 		<div class="relative" class:text-error-500={$form.error}>
 			{#if labelOnTop}

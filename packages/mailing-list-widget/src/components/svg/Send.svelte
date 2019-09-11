@@ -8,7 +8,7 @@ export let onClick
     top: 10px;
   }
   .send:hover svg {
-    color: red;
+    opacity: 0.8;
   }
 </style>
 

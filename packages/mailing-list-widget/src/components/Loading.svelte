@@ -1,5 +1,4 @@
 <script>
-	import {stateMachine} from './stores'
 	import {onMount} from 'svelte'
 	import {slide} from 'svelte/transition'
 	export let app = false

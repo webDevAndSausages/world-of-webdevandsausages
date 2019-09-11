@@ -2,3 +2,6 @@
 dist
 node_modules
 public/bundle.*
+.vscode
+.ideaDataSources
+dataSources
