@@ -6,7 +6,8 @@ module.exports = {
 			},
 			colors: {
 				background: 'var(--background)',
-				base: 'var(--base-text-color)',
+				base: 'var(--text-base-color)',
+				'mailing-list': 'var(--mailing-list-join-background)',
 				term: {
 					'brand-1': 'var(--term-brand-primary)',
 					'brand-2': 'var(--term-brand-secondary)',

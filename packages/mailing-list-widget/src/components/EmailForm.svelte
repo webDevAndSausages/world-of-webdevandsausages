@@ -32,14 +32,14 @@
 	$: labelOnTop = focused || $form.email
 	$: labelClasses = cc([
 		{
-			'ml-6 p-1 pt-0 text-term-brand-2 text-xs label-top bg-white h-3 z-30': labelOnTop,
+			'ml-6 p-1 pt-0 text-term-brand-2 text-xs label-top bg-mailing-list h-3 z-30': labelOnTop,
 			'pb-2 px-4 pt-2': !labelOnTop,
 		},
 		'absolute top-0 label-transition block pointer-events-none cursor-text text-term-brand-1 block',
 	])
 	$: inputClasses = cc([
 		{},
-		'outline-none text-black px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 text-white bg-transparent',
+		'outline-none text-base px-2 pb-2 pt-2 w-full border border-term-brand-2 bg-transparent',
 	])
 
 	$: showError = focusChange >= 2 && $form.error
@@ -93,10 +93,6 @@
 </script>
 
 <style>
-	input {
-		color: var(--base-text-color);
-	}
-
 	.label-transition {
 		transition: font-size 0.05s, line-height 0.1s;
 	}

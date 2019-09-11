@@ -1,5 +1,6 @@
 :root {
-	--background: #161616;
+	--background: #fff;
+	--mailing-list-join-background: #fff;
 	--text-base-color: #000;
 	--term-brand-primary: #00bcdd;
 	--term-brand-secondary: #ff00ff;
