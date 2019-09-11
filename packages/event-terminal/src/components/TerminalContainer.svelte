@@ -11,7 +11,7 @@
 		const elem = document.getElementById(lastId)
 		if (elem) {
 			elem.scrollIntoView({
-				start: 'block',
+				block: 'nearest',
 				bahavior: 'smooth',
 			})
 		}

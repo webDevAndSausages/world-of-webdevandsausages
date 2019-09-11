@@ -36,7 +36,7 @@
 		const elem = document.getElementById(id)
 		if (elem) {
 			elem.scrollIntoView({
-				start: 'block',
+				block: 'nearest',
 				bahavior: 'smooth',
 			})
 		}
@@ -68,7 +68,7 @@
 		if (c.length) {
 			switch (c) {
 				case 'r': {
-					$tokenError.validationOff = true
+					$tokenStore.validationOff = true
 					cmds.reset({component: 'Check'})
 					return
 				}

@@ -52,8 +52,8 @@
 		const elem = document.getElementById(formId)
 		if (elem) {
 			elem.scrollIntoView({
-				start: 'block',
-				bahavior: 'smooth',
+				block: 'nearest',
+				bahavior: 'smooth'
 			})
 		}
 	}
