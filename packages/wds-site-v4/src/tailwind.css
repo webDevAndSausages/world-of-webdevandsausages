@@ -3,7 +3,10 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 :root {
-	--background: #161616;
+	--background: #000;
+	--background-smoke: rgb(63, 63, 63);
+	--mailing-list-join-background: #000;
+	--text-base-color: #fff;
 	--term-brand-primary: #00bcdd;
 	--term-brand-secondary: #ff00ff;
 	--term-error: #fefb67;
@@ -43,7 +46,11 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 	opacity: 0.7;
 }
 
-body {
-	background: rgb(63, 63, 63);
-	background: radial-gradient(ellipse at center, rgb(63, 63, 63) 40%, #000 100%);
+#sapper {
+	background: var(--background);
+}
+
+.bg-glow {
+	background: var(--background-smoke);
+	background: radial-gradient(ellipse at center, var(--background-smoke) 10%, #000 70%);
 }

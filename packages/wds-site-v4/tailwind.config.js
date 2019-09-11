@@ -2,23 +2,25 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				term: [ 'var(--term-font-family)', 'monospace' ]
+				term: ['var(--term-font-family)', 'monospace'],
 			},
 			colors: {
-				base: 'var(--background)',
+				background: 'var(--background)',
+				base: 'var(--text-base-color)',
+				'mailing-list': 'var(--mailing-list-join-background)',
 				term: {
 					'brand-1': 'var(--term-brand-primary)',
 					'brand-2': 'var(--term-brand-secondary)',
 					success: 'var(--term-success)',
 					error: 'var(--term-error)',
-					base: 'var(--term-background-color)',
-					output: 'var(--term-output-text-color)'
-				}
-			}
-		}
+					background: 'var(--term-background-color)',
+					output: 'var(--term-output-text-color)',
+				},
+			},
+		},
 	},
 	variants: {
-		opacity: [ 'responsive', 'hover' ]
+		opacity: ['responsive', 'hover'],
 	},
-	plugins: [ require('tailwindcss-elevation')([ 'hover' ]) ]
+	plugins: [require('tailwindcss-elevation')(['hover'])],
 }
