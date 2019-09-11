@@ -5,7 +5,9 @@
 	import Failure from './Failure.svelte'
 </script>
 
-<StartButton>Join our mailing List</StartButton>
+<StartButton>
+	<slot>Join our mailing List</slot>
+</StartButton>
 <Success />
 <Failure />
 <EmailForm />

@@ -79,7 +79,7 @@
 					name="command"
 					bind:value
 					{style}
-					class="bg-term-base text-term-output"
+					class="bg-term-background text-term-output"
 					on:keyup={updateInputSize}
 					on:keydown={handleCmdInput}
 					disabled={!active} />

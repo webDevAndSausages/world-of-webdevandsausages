@@ -83,7 +83,7 @@
 	<div class="controls-container absolute">
 		<Controls />
 	</div>
-	<div id="term" class="screen p-6 text-term-text bg-term-base">
+	<div id="term" class="screen p-6 text-term-text bg-term-background">
 		<slot name="details">No current event</slot>
 		<slot name="output" class="block" />
 	</div>

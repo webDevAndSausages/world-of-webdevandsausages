@@ -1,6 +1,6 @@
 <script>
 	import {stateMachine, form} from './stores'
-	import Send from './svg/Send.svelte'
+	import Send from './Send.svelte'
 	import {fly, crossfade, scale} from 'svelte/transition'
 	import {linear} from 'svelte/easing'
 	import cc from 'classcat'
@@ -94,7 +94,7 @@
 
 <style>
 	input {
-		color: black;
+		color: var(--base-text-color);
 	}
 
 	.label-transition {

@@ -20,7 +20,7 @@
 </style>
 
 <div class="terminal-centered">
-	<div id="term" class="screen p-6 text-term-text bg-term-base">
+	<div id="term" class="screen p-6 text-term-text bg-term-background">
 		<TerminalTitle>VOLUME {event.volume || '?'}</TerminalTitle>
 		<TerminalOut title="When" detail={event.date} />
 		<TerminalOut title="What" detail={event.details} html />

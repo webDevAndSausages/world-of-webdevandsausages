@@ -53,7 +53,7 @@
 		if (elem) {
 			elem.scrollIntoView({
 				block: 'nearest',
-				bahavior: 'smooth'
+				bahavior: 'smooth',
 			})
 		}
 	}
