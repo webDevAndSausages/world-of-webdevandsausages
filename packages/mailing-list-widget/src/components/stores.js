@@ -6,23 +6,19 @@ export const machine = ({ init, states }) => {
 	if (!states.hasOwnProperty(init)) throw new Error(`That isn't a state, choose a real init state!`)
 	let current_state = init
 	const { subscribe, set } = writable(current_state)
-	console.log(states)
 	const send = (event) => {
-		console.log(states, event)
 		if (!states[current_state].on[event]) {
-			console.log('no such event')
+			console.log('no such event:', event)
 			return
 		}
 
 		if (!states[states[current_state].on[event]]) {
-			console.log('no such state')
+			console.log('no such state:', state)
 			return
 		}
 		current_state = states[current_state].on[event]
 		set(current_state)
 	}
-
-	console.log(current_state)
 
 	return {
 		subscribe,
@@ -41,24 +37,30 @@ const state_config = {
 		active: {
 			on: {
 				SUBMIT: 'loading',
-				QUIT: 'idle',
-				INVALID: 'active'
+				ABORT: 'idle',
+				INPUT_INVALID: 'warning'
 			}
 		},
 		warning: {
 			on: {
-				VALID: 'active'
+				VALID: 'active',
+				ABORT: 'idle'
 			}
 		},
 		loading: {
 			on: {
 				COMPLETE_SUCCESSFULLY: 'success',
-				COMPLETE_WITH_ERROR: 'error'
+				COMPLETE_WITH_ERROR: 'failure'
 			}
 		},
-		successMessage: {},
-		errorMessage: {
+		success: {
 			on: {
+				RESET: 'idle'
+			}
+		},
+		failure: {
+			on: {
+				RESET: 'idle',
 				TRY_AGAIN: 'active'
 			}
 		}

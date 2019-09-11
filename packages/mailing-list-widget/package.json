@@ -96,6 +96,7 @@
   },
   "dependencies": {
     "classcat": "4.0.2",
+    "daggy": "1.4.0",
     "ky": "0.13.0",
     "ramda": "0.26.1",
     "simplebar": "4.3.0-alpha.0",

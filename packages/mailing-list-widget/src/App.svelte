@@ -5,7 +5,8 @@
 
 <style>
 	.terminal-wrapper {
-		margin: 20px 10%;
+		margin: 20% auto;
+		width: 500px;
 	}
 
 	@media (max-width: 650px) {

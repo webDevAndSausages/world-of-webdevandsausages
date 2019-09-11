@@ -1,15 +1,31 @@
 <script>
-  import {stateMachine, form} from './stores/use-machine.js'
-  import Send from './svg/Send.svelte'
- 	import {fly, crossfade, scale} from 'svelte/transition'
+	import {onMount} from 'svelte'
+	import {stateMachine, form} from './stores'
+	import Send from './svg/Send.svelte'
+	import {fly, crossfade, scale} from 'svelte/transition'
 	import {linear} from 'svelte/easing'
 	import cc from 'classcat'
+	import {validateEmail} from './utils'
+	import {postEmail, Result} from './utils/request'
+	import Loading from './Loading.svelte'
+
+	const onEscape = e => {
+		if (
+			e.key.includes('Esc') &&
+			($stateMachine === 'active' || $stateMachine === 'warning')
+		) {
+			$form.email = ''
+			stateMachine.send('ABORT')
+		}
+	}
 
 	const [send, receive] = crossfade({
 		duration: 200,
 		fallback: scale,
 	})
 
+	let result = Result.None
+	let show = false
 	let focused = false
 	let showError = false
 	let focusChange = 0
@@ -25,18 +41,64 @@
 	])
 	$: inputClasses = cc([
 		{},
-		'outline-none px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 text-white bg-transparent',
+		'outline-none text-black px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 text-white bg-transparent',
 	])
 
 	$: showError = focusChange >= 2 && $form.error
+
+	$: showEscapeMsg = $stateMachine === 'active' || $stateMachine === 'warning'
 
 	function toggleFocused() {
 		focused = !focused
 		focusChange++
 	}
+
+	$: $form.error = validateEmail($form.email)
+		? validateEmail($form.email)
+		: null
+
+	async function handleSubmit() {
+		if ($form.error) {
+			stateMachine.send('INPUT_INVALID')
+		} else {
+			stateMachine.send('SUBMIT')
+			result = await postEmail({email: $form.email, receivesMail: true})
+			console.log(result)
+		}
+	}
+
+	function handleReturn(e) {
+		if (e.key === 'Enter') handleSubmit()
+  }
+  
+  function reset() {
+    setTimeout(() => stateMachine.send('RESET'), 4500)
+  }
+
+	$: result.cata({
+		None: () => {},
+		Pending: () => {},
+		Ok: () => {
+      stateMachine.send('COMPLETE_SUCCESSFULLY')
+      reset()
+    },
+		Failure: () => {
+      stateMachine.send('COMPLETE_WITH_ERROR')
+      reset()
+    }
+	})
+
+	$: show =
+		$stateMachine === 'active' ||
+		$stateMachine === 'warning' ||
+		$stateMachine === 'loading'
 </script>
 
 <style>
+	input {
+		color: black;
+	}
+
 	.label-transition {
 		transition: font-size 0.05s, line-height 0.1s;
 	}
@@ -74,14 +136,14 @@
 	input.disabled {
 		opacity: 0.7;
 		cursor: not-allowed !important;
-  }
+	}
 </style>
 
-{#if $stateMachine === 'active' || $stateMachine === 'warning'}
+<svelte:window on:keydown={onEscape} />
+{#if show}
 	<div
 		class="mt-1 relative pb-4"
-		in:fly={{duration: 500, y: 100, opacity: 0.5, easing: linear}}
-		out:fly={{duration: 500, y: -100, opacity: 0.5, easing: linear}}>
+		transition:fly={{duration: 100, y: 100, opacity: 0.0, easing: linear}}>
 		<div class="relative" class:text-error-500={$form.error}>
 			{#if labelOnTop}
 				<label
@@ -105,14 +167,24 @@
 				class={inputClasses}
 				on:focus={toggleFocused}
 				on:blur={toggleFocused}
+				on:keypress={handleReturn}
 				type="email"
 				bind:value={$form.email}
-				class:active={labelOnTop} />
-    </div>
-    <Send />
-    <div class="text-xs absolute bottom-0 right-0 -mb-1">ESC to exit</div>
-		{#if $form.error && showError}
-			<span class="text-term-error text-sm">{$form.error}</span>
+				class:active={labelOnTop}
+				disabled={$stateMachine === 'loading'} />
+		</div>
+		{#if $stateMachine === 'loading'}
+			<Loading />
+		{:else}
+			<Send onClick={handleSubmit} />
 		{/if}
+		<div class="flex justify-between">
+			{#if $form.error && $stateMachine === 'warning'}
+				<span class="text-gray-600 text-sm">{$form.error}</span>
+			{:else}
+				<div />
+			{/if}
+			<div class="escape-msg -mb-1 text-gray-600 text-sm">ESC to exit</div>
+		</div>
 	</div>
 {/if}
