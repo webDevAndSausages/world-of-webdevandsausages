@@ -67,23 +67,23 @@
 
 	function handleReturn(e) {
 		if (e.key === 'Enter') handleSubmit()
-  }
-  
-  function reset() {
-    setTimeout(() => stateMachine.send('RESET'), 4500)
-  }
+	}
+
+	function reset() {
+		setTimeout(() => stateMachine.send('RESET'), 4500)
+	}
 
 	$: result.cata({
 		None: () => {},
 		Pending: () => {},
 		Ok: () => {
-      stateMachine.send('COMPLETE_SUCCESSFULLY')
-      reset()
-    },
+			stateMachine.send('COMPLETE_SUCCESSFULLY')
+			reset()
+		},
 		Failure: () => {
-      stateMachine.send('COMPLETE_WITH_ERROR')
-      reset()
-    }
+			stateMachine.send('COMPLETE_WITH_ERROR')
+			reset()
+		},
 	})
 
 	$: show =

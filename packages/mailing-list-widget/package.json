@@ -108,5 +108,9 @@
   "homepage": "https://github.com/webDevAndSausages/world-of-webdevandsausages#readme",
   "directories": {
     "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webDevAndSausages/world-of-webdevandsausages.git"
   }
 }

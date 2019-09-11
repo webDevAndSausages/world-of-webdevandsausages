@@ -1,4 +1,4 @@
-# `@webdevandsauages/event-terminal`
+# `@webdevandsauages/mailing-list-widget`
 
 ### This is component is intended for use in [webdevandsausages.org](webdevandsausages.org) and is not suitable for other projects. The original boilerplate is from [svelte component template](https://github.com/YogliB/svelte-component-template).
 
@@ -14,32 +14,19 @@
 ## Getting Started usin the component
 
 ```bash
-npm i @webdevandsauages/event-terminal --save
+npm i @webdevandsauages/mailing-list-widget --save
 ```
 
 ### Include in your project
 
 ```js
 <script>
-  import {Terminal} from '@webdevandsausages/event-terminal'
+	import {JoinMailingList} from '@webdevandsausages/event-terminal'
 </script>
 
-<style>
-	.terminal-wrapper {
-		margin: 20px 10%;
-	}
-
-	@media (max-width: 650px) {
-		.terminal-wrapper {
-			margin: 20px 2%;
-		}
-	}
-</style>
-
-<div class="terminal-wrapper">
- /* it is possible to pass in the event here and the component will not fetch it itself */
+<div>
 	{#if process.browser}
-		<Terminal event={null} />
+		<JoinMailingList />
 	{/if}
 </div>
 ```
