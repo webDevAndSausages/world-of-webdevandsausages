@@ -7,7 +7,8 @@
 <div class="terminal-wrapper">
 	{#if process.browser}
 		<Terminal {event} />
-	{:else}
+		<!-- TODO: handle no event placeholder ssr -->
+	{:else if event && event.volume}
 		<SsrTerminal {event} />
 	{/if}
 </div>
