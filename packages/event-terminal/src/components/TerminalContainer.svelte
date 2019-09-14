@@ -45,24 +45,52 @@
 		}
 	}
 
+	:global(div.simplebar-scrollbar):before {
+		background: var(--term-brand-secondary);
+	}
+
+	:global(.sidebar-scrollbar) {
+		width: 10px;
+	}
+
+	:global(.simplebar-track .simplebar-scrollbar.simplebar-visible):before {
+		opacity: 0.7;
+	}
+
+	:global(.simplebar-content-wrapper),
+	:global(.simplebar-mask) {
+		border-radius: var(--term-border-radius);
+	}
+
+	.terminal-wrapper-full :global(.simplebar-content-wrapper),
+	.terminal-wrapper-full :global(.simplebar-mask) {
+		border-radius: 0;
+	}
+
 	.terminal-full {
 		animation: expand 0.3s linear;
 		@apply fixed top-0 left-0 z-10 w-full h-full;
 	}
 
 	.terminal-centered {
+		border: var(--term-border-width) solid var(--term-border-color);
+		box-shadow: var(--term-box-shadow);
+		border-radius: var(--term-border-radius);
 		position: relative;
 		height: 600px;
+	}
+
+	.terminal-centered .screen {
+		min-height: 600px;
 	}
 
 	.terminal-centered-return {
 		animation: retract 0.3s ease-in;
 	}
 
-	.screen {
-		border: var(--term-border-width) solid var(--term-border-color);
-		box-shadow: 0 10px 20px rgba(2, 1, 1, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-		border-radius: 8px;
+	.terminal-centered .screen,
+	.terminal-centered-return .screen {
+		border-radius: var(--term-border-radius);
 	}
 
 	.terminal-full .screen {
@@ -76,15 +104,17 @@
 	}
 </style>
 
-<div
-	class="terminal-{containerClass}"
-	data-simplebar
-	data-simplebar-auto-hide="false">
-	<div class="controls-container absolute">
-		<Controls />
+<span class="terminal-wrapper-{containerClass}">
+	<div
+		class="terminal terminal-{containerClass}"
+		data-simplebar
+		data-simplebar-auto-hide="false">
+		<div class="controls-container absolute">
+			<Controls />
+		</div>
+		<div id="term" class="screen p-6 text-term-text bg-term-background">
+			<slot name="details">No current event</slot>
+			<slot name="output" class="block" />
+		</div>
 	</div>
-	<div id="term" class="screen p-6 text-term-text bg-term-background">
-		<slot name="details">No current event</slot>
-		<slot name="output" class="block" />
-	</div>
-</div>
+</span>

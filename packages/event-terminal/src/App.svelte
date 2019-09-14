@@ -5,6 +5,10 @@
 </script>
 
 <style>
+	:global(body) {
+		background: #fff;
+	}
+
 	.terminal-wrapper {
 		margin: 20px 10%;
 		margin-top: 200px;

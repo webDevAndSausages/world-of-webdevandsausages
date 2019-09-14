@@ -23,6 +23,7 @@
 		position: relative;
 		top: -10px !important;
 		left: 1px !important;
+		background: var(--term-expander-color);
 	}
 
 	.v-line {
@@ -32,6 +33,7 @@
 		position: relative;
 		top: -19px !important;
 		left: 8px !important;
+		background: var(--term-expander-color);
 	}
 
 	.circle {
@@ -44,9 +46,9 @@
 <div class="term-controls p-1">
 	<div class="term-expander" on:click={store.actions.toggleExpander}>
 		<div class="circle" />
-		<div class="h-line bg-term-brand-2" />
+		<div class="h-line" />
 		{#if $store.open}
-			<div class="v-line bg-term-brand-2" />
+			<div class="v-line" />
 		{/if}
 	</div>
 </div>

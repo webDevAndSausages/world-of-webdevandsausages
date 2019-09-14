@@ -4,13 +4,15 @@
 	--term-brand-secondary: #ff00ff;
 	--term-error: #fefb67;
 	--term-success: #5ff967;
-	--term-border-color: none;
-	--term-border-width: none;
+	--term-border-color: #00bcdd;
+	--term-border-width: 1px;
+	--term-border-radius: 8px;
+	--term-box-shadow: 0px 0px 5px 5px rgba(47, 54, 55, 0.5);
 	--term-font-family: Inconsolata;
 	--term-font-size: 1.2rem;
 	--term-background-color: black;
 	--term-output-text-color: white;
-	--term-expander-color: #191919;
+	--term-expander-color: var(--term-brand-primary);
 }
 
 @tailwind base;
@@ -37,15 +39,4 @@ select:-webkit-autofill:focus {
 	-webkit-text-fill-color: #fff;
 	-webkit-box-shadow: 0 0 0px 1000px #000 inset;
 	transition: #000 5000s ease-in-out 0s;
-}
-
-.simplebar-scrollbar:before {
-	background: var(--term-brand-secondary);
-}
-.simplebar-scrollbar {
-	width: 10px;
-}
-
-.simplebar-track .simplebar-scrollbar.simplebar-visible:before {
-	opacity: 0.7;
 }
