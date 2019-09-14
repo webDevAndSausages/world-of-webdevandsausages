@@ -45,6 +45,10 @@
 		}
 	}
 
+	:global(div.simplebar-track.simplebar-vertical > div) {
+		max-height: 590px !important;
+	}
+
 	:global(div.simplebar-scrollbar):before {
 		background: var(--term-brand-secondary);
 	}

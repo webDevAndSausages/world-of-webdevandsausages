@@ -1,12 +1,20 @@
 <script>
+	import Facebook from './social-links/Facebook.svelte'
+	import Twitter from './social-links/Twitter.svelte'
+	import Github from './social-links/Github.svelte'
+	import Youtube from './social-links/Youtube.svelte'
+
 	export let segment
 </script>
 
 <style>
 	nav {
-		border-bottom: 1px solid var(--term-brand-primary);
+		position: fixed;
+		width: 100%;
+		border-top: 1px solid var(--term-brand-primary);
 		font-weight: 300;
 		padding: 0 1em;
+		z-index: 20;
 	}
 
 	ul {
@@ -19,11 +27,6 @@
 		content: '';
 		display: block;
 		clear: both;
-	}
-
-	li {
-		display: block;
-		float: left;
 	}
 
 	.selected {
@@ -40,31 +43,13 @@
 		display: block;
 		bottom: -1px;
 	}
-
-	a {
-		text-decoration: none;
-		@apply block pt-3 pb-3 pl-2 pr-2 text-white;
-	}
 </style>
 
 <nav>
 	<ul>
-		<li>
-			<a class={segment === undefined ? 'selected' : ''} href=".">home</a>
-		</li>
-		<li>
-			<a class={segment === 'about' ? 'selected' : ''} href="about">about</a>
-		</li>
-
-		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
-		     the blog data when we hover over the link or tap it on a touchscreen -->
-		<li>
-			<a
-				rel="prefetch"
-				class={segment === 'blog' ? 'selected' : ''}
-				href="blog">
-				blog
-			</a>
-		</li>
+		<Facebook />
+		<Twitter />
+		<Youtube />
+		<Github />
 	</ul>
 </nav>

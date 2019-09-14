@@ -52,7 +52,8 @@
 <svelte:head>
 	<title>Web Dev & Sausages</title>
 </svelte:head>
-<div class="pt-20 pb-20 bg-glow">
+
+<div class="pt-20 pb-20">
 	<h1 class="text-center text-term-brand-1">WEB DEV & SAUSAGES</h1>
 </div>
 
@@ -62,7 +63,7 @@
 	{/if}
 </div>
 
-<div class="terminal-wrapper mr-auto">
+<div class="terminal-wrapper mr-auto pt-20">
 	<Terminal {event} />
 </div>
 
