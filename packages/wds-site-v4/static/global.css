@@ -12409,20 +12409,22 @@ video {
 
 :root {
   --background: #000;
-  --background-smoke: rgb(63, 63, 63);
   --mailing-list-join-background: #000;
-  --text-base-color: #fff;
+  --brand-primary: #00bcdd;
+  --brand-secondary: #ff00ff;
   --term-brand-primary: #00bcdd;
   --term-brand-secondary: #ff00ff;
   --term-error: #fefb67;
   --term-success: #5ff967;
-  --term-border-color: none;
-  --term-border-width: none;
+  --term-border-color: #00bcdd;
+  --term-border-width: 1px;
+  --term-border-radius: 8px;
+  --term-box-shadow: 0px 0px 5px 5px rgb(0, 188, 221, 0.4);
   --term-font-family: Inconsolata;
   --term-font-size: 1.2rem;
   --term-background-color: black;
   --term-output-text-color: white;
-  --term-expander-color: #191919;
+  --term-expander-color: var(--term-brand-primary);
 }
 
 .term-title {
@@ -12434,7 +12436,15 @@ video {
 
 /* Change Autocomplete styles in Chrome*/
 
-input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus, select:-webkit-autofill, select:-webkit-autofill:hover, select:-webkit-autofill:focus {
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
   border: 1px solid #000;
   -webkit-text-fill-color: #fff;
   -webkit-box-shadow: 0 0 0px 1000px #000 inset;
@@ -12443,26 +12453,8 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
   transition: #000 5000s ease-in-out 0s;
 }
 
-.simplebar-scrollbar:before {
-  background: var(--term-brand-secondary);
-}
-
-.simplebar-scrollbar {
-  width: 10px;
-}
-
-.simplebar-track .simplebar-scrollbar.simplebar-visible:before {
-  opacity: 0.7;
-}
-
 #sapper {
   background: var(--background);
-}
-
-.bg-glow {
-  background: var(--background-smoke);
-  background: -o-radial-gradient(center, ellipse, var(--background-smoke) 10%, #000 70%);
-  background: radial-gradient(ellipse at center, var(--background-smoke) 10%, #000 70%);
 }
 
 @media (min-width: 640px){

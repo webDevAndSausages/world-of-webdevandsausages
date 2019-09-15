@@ -1,6 +1,8 @@
 import speakers from '../../content/speakers.json'
-import events from '../../content/events.json'
+import slugify from '@sindresorhus/slugify'
 import got from 'got'
+
+const createSlug = name => slugify(name, {lowercase: true, separator: '_'})
 
 export async function get(_req, res) {
 	let event = null
@@ -19,8 +21,14 @@ export async function get(_req, res) {
 		console.log(error.response.body)
 		//=> 'Internal server error ...'
 	}
+
+	const speakersWithSlugs = speakers.data.map(speaker => ({
+		...speaker,
+		slug: createSlug(speaker.name),
+	}))
+
 	// cache 10 min in browser and 20 min in cdn
 	res.set('Cache-Control', 'public, max-age=600, s-maxage=1200')
 	res.set(('Content-Type', 'application/json'))
-	res.json({speakers, events, event})
+	res.json({speakers: speakersWithSlugs, event})
 }

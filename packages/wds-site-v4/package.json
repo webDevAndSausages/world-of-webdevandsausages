@@ -20,6 +20,7 @@
     "last 3 version"
   ],
   "dependencies": {
+    "@sindresorhus/slugify": "^0.9.1",
     "@webdevandsausages/event-terminal": "^0.4.8",
     "@webdevandsausages/mailing-list-widget": "0.0.3",
     "compression": "^1.7.1",

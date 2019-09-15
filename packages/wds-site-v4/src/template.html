@@ -3,7 +3,7 @@
 <head>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width,initial-scale=1.0'>
-	<meta name='theme-color' content='#333333'>
+	<meta name='theme-color' content='#00bcdd'>
 
 	%sapper.base%
 
@@ -29,5 +29,46 @@
 	     and anything else it needs to hydrate the app and
 	     initialise the router -->
 	%sapper.scripts%
+	<script>
+		// this is a hack to prevent rerenders if someone uses the back button with a modal which uses a hash
+		const key = 'data-original-hash-href'
+
+		const makeUrl = (hash) => {
+			const current = document.location.href
+			return current.split("#")[0] + hash
+		}
+
+		const findA = (el) => {
+			do{
+				if(el.tagName.toLowerCase() === "a" && (el.hasAttribute(key) || el.getAttribute("href")[0] === "#")){
+					return el
+				}
+			} while(el = el.parentElement)
+		}
+
+		const changeHref = (event) => {
+			const a = findA(event.target)
+			if (a) {
+				let href
+				if(a.hasAttribute(key)){
+					href = a.getAttribute(key)
+				} else {
+					href = a.getAttribute('href')
+					a.setAttribute(key, href)
+					a.href = makeUrl(href)
+				}
+
+				if(event.button === 0 && !event.ctrlKey){
+					event.preventDefault()
+					document.location.hash = href
+				}
+			}
+		}
+
+		document.addEventListener('click', changeHref, true)
+		document.addEventListener('contextmenu', changeHref, true)
+		document.addEventListener('focus', changeHref, true)
+		document.addEventListener('auxclick', changeHref, true)
+	</script>
 </body>
 </html>
