@@ -13,6 +13,7 @@
 	import Terminal from './_terminal.svelte'
 	import SpeakerModal from '../components/SpeakerModal.svelte'
 	import {JoinMailingList} from '@webdevandsausages/mailing-list-widget'
+	import SpeakerLink from '../components/SpeakerLink.svelte'
 
 	export let event
 	export let speakers
@@ -50,22 +51,6 @@
 		}
 	}
 
-	.bracket {
-		font-weight: bold;
-	}
-
-	code,
-	pre {
-		font-family: inherit;
-		font-size: 1em;
-		max-width: 60vw;
-	}
-
-	em {
-		color: #fff;
-		font-style: normal;
-	}
-
 	.speakers {
 		max-width: 800px;
 		margin: auto;
@@ -77,14 +62,54 @@
 	}
 
 	.speaker {
-		height: 100%;
-		min-width: 0px;
-		align-content: space-around;
+		@apply h-full min-w-0 content-around text-lg overflow-hidden;
 		grid-column-end: span 1;
 		grid-row-end: span 1;
 		color: rgb(11, 126, 188);
-		font-size: 20px;
-		overflow: hidden;
+	}
+
+	.section-title {
+		color: var(--brand-secondary);
+	}
+
+	.title:hover {
+		animation: titleGlow 1.5s ease-in-out infinite alternate;
+		animation-delay: 0.2s;
+	}
+
+	.section-title:hover {
+		animation: subTitleGlow 1.5s ease-in-out infinite alternate;
+		animation-delay: 0.2s;
+	}
+
+	@keyframes titleGlow {
+		from {
+			text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff,
+				0 0 40px var(--brand-primary), 0 0 70px var(--brand-secondary),
+				0 0 80px var(--brand-primary), 0 0 100px var(--brand-primary),
+				0 0 150px var(--brand-primary);
+		}
+		to {
+			text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff,
+				0 0 20px var(--brand-primary), 0 0 35px var(--brand-secondary),
+				0 0 40px var(--brand-primary), 0 0 50px var(--brand-primary),
+				0 0 75px var(--brand-primary);
+		}
+	}
+
+	@keyframes subTitleGlow {
+		from {
+			text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff,
+				0 0 40px var(--brand-secondary), 0 0 70px var(--brand-secondary),
+				0 0 80px var(--brand-secondary), 0 0 100px var(--brand-secondary),
+				0 0 150px var(--brand-secondary);
+		}
+		to {
+			text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff,
+				0 0 20px var(--brand-secondary), 0 0 35px var(--brand-secondary),
+				0 0 40px var(--brand-secondary), 0 0 50px var(--brand-secondary),
+				0 0 75px var(--brand-secondary);
+		}
 	}
 </style>
 
@@ -93,7 +118,7 @@
 </svelte:head>
 
 <div class="pt-20 pb-20">
-	<h1 class="text-center text-term-brand-1">WEB DEV & SAUSAGES</h1>
+	<h1 class="title text-center text-term-brand-1">WEB DEV & SAUSAGES</h1>
 </div>
 
 <aside class="mailing-list-join-wrapper m-auto pt-10 pb-10">
@@ -106,18 +131,14 @@
 	<Terminal {event} />
 </section>
 
-<section class="pt-20 text-center">
-	<h3 class="text-term-brand-2 uppercase text-2xl pb-5">SPEAKERS</h3>
-	<div class="speakers">
+<section class="pt-20 pb-20 text-center">
+	<h3 class="section-title uppercase text-4xl">SPEAKER ALUMNI</h3>
+	<div class="speakers pt-10">
 		{#each speakers as speaker}
 			{#if speaker.talks.length}
-				<a
-					class="speaker text-term-brand-1 cursor-pointer"
-					href={`/#${speaker.slug}`}>
-					{speaker.name}
-				</a>
+				<SpeakerLink slug={speaker.slug}>{speaker.name}</SpeakerLink>
 			{:else}
-				<div class="speaker text-term-brand-1">{speaker.name}</div>
+				<div class="speaker text-term-brand-1 text-xl">{speaker.name}</div>
 			{/if}
 		{/each}
 	</div>

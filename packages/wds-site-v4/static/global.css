@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&display=swap');
 
+@import url('https://fonts.googleapis.com/css?family=Audiowide&display=swap');
+
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
@@ -12421,6 +12423,7 @@ video {
   --term-border-radius: 8px;
   --term-box-shadow: 0px 0px 5px 5px rgb(0, 188, 221, 0.4);
   --term-font-family: Inconsolata;
+  --term-title-font-family: 'Audiowide', cursive;
   --term-font-size: 1.2rem;
   --term-background-color: black;
   --term-output-text-color: white;
@@ -12436,15 +12439,7 @@ video {
 
 /* Change Autocomplete styles in Chrome*/
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus, select:-webkit-autofill, select:-webkit-autofill:hover, select:-webkit-autofill:focus {
   border: 1px solid #000;
   -webkit-text-fill-color: #fff;
   -webkit-box-shadow: 0 0 0px 1000px #000 inset;
@@ -12455,6 +12450,15 @@ select:-webkit-autofill:focus {
 
 #sapper {
   background: var(--background);
+}
+
+body {
+  font-family: var(--term-font-family);
+  font-size: 1.2rem;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--term-title-font-family);
 }
 
 @media (min-width: 640px){

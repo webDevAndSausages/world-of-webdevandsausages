@@ -60,6 +60,7 @@
 		overflow: auto;
 		position: relative;
 		width: 100%;
+		padding: 10px;
 	}
 
 	@media screen and (min-width: 769px) {
@@ -141,12 +142,20 @@
 		<div
 			class="modal-background left-0 bottom-0 absolute right-0 top-0"
 			on:click={close} />
-		<div class="modal-content bg-black" transition:scale|local={animProps}>
+		<div
+			class="modal-content bg-black text-white"
+			transition:scale|local={animProps}>
 			<!-- transition:_animation|local -->
-			<h3 class="text-white">{speaker.name}</h3>
+			<h3>{speaker.name}</h3>
 			{#each speaker.talks as talk}
-				<p class="text-white">{talk.details}</p>
-				<Video id={speaker.youtubeId} />
+				<p class="pt-1 pb-1">{talk.details}</p>
+				{#if talk.with}
+					<p class="pt-1 pb-1">together with {talk.with}</p>
+				{/if}
+				<Video
+					id={talk.youtubeId}
+					title={talk.details}
+					start={talk.startSeconds} />
 			{/each}
 		</div>
 		<button class="modal-close fixed" aria-label="close" on:click={close} />

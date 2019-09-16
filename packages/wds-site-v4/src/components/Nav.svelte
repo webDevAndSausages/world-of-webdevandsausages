@@ -9,12 +9,12 @@
 
 <style>
 	nav {
-		position: fixed;
+		position: absolute;
 		width: 100%;
 		border-top: 1px solid var(--term-brand-primary);
 		font-weight: 300;
 		padding: 0 1em;
-		z-index: 20;
+		z-index: 10;
 	}
 
 	ul {

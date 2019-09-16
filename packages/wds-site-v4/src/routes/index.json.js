@@ -24,6 +24,7 @@ export async function get(_req, res) {
 
 	const speakersWithSlugs = speakers.data.map(speaker => ({
 		...speaker,
+		talks: speaker.talks.filter(t => !!t.show),
 		slug: createSlug(speaker.name),
 	}))
 
