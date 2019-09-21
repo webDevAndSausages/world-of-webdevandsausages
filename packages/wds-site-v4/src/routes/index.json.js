@@ -18,7 +18,7 @@ export async function get(_req, res) {
 		})
 		event = JSON.parse(response.body)
 	} catch (error) {
-		console.log(error.response.body)
+		console.log(error)
 		//=> 'Internal server error ...'
 	}
 

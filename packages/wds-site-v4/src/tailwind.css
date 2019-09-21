@@ -45,6 +45,7 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 body {
 	font-family: var(--term-font-family);
 	font-size: 1.2rem;
+	color: #fff;
 }
 
 h1, h2, h3, h4, h5 {

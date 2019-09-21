@@ -1,6 +1,6 @@
 <script>
 	import Nav from '../components/Nav.svelte'
-
+	import Footer from '../components/Footer.svelte'
 	export let segment
 </script>
 
@@ -16,6 +16,10 @@
 
 <Nav {segment} />
 
-<main>
-	<slot />
-</main>
+<div class="container mx-auto px-0 sm:px-4 lg:px-8">
+	<main>
+		<slot />
+	</main>
+</div>
+
+<Footer />
