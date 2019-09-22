@@ -1,7 +1,7 @@
 <script>
 	export let title = undefined
 	export let className = ''
-	$: classNames = 'pt-12 pb-12 text-center ' + className
+	$: classNames = 'pt-16 pb-16 text-center ' + className
 </script>
 
 <style>

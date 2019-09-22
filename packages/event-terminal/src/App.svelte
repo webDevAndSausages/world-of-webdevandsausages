@@ -26,8 +26,7 @@
 	<Terminal />
 </div>
 
-<!--
+
 <div class="terminal-wrapper">
 	<SsrTerminal event={null}/>
 </div>
--->

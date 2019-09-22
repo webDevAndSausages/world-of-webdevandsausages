@@ -112,7 +112,7 @@
 	<div
 		class="terminal terminal-{containerClass}"
 		data-simplebar
-		data-simplebar-auto-hide="false">
+		data-simplebar-auto-hide="true">
 		<div class="controls-container absolute">
 			<Controls />
 		</div>
