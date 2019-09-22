@@ -27,7 +27,7 @@
 	}
 
 	.box {
-		padding: 1em;
+		padding: 2em;
 		display: flex;
 		flex-direction: column;
 		border: 1px solid var(--brand-primary);
@@ -39,8 +39,8 @@
 		@apply text-xl p-0 text-white text-left border-none;
 	}
 
-	.box h2 {
-		@apply text-xl p-0 text-white text-left uppercase;
+	.box :global(h2) {
+		@apply text-xl p-0 text-white text-left uppercase text-term-brand-1;
 		margin: 0 0 0.5em 0;
 	}
 
@@ -113,6 +113,10 @@
 				'one'
 				'two';
 		}
+	}
+
+	.blurbs-expanded :global(.blurb-image) {
+		display: none;
 	}
 </style>
 

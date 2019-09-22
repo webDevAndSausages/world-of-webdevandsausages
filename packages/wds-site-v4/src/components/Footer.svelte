@@ -5,6 +5,4 @@
 	}
 </style>
 
-<div class="footer flex text-center justify-center align-middle">
-	TODO: Footer
-</div>
+<div class="footer flex text-center justify-center align-middle" />
