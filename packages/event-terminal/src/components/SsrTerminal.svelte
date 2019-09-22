@@ -1,14 +1,17 @@
 <script>
 	import TerminalTitle from './TerminalTitle.svelte'
 	import TerminalOut from './TerminalOut.svelte'
+	import {formatDate} from './utils'
 
 	export let event = null
+	let formattedDate = ''
+	$: formattedDate = event && event.date ? formatDate(eventDate) : ''
 </script>
 
 <style>
 	.terminal-centered {
 		position: relative;
-		max-height: 600px;
+		height: 600px;
 	}
 
 	.screen {
@@ -19,12 +22,14 @@
 	}
 </style>
 
-<div class="terminal-centered">
-	<div id="term" class="screen p-6 text-term-text bg-term-background">
-		<TerminalTitle>VOLUME {event.volume || '?'}</TerminalTitle>
-		<TerminalOut title="When" detail={event.date} />
-		<TerminalOut title="What" detail={event.details} html />
-		<TerminalOut title="Where" detail={event.location} />
-		<TerminalOut title="Contact" detail={event.contact} html />
+{#if event}
+	<div class="terminal-centered">
+		<div id="term" class="screen p-6 text-term-text bg-term-background">
+			<TerminalTitle>VOLUME {event.volume || '?'}</TerminalTitle>
+			<TerminalOut title="When" detail={formattedDate} />
+			<TerminalOut title="What" detail={event.details} html />
+			<TerminalOut title="Where" detail={event.location} />
+			<TerminalOut title="Contact" detail={event.contact} html />
+		</div>
 	</div>
-</div>
+{/if}
