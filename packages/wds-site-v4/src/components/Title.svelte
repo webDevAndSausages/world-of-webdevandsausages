@@ -26,4 +26,4 @@
 </style>
 
 <h1 class="title text-center text-term-brand-1">{main}</h1>
-<p class="text-2xl text-white text-center">{sub}</p>
+<p class="text-xl md:text-2xl text-white text-center">{sub}</p>

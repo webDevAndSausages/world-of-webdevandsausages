@@ -1,5 +1,20 @@
 <script>
+	import {onMount} from 'svelte'
+	import {
+		blurbStore,
+		isWideGrid,
+		SPEAKING,
+		SPONSORING,
+	} from '../stores/blurb-store'
+	let blurbs_classes = 'blurbs'
 
+	onMount(async () => {
+		const {default: animate} = await import('animate-css-grid')
+		const blurbs = document.querySelector('.blurbs')
+		animate.wrapGrid(blurbs)
+	})
+
+	$: blurbs_classes = $isWideGrid ? 'blurbs blurbs-expanded' : 'blurbs'
 </script>
 
 <style>
@@ -20,7 +35,7 @@
 		box-shadow: var(--term-box-shadow);
 	}
 
-	.box a {
+	.box .box-link {
 		@apply text-xl p-0 text-white text-left border-none;
 	}
 
@@ -29,26 +44,31 @@
 		margin: 0 0 0.5em 0;
 	}
 
-	.box .learn-more {
+	.box .read-more,
+	.box .show-less {
 		display: block;
 		position: relative;
 		text-align: right;
 		margin-top: auto;
 		padding: 0 1.2em 0 0;
 		border-radius: var(--term-border-radius);
+		color: #fff;
 	}
 
 	.box:hover {
 		cursor: pointer;
 	}
 
-	.box:hover .learn-more {
+	.box:hover .read-more,
+	.box:hover .show-less {
 		color: white;
 		text-decoration: underline;
 	}
 
-	.box .learn-more::after,
-	.box a::after {
+	.box .read-more::after,
+	.box [data-open='false']::after,
+	.box .show-less::after,
+	.box [data-open='true']::after {
 		content: '';
 		position: absolute;
 		display: block;
@@ -56,7 +76,28 @@
 		top: 0.15em;
 		width: 1em;
 		height: 1em;
-		background: url(/icons/arrow-right.svg);
+	}
+
+	.box .show-less::after,
+	.box [data-open='true']::after {
+		background: url(/icons/arrow-up.svg);
+	}
+
+	.box .read-more::after,
+	.box [data-open='false']::after {
+		background: url(/icons/arrow-down.svg);
+	}
+
+	.box .show-less::after,
+	.box [data-open='true']::after {
+		content: '';
+		position: absolute;
+		display: block;
+		right: 0;
+		top: 0.15em;
+		width: 1em;
+		height: 1em;
+		background: url(/icons/arrow-up.svg);
 	}
 
 	@media (min-width: 1000px) {
@@ -66,22 +107,48 @@
 			grid-template-columns: repeat(2, 1fr);
 			grid-template-areas: 'one two';
 		}
+		.blurbs-expanded {
+			grid-template-columns: repeat(1, 1fr);
+			grid-template-areas:
+				'one'
+				'two';
+		}
 	}
 </style>
 
-<div class="blurbs">
-	<div class="box" style="background: var(--prime); grid-area: one;">
-		<a>
-			<h2>Sponsoring</h2>
-			<p>here</p>
-			<span class="learn-more">learn more</span>
-		</a>
+<div class={blurbs_classes}>
+	<div
+		class="box"
+		style="background: var(--prime); grid-area: one;"
+		data-open={$blurbStore.speaking}>
+		<div class="box-link" on:click={() => blurbStore.toggleBlurb(SPONSORING)}>
+			<!-- <h2> -->
+			<slot name="sponsoring-title">missing title</slot>
+			{#if !$blurbStore.sponsoring}
+				<!-- <p> -->
+				<slot name="sponsoring-blurb">missing blurb</slot>
+				<span class="read-more">Read more</span>
+			{:else}
+				<slot name="sponsoring-text">missing text</slot>
+				<span class="show-less">Show less</span>
+			{/if}
+		</div>
 	</div>
-	<div class="box" style="background: var(--flash); grid-area: two;">
-		<a>
-			<h2>Speaking</h2>
-			<p>here</p>
-			<span class="learn-more">learn more</span>
-		</a>
+	<div
+		class="box"
+		style="background: var(--flash); grid-area: two;"
+		data-open={$blurbStore.speaking}>
+		<div class="box-link" on:click={() => blurbStore.toggleBlurb(SPEAKING)}>
+			<!-- <h2> -->
+			<slot name="speaking-title">missing title</slot>
+			{#if !$blurbStore.speaking}
+				<!-- <p> -->
+				<slot name="speaking-blurb">missing blurb</slot>
+				<span class="read-more">Read more</span>
+			{:else}
+				<slot name="speaking-text">missing text</slot>
+				<span class="show-less">Show less</span>
+			{/if}
+		</div>
 	</div>
 </div>

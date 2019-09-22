@@ -23,6 +23,7 @@
     "@sindresorhus/slugify": "^0.9.1",
     "@webdevandsausages/event-terminal": "^0.4.8",
     "@webdevandsausages/mailing-list-widget": "0.0.3",
+    "animate-css-grid": "^1.4.1",
     "compression": "^1.7.1",
     "got": "^9.6.0",
     "polka": "^0.5.0",

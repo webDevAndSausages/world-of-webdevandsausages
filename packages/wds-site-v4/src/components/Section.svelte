@@ -32,7 +32,9 @@
 
 <section class={classNames}>
 	{#if title}
-		<h3 class="section-title uppercase text-term-brand-2 text-4xl pb-10">
+		<h3
+			class="section-title uppercase text-term-brand-2 text-2xl md:text-4xl
+			pb-10">
 			{title}
 		</h3>
 	{/if}

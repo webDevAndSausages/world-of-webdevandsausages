@@ -52,7 +52,7 @@
 
 <style>
 	.modal-background {
-		background-color: rgba(0, 188, 221, 0.76);
+		background-color: rgba(255, 188, 225, 0.76);
 	}
 
 	.modal-content {

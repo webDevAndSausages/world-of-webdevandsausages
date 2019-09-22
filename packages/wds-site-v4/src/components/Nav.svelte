@@ -28,21 +28,6 @@
 		display: block;
 		clear: both;
 	}
-
-	.selected {
-		position: relative;
-		display: inline-block;
-	}
-
-	.selected::after {
-		position: absolute;
-		content: '';
-		width: calc(100% - 1em);
-		height: 2px;
-		background-color: var(--term-brand-secondary);
-		display: block;
-		bottom: -1px;
-	}
 </style>
 
 <nav>

@@ -2,8 +2,8 @@
 	export function preload() {
 		return this.fetch(`index.json`)
 			.then(r => r.json())
-			.then(({event, speakers, events}) => {
-				return {event, speakers, events}
+			.then(({event, speakers, events, sponsors}) => {
+				return {event, speakers, events, sponsors: sponsors}
 			})
 	}
 </script>
@@ -11,15 +11,17 @@
 <script>
 	import {onMount} from 'svelte'
 	import Terminal from './_terminal.svelte'
+	import Sponsors from './_sponsors.svelte'
+	import About from './_about.svelte'
 	import SpeakerModal from '../components/SpeakerModal.svelte'
 	import {JoinMailingList} from '@webdevandsausages/mailing-list-widget'
 	import SpeakerAlumni from '../components/SpeakerAlumni.svelte'
-	import Blurb from '../components/Blurb.svelte'
 	import Section from '../components/Section.svelte'
 	import Title from '../components/Title.svelte'
 
 	export let event
 	export let speakers
+	export let sponsors
 </script>
 
 <style>
@@ -27,7 +29,7 @@
 		font-size: 2em;
 	}
 
-	@media (min-width: 480px) {
+	@media (min-width: 580px) {
 		:global(h1) {
 			font-size: 3em;
 		}
@@ -76,11 +78,15 @@
 </Section>
 
 <Section title="About">
-	<Blurb />
+	<About />
 </Section>
 
 <Section title="Speaker Alumni">
 	<SpeakerAlumni {speakers} />
+</Section>
+
+<Section title="Sponsors">
+	<Sponsors sponsors={sponsors.data} />
 </Section>
 
 <SpeakerModal {speakers} />

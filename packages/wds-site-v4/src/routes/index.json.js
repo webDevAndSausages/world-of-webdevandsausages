@@ -1,4 +1,5 @@
 import speakers from '../../content/speakers.json'
+import sponsors from '../../content/sponsors.json'
 import slugify from '@sindresorhus/slugify'
 import got from 'got'
 
@@ -31,5 +32,5 @@ export async function get(_req, res) {
 	// cache 10 min in browser and 20 min in cdn
 	res.set('Cache-Control', 'public, max-age=600, s-maxage=1200')
 	res.set(('Content-Type', 'application/json'))
-	res.json({speakers: speakersWithSlugs, event})
+	res.json({speakers: speakersWithSlugs, event, sponsors})
 }
