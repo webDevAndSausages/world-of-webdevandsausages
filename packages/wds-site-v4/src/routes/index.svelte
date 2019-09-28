@@ -13,9 +13,10 @@
 	import Terminal from './_terminal.svelte'
 	import Sponsors from './_sponsors.svelte'
 	import About from './_about.svelte'
-	import SpeakerModal from '../components/SpeakerModal.svelte'
+	import SpeakerModal from './_speaker_modal.svelte'
 	import {JoinMailingList} from '@webdevandsausages/mailing-list-widget'
-	import SpeakerAlumni from '../components/SpeakerAlumni.svelte'
+	import SpeakerAlumni from './_speaker_alumni.svelte'
+	import SwagModal from './_swag_modal.svelte'
 	import Section from '../components/Section.svelte'
 	import Title from '../components/Title.svelte'
 
@@ -87,6 +88,10 @@
 
 <Section title="Sponsors">
 	<Sponsors sponsors={sponsors.data} />
+</Section>
+
+<Section>
+	<SwagModal />
 </Section>
 
 <SpeakerModal {speakers} />

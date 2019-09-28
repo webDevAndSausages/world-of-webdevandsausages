@@ -1,5 +1,5 @@
 <script>
-	import SpeakerLink from './SpeakerLink.svelte'
+	import SpeakerLink from '../components/SpeakerLink.svelte'
 	export let speakers = {}
 </script>
 
