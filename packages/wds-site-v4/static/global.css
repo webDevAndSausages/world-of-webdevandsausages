@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400,700&display=swap');
 
-@import url('https://fonts.googleapis.com/css?family=Audiowide&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700&display=swap');
 
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
@@ -12423,7 +12423,7 @@ video {
   --term-border-radius: 8px;
   --term-box-shadow: 0px 0px 5px 5px rgb(0, 188, 221, 0.4);
   --term-font-family: Inconsolata;
-  --term-title-font-family: 'Audiowide', cursive;
+  --term-title-font-family: 'Quicksand', sans-serif;
   --term-font-size: 1.2rem;
   --term-background-color: black;
   --term-output-text-color: white;
@@ -12460,6 +12460,7 @@ body {
 
 h1, h2, h3, h4, h5 {
   font-family: var(--term-title-font-family);
+  font-weight: bold;
 }
 
 @media (min-width: 640px){
