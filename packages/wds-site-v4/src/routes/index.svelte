@@ -18,7 +18,7 @@
 	import SpeakerAlumni from './_speaker_alumni.svelte'
 	import SwagModal from './_swag_modal.svelte'
 	import Section from '../components/Section.svelte'
-	import Title from '../components/Title.svelte'
+	import Image from '../components/Image.svelte'
 
 	export let event
 	export let speakers
@@ -62,10 +62,8 @@
 	<title>Web Dev & Sausages</title>
 </svelte:head>
 
-<Section>
-	<Title
-		main="WEB DEV & SAUSAGES"
-		sub="The most awesome meetup in the world, possibly" />
+<Section style="padding-bottom:0px;">
+	<Image src="/images/wds-logo-rgb.png" alt="Wed Dev & Sausages logo" />
 </Section>
 
 <aside class="mailing-list-join-wrapper m-auto pt-10 pb-10">

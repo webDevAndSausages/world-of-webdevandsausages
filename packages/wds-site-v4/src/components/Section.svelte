@@ -1,12 +1,13 @@
 <script>
 	export let title = undefined
 	export let className = ''
-	$: classNames = 'pt-16 pb-16 text-center ' + className
+	export let style = ''
+	let classNames = 'pt-16 pb-16 text-center ' + className
 </script>
 
 <style>
 	.section-title {
-		color: var(--brand-secondary);
+		color: #fff;
 	}
 
 	.section-title:hover {
@@ -30,7 +31,7 @@
 	}
 </style>
 
-<section class={classNames}>
+<section class={classNames} style={style}>
 	{#if title}
 		<h3
 			class="section-title uppercase text-term-brand-2 text-2xl md:text-4xl
