@@ -28,20 +28,16 @@
 		<p>
 			Web Dev & Sausages is a completely volunteer event which exists thanks to
 			sponsors and volunteers. Since it began in 2016, it has attracted large,
-			enthusiastic groups of developers from Tampere and beyond. Events
-			fill up within a few hours of being announced. Sponsors contribute not only
-			money and spaces, but also their culture and ideas. Our goal is to join keep
-			the events high quality and exciting. Sponsoring companies benefit in a
-			number of ways:
+			enthusiastic groups of developers from Tampere and beyond. Events fill up
+			within a few hours of being announced. Sponsors contribute not only money
+			and spaces, but also their culture and ideas. Our goal is to join keep the
+			events high quality and exciting. Sponsoring companies benefit in a number
+			of ways:
 		</p>
 		<ul class="list-disc p-4">
 			<li>Company visibility among a large group of talented developers</li>
-			<li>
-				A presentation about the company, where you can also recruit
-			</li>
-			<li>
-				At least one developer from the company is invited to speak
-			</li>
+			<li>A presentation about the company, where you can also recruit</li>
+			<li>At least one developer from the company is invited to speak</li>
 			<li>
 				WD&S sponsors our proudly listed as supporters on our website for
 				eternity
@@ -68,16 +64,17 @@
 			{/if}
 		</div>
 		<p>
-			Dare to share something you care about or have learned with your fellow developers. It
-			is an empowering experience!
+			Dare to share something you care about or have learned with your fellow
+			developers. It is an empowering experience!
 		</p>
 	</div>
 	<div slot="speaking-text">
 		<p>
 			Web Dev & Sausages loves its speakers, and we take pride in the wide
 			variety of people who speak--developers, architects, designers, managers,
-			and artists. Topics can range from languages and tools, to
-			making music and even mental strategies. We like to embrace the full scope of developing for the web. So you belong too!
+			and artists. Topics can range from languages and tools, to making music
+			and even mental strategies. We like to embrace the full scope of
+			developing for the web. So you belong too!
 		</p>
 		<dl class="list-inside pb-4">
 			<dt>- Is x topic ok?</dt>
