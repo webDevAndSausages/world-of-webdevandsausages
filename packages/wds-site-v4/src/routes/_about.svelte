@@ -28,20 +28,19 @@
 		<p>
 			Web Dev & Sausages is a completely volunteer event which exists thanks to
 			sponsors and volunteers. Since it began in 2016, it has attracted large,
-			enthusiastic groups of developers from Tampere and beyond, with events
-			filling up within hours of being announced. Sponsors contribute not only
-			money and spaces, but also their culture and ideas. Our goal is to keep
+			enthusiastic groups of developers from Tampere and beyond. Events
+			fill up within a few hours of being announced. Sponsors contribute not only
+			money and spaces, but also their culture and ideas. Our goal is to join keep
 			the events high quality and exciting. Sponsoring companies benefit in a
 			number of ways:
 		</p>
 		<ul class="list-disc p-4">
-			<li>Visibility among a large group of developers of their company</li>
+			<li>Company visibility among a large group of talented developers</li>
 			<li>
-				A present to developers what the company is about and, e.g., if they are
-				recruiting
+				A presentation about the company, where you can also recruit
 			</li>
 			<li>
-				A developer from the company is invited to speak on a topic of interest
+				At least one developer from the company is invited to speak
 			</li>
 			<li>
 				WD&S sponsors our proudly listed as supporters on our website for
@@ -52,7 +51,7 @@
 			If you are interested in becoming a sponsor, please get in touch with
 			<a class="underline" href="mailto:juhani.kumara@solita.fi">Juhani</a>
 			,
-			<a class="underline" href="mailto:leo.melin@mylab.fi">Leo</a>
+			<a class="underline" href="mailto:leo@leomelin.com">Leo</a>
 			, or
 			<a class="underline" href="mailto:richard.vancamp@gmail.com">Richard</a>
 			and we will make a great event together!
@@ -69,16 +68,16 @@
 			{/if}
 		</div>
 		<p>
-			Dare to share something your interested in with your fellow developers. It
-			is an empowering experience.
+			Dare to share something you care about or have learned with your fellow developers. It
+			is an empowering experience!
 		</p>
 	</div>
 	<div slot="speaking-text">
 		<p>
-			Web Dev & Sausages loves its speakers and we take pride in the wide
-			variety of people, such as developers, architects, designers, managers,
-			and artists, as well as topics on everything, from languages and tools, to
-			making music and even mental strategies. So you belong too!
+			Web Dev & Sausages loves its speakers, and we take pride in the wide
+			variety of people who speak--developers, architects, designers, managers,
+			and artists. Topics can range from languages and tools, to
+			making music and even mental strategies. We like to embrace the full scope of developing for the web. So you belong too!
 		</p>
 		<dl class="list-inside pb-4">
 			<dt>- Is x topic ok?</dt>
@@ -99,10 +98,10 @@
 			<dd>Yep, you do. Check out our swag link below.</dd>
 		</dl>
 		<p>
-			If you are interested in becoming a sponsor, please get in touch with
+			If you are interested in speaking, please get in touch with
 			<a class="underline" href="mailto:juhani.kumara@solita.fi">Juhani</a>
 			,
-			<a class="underline" href="mailto:leo.melin@mylab.fi">Leo</a>
+			<a class="underline" href="mailto:leo@leomelin.com">Leo</a>
 			, or
 			<a class="underline" href="mailto:richard.vancamp@gmail.com">Richard</a>
 			and we will make a great event together!
