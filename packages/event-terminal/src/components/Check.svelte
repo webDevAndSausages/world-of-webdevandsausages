@@ -12,6 +12,7 @@
 	import FailureOut from './FailureOut.svelte'
 	import SuccessOut from './SuccessOut.svelte'
 	import FormButtons from './FormButtons.svelte'
+	import {CANCEL, SUBMIT, RESET} from './constants'
 	// models & stores
 	import {Result} from './models/Result'
 	import {
@@ -67,14 +68,14 @@
 		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
 		if (c.length) {
 			switch (c) {
-				case 'r': {
+				case RESET: {
 					$tokenStore.validationOff = true
 					cmds.reset({component: 'Check'})
 					return
 				}
-				case 's':
+				case SUBMIT:
 					return submit()
-				case 'x':
+				case CANCEL:
 					return cmds.wait()
 				default:
 					return cmds.invalid({cmd})
@@ -85,7 +86,7 @@
 		return
 	}
 
-	const validCmds = ['r', 's', 'x']
+	const validCmds = [RESET, SUBMIT, CANCEL]
 
 	function handleBtnClick(cmd) {
 		if (validCmds.includes(cmd)) {

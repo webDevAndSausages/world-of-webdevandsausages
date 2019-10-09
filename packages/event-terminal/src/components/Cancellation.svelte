@@ -19,6 +19,7 @@
 		createTokenValidationStore,
 	} from './stores/tokenStore'
 	import {getFullFormCmd, normalizeCmd} from './utils'
+	import {RESET, CANCEL, SUBMIT} from './constants'
 
 	const tokenStore = createTokenStore()
 	const tokenError = createTokenValidationStore(tokenStore)
@@ -64,14 +65,14 @@
 		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
 		if (c.length) {
 			switch (c) {
-				case 'r': {
+				case RESET: {
 					$tokenStore.validationOff = true
 					cmds.reset({component: 'Cancellation'})
 					return
 				}
-				case 's':
+				case SUBMIT:
 					return submit()
-				case 'x':
+				case CANCEL:
 					return cmds.wait()
 				default:
 					return cmds.invalid({cmd})

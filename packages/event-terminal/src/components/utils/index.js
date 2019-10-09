@@ -42,7 +42,8 @@ export const getPixelWidthOfText = id => txt => {
 
 const commandsRegex = /^(r|register|x|cancel|c|check|h|help)$/
 
-export const isValidCmd = value => commandsRegex.test(value)
+export const isValidCmd = value =>
+	is(String, value) && commandsRegex.test(value.toLowerCase())
 
 export const normalizeCmd = cmd =>
 	cmd

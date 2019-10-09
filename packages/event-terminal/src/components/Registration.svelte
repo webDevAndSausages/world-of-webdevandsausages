@@ -20,6 +20,9 @@
 		initialState,
 		successAsciiStore,
 	} from './stores/registrationStore'
+	import {REGISTER, SUBMIT, CANCEL} from './constants'
+
+	const validCmds = [REGISTER, SUBMIT, CANCEL]
 
 	import {getFullFormCmd, normalizeCmd} from './utils'
 
@@ -67,14 +70,14 @@
 		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
 		if (c.length) {
 			switch (c) {
-				case 'r': {
+				case REGISTER: {
 					$formValuesStore.validationOff = true
 					cmds.reset({component: 'Registration'})
 					return
 				}
-				case 's':
+				case SUBMIT:
 					return submit()
-				case 'x':
+				case CANCEL:
 					return cmds.wait()
 				default:
 					return cmds.invalid({cmd})
@@ -84,8 +87,6 @@
 		}
 		return
 	}
-
-	const validCmds = ['r', 's', 'x']
 
 	function handleBtnClick(cmd) {
 		if (validCmds.includes(cmd)) {
@@ -130,9 +131,6 @@
 </script>
 
 <style>
-	.registration {
-	}
-
 	.success-ascii {
 		min-height: 200px;
 	}

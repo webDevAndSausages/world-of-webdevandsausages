@@ -8,11 +8,11 @@ const initialFormValues = {
 	firstName: '',
 	lastName: '',
 	affiliation: '',
-	validationOff: false
+	validationOff: false,
 }
 
 export const initialState = {
-	values: initialFormValues
+	values: initialFormValues,
 }
 
 export const createFormValuesStore = () => writable(initialState)
@@ -24,14 +24,15 @@ const validations = {
 	affiliation: always(null),
 }
 
-export const createValidationStore = formValuesStore => derived(formValuesStore, $r => {
-	const errors = evolve(validations, $r.values)
-	const errorResults = Object.values(errors)
-	const isValid = errorResults.filter(identity).length === 0
-	return $r.validationOff ? {errors: {}, isValid: true} : {errors, isValid}
-})
+export const createValidationStore = formValuesStore =>
+	derived(formValuesStore, $r => {
+		const errors = evolve(validations, $r.values)
+		const errorResults = Object.values(errors)
+		const isValid = errorResults.filter(identity).length === 0
+		return $r.validationOff ? {errors: {}, isValid: true} : {errors, isValid}
+	})
 
-const LINE_DISPLAY_DELAY = 200
+const LINE_DISPLAY_DELAY = 50
 
 export const successAsciiStore = readable('', set => {
 	const successArray = successAscii.split('\n')
