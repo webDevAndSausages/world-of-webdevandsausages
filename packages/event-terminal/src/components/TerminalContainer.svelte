@@ -81,11 +81,11 @@
 		box-shadow: var(--term-box-shadow);
 		border-radius: var(--term-border-radius);
 		position: relative;
-		height: 600px;
+		height: 675px;
 	}
 
 	.terminal-centered .screen {
-		min-height: 600px;
+		min-height: 675px;
 	}
 
 	.terminal-centered-return {

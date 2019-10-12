@@ -42,7 +42,7 @@
 	let failureData = null
 	let success = ''
 	let cmdInputValue = ''
-	let formId = `registration-${index}`
+	let scrollAnchorId = `scroll-anchor-${index}`
 	let blurred = true
 
 	let eventId = $event.okOrNull($event).id
@@ -53,7 +53,7 @@
 
 	async function scroll() {
 		await tick()
-		const elem = document.getElementById('scroll-anchor')
+		const elem = document.getElementById(scrollAnchorId)
 		if (elem) {
 			elem.scrollIntoView({
 				block: 'nearest',
@@ -130,7 +130,7 @@
 		},
 	})
 
-	function onInputFocus(event) {
+	function onFocusChange(event) {
 		blurred = !event.detail
 	}
 
@@ -161,7 +161,7 @@
 	<TerminalTitle>REGISTRATION</TerminalTitle>
 
 	<div class="registration flex-col p-2 pt-4">
-		<form id={formId}>
+		<form>
 			<fieldset class="flex-1">
 				<Input
 					label="email"
@@ -169,7 +169,7 @@
 					bind:value={$formValuesStore.values.email}
 					error={$validationStore.errors.email}
 					disabled={!active}
-					on:focused={onInputFocus} />
+					on:focused={onFocusChange} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
@@ -177,7 +177,7 @@
 					bind:value={$formValuesStore.values.firstName}
 					error={$validationStore.errors.firstName}
 					disabled={!active}
-					on:focused={onInputFocus} />
+					on:focused={onFocusChange} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
@@ -185,7 +185,7 @@
 					bind:value={$formValuesStore.values.lastName}
 					error={$validationStore.errors.lastName}
 					disabled={!active}
-					on:focused={onInputFocus} />
+					on:focused={onFocusChange} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
@@ -193,13 +193,12 @@
 					bind:value={$formValuesStore.values.affiliation}
 					error={$validationStore.errors.affiliation}
 					disabled={!active}
-					on:focused={onInputFocus} />
+					on:focused={onFocusChange} />
 			</fieldset>
 			<FormButtons
 				handleClick={handleBtnClick}
 				submitDisabled={!$validationStore.isValid}
-				readOnly={!active}
-				on:focused={onInputFocus} />
+				readOnly={!active} />
 		</form>
 
 		{#if $validationStore.isValid}
@@ -243,5 +242,5 @@
 			<FailureOut status={failureData.status} message={failureData.message} />
 		{/if}
 	</div>
-	<div id="scroll-anchor" style="height: 1px" />
+	<div id={scrollAnchorId} style="height: 1px" />
 </section>

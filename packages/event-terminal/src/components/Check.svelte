@@ -1,5 +1,5 @@
 <script>
-	import {getContext, tick} from 'svelte'
+	import {getContext, tick, onMount} from 'svelte'
 	import {writable} from 'svelte/store'
 	// api call
 	import api from './api'
@@ -54,6 +54,7 @@
 	let success = ''
 	let cmdInputValue = ''
 	let formId = `check-${index}`
+	let blurred = true
 
 	let eventId = $event.okOrNull($event).id
 
@@ -118,6 +119,26 @@
 			cmds.wait()
 		},
 	})
+
+	function onFocusChange(event) {
+		blurred = !event.detail
+	}
+
+	// if the form is blurred and active you can
+	// execute commands with key press
+	function handleKeyPress(e) {
+		if (active && blurred && validCmds.includes(e.key.toLowerCase())) {
+			cmdInputValue = e.key
+			onCmd(e.key)
+		}
+	}
+
+	onMount(() => {
+		document.addEventListener('keypress', handleKeyPress)
+		return () => {
+			document.removeEventListener('keypress', handleKeyPress)
+		}
+	})
 </script>
 
 <section {id}>
@@ -129,7 +150,8 @@
 					label="verification token"
 					bind:value={$tokenStore.token}
 					error={$tokenError}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onFocusChange} />
 			</fieldset>
 			<FormButtons
 				handleClick={handleBtnClick}
