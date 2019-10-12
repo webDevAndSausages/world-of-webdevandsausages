@@ -31,7 +31,7 @@
 	}
 </style>
 
-<section class={classNames} style={style}>
+<section class={classNames} {style}>
 	{#if title}
 		<h3
 			class="section-title uppercase text-term-brand-2 text-2xl md:text-4xl

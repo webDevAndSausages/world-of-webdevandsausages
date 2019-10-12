@@ -1,10 +1,25 @@
 <script>
-	import {getContext} from 'svelte'
+	import {getContext, onMount} from 'svelte'
 	import CmdInput from './CmdInput.svelte'
 	import {showForStatusOf, getPixelWidthOfText} from './utils'
 	import {Result} from './models/Result'
 	import {isValidCmd, getFullTerminalCmd, normalizeCmd} from './utils'
 	import CmdButton from './CmdButton.svelte'
+	import {REGISTER, CANCEL, CHECK, HELP} from './constants'
+
+	function handleKeyPress(e) {
+		if (active && isValidCmd(e.key)) {
+			cmdInputValue = e.key
+			onCmd(e.key)
+		}
+	}
+
+	onMount(() => {
+		document.addEventListener('keypress', handleKeyPress)
+		return () => {
+			document.removeEventListener('keypress', handleKeyPress)
+		}
+	})
 
 	// TODO: inactive state
 	export let active
@@ -18,22 +33,22 @@
 	let commandButtons = [
 		{
 			text: 'register',
-			cmd: 'r',
+			cmd: REGISTER,
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST'),
 		},
 		{
 			text: 'cancel',
-			cmd: 'x',
+			cmd: CANCEL,
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL'),
 		},
 		{
 			text: 'check',
-			cmd: 'c',
+			cmd: CHECK,
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL'),
 		},
 		{
 			text: 'help',
-			cmd: 'h',
+			cmd: HELP,
 			show: showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL'),
 		},
 	]
@@ -47,13 +62,13 @@
 		if (c.length && isValidCmd(c)) {
 			const cmdLetter = normalizeCmd(c)
 			switch (cmdLetter) {
-				case 'r':
+				case REGISTER:
 					return cmds.register()
-				case 'x':
+				case CANCEL:
 					return cmds.cancel()
-				case 'c':
+				case CHECK:
 					return cmds.check()
-				case 'h':
+				case HELP:
 					return cmds.help()
 				default:
 					return cmds.invalid({cmd})
@@ -92,6 +107,7 @@
 	<CmdInput
 		on:cmd={({detail}) => onCmd(detail)}
 		bind:value={cmdInputValue}
+		tabindex={visibleCmdButtons.length}
 		{index}
 		{active} />
 </div>

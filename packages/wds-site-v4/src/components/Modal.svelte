@@ -102,9 +102,7 @@
 	<div
 		class="modal-background left-0 bottom-0 absolute right-0 top-0"
 		on:click={close} />
-	<div
-		class={contentClasses}
-		transition:scale|local={animProps}>
+	<div class={contentClasses} transition:scale|local={animProps}>
 		<!-- transition:_animation|local -->
 		<slot />
 	</div>

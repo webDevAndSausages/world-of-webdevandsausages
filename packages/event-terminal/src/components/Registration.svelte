@@ -1,5 +1,5 @@
 <script>
-	import {getContext, tick} from 'svelte'
+	import {getContext, tick, onMount} from 'svelte'
 	import {writable} from 'svelte/store'
 	// components
 	import Input from './Input.svelte'
@@ -20,6 +20,9 @@
 		initialState,
 		successAsciiStore,
 	} from './stores/registrationStore'
+	import {REGISTER, SUBMIT, CANCEL} from './constants'
+
+	const validCmds = [REGISTER, SUBMIT, CANCEL]
 
 	import {getFullFormCmd, normalizeCmd} from './utils'
 
@@ -39,7 +42,8 @@
 	let failureData = null
 	let success = ''
 	let cmdInputValue = ''
-	let formId = `registration-${index}`
+	let scrollAnchorId = `scroll-anchor-${index}`
+	let blurred = true
 
 	let eventId = $event.okOrNull($event).id
 	async function submit(_ev) {
@@ -49,7 +53,7 @@
 
 	async function scroll() {
 		await tick()
-		const elem = document.getElementById(formId)
+		const elem = document.getElementById(scrollAnchorId)
 		if (elem) {
 			elem.scrollIntoView({
 				block: 'nearest',
@@ -67,14 +71,14 @@
 		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
 		if (c.length) {
 			switch (c) {
-				case 'r': {
+				case REGISTER: {
 					$formValuesStore.validationOff = true
 					cmds.reset({component: 'Registration'})
 					return
 				}
-				case 's':
+				case SUBMIT:
 					return submit()
-				case 'x':
+				case CANCEL:
 					return cmds.wait()
 				default:
 					return cmds.invalid({cmd})
@@ -84,8 +88,6 @@
 		}
 		return
 	}
-
-	const validCmds = ['r', 's', 'x']
 
 	function handleBtnClick(cmd) {
 		if (validCmds.includes(cmd)) {
@@ -127,14 +129,31 @@
 			cmds.wait()
 		},
 	})
+
+	function onFocusChange(event) {
+		blurred = !event.detail
+	}
+
+	// if the form is blurred and active you can
+	// execute commands with key press
+	function handleKeyPress(e) {
+		if (active && blurred && validCmds.includes(e.key.toLowerCase())) {
+			cmdInputValue = e.key
+			onCmd(e.key)
+		}
+	}
+
+	onMount(() => {
+		document.addEventListener('keypress', handleKeyPress)
+		return () => {
+			document.removeEventListener('keypress', handleKeyPress)
+		}
+	})
 </script>
 
 <style>
-	.registration {
-	}
-
 	.success-ascii {
-		min-height: 200px;
+		min-height: 400px;
 	}
 </style>
 
@@ -142,35 +161,39 @@
 	<TerminalTitle>REGISTRATION</TerminalTitle>
 
 	<div class="registration flex-col p-2 pt-4">
-		<form id={formId}>
+		<form>
 			<fieldset class="flex-1">
 				<Input
 					label="email"
 					type="email"
 					bind:value={$formValuesStore.values.email}
 					error={$validationStore.errors.email}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onFocusChange} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
 					label="first name"
 					bind:value={$formValuesStore.values.firstName}
 					error={$validationStore.errors.firstName}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onFocusChange} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
 					label="last name"
 					bind:value={$formValuesStore.values.lastName}
 					error={$validationStore.errors.lastName}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onFocusChange} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
 					label="affiliation"
 					bind:value={$formValuesStore.values.affiliation}
 					error={$validationStore.errors.affiliation}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onFocusChange} />
 			</fieldset>
 			<FormButtons
 				handleClick={handleBtnClick}
@@ -189,10 +212,8 @@
 
 	<div id={`result-${index}`}>
 		{#if resultLoading}
-			<Spinner show={true} />
-		{/if}
-
-		{#if successData}
+			<Spinner show={true} style="padding-left:10px" />
+		{:else if successData}
 			<div class="flex flex-col text-white pb-8">
 				<SuccessOut>
 					<div class="flex-initial">You are {successData.displayStatus}</div>
@@ -212,15 +233,14 @@
 				{#if successData.status === 'REGISTERED'}
 					<div
 						class="flex w-full justify-center success-ascii text-term-brand-1
-						-m-6">
+						-m-6 relative">
 						<pre>{success}</pre>
 					</div>
 				{/if}
 			</div>
-		{/if}
-
-		{#if failureData}
+		{:else if failureData}
 			<FailureOut status={failureData.status} message={failureData.message} />
 		{/if}
 	</div>
+	<div id={scrollAnchorId} style="height: 1px" />
 </section>

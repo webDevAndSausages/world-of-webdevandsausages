@@ -1,5 +1,5 @@
 <script>
-	import {getContext, tick} from 'svelte'
+	import {getContext, tick, onMount} from 'svelte'
 	import {writable} from 'svelte/store'
 	// api call
 	import api from './api'
@@ -12,6 +12,7 @@
 	import FailureOut from './FailureOut.svelte'
 	import SuccessOut from './SuccessOut.svelte'
 	import FormButtons from './FormButtons.svelte'
+	import {CANCEL, SUBMIT, RESET} from './constants'
 	// models & stores
 	import {Result} from './models/Result'
 	import {
@@ -53,6 +54,7 @@
 	let success = ''
 	let cmdInputValue = ''
 	let formId = `check-${index}`
+	let blurred = true
 
 	let eventId = $event.okOrNull($event).id
 
@@ -67,14 +69,14 @@
 		const c = cmd && cmd.length ? normalizeCmd(cmd) : ''
 		if (c.length) {
 			switch (c) {
-				case 'r': {
+				case RESET: {
 					$tokenStore.validationOff = true
 					cmds.reset({component: 'Check'})
 					return
 				}
-				case 's':
+				case SUBMIT:
 					return submit()
-				case 'x':
+				case CANCEL:
 					return cmds.wait()
 				default:
 					return cmds.invalid({cmd})
@@ -85,7 +87,7 @@
 		return
 	}
 
-	const validCmds = ['r', 's', 'x']
+	const validCmds = [RESET, SUBMIT, CANCEL]
 
 	function handleBtnClick(cmd) {
 		if (validCmds.includes(cmd)) {
@@ -117,6 +119,26 @@
 			cmds.wait()
 		},
 	})
+
+	function onFocusChange(event) {
+		blurred = !event.detail
+	}
+
+	// if the form is blurred and active you can
+	// execute commands with key press
+	function handleKeyPress(e) {
+		if (active && blurred && validCmds.includes(e.key.toLowerCase())) {
+			cmdInputValue = e.key
+			onCmd(e.key)
+		}
+	}
+
+	onMount(() => {
+		document.addEventListener('keypress', handleKeyPress)
+		return () => {
+			document.removeEventListener('keypress', handleKeyPress)
+		}
+	})
 </script>
 
 <section {id}>
@@ -128,7 +150,8 @@
 					label="verification token"
 					bind:value={$tokenStore.token}
 					error={$tokenError}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onFocusChange} />
 			</fieldset>
 			<FormButtons
 				handleClick={handleBtnClick}

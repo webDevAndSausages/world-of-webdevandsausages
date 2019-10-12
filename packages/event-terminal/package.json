@@ -1,6 +1,6 @@
 {
 	"name": "@webdevandsausages/event-terminal",
-	"version": "0.5.21",
+	"version": "0.5.5",
 	"author": "Richard Van Camp",
 	"license": "MIT",
 	"description": "A component for display a WD&S event and executing, checking, or cancelling event resgistration",

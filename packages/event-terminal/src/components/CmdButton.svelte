@@ -32,7 +32,6 @@
 		border-image-slice: 1 1 0 0;
 		box-shadow: -0.5em 0.5em rgba(16, 24, 50, 0);
 		transform-origin: left bottom;
-		transition: all 200ms ease-in-out;
 	}
 
 	button.term:before,
