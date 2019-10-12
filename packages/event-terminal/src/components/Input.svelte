@@ -1,9 +1,11 @@
 <script>
-	import {tick, onMount} from 'svelte'
+	import {tick, onMount, createEventDispatcher} from 'svelte'
 	import {crossfade, scale} from 'svelte/transition'
 	import {fly} from 'svelte/transition'
 	import {quadOut} from 'svelte/easing'
 	import cc from 'classcat'
+
+	const dispatch = createEventDispatcher()
 
 	const [send, receive] = crossfade({
 		duration: 200,
@@ -21,7 +23,7 @@
 	export let disabled = false
 
 	let _id
-	let focused = false
+	export let focused = false
 	let focusChange = 0
 	let labelClasses = ''
 	let inputClasses = ''
@@ -60,6 +62,7 @@
 	function toggleFocused() {
 		focused = !focused
 		focusChange++
+		dispatch('focused', focused)
 	}
 
 	function onInput(ev) {

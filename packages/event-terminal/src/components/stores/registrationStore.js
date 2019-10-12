@@ -8,7 +8,7 @@ const initialFormValues = {
 	firstName: '',
 	lastName: '',
 	affiliation: '',
-	validationOff: false,
+	validationOff: false
 }
 
 export const initialState = {

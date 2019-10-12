@@ -1,5 +1,5 @@
 <script>
-	import {getContext, tick} from 'svelte'
+	import {getContext, tick, onMount} from 'svelte'
 	import {writable} from 'svelte/store'
 	// components
 	import Input from './Input.svelte'
@@ -43,6 +43,7 @@
 	let success = ''
 	let cmdInputValue = ''
 	let formId = `registration-${index}`
+	let blurred = true
 
 	let eventId = $event.okOrNull($event).id
 	async function submit(_ev) {
@@ -128,6 +129,26 @@
 			cmds.wait()
 		},
 	})
+
+	function onInputFocus(event) {
+		blurred = !event.detail
+	}
+
+	// if the form is blurred and active you can 
+	// execute commands with key press
+	function handleKeyPress(e) {
+		if (active && blurred && validCmds.includes(e.key.toLowerCase())) {
+			cmdInputValue = e.key
+			onCmd(e.key)
+		}
+	}
+
+	onMount(() => {
+		document.addEventListener('keypress', handleKeyPress)
+		return () => {
+			document.removeEventListener('keypress', handleKeyPress)
+		}
+	})
 </script>
 
 <style>
@@ -147,33 +168,38 @@
 					type="email"
 					bind:value={$formValuesStore.values.email}
 					error={$validationStore.errors.email}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onInputFocus} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
 					label="first name"
 					bind:value={$formValuesStore.values.firstName}
 					error={$validationStore.errors.firstName}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onInputFocus} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
 					label="last name"
 					bind:value={$formValuesStore.values.lastName}
 					error={$validationStore.errors.lastName}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onInputFocus} />
 			</fieldset>
 			<fieldset class="flex-1">
 				<Input
 					label="affiliation"
 					bind:value={$formValuesStore.values.affiliation}
 					error={$validationStore.errors.affiliation}
-					disabled={!active} />
+					disabled={!active}
+					on:focused={onInputFocus} />
 			</fieldset>
 			<FormButtons
 				handleClick={handleBtnClick}
 				submitDisabled={!$validationStore.isValid}
-				readOnly={!active} />
+				readOnly={!active}
+				on:focused={onInputFocus} />
 		</form>
 
 		{#if $validationStore.isValid}
