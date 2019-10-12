@@ -1,5 +1,6 @@
 <script>
 	export let show = false
+	export let style = ''
 
 	// terminal spinner frames here:
 	// https://github.com/sindresorhus/cli-spinners/blob/master/spinners.json
@@ -31,7 +32,7 @@
 	}
 </style>
 
-<div class="term-spinner text-term-brand-1">
+<div class="term-spinner text-term-brand-1" {style}>
 	<span class="prompt">$</span>
 	{frames[currentFrame]}
 </div>

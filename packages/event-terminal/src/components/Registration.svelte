@@ -53,7 +53,7 @@
 
 	async function scroll() {
 		await tick()
-		const elem = document.getElementById(formId)
+		const elem = document.getElementById('scroll-anchor')
 		if (elem) {
 			elem.scrollIntoView({
 				block: 'nearest',
@@ -134,7 +134,7 @@
 		blurred = !event.detail
 	}
 
-	// if the form is blurred and active you can 
+	// if the form is blurred and active you can
 	// execute commands with key press
 	function handleKeyPress(e) {
 		if (active && blurred && validCmds.includes(e.key.toLowerCase())) {
@@ -153,7 +153,7 @@
 
 <style>
 	.success-ascii {
-		min-height: 200px;
+		min-height: 400px;
 	}
 </style>
 
@@ -213,10 +213,8 @@
 
 	<div id={`result-${index}`}>
 		{#if resultLoading}
-			<Spinner show={true} />
-		{/if}
-
-		{#if successData}
+			<Spinner show={true} style="padding-left:10px" />
+		{:else if successData}
 			<div class="flex flex-col text-white pb-8">
 				<SuccessOut>
 					<div class="flex-initial">You are {successData.displayStatus}</div>
@@ -236,15 +234,14 @@
 				{#if successData.status === 'REGISTERED'}
 					<div
 						class="flex w-full justify-center success-ascii text-term-brand-1
-						-m-6">
+						-m-6 relative">
 						<pre>{success}</pre>
 					</div>
 				{/if}
 			</div>
-		{/if}
-
-		{#if failureData}
+		{:else if failureData}
 			<FailureOut status={failureData.status} message={failureData.message} />
 		{/if}
 	</div>
+	<div id="scroll-anchor" style="height: 1px" />
 </section>

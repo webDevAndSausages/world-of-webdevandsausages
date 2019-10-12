@@ -8,7 +8,7 @@ const initialFormValues = {
 	firstName: '',
 	lastName: '',
 	affiliation: '',
-	validationOff: false
+	validationOff: false,
 }
 
 export const initialState = {
@@ -32,7 +32,7 @@ export const createValidationStore = formValuesStore =>
 		return $r.validationOff ? {errors: {}, isValid: true} : {errors, isValid}
 	})
 
-const LINE_DISPLAY_DELAY = 50
+const LINE_DISPLAY_DELAY = 100
 
 export const successAsciiStore = readable('', set => {
 	const successArray = successAscii.split('\n')
