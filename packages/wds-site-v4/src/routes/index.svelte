@@ -62,7 +62,7 @@
 	<title>Web Dev & Sausages</title>
 </svelte:head>
 
-<Section style="padding-bottom:0px;">
+<Section class="pb-0">
 	<Image src="/images/wds-logo-rgb.png" alt="Wed Dev & Sausages logo" />
 </Section>
 
@@ -72,7 +72,14 @@
 	{/if}
 </aside>
 
-<Section className="terminal-wrapper mr-auto">
+<Section title="sponsored by" class="centered pb-0">
+	<Image
+		src="/images/reaktor-logo-rgb-white.png"
+		alt="Reaktor logo"
+		width="500" />
+</Section>
+
+<Section class="terminal-wrapper mr-auto">
 	<Terminal {event} />
 </Section>
 

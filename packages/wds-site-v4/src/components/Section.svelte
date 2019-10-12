@@ -1,11 +1,27 @@
 <script>
 	export let title = undefined
-	export let className = ''
+	let className = ''
 	export let style = ''
+	export {className as class}
 	let classNames = 'pt-16 pb-16 text-center ' + className
 </script>
 
 <style>
+	section.centered {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	section.pb-0 {
+		padding-bottom: 0 !important;
+	}
+
+	section.pb-0 > .section-title {
+		padding-bottom: 0 !important;
+	}
+
 	.section-title {
 		color: #fff;
 	}
