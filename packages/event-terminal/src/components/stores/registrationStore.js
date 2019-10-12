@@ -32,7 +32,7 @@ export const createValidationStore = formValuesStore =>
 		return $r.validationOff ? {errors: {}, isValid: true} : {errors, isValid}
 	})
 
-const LINE_DISPLAY_DELAY = 100
+const LINE_DISPLAY_DELAY = 200
 
 export const successAsciiStore = readable('', set => {
 	const successArray = successAscii.split('\n')
