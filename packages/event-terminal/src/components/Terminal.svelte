@@ -9,6 +9,7 @@
 	import Commands from './Commands.svelte'
 	import {createEventStore} from './stores/eventStore.js'
 	import {terminalStore} from './stores/terminalStore.js'
+	import {showForStatusOf} from './utils'
 
 	// if the event is not passed a prop
 	// the store will fetch it
@@ -16,7 +17,11 @@
 	const eventStore = createEventStore(event)
 	let components = []
 
-	$: showInteractiveTerminal = $eventStore.okOrNull($eventStore)
+	$: showInteractiveTerminal =
+		$eventStore.okOrNull($eventStore) &&
+		showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL')(
+			$eventStore.okOrNull($eventStore)
+		)
 	// this ensures an update when the array size does not change but an item is switched
 	// ie for reseting a component
 	$: components = [...$terminalStore.history]

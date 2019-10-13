@@ -5,11 +5,13 @@
 	import TerminalTitle from './TerminalTitle.svelte'
 	import CmdInput from './CmdInput.svelte'
 	import MailTo from './MailTo.svelte'
+	import {showForStatusOf} from './utils'
 
 	let result
 	let error
 	let loading
 	let showNoEvent
+	let showVisibleStatusCmdInput = false
 
 	const event = getContext('eventStore')
 
@@ -28,6 +30,10 @@
 			loading = false
 		},
 	})
+
+	$: showVisibleStatusCmdInput = showForStatusOf('VISIBLE')(
+		$event.okOrNull($event)
+	)
 </script>
 
 <div class="font-term">
@@ -39,6 +45,17 @@
 		<TerminalOut title="What" detail={result.details} html />
 		<TerminalOut title="Where" detail={result.location} />
 		<TerminalOut title="Contact" detail={result.contact} html />
+		{#if showVisibleStatusCmdInput}
+			<div class="p-2">
+				<CmdInput
+					value="sudo kill other plans"
+					disabled={true}
+					on:cmd={null}
+					active={false}
+					index={0}
+					showReadOnlyCursor />
+			</div>
+		{/if}
 	{:else if showNoEvent || error}
 		<TerminalTitle>THE NEXT VOLUME</TerminalTitle>
 		<TerminalOut title="What" detail="The next volume is in the works..." />
