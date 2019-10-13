@@ -1,28 +1,32 @@
 {
-  "data": [
-    {
-      "name": "futurice",
-      "href": "https://futurice.com"
-    },
-    {
-      "name": "gofore",
-      "href": "https://gofore.com"
-    },
-    {
-      "name": "happy-or-not",
-      "href": "https://www.happy-or-not.com"
-    },
-    {
-      "name": "solita",
-      "href": "https://www.solita.fi"
-    },
-    {
-      "name": "vincit",
-      "href": "https://vincit.com"
-    },
-    {
-      "name": "wapice",
-      "href": "https://wapice.com"
-    }
-  ]
+	"data": [
+		{
+			"name": "reaktor",
+			"href": "https://reaktor.com"
+		},
+		{
+			"name": "futurice",
+			"href": "https://futurice.com"
+		},
+		{
+			"name": "gofore",
+			"href": "https://gofore.com"
+		},
+		{
+			"name": "happy-or-not",
+			"href": "https://www.happy-or-not.com"
+		},
+		{
+			"name": "solita",
+			"href": "https://www.solita.fi"
+		},
+		{
+			"name": "vincit",
+			"href": "https://vincit.com"
+		},
+		{
+			"name": "wapice",
+			"href": "https://wapice.com"
+		}
+	]
 }
