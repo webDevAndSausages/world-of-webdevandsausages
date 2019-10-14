@@ -63,7 +63,10 @@
 </svelte:head>
 
 <Section class="pb-0">
-	<Image src="/images/wds-logo-rgb.png" alt="Wed Dev & Sausages logo" />
+	<Image
+		src="/images/wds-logo-rgb.png"
+		alt="Wed Dev & Sausages logo"
+		class="wds-logo" />
 </Section>
 
 <aside class="mailing-list-join-wrapper m-auto pt-10 pb-10">
@@ -72,6 +75,7 @@
 	{/if}
 </aside>
 
+<!-- remove after volume 12 -->
 <Section title="sponsored by" class="centered pb-0">
 	<Image
 		src="/images/reaktor-logo-rgb-white.png"

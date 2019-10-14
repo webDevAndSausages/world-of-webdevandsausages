@@ -20,6 +20,14 @@
 	}
 </script>
 
+<style>
+	@media (max-width: 600px) {
+		:global(.wds-logo) {
+			transform: scale(1.4);
+		}
+	}
+</style>
+
 <img
 	id
 	class={className}

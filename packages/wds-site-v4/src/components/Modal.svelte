@@ -8,6 +8,10 @@
 </script>
 
 <style>
+	.modal {
+		z-index: 300;
+	}
+
 	.modal-background {
 		background-color: rgba(255, 188, 225, 0.76);
 	}
@@ -97,8 +101,8 @@
 
 <svelte:window on:keydown={handleOutsideClick} />
 <div
-	class="modal fixed w-full h-full top-0 left-0 z-40 overflow-hidden
-	justify-center flex-col flex">
+	class="modal fixed w-full h-full top-0 left-0 overflow-hidden justify-center
+	flex-col flex">
 	<div
 		class="modal-background left-0 bottom-0 absolute right-0 top-0"
 		on:click={close} />

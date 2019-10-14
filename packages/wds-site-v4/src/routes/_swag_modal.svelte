@@ -48,7 +48,7 @@
 		grid-column-end: span 1;
 		grid-row-end: span 1;
 		display: inline-flex;
-		flex-flow: column wrap;
+		flex-wrap: wrap;
 		justify-content: center;
 	}
 	img {
