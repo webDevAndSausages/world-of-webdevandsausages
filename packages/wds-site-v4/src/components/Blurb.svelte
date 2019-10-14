@@ -40,7 +40,7 @@
 	}
 
 	.box :global(h2) {
-		@apply text-xl p-0 text-white text-left uppercase text-term-brand-1;
+		@apply text-xl p-0 text-white text-left lowercase text-term-brand-1;
 		margin: 0 0 0.5em 0;
 	}
 
@@ -117,6 +117,36 @@
 
 	.blurbs-expanded :global(.blurb-image) {
 		display: none;
+	}
+
+	:global(.tint) {
+		position: relative;
+		float: left;
+	}
+
+	:global(.tint:before) {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: var(--brand-secondary);
+		opacity: 0.6;
+		transition: all 0.3s linear;
+		z-index: 100;
+	}
+	:global(.tint:hover:before) {
+		background: none;
+	}
+
+	:global(.tint > img) {
+		filter: saturate(2);
+	}
+
+	:global(.tint:hover > img) {
+		filter: saturate(1);
 	}
 </style>
 

@@ -50,7 +50,6 @@
 		display: inline-flex;
 		flex-flow: column wrap;
 		justify-content: center;
-		justify-self: stretch;
 	}
 	img {
 		max-height: 200px;
@@ -63,7 +62,7 @@
 	}
 
 	button {
-		min-width: 400px;
+		min-width: 365px;
 	}
 </style>
 

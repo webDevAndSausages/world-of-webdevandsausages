@@ -11,13 +11,15 @@
 </style>
 
 <Blurb>
-	<h2 slot="sponsoring-title">Sponsoring</h2>
+	<h2 slot="sponsoring-title">$ Sponsoring</h2>
 	<div slot="sponsoring-blurb">
 		{#if process.browser}
-			<Image
-				class="blurb-image full"
-				src="/images/wds-sponsoring.jpg"
-				alt="meetup speaker" />
+			<div class="tint">
+				<Image
+					class="blurb-image full"
+					src="/images/wds-sponsoring.jpg"
+					alt="meetup speaker" />
+			</div>
 		{/if}
 		<p>
 			Help sustain the most popular meetup in Tampere, while gaining greater
@@ -53,14 +55,16 @@
 			and we will make a great event together!
 		</p>
 	</div>
-	<h2 slot="speaking-title">Speaking</h2>
+	<h2 slot="speaking-title">$ Speaking</h2>
 	<div slot="speaking-blurb">
 		<div class="mt-2 mb-2">
 			{#if process.browser}
-				<Image
-					class="blurb-image full"
-					src="/images/wds-speaker.jpg"
-					alt="meetup speaker" />
+				<div class="tint">
+					<Image
+						class="blurb-image full"
+						src="/images/wds-speaker.jpg"
+						alt="meetup speaker" />
+				</div>
 			{/if}
 		</div>
 		<p>
