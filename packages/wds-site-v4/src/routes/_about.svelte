@@ -29,12 +29,12 @@
 	<div slot="sponsoring-text">
 		<p>
 			Web Dev & Sausages is a completely volunteer event which exists thanks to
-			sponsors and volunteers. Since it began in 2016, it has attracted large,
-			enthusiastic groups of developers from Tampere and beyond. Events fill up
-			within a few hours of being announced. Sponsors contribute not only money
-			and spaces, but also their culture and ideas. Our goal is to join keep the
-			events high quality and exciting. Sponsoring companies benefit in a number
-			of ways:
+			sponsors. Since it began in 2016, it has attracted large, enthusiastic
+			groups of developers from Tampere and beyond. Events fill up within a few
+			hours of being announced. Sponsors contribute not only money and spaces,
+			but also their culture and ideas. Our goal is to join with sponsors to
+			keep the events high quality and exciting. Sponsoring companies benefit in
+			a number of ways:
 		</p>
 		<ul class="list-disc p-4">
 			<li>Company visibility among a large group of talented developers</li>
