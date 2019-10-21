@@ -7,8 +7,13 @@
 	import CmdButton from './CmdButton.svelte'
 	import {REGISTER, CANCEL, CHECK, HELP} from './constants'
 
+	function isValid(char) {
+		const cmd = visibleCmdButtons.find(cb => cb.cmd === char.toLowerCase())
+		return cmd && cmd.show
+	}
+
 	function handleKeyPress(e) {
-		if (active && isValidCmd(e.key)) {
+		if (active && isValid(e.key)) {
 			cmdInputValue = e.key
 			onCmd(e.key)
 		}
