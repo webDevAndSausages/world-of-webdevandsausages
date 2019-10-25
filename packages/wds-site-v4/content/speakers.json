@@ -1,5 +1,44 @@
 {
 	"data": [
+		{
+			"name": "Antti-Pekka Vilkko",
+			"talks": [
+				{
+					"title": "Music generators: actually listenable original music in your browser?",
+					"details": "Vol 12. Reaktor, 2019-10-25",
+					"youtubeId": "n-wEEVrVId0",
+					"startTime": "1h05m40s",
+					"startSeconds": 3940,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Petri & Henri Sarasvirta",
+			"talks": [
+				{
+					"title": "WebGL in the demoscene: demos and intros",
+					"details": "Vol 12. Reaktor, 2019-10-25",
+					"youtubeId": "n-wEEVrVId0",
+					"startTime": "1h50m24s",
+					"startSeconds": 6624,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Eero Pitkänen",
+			"talks": [
+				{
+					"title": "WebGL in the demoscene: demos and intros",
+					"details": "Vol 12. Reaktor, 2019-10-25",
+					"youtubeId": "n-wEEVrVId0",
+					"startTime": "2h43m15s",
+					"startSeconds": 9795,
+					"show": true
+				}
+			]
+		},
 		{"name": "Mikko Ahlroth", "talks": []},
 		{
 			"name": "Johannes Feig",

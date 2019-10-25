@@ -75,13 +75,14 @@
 	{/if}
 </aside>
 
-<!-- remove after volume 12 -->
+<!-- Sponsor logo when event is open
 <Section title="sponsored by" class="centered pb-0">
 	<Image
 		src="/images/reaktor-logo-rgb-white.png"
 		alt="Reaktor logo"
 		width="500" />
 </Section>
+-->
 
 <Section class="terminal-wrapper mr-auto">
 	<Terminal {event} />
