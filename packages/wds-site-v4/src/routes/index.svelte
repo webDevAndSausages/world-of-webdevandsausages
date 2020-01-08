@@ -75,14 +75,13 @@
 	{/if}
 </aside>
 
-<!-- Sponsor logo when event is open
+<!-- Sponsor logo when event is open -->
 <Section title="sponsored by" class="centered pb-0">
-	<Image
-		src="/images/reaktor-logo-rgb-white.png"
-		alt="Reaktor logo"
-		width="500" />
+	<a href="http://www.mylab.fi"><Image
+		src="/images/mylab-logo.svg"
+		alt="Mylab logo"
+		width="500" /></a>
 </Section>
--->
 
 <Section class="terminal-wrapper mr-auto">
 	<Terminal {event} />
