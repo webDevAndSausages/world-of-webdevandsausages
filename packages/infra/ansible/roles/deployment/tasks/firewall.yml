@@ -37,11 +37,11 @@
     state: enabled
     policy: deny
 
-#- name: Allow all access to port 80
-#  become: yes
-#  ufw:
-#    rule: allow
-#    port: 80
+- name: Allow all access to port 80
+  become: yes
+  ufw:
+    rule: allow
+    port: 80
 
 - name: Allow all access to port 443
   become: yes
