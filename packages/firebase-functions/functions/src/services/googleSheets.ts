@@ -6,9 +6,7 @@ import { docDataOrNull } from '../utils'
 import { notifySlack } from './slack'
 import { config } from '..'
 
-const GOOGLE_AUTH_REDIRECT = `https://us-central1-wds-event-${config.VERSION === 'dev'
-	? 'dev'
-	: 'tool'}.cloudfunctions.net/OauthCallback`
+const GOOGLE_AUTH_REDIRECT = `https://us-central1-wds-event-tool.cloudfunctions.net/oauthcallback`
 
 let oauthTokens = null
 
@@ -34,7 +32,9 @@ export const setGooogleSheetsApiTokens = (request, response) => {
 	return (
 		tryP(() => functionsOauthClient.getToken(code))
 			// Now tokens contains an access_token and an optional refresh_token. Save them.
-			.chain(({ tokens }) => tryP(() => tokensRef.doc('googleSheetsApi').set(tokens)))
+			.chain(({ tokens }) => {
+				return tryP(() => tokensRef.doc('googleSheetsApi').set(tokens))
+			})
 			.fork(
 				(err) => {
 					console.log('Google OAuth token request failure: ', err)
@@ -66,7 +66,6 @@ function getAuthorizedClient() {
 function appendFuture(requestWithoutAuth) {
 	return getAuthorizedClient()
 		.chain((client) => {
-			console.log('google auth client: ', client)
 			if (!client) {
 				return reject(null)
 			}
@@ -91,10 +90,11 @@ function appendFuture(requestWithoutAuth) {
 const GOOGLE_SHEET_ID = config.GOOGLE.SHEET_ID
 
 export const appendNewEmailToSpreadsheetOnCreate = (snap) => {
-	console.log('Appending email to google sheet: ', snap)
 	const newParticipant = snap.data()
 	notifySlack(newParticipant.email)
+
 	console.log('Appending email to google sheet: ', newParticipant)
+
 	return appendFuture({
 		spreadsheetId: GOOGLE_SHEET_ID,
 		range: 'A:C',

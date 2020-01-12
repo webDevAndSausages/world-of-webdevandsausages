@@ -7,9 +7,7 @@ const db_1 = require("./db");
 const utils_1 = require("../utils");
 const slack_1 = require("./slack");
 const __1 = require("..");
-const GOOGLE_AUTH_REDIRECT = `https://us-central1-wds-event-${__1.config.VERSION === 'dev'
-    ? 'dev'
-    : 'tool'}.cloudfunctions.net/OauthCallback`;
+const GOOGLE_AUTH_REDIRECT = `https://us-central1-wds-event-tool.cloudfunctions.net/oauthcallback`;
 let oauthTokens = null;
 const functionsOauthClient = new OAuth2Client(__1.config.GOOGLE.ID, __1.config.GOOGLE.SECRET, GOOGLE_AUTH_REDIRECT);
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
@@ -28,7 +26,10 @@ exports.setGooogleSheetsApiTokens = (request, response) => {
     const code = request.query.code;
     // TODO: how to encase this directly in a Future?
     return (fluture_1.tryP(() => functionsOauthClient.getToken(code))
-        .chain(({ tokens }) => fluture_1.tryP(() => db_1.tokensRef.doc('googleSheetsApi').set(tokens)))
+        .chain(({ tokens }) => {
+        console.log('tokens', tokens);
+        return fluture_1.tryP(() => db_1.tokensRef.doc('googleSheetsApi').set(tokens));
+    })
         .fork((err) => {
         console.log('Google OAuth token request failure: ', err);
         response.status(400).send(err);
@@ -73,7 +74,6 @@ function appendFuture(requestWithoutAuth) {
 }
 const GOOGLE_SHEET_ID = __1.config.GOOGLE.SHEET_ID;
 exports.appendNewEmailToSpreadsheetOnCreate = (snap) => {
-    console.log('Appending email to google sheet: ', snap);
     const newParticipant = snap.data();
     slack_1.notifySlack(newParticipant.email);
     console.log('Appending email to google sheet: ', newParticipant);

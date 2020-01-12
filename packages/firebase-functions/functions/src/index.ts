@@ -28,7 +28,7 @@ exports.api = functions.https.onRequest((req: express.Request, res: express.Resp
 })
 
 /* NON-API ENDPOINTS */
-exports.OauthCallback = functions.https.onRequest(setGooogleSheetsApiTokens)
+exports.oauthcallback = functions.https.onRequest(setGooogleSheetsApiTokens)
 exports.authGoogleAPI = functions.https.onRequest(authenticateForGoogleSheetsApi)
 exports.appendNewEmailToSpreadSheet = functions.firestore
 	.document(`participants/{participantId}`)

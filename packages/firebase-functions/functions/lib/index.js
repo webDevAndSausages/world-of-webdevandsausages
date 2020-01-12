@@ -23,7 +23,7 @@ exports.api = functions.https.onRequest((req, res) => {
     return app(req, res);
 });
 /* NON-API ENDPOINTS */
-exports.OauthCallback = functions.https.onRequest(googleSheets_1.setGooogleSheetsApiTokens);
+exports.oauthcallback = functions.https.onRequest(googleSheets_1.setGooogleSheetsApiTokens);
 exports.authGoogleAPI = functions.https.onRequest(googleSheets_1.authenticateForGoogleSheetsApi);
 exports.appendNewEmailToSpreadSheet = functions.firestore
     .document(`participants/{participantId}`)
