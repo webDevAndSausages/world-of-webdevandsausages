@@ -108,21 +108,21 @@
 	}
 
 	input {
-		border: 1px var(--term-brand-primary) solid;
-		border-image: linear-gradient(
+		border: 1px var(--brand-primary) solid;
+		border-image-source: linear-gradient(
 			45deg,
-			var(--term-brand-primary) 0%,
-			var(--term-brand-secondary) 100%
+			var(--brand-primary) 0%,
+			var(--brand-secondary) 100%
 		);
 		border-image-slice: 1 1 1 1;
 	}
 
 	input.active {
-		border: 1px var(--term-brand-secondary) solid;
+		border: 1px var(--brand-secondary) solid;
 		border-image: linear-gradient(
 			45deg,
-			var(--term-brand-secondary) 0%,
-			var(--term-brand-primary) 100%
+			var(--brand-secondary) 0%,
+			var(--brand-primary) 100%
 		);
 		border-image-slice: 1 1 1 1;
 	}

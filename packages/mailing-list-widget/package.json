@@ -1,6 +1,6 @@
 {
 	"name": "@webdevandsausages/mailing-list-widget",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"author": "Richard Van Camp",
 	"license": "MIT",
 	"description": "A widget for joining the Web Dev & Sausages mailing list",
