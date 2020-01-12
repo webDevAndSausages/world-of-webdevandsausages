@@ -3,6 +3,7 @@
     "lib": ["es6"],
     "module": "commonjs",
     "noImplicitReturns": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "lib",
     "sourceMap": true,

@@ -1,0 +1,10 @@
+secrets.json
+node_modules
+firebase-debug.log
+/lib
+/etc
+node_modules
+serviceAccountKey.json
+devServiceAccountKey.json
+prodServiceAccountKey.json
+.idea/

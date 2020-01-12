@@ -4,6 +4,6 @@ import { MailData } from '@sendgrid/helpers/classes/mail'
 import { config } from '..'
 
 export const sendMail = (msg: MailData) => {
-  sgMail.setApiKey(config.SENDGRID_KEY)
-  return tryP(() => sgMail.send(msg))
+	sgMail.setApiKey(config.SENDGRID_KEY)
+	return tryP(() => sgMail.send(msg))
 }
