@@ -403,6 +403,16 @@
 			]
 		},
 		{
+			"name": "Mikael von Bonsdorff",
+			"talks": [
+				{
+					"title": "Magical code generation with OpenApi",
+					"details": "Vol 13., Gofore, 2016-08-18",
+					"show": false
+				}
+			]
+		},
+		{
 			"name": "Justin Woo",
 			"talks": []
 		},

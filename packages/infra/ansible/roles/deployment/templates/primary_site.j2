@@ -1,3 +1,9 @@
+# non-www to www redirect
+server {
+    server_name webdevandsausages.org;
+    return 301 $scheme://www.webdevandsausages.org$request_uri;
+}
+
 # HTTP -> HTTPS redirect
 server {
         listen 80 default_server;
