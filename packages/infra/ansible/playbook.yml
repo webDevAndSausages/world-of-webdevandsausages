@@ -4,5 +4,6 @@
   become: yes
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
+    pip_version: 20.0.2
   roles:
     - deployment

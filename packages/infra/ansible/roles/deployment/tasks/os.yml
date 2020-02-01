@@ -12,7 +12,7 @@
 
 
 - name: Install pip
-  command: "python get-pip.py pip=={{ pip_version }}"
+  command: "{{ ansible_python_interpreter if ansible_python_interpreter is defined else 'python' }} get-pip.py pip=={{ pip_version }}"
   args:
     chdir: /tmp
 
