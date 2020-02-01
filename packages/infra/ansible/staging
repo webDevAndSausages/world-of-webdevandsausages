@@ -3,3 +3,4 @@ default ansible_host=test.webdevandsausages.org ansible_connection=ssh
 
 [staging:vars]
 nginx_ssl_domain=test.webdevandsausages.org
+pip_version=20.0.2
