@@ -5,6 +5,6 @@
 
 <div class="flex flex-wrap w-full justify-center">
 	{#each sponsors as sponsor}
-		<SponsorLogo {sponsor} />
+		<SponsorLogo {sponsor} height={sponsor.name.includes("mylab") ? "2.5rem" : undefined} />
 	{/each}
 </div>

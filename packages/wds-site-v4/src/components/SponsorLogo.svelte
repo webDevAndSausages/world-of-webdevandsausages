@@ -1,5 +1,6 @@
 <script>
 	export let sponsor
+	export let height = '2rem'
 	let src = `/sponsors/${sponsor.name}-logo.svg`
 </script>
 
@@ -20,5 +21,5 @@
 </style>
 
 <a href={sponsor.href}>
-	<img {src} alt={sponsor.name} />
+  <img {src} alt={sponsor.name} style="height:{height};" />
 </a>
