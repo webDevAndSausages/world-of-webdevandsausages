@@ -22,6 +22,7 @@ import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.service.GetRegistrationService
 import java.sql.Timestamp
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 class GetRegistrationServiceTest : StringSpec() {
     lateinit var unit: GetRegistrationService
@@ -36,7 +37,7 @@ class GetRegistrationServiceTest : StringSpec() {
             "Vol 10",
             "Acme",
             "Joe",
-            Timestamp.valueOf(LocalDateTime.now().plusDays(4)),
+            OffsetDateTime.now().plusDays(4),
             "Great presentations",
             "Tampere center",
             EventStatus.OPEN,

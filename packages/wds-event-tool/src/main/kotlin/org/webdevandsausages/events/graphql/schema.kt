@@ -11,6 +11,7 @@ import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.error.EventError
 import org.webdevandsausages.events.error.RegistrationError
 import java.sql.Timestamp
+import java.time.OffsetDateTime
 
 fun createSchema(configs: List<ApiRouteWithGraphqlConfig>
 ): Schema {
@@ -30,6 +31,11 @@ fun createSchema(configs: List<ApiRouteWithGraphqlConfig>
             stringScalar<Timestamp> {
                 deserialize = { ts : String -> Timestamp.valueOf(ts) }
                 serialize = Timestamp::toString
+            }
+
+            stringScalar<OffsetDateTime> {
+                deserialize = { ts : String -> OffsetDateTime.parse(ts) }
+                serialize = OffsetDateTime::toString
             }
 
             enum<EventStatus>{

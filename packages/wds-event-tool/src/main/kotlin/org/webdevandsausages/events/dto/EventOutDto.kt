@@ -5,13 +5,14 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.controller.GetCurrentEvent.EventLens
 import java.sql.Timestamp
+import java.time.OffsetDateTime
 
 data class EventOutDto(
     val id: Long,
     val name: String,
     val sponsor: String,
     val contact: String,
-    val date: Timestamp,
+    val date: OffsetDateTime,
     val details: String,
     val location: String,
     val status: EventStatus,

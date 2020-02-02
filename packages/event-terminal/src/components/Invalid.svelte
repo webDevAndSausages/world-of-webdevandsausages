@@ -1,7 +1,7 @@
 <script>
 	import {getContext} from 'svelte'
 
-	export let index
+	// export let index
 
 	const terminalStore = getContext('terminalStore')
 </script>

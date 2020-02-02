@@ -26,6 +26,7 @@ import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 class CreateRegistrationServiceTest : StringSpec() {
     lateinit var unit: CreateRegistrationService
@@ -58,7 +59,7 @@ class CreateRegistrationServiceTest : StringSpec() {
             "Vol 10",
             "Acme",
             "Joe",
-            Timestamp.valueOf(LocalDateTime.now().plusDays(4)),
+            OffsetDateTime.now().plusDays(4),
             "Great presentations",
             "Tampere center",
             EventStatus.OPEN,
@@ -124,7 +125,7 @@ class CreateRegistrationServiceTest : StringSpec() {
                     "Vol 10",
                     "Acme",
                     "Joe",
-                    Timestamp.valueOf(LocalDateTime.now().plusDays(4)),
+                    OffsetDateTime.now().plusDays(4),
                     "Great presentations",
                     "Tampere center",
                     EventStatus.OPEN_WITH_WAITLIST,
@@ -220,7 +221,7 @@ class CreateRegistrationServiceTest : StringSpec() {
                     "Vol 10",
                     "Acme",
                     "Joe",
-                    Timestamp.valueOf(LocalDateTime.now().plusDays(0)),
+                    OffsetDateTime.now().plusDays(0),
                     "Great presentations",
                     "Tampere center",
                     EventStatus.CLOSED,
