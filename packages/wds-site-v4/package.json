@@ -1,7 +1,7 @@
 {
 	"name": "wds-site",
 	"description": "The website for Web Dev & Sausages, a awesome meetup based in Tampere, Finland",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"scripts": {
 		"dev": "sapper dev",
 		"build": "sapper build --legacy",
@@ -21,7 +21,7 @@
 	],
 	"dependencies": {
 		"@sindresorhus/slugify": "^0.9.1",
-		"@webdevandsausages/event-terminal": "^0.5.8",
+		"@webdevandsausages/event-terminal": "^0.5.9",
 		"@webdevandsausages/mailing-list-widget": "0.0.5",
 		"animate-css-grid": "^1.4.1",
 		"compression": "^1.7.1",

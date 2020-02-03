@@ -19,8 +19,9 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 import org.webdevandsausages.events.graphql.Query
 import org.webdevandsausages.events.utils.toJson
+import java.time.OffsetDateTime
 
-class EventGraphqlEndpoinntTest : StringSpec() {
+class EventGraphqlEndpointTest : StringSpec() {
     lateinit var router: Router
 
     override fun beforeTest(description: Description) {
@@ -38,7 +39,7 @@ class EventGraphqlEndpoinntTest : StringSpec() {
                         "test_event",
                         "sponsor",
                         "esa",
-                        TIMESTAMP,
+                        OffsetDateTime.now().minusDays(4),
                         "details",
                         "tamperee",
                         EventStatus.VISIBLE,
@@ -97,7 +98,7 @@ class EventGraphqlEndpoinntTest : StringSpec() {
                         "test_event",
                         "sponsor",
                         "esa",
-                        TIMESTAMP,
+                        OffsetDateTime.now().minusDays(4),
                         "details",
                         "tamperee",
                         EventStatus.OPEN,

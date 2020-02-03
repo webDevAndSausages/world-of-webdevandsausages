@@ -6,6 +6,7 @@ package meta.tables.pojos;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 
 import javax.annotation.Generated;
 
@@ -25,22 +26,22 @@ import meta.enums.EventStatus;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event implements Serializable {
 
-    private static final long serialVersionUID = -722875272;
+    private static final long serialVersionUID = -1744963535;
 
-    private final Long        id;
-    private final String      name;
-    private final String      sponsor;
-    private final String      contact;
-    private final Timestamp   date;
-    private final String      details;
-    private final String      location;
-    private final EventStatus status;
-    private final Integer     maxParticipants;
-    private final Timestamp   registrationOpens;
-    private final Timestamp   createdOn;
-    private final Timestamp   updatedOn;
-    private final Integer     volume;
-    private final String      sponsorLink;
+    private final Long           id;
+    private final String         name;
+    private final String         sponsor;
+    private final String         contact;
+    private final OffsetDateTime date;
+    private final String         details;
+    private final String         location;
+    private final EventStatus    status;
+    private final Integer        maxParticipants;
+    private final Timestamp      registrationOpens;
+    private final Timestamp      createdOn;
+    private final Timestamp      updatedOn;
+    private final Integer        volume;
+    private final String         sponsorLink;
 
     public Event(Event value) {
         this.id = value.id;
@@ -60,20 +61,20 @@ public class Event implements Serializable {
     }
 
     public Event(
-        Long        id,
-        String      name,
-        String      sponsor,
-        String      contact,
-        Timestamp   date,
-        String      details,
-        String      location,
-        EventStatus status,
-        Integer     maxParticipants,
-        Timestamp   registrationOpens,
-        Timestamp   createdOn,
-        Timestamp   updatedOn,
-        Integer     volume,
-        String      sponsorLink
+        Long           id,
+        String         name,
+        String         sponsor,
+        String         contact,
+        OffsetDateTime date,
+        String         details,
+        String         location,
+        EventStatus    status,
+        Integer        maxParticipants,
+        Timestamp      registrationOpens,
+        Timestamp      createdOn,
+        Timestamp      updatedOn,
+        Integer        volume,
+        String         sponsorLink
     ) {
         this.id = id;
         this.name = name;
@@ -107,7 +108,7 @@ public class Event implements Serializable {
         return this.contact;
     }
 
-    public Timestamp getDate() {
+    public OffsetDateTime getDate() {
         return this.date;
     }
 

@@ -3,8 +3,7 @@
 	import {pick} from 'ramda'
 	export let cmd
 	export let disabled = false
-	export let style = ''
-	export let tabindex = null
+	// export let style = ''
 	export let type = 'button'
 
 	const dispatch = createEventDispatcher()

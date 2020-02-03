@@ -23,7 +23,7 @@
 </style>
 
 <div class="terminal-wrapper">
-	<Terminal />
+	<Terminal event={undefined} />
 </div>
 
 

@@ -18,7 +18,7 @@
 	export let id = ''
 	export let error = null
 	export let type = 'text'
-	export let loading = false
+	// export let loading = false
 	export let maxChars = null
 	export let disabled = false
 

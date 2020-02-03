@@ -12,12 +12,23 @@ import {
 	always,
 	ifElse,
 } from 'ramda'
-import format from 'date-fns/format'
+import {zonedTimeToUtc, utcToZonedTime, format} from 'date-fns-tz'
 import produce from 'immer'
 
 export const isEvent = both(is(Object), has('status'))
 
-export const formatDate = date => format(date, 'MMMM do, yyyy, HH:mm')
+const timeZone = 'Europe/Helsinki'
+const pattern = "MMMM do, yyyy, HH:mm 'GMT' XXX (z)"
+
+const toUtcDate = date => zonedTimeToUtc(date, timeZone)
+const toZonedDate = date => utcToZonedTime(new Date(date), timeZone)
+const formatWithZone = zonedDate => format(zonedDate, pattern, {timeZone})
+
+export const formatDate = compose(
+	formatWithZone,
+	toZonedDate,
+	toUtcDate
+)
 
 export const formatEvent = over(lensProp('date'), formatDate)
 

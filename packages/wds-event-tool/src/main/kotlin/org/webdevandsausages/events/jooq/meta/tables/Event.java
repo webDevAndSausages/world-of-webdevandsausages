@@ -5,6 +5,7 @@ package meta.tables;
 
 
 import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Event extends TableImpl<EventRecord> {
 
-    private static final long serialVersionUID = -1147661804;
+    private static final long serialVersionUID = 787932488;
 
     /**
      * The reference instance of <code>public.event</code>
@@ -79,7 +80,7 @@ public class Event extends TableImpl<EventRecord> {
     /**
      * The column <code>public.event.date</code>.
      */
-    public final TableField<EventRecord, Timestamp> DATE = createField("date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false), this, "");
+    public final TableField<EventRecord, OffsetDateTime> DATE = createField("date", org.jooq.impl.SQLDataType.TIMESTAMPWITHTIMEZONE.nullable(false), this, "");
 
     /**
      * The column <code>public.event.details</code>.

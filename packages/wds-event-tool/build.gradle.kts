@@ -3,6 +3,7 @@ import com.rohanprabhu.gradle.plugins.kdjooq.jdbc
 import com.rohanprabhu.gradle.plugins.kdjooq.jooqCodegenConfiguration
 import org.gradle.api.internal.initialization.ClassLoaderIds.buildScript
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jooq.tools.jdbc.JDBCUtils.driver
 import org.jooq.util.jaxb.Database
 import org.jooq.util.jaxb.ForcedType
 import org.jooq.util.jaxb.Target
@@ -27,6 +28,8 @@ val KGraphQLVersion = "0.6.4"
 
 plugins {
     kotlin("jvm") version "1.3.20"
+    id("org.flywaydb.flyway") version "6.2.1"
+    id("org.gradle.idea")
     id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
     // id("org.jmailen.kotlinter") version "1.20.1"
     java
@@ -46,8 +49,13 @@ repositories {
     jcenter()
 }
 
+dependencies {
+    driver("org.postgresql:postgresql:42.2.5")
+}
+
 buildscript {
     val kotlinVersion = "1.3.11"
+    val flywayCoreVersion = "5.2.4"
 
     repositories {
         mavenCentral()
@@ -57,6 +65,8 @@ buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion")
+        classpath("org.flywaydb:flyway-core:$flywayCoreVersion")
+        classpath("org.postgresql:postgresql:42.2.5")
     }
 }
 
@@ -159,6 +169,8 @@ val jooqConfig = Configuration()
                             .withDirectory("src/main/kotlin/org/webdevandsausages/events/jooq")
             )
     )
+
+
 
 jooqGenerator {
     configuration("meta", project.java.sourceSets.getByName("main")) {

@@ -1,6 +1,6 @@
 {
 	"name": "@webdevandsausages/event-terminal",
-	"version": "0.5.8",
+	"version": "0.5.9",
 	"author": "Richard Van Camp",
 	"license": "MIT",
 	"description": "A component for display a WD&S event and executing, checking, or cancelling event resgistration",
@@ -25,7 +25,9 @@
 		"@types/jest": "24.0.18",
 		"autoprefixer": "9.6.1",
 		"babel-jest": "24.9.0",
+		"caniuse-lite": "1.0.30001023",
 		"compression": "1.7.4",
+		"corejs": "1.0.0",
 		"cors": "2.8.5",
 		"cssnano": "4.1.10",
 		"eslint": "6.2.2",
@@ -54,7 +56,7 @@
 		"rollup-plugin-svelte": "5.1.0",
 		"rollup-plugin-terser": "5.1.1",
 		"sirv": "0.4.2",
-		"svelte": "3.9.1",
+		"svelte": "3.18.1",
 		"svelte-preprocess": "2.15.1",
 		"tailwindcss": "1.1.2",
 		"tailwindcss-elevation": "0.3.2",
@@ -73,9 +75,7 @@
 		"format": "npm --scripts-prepend-node-path=true run format-svelte && npm run format-js",
 		"release": "npm run build && npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push origin master && git push --tags && npm publish"
 	},
-	"browserslist": [
-		"defaults"
-	],
+	"browserslist": "> 0.25%, not dead",
 	"keywords": [
 		"svelte"
 	],
@@ -102,8 +102,9 @@
 	"dependencies": {
 		"classcat": "4.0.2",
 		"daggy": "1.4.0",
-		"date-fns": "2.0.1",
-		"immer": "3.2.0",
+		"date-fns": "2.9.0",
+		"date-fns-tz": "1.0.9",
+		"immer": "5.3.2",
 		"ky": "0.13.0",
 		"ramda": "0.26.1",
 		"simplebar": "4.3.0-alpha.0",

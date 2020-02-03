@@ -35,6 +35,7 @@ import org.webdevandsausages.events.service.CancelRegistrationService
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 class CancelRegistrationServiceTest : StringSpec() {
     lateinit var unit: CancelRegistrationService
@@ -56,7 +57,7 @@ class CancelRegistrationServiceTest : StringSpec() {
         "Vol 10",
         "Acme",
         "Joe",
-        Timestamp.valueOf(LocalDateTime.now().plusDays(4)),
+        OffsetDateTime.now().plusDays(4),
         "Great presentations",
         "Tampere center",
         EventStatus.OPEN,
