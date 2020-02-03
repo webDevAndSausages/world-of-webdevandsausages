@@ -4,5 +4,5 @@ yarn-error.log
 /cypress/screenshots/
 /__sapper__/
 .idea
-/static/global.css
 global.css
+/static/global.css
