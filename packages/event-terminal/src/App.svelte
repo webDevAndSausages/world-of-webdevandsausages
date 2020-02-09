@@ -26,7 +26,6 @@
 	<Terminal event={undefined} />
 </div>
 
-
 <div class="terminal-wrapper">
-	<SsrTerminal event={null}/>
+	<SsrTerminal event={null} />
 </div>

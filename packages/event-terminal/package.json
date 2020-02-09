@@ -108,7 +108,8 @@
 		"ky": "0.13.0",
 		"ramda": "0.26.1",
 		"simplebar": "4.3.0-alpha.0",
-		"smoothscroll-polyfill": "0.4.4"
+		"smoothscroll-polyfill": "0.4.4",
+		"viewprt": "4.0.0"
 	},
 	"bugs": {
 		"url": "https://github.com/webDevAndSausages/world-of-webdevandsausages/issues"
