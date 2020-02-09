@@ -52,7 +52,7 @@
 		{#if showVisibleStatusCmdInput}
 			<div class="p-2">
 				<CmdInput
-					value="sudo kill all other plans"
+					value="sudo kill -9 all other plans"
 					disabled={true}
 					on:cmd={null}
 					active={false}
