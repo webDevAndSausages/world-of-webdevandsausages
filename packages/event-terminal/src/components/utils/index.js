@@ -2,8 +2,6 @@ import {
 	has,
 	is,
 	both,
-	over,
-	lensProp,
 	propOr,
 	compose,
 	contains,
@@ -13,16 +11,25 @@ import {
 	ifElse,
 } from 'ramda'
 import {zonedTimeToUtc, utcToZonedTime, format} from 'date-fns-tz'
+import add from 'date-fns/add'
 import produce from 'immer'
 
 export const isEvent = both(is(Object), has('status'))
 
-const timeZone = 'Europe/Helsinki'
-const pattern = "MMMM do, yyyy, HH:mm 'GMT' XXX (z)"
+export const timeZone = 'Europe/Helsinki'
+const readablePattern = "MMMM do, yyyy, HH:mm 'GMT' XXX (z)"
+const icsPattern = "yMMdd'T'HHmmss"
 
 const toUtcDate = date => zonedTimeToUtc(date, timeZone)
 const toZonedDate = date => utcToZonedTime(new Date(date), timeZone)
-const formatWithZone = zonedDate => format(zonedDate, pattern, {timeZone})
+const formatWithZone = zonedDate =>
+	format(zonedDate, readablePattern, {timeZone})
+
+const formatIcsDate = (date, offset = 0) =>
+	compose(
+		date => format(add(date, {hours: offset}), icsPattern),
+		date => new Date(date)
+	)(date)
 
 export const formatDate = compose(
 	formatWithZone,
@@ -30,7 +37,14 @@ export const formatDate = compose(
 	toUtcDate
 )
 
-export const formatEvent = over(lensProp('date'), formatDate)
+export const formatEvent = event => ({
+	...event,
+	date: formatDate(event.date),
+	icsNow: format(new Date(), icsPattern),
+	icsStart: formatIcsDate(event.date),
+	icsEnd: formatIcsDate(event.date, 3.5),
+	serverDate: event.date,
+})
 
 export const showForStatusOf = (...statuses) =>
 	compose(

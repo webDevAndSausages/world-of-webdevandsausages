@@ -9,6 +9,7 @@
 	import TerminalTitle from './TerminalTitle.svelte'
 	import SuccessOut from './SuccessOut.svelte'
 	import FailureOut from './FailureOut.svelte'
+	import EventDownload from './EventDownload.svelte'
 	// api request
 	import {apiPost} from './utils/request'
 	import api from './api'
@@ -228,6 +229,9 @@
 						<span class="text-term-brand-2 pl-2">
 							{successData.verificationToken}
 						</span>
+					</div>
+					<div class="flex-initial pt-1 z-10">
+						<EventDownload event={$event.okOrNull($event)} />
 					</div>
 				</SuccessOut>
 				{#if successData.status === 'REGISTERED'}

@@ -5,6 +5,7 @@
 	import TerminalTitle from './TerminalTitle.svelte'
 	import CmdInput from './CmdInput.svelte'
 	import MailTo from './MailTo.svelte'
+	import EventDownload from './EventDownload.svelte'
 	import {showForStatusOf} from './utils'
 
 	let result
@@ -40,7 +41,10 @@
 	{#if loading}
 		<Spinner show={true} />
 	{:else if result}
-		<TerminalTitle>VOLUME {result.volume}</TerminalTitle>
+		<div class="event-header flex flex-row justify-between">
+			<TerminalTitle>VOLUME {result.volume}</TerminalTitle>
+			<EventDownload event={result} />
+		</div>
 		<TerminalOut title="When" detail={result.date} />
 		<TerminalOut title="What" detail={result.details} html />
 		<TerminalOut title="Where" detail={result.location} />
@@ -48,7 +52,7 @@
 		{#if showVisibleStatusCmdInput}
 			<div class="p-2">
 				<CmdInput
-					value="sudo kill all other plans"
+					value="sudo kill -9 all other plans"
 					disabled={true}
 					on:cmd={null}
 					active={false}

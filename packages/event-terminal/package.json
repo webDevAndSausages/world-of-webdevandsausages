@@ -1,6 +1,6 @@
 {
 	"name": "@webdevandsausages/event-terminal",
-	"version": "0.5.9",
+	"version": "0.6.1",
 	"author": "Richard Van Camp",
 	"license": "MIT",
 	"description": "A component for display a WD&S event and executing, checking, or cancelling event resgistration",
@@ -73,7 +73,7 @@
 		"format-svelte": "prettier --write --plugin-search-dir=. ./src/**/*.svelte",
 		"format-js": "prettier --config ./.prettierrc --write ./src/**/*.js",
 		"format": "npm --scripts-prepend-node-path=true run format-svelte && npm run format-js",
-		"release": "npm run build && npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push origin master && git push --tags && npm publish"
+		"release": "npm run build && git commit -am $npm_package_version && git tag $npm_package_version && git push origin master && git push --tags && npm publish"
 	},
 	"browserslist": "> 0.25%, not dead",
 	"keywords": [
@@ -108,7 +108,8 @@
 		"ky": "0.13.0",
 		"ramda": "0.26.1",
 		"simplebar": "4.3.0-alpha.0",
-		"smoothscroll-polyfill": "0.4.4"
+		"smoothscroll-polyfill": "0.4.4",
+		"viewprt": "4.0.0"
 	},
 	"bugs": {
 		"url": "https://github.com/webDevAndSausages/world-of-webdevandsausages/issues"
