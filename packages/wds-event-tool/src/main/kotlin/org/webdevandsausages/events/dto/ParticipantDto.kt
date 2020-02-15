@@ -25,9 +25,10 @@ data class ParticipantDto(
     )
 }
 
-val ParticipantDto.participantDetails get() = mapOf(
-    "email" to email,
-    "name" to name,
-    "affiliation" to affiliation,
-    "insertedOn" to insertedOn
+val ParticipantDto.participantDetails
+    get() = mapOf(
+        "email" to email,
+        "name" to name,
+        "affiliation" to affiliation,
+        "insertedOn" to insertedOn
     )

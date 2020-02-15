@@ -38,7 +38,7 @@ object DeleteRegistration: ApiRouteWithGraphqlConfig {
         )
     }
 
-    override val route: ContractRoute = "events/registrations" / registrationToken meta {
+    override val route: ContractRoute = "/events/registrations" / registrationToken meta {
         summary = "Cancel user registration"
         returning(Status.OK to "Registration to the event has been cancelled.")
         returning(Status.NOT_FOUND to "The event is closed or non-existent.")

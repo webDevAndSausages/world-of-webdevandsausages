@@ -13,7 +13,6 @@ import org.jooq.impl.DSL
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.utils.getFullName
-import org.webdevandsausages.events.utils.prettified
 
 class ParticipantCRUD(configuration: Configuration) {
     val db = DSL.using(configuration)

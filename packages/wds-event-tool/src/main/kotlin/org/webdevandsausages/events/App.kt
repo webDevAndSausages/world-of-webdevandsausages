@@ -10,7 +10,16 @@ import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.ParticipantCRUD
-import org.webdevandsausages.events.service.*
+import org.webdevandsausages.events.service.CancelRegistrationService
+import org.webdevandsausages.events.service.CreateEventService
+import org.webdevandsausages.events.service.CreateRegistrationService
+import org.webdevandsausages.events.service.EmailService
+import org.webdevandsausages.events.service.FirebaseService
+import org.webdevandsausages.events.service.GetCurrentEventService
+import org.webdevandsausages.events.service.GetEventByIdService
+import org.webdevandsausages.events.service.GetEventsService
+import org.webdevandsausages.events.service.GetRegistrationService
+import org.webdevandsausages.events.service.UpdateEventService
 import org.webdevandsausages.events.utils.RandomWordsUtil
 
 fun main(args: Array<String>) {
@@ -20,16 +29,21 @@ fun main(args: Array<String>) {
 
 fun startApp(config: AppConfig): Http4kServer {
     Configurator.initialize(null, config.logConfig)
+
     val logger = LoggerFactory.getLogger("main")
     logger.info("Running DB migrations...")
+
     val flyway = Flyway.configure().dataSource(config.db.url, config.db.user, config.db.password).load()
     flyway.migrate()
+
     logger.info("Starting server...")
+
     // Initialize CRUD instances
     val eventCRUD = EventCRUD(local.jooqConfiguration)
     val participantCRUD = ParticipantCRUD(local.jooqConfiguration)
     val emailService = EmailService(config.secrets)
     val firebaseService = FirebaseService()
+
     val app = Router(
         GetEventsService(eventCRUD),
         GetCurrentEventService(eventCRUD, logger),
@@ -47,7 +61,9 @@ fun startApp(config: AppConfig): Http4kServer {
         CreateEventService(eventCRUD),
         UpdateEventService(eventCRUD)
     )(config.secrets)
+
     val server = app.asServer(Jetty(config.port)).start()
     logger.info("Server started on port ${config.port}")
+
     return server
 }

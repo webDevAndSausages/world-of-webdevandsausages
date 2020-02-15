@@ -60,7 +60,7 @@ object PostRegistration: ApiRouteWithGraphqlConfig {
             })
     }
 
-    override val route: ContractRoute = "events" / eventIdParam / "registrations" meta {
+    override val route: ContractRoute = "/events" / eventIdParam / "registrations" meta {
             summary = "Register user"
             receiving(registrationRequestLens)
             returning(Status.CREATED to "User has been registered to the event.")

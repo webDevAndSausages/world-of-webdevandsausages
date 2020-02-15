@@ -40,7 +40,7 @@ object GetEvent : ApiRouteWithGraphqlConfig {
             )
         }
 
-    override val route: ContractRoute = "events" / Router.eventIdParam meta {
+    override val route: ContractRoute = "/events" / Router.eventIdParam meta {
         summary = "Get event by id"
         returning(Status.OK to "Event found")
         returning(Status.NOT_FOUND to "The event does not exist.")

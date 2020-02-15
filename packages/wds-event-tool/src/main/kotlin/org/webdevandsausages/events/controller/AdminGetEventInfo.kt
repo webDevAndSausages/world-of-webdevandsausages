@@ -32,7 +32,7 @@ object AdminGetEventInfo {
                     })
             }
 
-        return "events" / Router.eventIdParam meta {
+        return "/events" / Router.eventIdParam meta {
             summary = "Get event by id (with participant info)"
             returning(Status.OK to "Event found")
             returning(Status.NOT_FOUND to "The event does not exist.")

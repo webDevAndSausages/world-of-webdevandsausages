@@ -35,7 +35,7 @@ object GetUser : ApiRouteWithGraphqlConfig {
             )
         }
 
-    override val route: ContractRoute = "user" / Router.verificationTokenParam meta {
+    override val route: ContractRoute = "/user" / Router.verificationTokenParam meta {
         summary = "Get user by verification token"
         returning(Status.OK to "User found.")
         returning(Status.NOT_FOUND to "The user does not exist.")

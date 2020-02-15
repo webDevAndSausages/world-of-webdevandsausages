@@ -1,28 +1,25 @@
-import com.rohanprabhu.gradle.plugins.kdjooq.generator
-import com.rohanprabhu.gradle.plugins.kdjooq.jdbc
-import com.rohanprabhu.gradle.plugins.kdjooq.jooqCodegenConfiguration
-import org.gradle.api.internal.initialization.ClassLoaderIds.buildScript
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jooq.tools.jdbc.JDBCUtils.driver
+import org.jooq.util.jaxb.Configuration
 import org.jooq.util.jaxb.Database
 import org.jooq.util.jaxb.ForcedType
-import org.jooq.util.jaxb.Target
-import org.jooq.util.jaxb.Configuration
 import org.jooq.util.jaxb.Generate
 import org.jooq.util.jaxb.Generator
 import org.jooq.util.jaxb.Jdbc
 import org.jooq.util.jaxb.Strategy
-import org.jooq.util.postgres.PostgresDatabase
+import org.jooq.util.jaxb.Target
 
-val kotlinVersion = "1.3.20"
-val http4kVersion = "3.115.1"
-val log4jVersion = "2.10.0"
-val jacksonVersion = "2.9.6"
+val kotlinVersion = "1.3.61"
+val http4kVersion = "3.235.0"
+val log4jVersion = "2.13.0"
+val jacksonVersion = "2.10.1"
 val firebaseVersion = "6.6.0"
 val flywayCoreVersion = "5.2.4"
 val postgresqlDriverVersion = "42.2.5"
 val jooqVersion = "3.10.1"
 val arrowVersion = "0.8.2"
+// val newArrowVersion = "0.10.4"
 val mockkVersion = "1.9.2"
 val KGraphQLVersion = "0.6.4"
 
@@ -105,19 +102,16 @@ dependencies {
     jooqGeneratorRuntime("org.postgresql:postgresql:$postgresqlDriverVersion")
     /* graphql */
     implementation("com.apurebase:kgraphql:$KGraphQLVersion")
-    /* Arrow */
+    /* Arrow new */
+    // implementation("io.arrow-kt:arrow-fx:$newArrowVersion")
+    // implementation("io.arrow-kt:arrow-mtl:$newArrowVersion")
+    // implementation("io.arrow-kt:arrow-syntax:$newArrowVersion")
+    /* Arrow old */
     implementation("io.arrow-kt:arrow-core:$arrowVersion")
     implementation("io.arrow-kt:arrow-data:$arrowVersion")
 
     /* Validation */
     compile("com.markodevcic.kvalidation:KValidation:1.0.0")
-    // use IO monads in future?
-    // implementation("io.arrow-kt:arrow-effects:$arrowVersion")
-    // implementation("io.arrow-kt:arrow-effects-instances:$arrowVersion")
-    // implementation("io.arrow-kt:arrow-instances-core:$arrowVersion")
-    // implementation("io.arrow-kt:arrow-instances-data:$arrowVersion")
-    // implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
-
     /* tests */
     testImplementation("io.kotlintest:kotlintest-runner-junit5:3.1.10")
     testImplementation("io.kotlintest:kotlintest-assertions-arrow:3.1.11")

@@ -37,7 +37,7 @@ object GetRegistration: ApiRouteWithGraphqlConfig {
             )
         }
 
-    override val route: ContractRoute = "events" / Router.eventIdParam / "registrations" / Router.verificationTokenParam meta {
+    override val route: ContractRoute = "/events" / Router.eventIdParam / "registrations" / Router.verificationTokenParam meta {
             summary = "Get registration by verification token"
             returning( Status.OK to "Registration found.")
             returning(Status.NOT_FOUND to "The event does not exist.")
