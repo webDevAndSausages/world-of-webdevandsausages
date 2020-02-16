@@ -102,6 +102,8 @@ dependencies {
     jooqGeneratorRuntime("org.postgresql:postgresql:$postgresqlDriverVersion")
     /* graphql */
     implementation("com.apurebase:kgraphql:$KGraphQLVersion")
+    /* Result */
+    implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.6")
     /* Arrow new */
     // implementation("io.arrow-kt:arrow-fx:$newArrowVersion")
     // implementation("io.arrow-kt:arrow-mtl:$newArrowVersion")

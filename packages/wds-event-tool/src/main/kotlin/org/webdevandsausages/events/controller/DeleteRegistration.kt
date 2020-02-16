@@ -13,7 +13,7 @@ import org.http4k.lens.Path
 import org.http4k.lens.string
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.error.toResponse
+import org.webdevandsausages.events.domain.toResponse
 import org.webdevandsausages.events.service.CancelRegistrationService
 
 object DeleteRegistration: ApiRouteWithGraphqlConfig {

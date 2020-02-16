@@ -6,6 +6,7 @@ package meta;
 
 import javax.annotation.Generated;
 
+import meta.routines.AddContact;
 import meta.routines.CheckIfMaxParticipantsChanged;
 import meta.routines.EventStatusPossiblyChanges;
 import meta.routines.UpdateEventStatus;
@@ -27,6 +28,27 @@ import org.jooq.Field;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Routines {
+
+    /**
+     * @deprecated Unknown data type. Please define an explicit {@link org.jooq.Binding} to specify how this type should be handled.
+     */
+    @java.lang.Deprecated
+    public static Object addContact(Configuration configuration) {
+        AddContact f = new AddContact();
+
+        f.execute(configuration);
+        return f.getReturnValue();
+    }
+
+    /**
+     * @deprecated Unknown data type. Please define an explicit {@link org.jooq.Binding} to specify how this type should be handled.
+     */
+    @java.lang.Deprecated
+    public static Field<Object> addContact() {
+        AddContact f = new AddContact();
+
+        return f.asField();
+    }
 
     /**
      * @deprecated Unknown data type. Please define an explicit {@link org.jooq.Binding} to specify how this type should be handled.

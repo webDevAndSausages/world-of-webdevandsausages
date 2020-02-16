@@ -12,7 +12,7 @@ import org.http4k.core.Status
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.RegistrationOutDto
-import org.webdevandsausages.events.error.toResponse
+import org.webdevandsausages.events.domain.toResponse
 import org.webdevandsausages.events.service.GetRegistrationService
 
 object GetUser : ApiRouteWithGraphqlConfig {

@@ -24,13 +24,10 @@ import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import meta.tables.pojos.Participant
 import org.jooq.Configuration
-import org.jooq.Context
 import org.jooq.impl.DSL
-import org.jooq.tools.jdbc.MockConfiguration
-import org.jooq.tools.jdbc.MockExecuteContext
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
-import org.webdevandsausages.events.error.RegistrationCancellationError
+import org.webdevandsausages.events.domain.RegistrationCancellationError
 import org.webdevandsausages.events.service.CancelRegistrationService
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp

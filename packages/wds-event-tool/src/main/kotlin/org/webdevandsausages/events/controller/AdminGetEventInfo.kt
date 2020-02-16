@@ -11,7 +11,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventDto
-import org.webdevandsausages.events.error.toResponse
+import org.webdevandsausages.events.domain.toResponse
 import org.webdevandsausages.events.service.GetEventByIdService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 

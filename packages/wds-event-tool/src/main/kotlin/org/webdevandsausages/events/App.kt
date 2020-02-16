@@ -8,9 +8,11 @@ import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.AppConfig
 import org.webdevandsausages.events.config.local
+import org.webdevandsausages.events.dao.ContactCRUD
 import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.ParticipantCRUD
 import org.webdevandsausages.events.service.CancelRegistrationService
+import org.webdevandsausages.events.service.CreateContactService
 import org.webdevandsausages.events.service.CreateEventService
 import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.service.EmailService
@@ -41,6 +43,7 @@ fun startApp(config: AppConfig): Http4kServer {
     // Initialize CRUD instances
     val eventCRUD = EventCRUD(local.jooqConfiguration)
     val participantCRUD = ParticipantCRUD(local.jooqConfiguration)
+    val contactCRUD = ContactCRUD(local.jooqConfiguration)
     val emailService = EmailService(config.secrets)
     val firebaseService = FirebaseService()
 
@@ -59,7 +62,8 @@ fun startApp(config: AppConfig): Http4kServer {
         ),
         CancelRegistrationService(eventCRUD, participantCRUD, emailService),
         CreateEventService(eventCRUD),
-        UpdateEventService(eventCRUD)
+        UpdateEventService(eventCRUD),
+        CreateContactService(contactCRUD)
     )(config.secrets)
 
     val server = app.asServer(Jetty(config.port)).start()

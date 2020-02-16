@@ -14,11 +14,11 @@ import org.http4k.lens.Path
 import org.http4k.lens.long
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
+import org.webdevandsausages.events.domain.toResponse
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
-import org.webdevandsausages.events.error.toResponse
 import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.utils.Read
 import org.webdevandsausages.events.utils.WDSJackson.auto

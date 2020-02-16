@@ -41,6 +41,7 @@ import org.webdevandsausages.events.controller.GetEvents
 import org.webdevandsausages.events.controller.GetRegistration
 import org.webdevandsausages.events.controller.GetUser
 import org.webdevandsausages.events.controller.PatchEvent
+import org.webdevandsausages.events.controller.PostContact
 import org.webdevandsausages.events.controller.PostEvent
 import org.webdevandsausages.events.controller.PostRegistration
 import org.webdevandsausages.events.dto.ErrorCode
@@ -51,6 +52,7 @@ import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.graphql.GraphqlRouter
 import org.webdevandsausages.events.graphql.createSchema
 import org.webdevandsausages.events.service.CancelRegistrationService
+import org.webdevandsausages.events.service.CreateContactService
 import org.webdevandsausages.events.service.CreateEventService
 import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.service.GetCurrentEventService
@@ -70,7 +72,8 @@ class Router(
     val createRegistration: CreateRegistrationService,
     val cancelRegistration: CancelRegistrationService,
     val createEvent: CreateEventService,
-    val updateEvent: UpdateEventService
+    val updateEvent: UpdateEventService,
+    val createContact: CreateContactService
 ) {
 
     operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
@@ -148,7 +151,8 @@ class Router(
         GetRegistration(getRegistration).route,
         PostRegistration(createRegistration).route,
         DeleteRegistration(cancelRegistration).route,
-        GetUser(getRegistration).route
+        GetUser(getRegistration).route,
+        PostContact(createContact).route
     )
 
     private fun ok() = { _: Request -> Response(OK) }

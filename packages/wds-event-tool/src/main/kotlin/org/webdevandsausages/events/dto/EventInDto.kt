@@ -5,7 +5,7 @@ import com.markodevcic.kvalidation.ValidatorBase
 import com.markodevcic.kvalidation.onError
 import com.markodevcic.kvalidation.rules
 import meta.enums.EventStatus
-import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.domain.EventError
 import org.webdevandsausages.events.utils.mapper
 import java.sql.Timestamp
 import java.time.LocalDateTime

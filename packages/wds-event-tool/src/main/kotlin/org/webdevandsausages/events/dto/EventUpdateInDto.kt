@@ -10,7 +10,7 @@ import meta.enums.EventStatus
 import meta.tables.Event.EVENT
 import org.webdevandsausages.events.dao.EventUpdate
 import org.webdevandsausages.events.dao.EventUpdates
-import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.domain.EventError
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import kotlin.reflect.full.declaredMemberProperties

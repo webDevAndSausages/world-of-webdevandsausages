@@ -20,9 +20,9 @@ import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.getNextOrderNumber
 import org.webdevandsausages.events.dto.getNextOrderNumberInStatusGroup
 import org.webdevandsausages.events.dto.getPosition
-import org.webdevandsausages.events.error.EventError
-import org.webdevandsausages.events.error.RegistrationCancellationError
-import org.webdevandsausages.events.error.RegistrationError
+import org.webdevandsausages.events.domain.EventError
+import org.webdevandsausages.events.domain.RegistrationCancellationError
+import org.webdevandsausages.events.domain.RegistrationError
 import org.webdevandsausages.events.utils.RandomWordsUtil
 
 class CreateRegistrationService(

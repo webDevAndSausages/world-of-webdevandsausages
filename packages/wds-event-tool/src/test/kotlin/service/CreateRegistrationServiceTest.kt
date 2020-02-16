@@ -21,7 +21,7 @@ import org.jooq.impl.DSL
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
-import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.domain.EventError
 import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp

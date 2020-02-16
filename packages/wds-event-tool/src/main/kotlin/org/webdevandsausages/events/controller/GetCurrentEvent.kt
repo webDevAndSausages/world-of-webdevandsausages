@@ -10,7 +10,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.dto.EventOutDto
-import org.webdevandsausages.events.error.toResponse
+import org.webdevandsausages.events.domain.toResponse
 import org.webdevandsausages.events.service.GetCurrentEventService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 

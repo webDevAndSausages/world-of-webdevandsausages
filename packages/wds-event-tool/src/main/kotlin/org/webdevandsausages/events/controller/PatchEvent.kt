@@ -14,7 +14,7 @@ import org.http4k.core.Status
 import org.http4k.lens.string
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventUpdateInDto
-import org.webdevandsausages.events.error.toResponse
+import org.webdevandsausages.events.domain.toResponse
 import org.webdevandsausages.events.service.GetEventByIdService
 import org.webdevandsausages.events.service.UpdateEventService
 

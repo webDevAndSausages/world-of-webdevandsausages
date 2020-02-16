@@ -1,7 +1,6 @@
 package endpoint
 
 import arrow.core.Either
-import com.sun.xml.internal.ws.api.message.Headers
 import io.kotlintest.Description
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
@@ -13,7 +12,7 @@ import org.http4k.core.Status
 import org.intellij.lang.annotations.Language
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ParticipantDto
-import org.webdevandsausages.events.error.RegistrationCancellationError
+import org.webdevandsausages.events.domain.RegistrationCancellationError
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime

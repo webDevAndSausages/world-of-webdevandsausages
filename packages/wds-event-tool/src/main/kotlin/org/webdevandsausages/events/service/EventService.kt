@@ -5,10 +5,10 @@ import arrow.core.Some
 import meta.enums.EventStatus
 import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventCRUD
+import org.webdevandsausages.events.domain.EventError
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventInDto
 import org.webdevandsausages.events.dto.EventUpdateInDto
-import org.webdevandsausages.events.error.EventError
 
 class GetEventsService(val eventRepository: EventCRUD) {
     operator fun invoke(status: String?): List<EventDto> {

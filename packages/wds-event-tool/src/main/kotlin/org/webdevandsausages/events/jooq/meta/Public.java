@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.annotation.Generated;
 
+import meta.tables.Contact;
 import meta.tables.Event;
 import meta.tables.FlywaySchemaHistory;
 import meta.tables.Participant;
@@ -33,12 +34,17 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -1971191500;
+    private static final long serialVersionUID = 422590914;
 
     /**
      * The reference instance of <code>public</code>
      */
     public static final Public PUBLIC = new Public();
+
+    /**
+     * The table <code>public.contact</code>.
+     */
+    public final Contact CONTACT = meta.tables.Contact.CONTACT;
 
     /**
      * The table <code>public.event</code>.
@@ -80,6 +86,7 @@ public class Public extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
+            Sequences.CONTACT_ID_SEQ,
             Sequences.EVENT_ID_SEQ,
             Sequences.PARTICIPANT_EVENT_ID_SEQ,
             Sequences.PARTICIPANT_ID_SEQ);
@@ -94,6 +101,7 @@ public class Public extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            Contact.CONTACT,
             Event.EVENT,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Participant.PARTICIPANT);

@@ -12,7 +12,7 @@ import org.http4k.core.Status
 import org.intellij.lang.annotations.Language
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.ParticipantDto
-import org.webdevandsausages.events.error.RegistrationError
+import org.webdevandsausages.events.domain.RegistrationError
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
