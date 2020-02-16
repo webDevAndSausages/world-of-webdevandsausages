@@ -1,5 +1,6 @@
 package service
 
+import CreateRegistrationService
 import arrow.core.Left
 import arrow.core.None
 import arrow.core.Option
@@ -22,7 +23,6 @@ import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.domain.EventError
-import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime
@@ -36,7 +36,6 @@ class CreateRegistrationServiceTest : StringSpec() {
                emailService = mockk(relaxed = true),
                eventCRUD = mockk(relaxed = true),
                randomWordsUtil = mockk(relaxed = true),
-               logger = mockk(relaxed = true),
                participantCRUD = mockk(relaxed = true),
                firebaseService = mockk(relaxed = true)
                )

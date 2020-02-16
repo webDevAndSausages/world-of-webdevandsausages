@@ -13,7 +13,7 @@ import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.domain.toResponse
-import org.webdevandsausages.events.service.GetRegistrationService
+import org.webdevandsausages.events.service.registration.GetRegistrationService
 
 object GetRegistration: ApiRouteWithGraphqlConfig {
 

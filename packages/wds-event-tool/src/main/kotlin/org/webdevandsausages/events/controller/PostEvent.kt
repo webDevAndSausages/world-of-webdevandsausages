@@ -13,7 +13,7 @@ import org.http4k.lens.string
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventInDto
 import org.webdevandsausages.events.domain.toResponse
-import org.webdevandsausages.events.service.CreateEventService
+import org.webdevandsausages.events.service.event.CreateEventService
 
 object PostEvent {
     private val eventCreateRequestLens =

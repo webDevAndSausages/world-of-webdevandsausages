@@ -1,5 +1,6 @@
 package org.webdevandsausages.events
 
+import CreateRegistrationService
 import org.apache.logging.log4j.core.config.Configurator
 import org.flywaydb.core.Flyway
 import org.http4k.server.Http4kServer
@@ -11,17 +12,16 @@ import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dao.ContactCRUD
 import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.ParticipantCRUD
-import org.webdevandsausages.events.service.CancelRegistrationService
 import org.webdevandsausages.events.service.CreateContactService
-import org.webdevandsausages.events.service.CreateEventService
-import org.webdevandsausages.events.service.CreateRegistrationService
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.FirebaseService
-import org.webdevandsausages.events.service.GetCurrentEventService
-import org.webdevandsausages.events.service.GetEventByIdService
-import org.webdevandsausages.events.service.GetEventsService
-import org.webdevandsausages.events.service.GetRegistrationService
-import org.webdevandsausages.events.service.UpdateEventService
+import org.webdevandsausages.events.service.event.CreateEventService
+import org.webdevandsausages.events.service.event.GetCurrentEventService
+import org.webdevandsausages.events.service.event.GetEventByIdService
+import org.webdevandsausages.events.service.event.GetEventsService
+import org.webdevandsausages.events.service.event.UpdateEventService
+import org.webdevandsausages.events.service.registration.CancelRegistrationService
+import org.webdevandsausages.events.service.registration.GetRegistrationService
 import org.webdevandsausages.events.utils.RandomWordsUtil
 
 fun main(args: Array<String>) {
@@ -49,16 +49,15 @@ fun startApp(config: AppConfig): Http4kServer {
 
     val app = Router(
         GetEventsService(eventCRUD),
-        GetCurrentEventService(eventCRUD, logger),
+        GetCurrentEventService(eventCRUD),
         GetEventByIdService(eventCRUD),
-        GetRegistrationService(eventCRUD, participantCRUD, logger),
+        GetRegistrationService(eventCRUD, participantCRUD),
         CreateRegistrationService(
             eventCRUD,
             participantCRUD,
             RandomWordsUtil,
             emailService,
-            firebaseService,
-            logger
+            firebaseService
         ),
         CancelRegistrationService(eventCRUD, participantCRUD, emailService),
         CreateEventService(eventCRUD),

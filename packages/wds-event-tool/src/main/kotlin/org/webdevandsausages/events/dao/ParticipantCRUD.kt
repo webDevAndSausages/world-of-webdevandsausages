@@ -1,8 +1,6 @@
 package org.webdevandsausages.events.dao
 
 import arrow.core.Option
-import arrow.core.Try
-import arrow.core.getOrDefault
 import arrow.core.toOption
 import meta.enums.ParticipantStatus
 import meta.tables.Participant
@@ -29,7 +27,7 @@ class ParticipantCRUD(configuration: Configuration) {
     }
 
     fun findByToken(token: String, context: DSLContext = db): Option<ParticipantDto> {
-        return Try {
+        return runCatching {
             with(Participant.PARTICIPANT) {
                 context.use { ctx ->
                     ctx
@@ -47,7 +45,7 @@ class ParticipantCRUD(configuration: Configuration) {
                     )
                 }
             }
-        }.getOrDefault { null }.toOption()
+        }.getOrNull().toOption()
     }
 
     fun updateStatus(

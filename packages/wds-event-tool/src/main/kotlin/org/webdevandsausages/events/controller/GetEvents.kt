@@ -13,7 +13,7 @@ import org.http4k.core.Status
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventOutDto
-import org.webdevandsausages.events.service.GetEventsService
+import org.webdevandsausages.events.service.event.GetEventsService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object GetEvents: ApiRouteWithGraphqlConfig {

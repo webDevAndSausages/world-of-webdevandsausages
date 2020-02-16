@@ -15,8 +15,8 @@ import org.http4k.lens.string
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventUpdateInDto
 import org.webdevandsausages.events.domain.toResponse
-import org.webdevandsausages.events.service.GetEventByIdService
-import org.webdevandsausages.events.service.UpdateEventService
+import org.webdevandsausages.events.service.event.GetEventByIdService
+import org.webdevandsausages.events.service.event.UpdateEventService
 
 object PatchEvent {
     private val eventUpdateRequestLens =

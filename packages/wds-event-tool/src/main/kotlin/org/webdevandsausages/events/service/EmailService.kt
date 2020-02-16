@@ -1,22 +1,23 @@
 package org.webdevandsausages.events.service
 
-import arrow.core.Try
-import arrow.core.getOrDefault
+import com.github.michaelbull.result.runCatching
+import com.github.michaelbull.result.getOr
 import com.sendgrid.Email
 import com.sendgrid.Mail
 import com.sendgrid.Method
 import com.sendgrid.Personalization
 import com.sendgrid.Request
 import com.sendgrid.SendGrid
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.webdevandsausages.events.config.Secrets
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
+import org.webdevandsausages.events.service.registration.toText
+import org.webdevandsausages.events.utils.createLogger
 import org.webdevandsausages.events.utils.prettified
 
 val SUBJECT_INTRO = "Web Dev and Sausages:"
@@ -24,20 +25,19 @@ val SUBJECT_INTRO = "Web Dev and Sausages:"
 val WAIT_LISTED_SUBJECT  = "$SUBJECT_INTRO You are currently on the waiting list."
 val REGISTERED_SUBJECT = "$SUBJECT_INTRO You are successfully registered!"
 
-class EmailService(private val secrets: Secrets?) {
-    private val logger: Logger = LoggerFactory.getLogger("email service")
+class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineScope(Dispatchers.Default) {
+    private val logger = createLogger()
 
     private val sg by lazy {
-        Try {
+        runCatching {
             SendGrid(this.secrets?.sendgridApiKey)
-        }.getOrDefault {
+        }.getOr {
             logger.error("Could not initialize sendgrid")
             null
         }
     }
 
-    fun sendMail(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) =
-        GlobalScope.launch {
+    fun sendMail(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) = launch {
             // this uses the new version 3 api for Sendgrid
             // we need to copy over our old templates in Sendgrid to work in new api
             if (sg != null) {
@@ -137,6 +137,7 @@ class EmailService(private val secrets: Secrets?) {
         )
 
         logger.info("Dispatching confirmation email (upgraded from waiting list to registered) to ${participantDto.email}")
+
         sendMail(
             participantDto.email,
             participantDto.name,

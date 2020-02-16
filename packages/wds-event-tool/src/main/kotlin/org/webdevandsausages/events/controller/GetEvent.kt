@@ -14,7 +14,7 @@ import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.domain.toResponse
-import org.webdevandsausages.events.service.GetEventByIdService
+import org.webdevandsausages.events.service.event.GetEventByIdService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object GetEvent : ApiRouteWithGraphqlConfig {

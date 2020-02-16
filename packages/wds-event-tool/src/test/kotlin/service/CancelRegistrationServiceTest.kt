@@ -28,7 +28,7 @@ import org.jooq.impl.DSL
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.domain.RegistrationCancellationError
-import org.webdevandsausages.events.service.CancelRegistrationService
+import org.webdevandsausages.events.service.registration.CancelRegistrationService
 import org.webdevandsausages.events.utils.prettified
 import java.sql.Timestamp
 import java.time.LocalDateTime

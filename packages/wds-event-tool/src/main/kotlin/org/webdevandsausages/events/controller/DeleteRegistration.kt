@@ -14,7 +14,7 @@ import org.http4k.lens.string
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.domain.toResponse
-import org.webdevandsausages.events.service.CancelRegistrationService
+import org.webdevandsausages.events.service.registration.CancelRegistrationService
 
 object DeleteRegistration: ApiRouteWithGraphqlConfig {
     private val registrationToken = Path.string().of("token")

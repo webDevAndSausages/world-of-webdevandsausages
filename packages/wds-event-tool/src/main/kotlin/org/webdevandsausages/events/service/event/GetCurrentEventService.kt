@@ -1,20 +1,13 @@
-package org.webdevandsausages.events.service
+package org.webdevandsausages.events.service.event
 
 import arrow.core.Either
 import arrow.core.Some
 import meta.enums.EventStatus
-import org.slf4j.Logger
 import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.domain.EventError
 import org.webdevandsausages.events.dto.EventDto
-import org.webdevandsausages.events.dto.EventInDto
 import org.webdevandsausages.events.dto.EventUpdateInDto
-
-class GetEventsService(val eventRepository: EventCRUD) {
-    operator fun invoke(status: String?): List<EventDto> {
-        return eventRepository.findAllWithParticipants(status)
-    }
-}
+import org.webdevandsausages.events.utils.createLogger
 
 /**
  * GetCurrentEventService should handle following updates
@@ -23,7 +16,8 @@ class GetEventsService(val eventRepository: EventCRUD) {
  *  3. If the event happened three days ago, close feedback
  */
 
-class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
+class GetCurrentEventService(val eventCRUD: EventCRUD) {
+    val logger = createLogger()
 
     @Suppress("UNCHECKED_CAST")
     private fun openEvent(data: EventDto): Either<EventError, EventDto> {
@@ -92,54 +86,3 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val logger: Logger) {
         )
     }
 }
-
-class GetEventByIdService(val eventRepository: EventCRUD) {
-    operator fun invoke(eventId: Long): Either<EventError, EventDto> {
-        return eventRepository.findByIdOrLatest(eventId).fold({
-            Either.Left(EventError.NotFound)
-        }, {
-            Either.Right(it)
-        })
-    }
-}
-
-class CreateEventService(val eventRepository: EventCRUD) {
-    operator fun invoke(eventInDto: EventInDto): Either<EventError, EventDto> {
-
-        if (!eventInDto.status.isInvisible && !eventRepository.findByIdOrLatest().isEmpty()) {
-            return Either.Left(EventError.MultipleOpen)
-        }
-
-        return eventRepository.create(eventInDto).fold({
-            Either.Left(EventError.DatabaseError)
-        }, {
-            Either.Right(it)
-        })
-    }
-}
-
-class UpdateEventService(val eventRepository: EventCRUD) {
-    operator fun invoke(eventId: Long, eventInDto: EventUpdateInDto): Either<EventError, EventDto> {
-
-        val latestEvent = eventRepository.findByIdOrLatest();
-        if (eventInDto.status != null && !eventInDto.status.isInvisible && !latestEvent.isEmpty() &&
-            (latestEvent.orNull()?.event?.id == eventId && latestEvent.orNull()?.event?.status != EventStatus.VISIBLE
-                    && latestEvent.orNull()?.event?.status != EventStatus.OPEN)
-        ) {
-            return Either.Left(EventError.MultipleOpen)
-        }
-
-        return eventRepository.update(eventId, eventInDto).fold({
-            Either.Left(EventError.DatabaseError)
-        }, {
-            Either.Right(it)
-        })
-    }
-}
-
-val EventStatus.isVisibleStatus get() = this == EventStatus.VISIBLE
-val EventStatus.isNotFull get() = this == EventStatus.OPEN
-val EventStatus.isWithWaitList get() = this == EventStatus.OPEN_WITH_WAITLIST
-val EventStatus.canRegister get() = this == EventStatus.OPEN || this == EventStatus.OPEN_WITH_WAITLIST
-val EventStatus.isOpenFeedbackStatus get() = this == EventStatus.CLOSED_WITH_FEEDBACK
-val EventStatus.isInvisible get() = this == EventStatus.PLANNING || this == EventStatus.CLOSED || this == EventStatus.CANCELLED

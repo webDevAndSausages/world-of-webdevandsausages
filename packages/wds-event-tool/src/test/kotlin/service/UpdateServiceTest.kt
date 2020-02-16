@@ -8,7 +8,8 @@ import meta.enums.EventStatus
 import meta.tables.Event.EVENT
 import meta.tables.records.EventRecord
 import org.webdevandsausages.events.dto.EventUpdateInDto
-import org.webdevandsausages.events.service.UpdateEventService
+import org.webdevandsausages.events.service.event.UpdateEventService
+
 import java.sql.Timestamp
 import java.time.*
 

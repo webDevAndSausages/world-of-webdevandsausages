@@ -1,5 +1,6 @@
 package org.webdevandsausages.events
 
+import CreateRegistrationService
 import org.http4k.contract.bindContract
 import org.http4k.contract.contract
 import org.http4k.contract.openapi.ApiInfo
@@ -51,15 +52,14 @@ import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.graphql.GraphqlRouter
 import org.webdevandsausages.events.graphql.createSchema
-import org.webdevandsausages.events.service.CancelRegistrationService
 import org.webdevandsausages.events.service.CreateContactService
-import org.webdevandsausages.events.service.CreateEventService
-import org.webdevandsausages.events.service.CreateRegistrationService
-import org.webdevandsausages.events.service.GetCurrentEventService
-import org.webdevandsausages.events.service.GetEventByIdService
-import org.webdevandsausages.events.service.GetEventsService
-import org.webdevandsausages.events.service.GetRegistrationService
-import org.webdevandsausages.events.service.UpdateEventService
+import org.webdevandsausages.events.service.event.CreateEventService
+import org.webdevandsausages.events.service.event.GetCurrentEventService
+import org.webdevandsausages.events.service.event.GetEventByIdService
+import org.webdevandsausages.events.service.event.GetEventsService
+import org.webdevandsausages.events.service.event.UpdateEventService
+import org.webdevandsausages.events.service.registration.CancelRegistrationService
+import org.webdevandsausages.events.service.registration.GetRegistrationService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 typealias handleErrorResponse = (message: String, code: ErrorCode, status: Status) -> Response
