@@ -35,6 +35,7 @@ class FirebaseService : CoroutineScope by CoroutineScope(Dispatchers.Default) {
         val participantsRef = FirestoreClient.getFirestore()?.collection("participants")
         val details = participant.participantDetails
         val email = details["email"]
+
         if (email != null) {
             runCatching { participantsRef?.document(email)?.set(details, SetOptions.merge()) }.fold(
                 {

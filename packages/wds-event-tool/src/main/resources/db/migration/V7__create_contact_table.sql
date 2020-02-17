@@ -1,10 +1,10 @@
 create table contact (
-   id                  bigserial primary key,
-   email               varchar(255) unique not null,
+   id                  bigserial     primary key,
+   email               varchar(255)  unique not null,
    first_name          varchar(255),
    last_name           varchar(255),
    phone               varchar(255),
-   unsubscribed        bool          not null default false,
+   subscribe           bool          not null default true,
    created_on          timestamp     not null default current_timestamp,
    updated_on          timestamp     not null default current_timestamp
 );

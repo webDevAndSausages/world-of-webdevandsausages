@@ -30,7 +30,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ContactRecord extends UpdatableRecordImpl<ContactRecord> implements Record8<Long, String, String, String, String, Boolean, Timestamp, Timestamp> {
 
-    private static final long serialVersionUID = -2076109670;
+    private static final long serialVersionUID = 1114129434;
 
     /**
      * Setter for <code>public.contact.id</code>.
@@ -108,17 +108,17 @@ public class ContactRecord extends UpdatableRecordImpl<ContactRecord> implements
     }
 
     /**
-     * Setter for <code>public.contact.unsubscribed</code>.
+     * Setter for <code>public.contact.subscribe</code>.
      */
-    public ContactRecord setUnsubscribed(Boolean value) {
+    public ContactRecord setSubscribe(Boolean value) {
         set(5, value);
         return this;
     }
 
     /**
-     * Getter for <code>public.contact.unsubscribed</code>.
+     * Getter for <code>public.contact.subscribe</code>.
      */
-    public Boolean getUnsubscribed() {
+    public Boolean getSubscribe() {
         return (Boolean) get(5);
     }
 
@@ -229,7 +229,7 @@ public class ContactRecord extends UpdatableRecordImpl<ContactRecord> implements
      */
     @Override
     public Field<Boolean> field6() {
-        return Contact.CONTACT.UNSUBSCRIBED;
+        return Contact.CONTACT.SUBSCRIBE;
     }
 
     /**
@@ -293,7 +293,7 @@ public class ContactRecord extends UpdatableRecordImpl<ContactRecord> implements
      */
     @Override
     public Boolean component6() {
-        return getUnsubscribed();
+        return getSubscribe();
     }
 
     /**
@@ -357,7 +357,7 @@ public class ContactRecord extends UpdatableRecordImpl<ContactRecord> implements
      */
     @Override
     public Boolean value6() {
-        return getUnsubscribed();
+        return getSubscribe();
     }
 
     /**
@@ -426,7 +426,7 @@ public class ContactRecord extends UpdatableRecordImpl<ContactRecord> implements
      */
     @Override
     public ContactRecord value6(Boolean value) {
-        setUnsubscribed(value);
+        setSubscribe(value);
         return this;
     }
 
@@ -478,7 +478,7 @@ public class ContactRecord extends UpdatableRecordImpl<ContactRecord> implements
     /**
      * Create a detached, initialised ContactRecord
      */
-    public ContactRecord(Long id, String email, String firstName, String lastName, String phone, Boolean unsubscribed, Timestamp createdOn, Timestamp updatedOn) {
+    public ContactRecord(Long id, String email, String firstName, String lastName, String phone, Boolean subscribe, Timestamp createdOn, Timestamp updatedOn) {
         super(Contact.CONTACT);
 
         set(0, id);
@@ -486,7 +486,7 @@ public class ContactRecord extends UpdatableRecordImpl<ContactRecord> implements
         set(2, firstName);
         set(3, lastName);
         set(4, phone);
-        set(5, unsubscribed);
+        set(5, subscribe);
         set(6, createdOn);
         set(7, updatedOn);
     }

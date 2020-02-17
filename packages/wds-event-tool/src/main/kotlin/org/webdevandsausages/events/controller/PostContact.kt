@@ -62,7 +62,7 @@ object PostContact : ApiRouteWithGraphqlConfig {
 
     override val config: SchemaBuilder<Unit>.() -> Unit = {
         mutation("createContact") {
-            resolver { email: String, phone: String?, firstName: String?, lastName: String?, unsubscribed: Boolean ->
+            resolver { email: String, phone: String?, firstName: String?, lastName: String?, subscribe: Boolean ->
                 parse(Read.emailRead, email).fold(
                     {
                         throw Exception("The email address is not valid")
@@ -73,7 +73,7 @@ object PostContact : ApiRouteWithGraphqlConfig {
                             phone = phone,
                             firstName = firstName,
                             lastName = lastName,
-                            unsubscribed = unsubscribed
+                            subscribe = subscribe
                         )
                         createContact!!(contact).fold(
                             { it },

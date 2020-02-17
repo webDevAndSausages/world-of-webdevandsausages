@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Contact extends TableImpl<ContactRecord> {
 
-    private static final long serialVersionUID = 1652508142;
+    private static final long serialVersionUID = 1585128626;
 
     /**
      * The reference instance of <code>public.contact</code>
@@ -81,9 +81,9 @@ public class Contact extends TableImpl<ContactRecord> {
     public final TableField<ContactRecord, String> PHONE = createField("phone", org.jooq.impl.SQLDataType.VARCHAR(255), this, "");
 
     /**
-     * The column <code>public.contact.unsubscribed</code>.
+     * The column <code>public.contact.subscribe</code>.
      */
-    public final TableField<ContactRecord, Boolean> UNSUBSCRIBED = createField("unsubscribed", org.jooq.impl.SQLDataType.BOOLEAN.nullable(false).defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "");
+    public final TableField<ContactRecord, Boolean> SUBSCRIBE = createField("subscribe", org.jooq.impl.SQLDataType.BOOLEAN.nullable(false).defaultValue(org.jooq.impl.DSL.field("true", org.jooq.impl.SQLDataType.BOOLEAN)), this, "");
 
     /**
      * The column <code>public.contact.created_on</code>.

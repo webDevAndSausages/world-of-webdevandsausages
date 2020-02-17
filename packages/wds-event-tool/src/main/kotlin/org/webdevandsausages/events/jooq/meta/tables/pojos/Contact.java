@@ -23,14 +23,14 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Contact implements Serializable {
 
-    private static final long serialVersionUID = -1868452508;
+    private static final long serialVersionUID = -568777031;
 
     private final Long      id;
     private final String    email;
     private final String    firstName;
     private final String    lastName;
     private final String    phone;
-    private final Boolean   unsubscribed;
+    private final Boolean   subscribe;
     private final Timestamp createdOn;
     private final Timestamp updatedOn;
 
@@ -40,7 +40,7 @@ public class Contact implements Serializable {
         this.firstName = value.firstName;
         this.lastName = value.lastName;
         this.phone = value.phone;
-        this.unsubscribed = value.unsubscribed;
+        this.subscribe = value.subscribe;
         this.createdOn = value.createdOn;
         this.updatedOn = value.updatedOn;
     }
@@ -51,7 +51,7 @@ public class Contact implements Serializable {
         String    firstName,
         String    lastName,
         String    phone,
-        Boolean   unsubscribed,
+        Boolean   subscribe,
         Timestamp createdOn,
         Timestamp updatedOn
     ) {
@@ -60,7 +60,7 @@ public class Contact implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.unsubscribed = unsubscribed;
+        this.subscribe = subscribe;
         this.createdOn = createdOn;
         this.updatedOn = updatedOn;
     }
@@ -85,8 +85,8 @@ public class Contact implements Serializable {
         return this.phone;
     }
 
-    public Boolean getUnsubscribed() {
-        return this.unsubscribed;
+    public Boolean getSubscribe() {
+        return this.subscribe;
     }
 
     public Timestamp getCreatedOn() {
@@ -106,7 +106,7 @@ public class Contact implements Serializable {
         sb.append(", ").append(firstName);
         sb.append(", ").append(lastName);
         sb.append(", ").append(phone);
-        sb.append(", ").append(unsubscribed);
+        sb.append(", ").append(subscribe);
         sb.append(", ").append(createdOn);
         sb.append(", ").append(updatedOn);
 

@@ -5,5 +5,5 @@ data class ContactDto(
     val firstName: String? = null,
     val lastName: String? = null,
     val phone: String? = null,
-    val unsubscribed: Boolean = false
+    val subscribe: Boolean = true
 )

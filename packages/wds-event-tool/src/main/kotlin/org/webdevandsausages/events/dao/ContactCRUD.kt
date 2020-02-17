@@ -15,8 +15,8 @@ class ContactCRUD(configuration: Configuration) {
     fun create(contact: ContactDto, ctx: DSLContext = db): Result<Int, Throwable> {
         return runCatching {
             ctx.insertInto(c)
-                .columns(c.EMAIL, c.FIRST_NAME, c.LAST_NAME, c.PHONE, c.UNSUBSCRIBED)
-                .values(contact.email, contact.firstName, contact.lastName, contact.phone, contact.unsubscribed)
+                .columns(c.EMAIL, c.FIRST_NAME, c.LAST_NAME, c.PHONE, c.SUBSCRIBE)
+                .values(contact.email, contact.firstName, contact.lastName, contact.phone, contact.subscribe)
                 .onConflictDoNothing()
                 .execute()
 
