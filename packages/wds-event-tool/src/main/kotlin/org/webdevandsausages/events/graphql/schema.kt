@@ -6,10 +6,7 @@ import meta.enums.EventStatus
 import meta.enums.ParticipantStatus
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.dto.EventOutDto
-import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
-import org.webdevandsausages.events.error.EventError
-import org.webdevandsausages.events.error.RegistrationError
 import java.sql.Timestamp
 import java.time.OffsetDateTime
 

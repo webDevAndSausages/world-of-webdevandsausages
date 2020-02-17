@@ -1,8 +1,6 @@
 package org.webdevandsausages.events.dao
 
 import arrow.core.Option
-import arrow.core.Try
-import arrow.core.getOrDefault
 import arrow.core.toOption
 import meta.enums.ParticipantStatus
 import meta.tables.Participant
@@ -13,7 +11,6 @@ import org.jooq.impl.DSL
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.utils.getFullName
-import org.webdevandsausages.events.utils.prettified
 
 class ParticipantCRUD(configuration: Configuration) {
     val db = DSL.using(configuration)
@@ -30,7 +27,7 @@ class ParticipantCRUD(configuration: Configuration) {
     }
 
     fun findByToken(token: String, context: DSLContext = db): Option<ParticipantDto> {
-        return Try {
+        return runCatching {
             with(Participant.PARTICIPANT) {
                 context.use { ctx ->
                     ctx
@@ -48,7 +45,7 @@ class ParticipantCRUD(configuration: Configuration) {
                     )
                 }
             }
-        }.getOrDefault { null }.toOption()
+        }.getOrNull().toOption()
     }
 
     fun updateStatus(

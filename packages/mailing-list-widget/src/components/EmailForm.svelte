@@ -35,11 +35,11 @@
 			'ml-6 p-1 pt-0 text-term-brand-2 text-xs label-top bg-mailing-list h-3 z-30': labelOnTop,
 			'pb-2 px-4 pt-2': !labelOnTop,
 		},
-		'absolute top-0 label-transition block pointer-events-none cursor-text text-term-brand-1 block',
+		'absolute top-0 label-transition block pointer-events-none cursor-text block',
 	])
 	$: inputClasses = cc([
 		{},
-		'outline-none text-base px-2 pb-2 pt-2 w-full border border-term-brand-2 bg-transparent',
+		'outline-none text-base px-2 pb-2 pt-2 w-full border bg-transparent',
 	])
 
 	$: showError = focusChange >= 2 && $form.error
@@ -71,6 +71,7 @@
 
 	function reset() {
 		setTimeout(() => stateMachine.send('RESET'), 4500)
+		$form.email = ''
 	}
 
 	$: result.cata({

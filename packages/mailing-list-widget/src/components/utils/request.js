@@ -1,29 +1,26 @@
 import ky from 'ky'
 import daggy from 'daggy'
-let version = 'tool'
-if (ENVIRONMENT === 'development') {
-	// TODO: dev version seems to be down?
-	// version = 'dev'
-}
+import config from '../config'
 
-const url = `https://us-central1-wds-event-${version}.cloudfunctions.net/api/participants`
+const url = `${config.API_ROOT}contacts`
 
 export const Result = daggy.taggedSum('Result', {
 	None: [],
 	Pending: [],
-	Ok: [ 'data' ],
-	Failure: [ 'error' ]
+	Ok: [],
+	Failure: ['error'],
 })
 
-export const postEmail = async (payload) => {
+export const postEmail = async payload => {
 	const requestConfig = {
 		method: 'POST',
 		url,
 		headers: {
 			Accept: 'application/json',
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			...config.headers,
 		},
-		throwHttpErrors: false
+		throwHttpErrors: false,
 	}
 
 	if (payload) {
@@ -33,7 +30,7 @@ export const postEmail = async (payload) => {
 	const response = await ky(url, requestConfig)
 
 	let error = {
-		message: 'A mysterious error occurred on the server.'
+		message: 'A mysterious error occurred on the server.',
 	}
 
 	if (!response.ok) {
@@ -47,15 +44,9 @@ export const postEmail = async (payload) => {
 		}
 		return Result.Failure({
 			...error,
-			status: response.status
+			status: response.status,
 		})
 	}
 
-	try {
-		const parsed = await response.json()
-		return Result.Ok(parsed)
-	} catch (e) {
-		console.log('Failed to parse response')
-		return Result.Failure({ status: 500, ...error })
-	}
+	return Result.Ok
 }

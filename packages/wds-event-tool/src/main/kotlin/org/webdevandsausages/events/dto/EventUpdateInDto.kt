@@ -1,7 +1,6 @@
 package org.webdevandsausages.events.dto
 
 import arrow.core.Either
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.base.CaseFormat
 import com.markodevcic.kvalidation.ValidatorBase
@@ -9,20 +8,11 @@ import com.markodevcic.kvalidation.onError
 import com.markodevcic.kvalidation.rules
 import meta.enums.EventStatus
 import meta.tables.Event.EVENT
-import meta.tables.pojos.Event
-import meta.tables.records.EventRecord
-import org.http4k.core.Response
-import org.jooq.TableField
 import org.webdevandsausages.events.dao.EventUpdate
 import org.webdevandsausages.events.dao.EventUpdates
-import org.webdevandsausages.events.error.EventError
-import org.webdevandsausages.events.error.toResponse
+import org.webdevandsausages.events.domain.EventError
 import java.sql.Timestamp
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.*
-import kotlin.math.max
 import kotlin.reflect.full.declaredMemberProperties
 
 data class EventUpdateInDto(
@@ -42,6 +32,7 @@ data class EventUpdateInDto(
         fun from(json: String): Either<EventError.ValidationError, EventUpdateInDto> {
             try {
                 class EventUpdateInDtoValidator(consumer: EventUpdateInDto) : ValidatorBase<EventUpdateInDto>(consumer)
+
                 val dto = ObjectMapper().readValue(json, EventUpdateInDto::class.java)
                 val validator = EventUpdateInDtoValidator(dto)
 
@@ -70,7 +61,11 @@ data class EventUpdateInDto(
                         },
                         date to {
                             validator.forProperty { date } rules {
-                                mustBe { (it!!.after(Timestamp.valueOf(LocalDateTime.now())) && !it.before(registrationOpens)) }
+                                mustBe {
+                                    (it!!.after(Timestamp.valueOf(LocalDateTime.now())) && !it.before(
+                                        registrationOpens
+                                    ))
+                                }
                             } onError {
                                 errorMessage("Date must be in the future and after the registration opens date")
                             }

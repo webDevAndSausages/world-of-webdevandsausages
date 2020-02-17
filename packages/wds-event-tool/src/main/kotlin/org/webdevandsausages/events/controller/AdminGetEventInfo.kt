@@ -11,8 +11,8 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventDto
-import org.webdevandsausages.events.error.toResponse
-import org.webdevandsausages.events.service.GetEventByIdService
+import org.webdevandsausages.events.domain.toResponse
+import org.webdevandsausages.events.service.event.GetEventByIdService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object AdminGetEventInfo {
@@ -32,7 +32,7 @@ object AdminGetEventInfo {
                     })
             }
 
-        return "events" / Router.eventIdParam meta {
+        return "/events" / Router.eventIdParam meta {
             summary = "Get event by id (with participant info)"
             returning(Status.OK to "Event found")
             returning(Status.NOT_FOUND to "The event does not exist.")

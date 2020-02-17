@@ -15,7 +15,8 @@ fun getRouterToTest() = Router(
     createRegistration = mockk(relaxed = true),
     cancelRegistration = mockk(relaxed = true),
     createEvent = mockk(relaxed = true),
-    updateEvent = mockk(relaxed = true)
+    updateEvent = mockk(relaxed = true),
+    createContact = mockk(relaxed = true)
 )
 
 fun Response.expectJsonResponse(expectedBody: String? = null) {

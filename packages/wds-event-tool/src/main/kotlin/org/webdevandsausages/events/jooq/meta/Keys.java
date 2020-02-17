@@ -6,9 +6,11 @@ package meta;
 
 import javax.annotation.Generated;
 
+import meta.tables.Contact;
 import meta.tables.Event;
 import meta.tables.FlywaySchemaHistory;
 import meta.tables.Participant;
+import meta.tables.records.ContactRecord;
 import meta.tables.records.EventRecord;
 import meta.tables.records.FlywaySchemaHistoryRecord;
 import meta.tables.records.ParticipantRecord;
@@ -37,6 +39,7 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
+    public static final Identity<ContactRecord, Long> IDENTITY_CONTACT = Identities0.IDENTITY_CONTACT;
     public static final Identity<EventRecord, Long> IDENTITY_EVENT = Identities0.IDENTITY_EVENT;
     public static final Identity<ParticipantRecord, Long> IDENTITY_PARTICIPANT = Identities0.IDENTITY_PARTICIPANT;
 
@@ -44,6 +47,8 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<ContactRecord> CONTACT_PKEY = UniqueKeys0.CONTACT_PKEY;
+    public static final UniqueKey<ContactRecord> CONTACT_EMAIL_KEY = UniqueKeys0.CONTACT_EMAIL_KEY;
     public static final UniqueKey<EventRecord> EVENT_PKEY = UniqueKeys0.EVENT_PKEY;
     public static final UniqueKey<EventRecord> EVENT_VOLUME_KEY = UniqueKeys0.EVENT_VOLUME_KEY;
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = UniqueKeys0.FLYWAY_SCHEMA_HISTORY_PK;
@@ -61,11 +66,14 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class Identities0 extends AbstractKeys {
+        public static Identity<ContactRecord, Long> IDENTITY_CONTACT = createIdentity(Contact.CONTACT, Contact.CONTACT.ID);
         public static Identity<EventRecord, Long> IDENTITY_EVENT = createIdentity(Event.EVENT, Event.EVENT.ID);
         public static Identity<ParticipantRecord, Long> IDENTITY_PARTICIPANT = createIdentity(Participant.PARTICIPANT, Participant.PARTICIPANT.ID);
     }
 
     private static class UniqueKeys0 extends AbstractKeys {
+        public static final UniqueKey<ContactRecord> CONTACT_PKEY = createUniqueKey(Contact.CONTACT, "contact_pkey", Contact.CONTACT.ID);
+        public static final UniqueKey<ContactRecord> CONTACT_EMAIL_KEY = createUniqueKey(Contact.CONTACT, "contact_email_key", Contact.CONTACT.EMAIL);
         public static final UniqueKey<EventRecord> EVENT_PKEY = createUniqueKey(Event.EVENT, "event_pkey", Event.EVENT.ID);
         public static final UniqueKey<EventRecord> EVENT_VOLUME_KEY = createUniqueKey(Event.EVENT, "event_volume_key", Event.EVENT.VOLUME);
         public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, "flyway_schema_history_pk", FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK);

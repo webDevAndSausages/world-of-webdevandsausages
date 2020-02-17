@@ -19,7 +19,7 @@ import org.jooq.Configuration
 import org.jooq.impl.DSL
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
-import org.webdevandsausages.events.service.GetRegistrationService
+import org.webdevandsausages.events.service.registration.GetRegistrationService
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -47,26 +47,28 @@ class GetRegistrationServiceTest : StringSpec() {
             TIMESTAMP,
             10,
             "www.acme.fi"
-         ),
+        ),
         participants = populateParticipants()
-      )
+    )
 
     private fun populateParticipants(): MutableList<Participant> {
         for (n in 1..14) {
             val status = if (n < 9) ParticipantStatus.REGISTERED else ParticipantStatus.WAIT_LISTED
-            participantList.add(Participant(
-                1,
-                "first_$n",
-                "last_$n",
-                "first_${n}last_$n@mail.com",
-                "Acme",
-                "token_$n",
-                n * 1000,
-                1,
-                status,
-                TIMESTAMP,
-                TIMESTAMP
-           ))
+            participantList.add(
+                Participant(
+                    1,
+                    "first_$n",
+                    "last_$n",
+                    "first_${n}last_$n@mail.com",
+                    "Acme",
+                    "token_$n",
+                    n * 1000,
+                    1,
+                    status,
+                    TIMESTAMP,
+                    TIMESTAMP
+                )
+            )
         }
         return participantList
     }
@@ -74,9 +76,8 @@ class GetRegistrationServiceTest : StringSpec() {
     override fun beforeTest(description: Description) {
         unit = GetRegistrationService(
             eventCRUD = mockk(relaxed = true),
-            participantCRUD = mockk(relaxed = true),
-            logger = mockk(relaxed = true)
-            )
+            participantCRUD = mockk(relaxed = true)
+        )
         every { unit.eventCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
         every { unit.participantCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
     }
@@ -91,18 +92,26 @@ class GetRegistrationServiceTest : StringSpec() {
                     name = "first_7 last_7",
                     verificationToken = "token_7",
                     status = ParticipantStatus.REGISTERED,
-                    orderNumber = 7000)
-                  )
+                    orderNumber = 7000
+                )
+            )
 
             val resultingEither = unit(1, "token_7")
             assertSoftly {
                 resultingEither.isRight().shouldBe(true)
-                beRight(resultingEither.shouldBe(Right(ParticipantDto(
-                    email = "first_7last_7@mail.com",
-                    name = "first_7 last_7",
-                    verificationToken = "token_7",
-                    status = ParticipantStatus.REGISTERED,
-                    orderNumber = 7))))
+                beRight(
+                    resultingEither.shouldBe(
+                        Right(
+                            ParticipantDto(
+                                email = "first_7last_7@mail.com",
+                                name = "first_7 last_7",
+                                verificationToken = "token_7",
+                                status = ParticipantStatus.REGISTERED,
+                                orderNumber = 7
+                            )
+                        )
+                    )
+                )
                 slot.captured.shouldBe("token_7")
             }
         }
@@ -116,18 +125,26 @@ class GetRegistrationServiceTest : StringSpec() {
                     name = "first_11 last_11",
                     verificationToken = "token_11",
                     status = ParticipantStatus.WAIT_LISTED,
-                    orderNumber = 11000)
-             )
+                    orderNumber = 11000
+                )
+            )
 
             val resultingEither = unit(1, "token_11")
             assertSoftly {
                 resultingEither.isRight().shouldBe(true)
-                beRight(resultingEither.shouldBe(Right(ParticipantDto(
-                    email = "first_11last_11@mail.com",
-                    name = "first_11 last_11",
-                    verificationToken = "token_11",
-                    status = ParticipantStatus.WAIT_LISTED,
-                    orderNumber = 3))))
+                beRight(
+                    resultingEither.shouldBe(
+                        Right(
+                            ParticipantDto(
+                                email = "first_11last_11@mail.com",
+                                name = "first_11 last_11",
+                                verificationToken = "token_11",
+                                status = ParticipantStatus.WAIT_LISTED,
+                                orderNumber = 3
+                            )
+                        )
+                    )
+                )
                 slot.captured.shouldBe("token_11")
             }
         }

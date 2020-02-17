@@ -6,6 +6,7 @@ package meta;
 
 import javax.annotation.Generated;
 
+import meta.tables.Contact;
 import meta.tables.Event;
 import meta.tables.FlywaySchemaHistory;
 import meta.tables.Participant;
@@ -23,6 +24,11 @@ import meta.tables.Participant;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>public.contact</code>.
+     */
+    public static final Contact CONTACT = meta.tables.Contact.CONTACT;
 
     /**
      * The table <code>public.event</code>.

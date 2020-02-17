@@ -1,6 +1,11 @@
 package org.webdevandsausages.events.dao
 
-import arrow.core.*
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.toOption
+import com.github.michaelbull.result.get
+import com.github.michaelbull.result.getOr
+import com.github.michaelbull.result.runCatching
 import meta.enums.EventStatus
 import meta.tables.Event
 import meta.tables.Participant
@@ -43,15 +48,15 @@ class EventCRUD(configuration: Configuration) {
             .addKeys(Event.EVENT.ID.name, Participant.PARTICIPANT.ID.name)
             .newMapper(object : TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-        return Try {
+        return runCatching {
             jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList()
-        }.getOrDefault { emptyList() }
+        }.getOr { emptyList() }
     }
 
     private fun hasStatus(value: EventStatus): Condition = Event.EVENT.STATUS.eq(value)
 
     fun findByIdOrLatest(id: Long? = null, context: DSLContext = db): Option<EventDto> {
-        return Try {
+        return runCatching {
             val resultSet = context.use { ctx ->
                 ctx.select()
                     .from(Event.EVENT)
@@ -75,8 +80,8 @@ class EventCRUD(configuration: Configuration) {
                 .newMapper(object :
                     TypeReference<Pair<meta.tables.pojos.Event, List<meta.tables.pojos.Participant>>>() {})
 
-            jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull()
-        }.getOrDefault { null }.toOption()
+            jdbcMapper.stream(resultSet).map { EventDto(it.first, it.second) }.toList().firstOrNull().toOption()
+        }.getOr { None }
     }
 
     // can handle an arbitrary number of updates
@@ -91,7 +96,7 @@ class EventCRUD(configuration: Configuration) {
         }
     }
 
-    fun findByParticipantToken(registrationToken: String, context: DSLContext = db): Option<EventDto> = Try {
+    fun findByParticipantToken(registrationToken: String, context: DSLContext = db): Option<EventDto> = runCatching {
         context.use { ctx ->
             ctx.select(*Event.EVENT.fields())
                 .from(Event.EVENT)
@@ -101,7 +106,7 @@ class EventCRUD(configuration: Configuration) {
                 .fetchAny()
                 .into(meta.tables.pojos.Event::class.java)
         }
-    }.toOption().flatMap {
+    }.get().toOption().flatMap {
         findByIdOrLatest(it.id)
     }
 

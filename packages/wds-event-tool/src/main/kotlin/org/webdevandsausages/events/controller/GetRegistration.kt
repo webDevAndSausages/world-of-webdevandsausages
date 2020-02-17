@@ -12,8 +12,8 @@ import org.http4k.core.Status
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.RegistrationOutDto
-import org.webdevandsausages.events.error.toResponse
-import org.webdevandsausages.events.service.GetRegistrationService
+import org.webdevandsausages.events.domain.toResponse
+import org.webdevandsausages.events.service.registration.GetRegistrationService
 
 object GetRegistration: ApiRouteWithGraphqlConfig {
 
@@ -37,7 +37,7 @@ object GetRegistration: ApiRouteWithGraphqlConfig {
             )
         }
 
-    override val route: ContractRoute = "events" / Router.eventIdParam / "registrations" / Router.verificationTokenParam meta {
+    override val route: ContractRoute = "/events" / Router.eventIdParam / "registrations" / Router.verificationTokenParam meta {
             summary = "Get registration by verification token"
             returning( Status.OK to "Registration found.")
             returning(Status.NOT_FOUND to "The event does not exist.")

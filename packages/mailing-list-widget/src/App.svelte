@@ -7,6 +7,7 @@
 	.terminal-wrapper {
 		margin: 20% auto;
 		width: 500px;
+		background: black;
 	}
 
 	@media (max-width: 650px) {

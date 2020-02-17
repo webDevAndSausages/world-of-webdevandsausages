@@ -1,9 +1,9 @@
-package org.webdevandsausages.events.error
+package org.webdevandsausages.events.domain
 
 import org.http4k.core.Response
-import org.webdevandsausages.events.dto.ErrorCode
 import org.http4k.core.Status
 import org.webdevandsausages.events.Router.Companion.errorResponseLens
+import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
 
 sealed class EventError(message: String = "", status: Status, code: ErrorCode) : WDSException(message, status, code) {

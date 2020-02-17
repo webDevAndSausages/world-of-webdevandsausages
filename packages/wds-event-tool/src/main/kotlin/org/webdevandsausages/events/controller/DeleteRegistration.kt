@@ -13,8 +13,8 @@ import org.http4k.lens.Path
 import org.http4k.lens.string
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
-import org.webdevandsausages.events.error.toResponse
-import org.webdevandsausages.events.service.CancelRegistrationService
+import org.webdevandsausages.events.domain.toResponse
+import org.webdevandsausages.events.service.registration.CancelRegistrationService
 
 object DeleteRegistration: ApiRouteWithGraphqlConfig {
     private val registrationToken = Path.string().of("token")
@@ -38,7 +38,7 @@ object DeleteRegistration: ApiRouteWithGraphqlConfig {
         )
     }
 
-    override val route: ContractRoute = "events/registrations" / registrationToken meta {
+    override val route: ContractRoute = "/events/registrations" / registrationToken meta {
         summary = "Cancel user registration"
         returning(Status.OK to "Registration to the event has been cancelled.")
         returning(Status.NOT_FOUND to "The event is closed or non-existent.")

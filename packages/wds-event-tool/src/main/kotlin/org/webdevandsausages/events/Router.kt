@@ -1,9 +1,24 @@
 package org.webdevandsausages.events
 
-import org.http4k.contract.*
-import org.http4k.core.*
-import org.http4k.core.Method.*
+import CreateRegistrationService
+import org.http4k.contract.bindContract
+import org.http4k.contract.contract
+import org.http4k.contract.openapi.ApiInfo
+import org.http4k.contract.openapi.v3.OpenApi3
+import org.http4k.contract.security.ApiKeySecurity
+import org.http4k.contract.security.NoSecurity
+import org.http4k.core.Body
+import org.http4k.core.Method
+import org.http4k.core.Method.DELETE
+import org.http4k.core.Method.GET
+import org.http4k.core.Method.OPTIONS
+import org.http4k.core.Method.POST
+import org.http4k.core.Method.PUT
+import org.http4k.core.Request
+import org.http4k.core.Response
+import org.http4k.core.Status
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.then
 import org.http4k.filter.CorsPolicy
 import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ServerFilters
@@ -19,10 +34,32 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
 import org.webdevandsausages.events.config.Secrets
-import org.webdevandsausages.events.controller.*
-import org.webdevandsausages.events.dto.*
-import org.webdevandsausages.events.graphql.*
-import org.webdevandsausages.events.service.*
+import org.webdevandsausages.events.controller.AdminGetEventInfo
+import org.webdevandsausages.events.controller.DeleteRegistration
+import org.webdevandsausages.events.controller.GetCurrentEvent
+import org.webdevandsausages.events.controller.GetEvent
+import org.webdevandsausages.events.controller.GetEvents
+import org.webdevandsausages.events.controller.GetRegistration
+import org.webdevandsausages.events.controller.GetUser
+import org.webdevandsausages.events.controller.PatchEvent
+import org.webdevandsausages.events.controller.PostContact
+import org.webdevandsausages.events.controller.PostEvent
+import org.webdevandsausages.events.controller.PostRegistration
+import org.webdevandsausages.events.dto.ErrorCode
+import org.webdevandsausages.events.dto.ErrorOutDto
+import org.webdevandsausages.events.dto.EventDto
+import org.webdevandsausages.events.dto.ParticipantDto
+import org.webdevandsausages.events.dto.RegistrationOutDto
+import org.webdevandsausages.events.graphql.GraphqlRouter
+import org.webdevandsausages.events.graphql.createSchema
+import org.webdevandsausages.events.service.CreateContactService
+import org.webdevandsausages.events.service.event.CreateEventService
+import org.webdevandsausages.events.service.event.GetCurrentEventService
+import org.webdevandsausages.events.service.event.GetEventByIdService
+import org.webdevandsausages.events.service.event.GetEventsService
+import org.webdevandsausages.events.service.event.UpdateEventService
+import org.webdevandsausages.events.service.registration.CancelRegistrationService
+import org.webdevandsausages.events.service.registration.GetRegistrationService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 typealias handleErrorResponse = (message: String, code: ErrorCode, status: Status) -> Response
@@ -35,7 +72,8 @@ class Router(
     val createRegistration: CreateRegistrationService,
     val cancelRegistration: CancelRegistrationService,
     val createEvent: CreateEventService,
-    val updateEvent: UpdateEventService
+    val updateEvent: UpdateEventService,
+    val createContact: CreateContactService
 ) {
 
     operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
@@ -53,34 +91,36 @@ class Router(
             .then(ServerFilters.CatchLensFailure)
             .then(
                 routes(
-                    "/api/1.0/" bind contract(
-                        // Automatic Swagger
-                        OpenApi(ApiInfo("Event tool api", "v1.0"), Jackson),
-                        "/api-docs",
-                        ApiKey(
-                            Header.required("wds-key"),
-                            { key: String -> key == secrets?.WDSApiKey ?: "wds-secret" }),
-                        *getApiRoutes().toTypedArray()
-                    ),
-                    "/admin-api/" bind contract(
-                        // Automatic Swagger
-                        OpenApi(
+                    "/api/1.0" bind contract {
+                        renderer = OpenApi3(ApiInfo("Event tool api", "v1.0"), Jackson)
+                        descriptionPath = "/api-docs"
+                        security = apiSecurity(secrets)
+                        routes += getApiRoutes()
+                    },
+                    "/admin-api" bind contract {
+                        renderer = OpenApi3(
                             ApiInfo(
                                 "Event tool admin api",
                                 "v1.0",
                                 "No security as it will not be open to internet"
                             ), Jackson
-                        ),
-                        "/api-docs",
-                        NoSecurity,
-                        *getAdminApiRoutes().toTypedArray()
-                    ),
+                        )
+                        descriptionPath = "/api-docs"
+                        security = NoSecurity
+                        routes += getAdminApiRoutes()
+                    },
                     "/graphql" bind GraphqlRouter(getGraphqlSchemas()),
                     "/" bind static(ResourceLoader.Classpath("public"))
                 )
             )
 
     }
+
+
+    private fun apiSecurity(secrets: Secrets?) = ApiKeySecurity(
+        Header.string().required("wds-key"),
+        { key: String -> key == secrets?.WDSApiKey ?: "wds-secret" })
+
 
     private fun getGraphqlSchemas() = createSchema(
         listOf(
@@ -111,7 +151,8 @@ class Router(
         GetRegistration(getRegistration).route,
         PostRegistration(createRegistration).route,
         DeleteRegistration(cancelRegistration).route,
-        GetUser(getRegistration).route
+        GetUser(getRegistration).route,
+        PostContact(createContact).route
     )
 
     private fun ok() = { _: Request -> Response(OK) }

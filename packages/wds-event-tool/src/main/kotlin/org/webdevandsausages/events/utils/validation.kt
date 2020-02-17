@@ -3,9 +3,9 @@ package org.webdevandsausages.events.utils
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
-import arrow.data.Validated
-import arrow.data.invalid
-import arrow.data.valid
+import arrow.core.Validated
+import arrow.core.invalid
+import arrow.core.valid
 
 val String.isValidEmail get() = contains("@") && length >= 3 && length < 250
 

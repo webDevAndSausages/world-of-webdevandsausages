@@ -14,7 +14,7 @@ import org.http4k.hamkrest.hasBody
 import org.intellij.lang.annotations.Language
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventDto
-import org.webdevandsausages.events.error.EventError
+import org.webdevandsausages.events.domain.EventError
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import org.webdevandsausages.events.graphql.Query

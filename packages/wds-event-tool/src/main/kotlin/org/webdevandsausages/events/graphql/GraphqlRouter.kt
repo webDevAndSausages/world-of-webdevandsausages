@@ -5,8 +5,8 @@ import org.http4k.core.*
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import org.webdevandsausages.events.error.EventError
-import org.webdevandsausages.events.error.WDSException
+import org.webdevandsausages.events.domain.EventError
+import org.webdevandsausages.events.domain.WDSException
 import org.webdevandsausages.events.utils.WDSJackson.auto
 import org.webdevandsausages.events.utils.toJson
 

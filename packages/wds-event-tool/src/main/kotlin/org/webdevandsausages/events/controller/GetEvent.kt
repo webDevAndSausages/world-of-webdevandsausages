@@ -13,8 +13,8 @@ import org.http4k.core.Status
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventOutDto
-import org.webdevandsausages.events.error.toResponse
-import org.webdevandsausages.events.service.GetEventByIdService
+import org.webdevandsausages.events.domain.toResponse
+import org.webdevandsausages.events.service.event.GetEventByIdService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 object GetEvent : ApiRouteWithGraphqlConfig {
@@ -40,7 +40,7 @@ object GetEvent : ApiRouteWithGraphqlConfig {
             )
         }
 
-    override val route: ContractRoute = "events" / Router.eventIdParam meta {
+    override val route: ContractRoute = "/events" / Router.eventIdParam meta {
         summary = "Get event by id"
         returning(Status.OK to "Event found")
         returning(Status.NOT_FOUND to "The event does not exist.")

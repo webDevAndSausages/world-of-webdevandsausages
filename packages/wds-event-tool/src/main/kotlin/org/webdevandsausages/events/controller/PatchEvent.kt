@@ -4,13 +4,19 @@ import arrow.core.Either
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.div
 import org.http4k.contract.meta
-import org.http4k.core.*
+import org.http4k.core.Body
+import org.http4k.core.ContentType
+import org.http4k.core.HttpHandler
+import org.http4k.core.Method
+import org.http4k.core.Request
+import org.http4k.core.Response
+import org.http4k.core.Status
 import org.http4k.lens.string
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.EventUpdateInDto
-import org.webdevandsausages.events.error.toResponse
-import org.webdevandsausages.events.service.GetEventByIdService
-import org.webdevandsausages.events.service.UpdateEventService
+import org.webdevandsausages.events.domain.toResponse
+import org.webdevandsausages.events.service.event.GetEventByIdService
+import org.webdevandsausages.events.service.event.UpdateEventService
 
 object PatchEvent {
     private val eventUpdateRequestLens =
@@ -40,7 +46,7 @@ object PatchEvent {
             )
         }
 
-        return "events" / Router.eventIdParam meta {
+        return "/events" / Router.eventIdParam meta {
             summary = "Update event details"
             returning(Status.OK to "Event updated.")
             returning(Status.NOT_FOUND to "Event was not found")

@@ -12,8 +12,8 @@ import org.http4k.core.Status
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.Router
 import org.webdevandsausages.events.dto.RegistrationOutDto
-import org.webdevandsausages.events.error.toResponse
-import org.webdevandsausages.events.service.GetRegistrationService
+import org.webdevandsausages.events.domain.toResponse
+import org.webdevandsausages.events.service.registration.GetRegistrationService
 
 object GetUser : ApiRouteWithGraphqlConfig {
     private var regService: GetRegistrationService? = null
@@ -35,7 +35,7 @@ object GetUser : ApiRouteWithGraphqlConfig {
             )
         }
 
-    override val route: ContractRoute = "user" / Router.verificationTokenParam meta {
+    override val route: ContractRoute = "/user" / Router.verificationTokenParam meta {
         summary = "Get user by verification token"
         returning(Status.OK to "User found.")
         returning(Status.NOT_FOUND to "The user does not exist.")

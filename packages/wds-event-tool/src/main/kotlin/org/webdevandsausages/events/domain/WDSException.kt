@@ -1,4 +1,4 @@
-package org.webdevandsausages.events.error
+package org.webdevandsausages.events.domain
 
 import org.http4k.core.Status
 import org.webdevandsausages.events.dto.ErrorCode
