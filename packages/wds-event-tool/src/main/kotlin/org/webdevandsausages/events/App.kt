@@ -62,7 +62,7 @@ fun startApp(config: AppConfig): Http4kServer {
         CancelRegistrationService(eventCRUD, participantCRUD, emailService),
         CreateEventService(eventCRUD),
         UpdateEventService(eventCRUD),
-        CreateContactService(contactCRUD)
+        CreateContactService(contactCRUD, emailService)
     )(config.secrets)
 
     val server = app.asServer(Jetty(config.port)).start()

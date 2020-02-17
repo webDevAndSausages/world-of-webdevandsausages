@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import org.webdevandsausages.events.config.Secrets
+import org.webdevandsausages.events.dto.ContactDto
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.service.registration.toText
@@ -144,6 +145,19 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
             "Web Dev & Sausages Registration",
             "d-f7fd0df79d1e49d39e177d599b0411e7",
             emailData
+        )
+    }
+
+    fun sendMailingListJoinConfirmation(contact: ContactDto) {
+
+        logger.info("Dispatching mailing list join confirmation email to ${contact.email}")
+
+        sendMail(
+            contact.email,
+            "",
+            "Wed dev & sausage's mailing list confirmation",
+            "487d4c85-5cd0-4602-80e2-5120d2483f76",
+            emptyMap()
         )
     }
 }
