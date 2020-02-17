@@ -30,3 +30,8 @@ create trigger registration_added
     on participant
     for each row
 execute procedure add_contact();
+
+create trigger update_contact_updatetime
+    before update on contact
+    for each row
+execute procedure update_timestamp();
