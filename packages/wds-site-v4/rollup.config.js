@@ -76,7 +76,7 @@ export default {
 						[
 							'@babel/preset-env',
 							{
-								targets: '> 0.25%, not dead',
+								targets: '> 0.25%, ie >= 11, not dead',
 							},
 						],
 					],
@@ -88,6 +88,16 @@ export default {
 								useESModules: true,
 							},
 						],
+					],
+				}),
+
+			!legacy &&
+				babel({
+					extensions: ['.js', '.mjs', '.html', '.svelte'],
+					exclude: ['node_modules/@babel/**'],
+					plugins: [
+						'@babel/plugin-syntax-dynamic-import',
+						'@babel/plugin-proposal-object-rest-spread',
 					],
 				}),
 
