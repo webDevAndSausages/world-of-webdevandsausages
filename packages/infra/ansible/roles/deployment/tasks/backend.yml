@@ -7,7 +7,7 @@
     archive: yes
     recursive: yes
     rsync_opts:
-      - "--exclude=.git --exclude=.idea"
+      - '--exclude=.git --exclude=.idea'
   tags:
     - backend
 
