@@ -9,7 +9,8 @@
 	let speaker = null
 
 	let speaker_lookup = new Map()
-	let modal_slug
+	let modal_slug =
+		typeof window !== 'undefined' && window.location.hash.slice(1)
 	let modal_active = false
 
 	$: if (speakers) {
@@ -18,18 +19,28 @@
 		})
 	}
 
+	// this watchers is needed to ensure modal loads if app loads via link to this the url
+	// otherwise event listener in setup in onMount takes over
+
+	$: speaker = speaker_lookup.get(modal_slug)
+
+	$: if (modal_slug && speaker) active = true
+
 	onMount(() => {
 		const getFragment = () => window.location.hash.slice(1)
 		const onhashchange = () => {
 			modal_slug = getFragment()
-			speaker = speaker_lookup.get(modal_slug)
 			active = true
 		}
+
 		window.addEventListener('hashchange', onhashchange, false)
+
 		const fragment = getFragment()
+
 		if (fragment) {
 			modal_slug = fragment
 		}
+
 		return () => {
 			window.removeEventListener('hashchange', onhashchange, false)
 		}
