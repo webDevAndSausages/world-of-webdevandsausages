@@ -93,7 +93,9 @@
 </Section>
 
 <Section title="Speaker Alumni">
-	<SpeakerAlumni {speakers} />
+	{#if speakers}
+		<SpeakerAlumni {speakers} />
+	{/if}
 </Section>
 
 <Section title="Sponsors">
