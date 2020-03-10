@@ -45,6 +45,6 @@
     name: renew outdated certificates every day
     minute: 0
     hour: 0
-    job: certbot renew
+    job: certbot --nginx renew
   tags:
     - certbot
