@@ -1,14 +1,8 @@
-
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jooq.tools.jdbc.JDBCUtils.driver
-import org.jooq.util.jaxb.Configuration
-import org.jooq.util.jaxb.Database
-import org.jooq.util.jaxb.ForcedType
-import org.jooq.util.jaxb.Generate
-import org.jooq.util.jaxb.Generator
-import org.jooq.util.jaxb.Jdbc
-import org.jooq.util.jaxb.Strategy
-import org.jooq.util.jaxb.Target
+import org.gradle.jvm.tasks.Jar
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.rohanprabhu.gradle.plugins.kdjooq.*
 
 val kotlinVersion = "1.3.61"
 val coroutinesVersion = "1.3.3"
@@ -18,22 +12,23 @@ val jacksonVersion = "2.10.1"
 val firebaseVersion = "6.6.0"
 val flywayCoreVersion = "5.2.4"
 val postgresqlDriverVersion = "42.2.5"
-val jooqVersion = "3.10.1"
+val jooqVersion = "3.12.1"
 val arrowVersion = "0.10.4"
 val mockkVersion = "1.9.2"
 val KGraphQLVersion = "0.6.4"
 
 plugins {
-    kotlin("jvm") version "1.3.20"
+    kotlin("jvm") version "1.3.61"
+    id("com.github.johnrengelman.shadow") version "4.0.4"
     id("org.flywaydb.flyway") version "6.2.1"
     id("org.gradle.idea")
-    id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
+    id("com.rohanprabhu.kotlin-dsl-jooq") version "0.4.5"
     // id("org.jmailen.kotlinter") version "1.20.1"
     java
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
 }
 
 task("execute", JavaExec::class) {
@@ -94,6 +89,7 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:$firebaseVersion")
     /* sendgrid */
     implementation("com.sendgrid:sendgrid-java:4.3.0")
+
     /* db & jooq */
     implementation("org.flywaydb:flyway-core:$flywayCoreVersion")
     implementation("org.postgresql:postgresql:$postgresqlDriverVersion")
@@ -119,55 +115,65 @@ dependencies {
     testImplementation("org.http4k:http4k-testing-hamkrest:$http4kVersion")
 }
 
-val jooqConfig = Configuration()
-    .withJdbc(
-        Jdbc()
-            .withDriver("org.postgresql.Driver")
-            .withUsername("wds")
-            .withPassword("password")
-            .withUrl(System.getenv("DB_URL") ?: "jdbc:postgresql://localhost:45433/wds_db")
-            .withSchema("public")
-    )
-    .withGenerator(
-        Generator()
-            .withName("org.jooq.util.DefaultGenerator")
-            .withStrategy(Strategy().withName("org.jooq.util.DefaultGeneratorStrategy"))
-            .withDatabase(
-                Database()
-                    .withName("org.jooq.util.postgres.PostgresDatabase")
-                    .withInputSchema("public")
-                    .withForcedTypes(
-                        ForcedType()
-                            .withName("varchar")
-                            .withExpression(".*")
-                            .withTypes("JSONB?"),
-                        ForcedType()
-                            .withName("varchar")
-                            .withExpression(".*")
-                            .withTypes("INET")
-                    )
-            )
-            .withGenerate(
-                Generate()
-                              .withRelations(true)
-                              .withDeprecated(true)
-                              .withRecords(true)
-                              .withDaos(false)
-                              .withInterfaces(false)
-                              .withImmutablePojos(true)
-                              .withFluentSetters(true)
-            )
-            .withTarget(Target()
-                            .withPackageName("meta")
-                            .withDirectory("src/main/kotlin/org/webdevandsausages/events/jooq")
-            )
-    )
-
-
+val jooqConfig = jooqCodegenConfiguration {
+    jdbc {
+        driver = "org.postgresql.Driver"
+        username = "wds"
+        password = "password"
+        url = System.getenv("DB_URL") ?: "jdbc:postgresql://localhost:45433/wds_db"
+        schema = "public"
+    }
+    generator {
+        database {
+            inputSchema = "public"
+            forcedTypes {
+                forcedType {
+                    name = "varchar"
+                    expression = ".*"
+                    types = "JSONB?"
+                }
+                forcedType {
+                    name = "varchar"
+                    expression = ".*"
+                    types = "INET"
+                }
+            }
+            generate {
+                isRelations = true
+                isDeprecated = true
+                isRecords = true
+                isDaos = false
+                isInterfaces = false
+                isImmutablePojos = true
+                isFluentSetters = true
+            }
+            target {
+                packageName = "meta"
+                directory = "src/main/kotlin/org/webdevandsausages/events/jooq"
+            }
+        }
+    }
+}
 
 jooqGenerator {
+    jooqEdition = JooqEdition.OpenSource
+    jooqVersion = "3.12.1"
     configuration("meta", project.java.sourceSets.getByName("main")) {
         configuration = jooqConfig
+    }
+}
+
+tasks.getByName<ShadowJar>("shadowJar") {
+    baseName = "events"
+    mergeServiceFiles()
+    manifest {
+        attributes(mapOf("Main-Class" to "org.webdevandsausages.events.AppKt"))
+    }
+}
+
+tasks {
+    "build" {
+        dependsOn("shadowJar")
     }
 }
 
@@ -176,7 +182,7 @@ val test by tasks.getting(Test::class) {
 }
 
 val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions.jvmTarget = "1.8"
+compileKotlin.kotlinOptions.jvmTarget = "11"
 
 val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions.jvmTarget = "1.8"
+compileTestKotlin.kotlinOptions.jvmTarget = "11"
