@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: events-app-deployment
+  labels:
+    app: events
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: events
+  template:
+    metadata:
+      labels:
+        app: events
+    spec:
+      containers:
+        - name: events
+          imagePullPolicy: Never
+          env:
+            - name: DB_URL
+              value: jdbc:postgresql://postgres:5432/wds_db
+          image: events:v1
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: events
+  labels:
+    app: events
+spec:
+  type: ClusterIP
+  ports:
+    - name: events
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    app: events

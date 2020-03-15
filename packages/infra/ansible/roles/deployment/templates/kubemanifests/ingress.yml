@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: events-app
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: kubernetes.docker.internal
+      http:
+        paths:
+          - path: /api
+            backend:
+              serviceName: events
+              servicePort: 5000

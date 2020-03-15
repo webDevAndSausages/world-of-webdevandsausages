@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:10.6
+          env:
+            - name: POSTGRES_USER
+              value: wds
+            - name: POSTGRES_DB
+              value: wds_db
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - exec pg_isready --host $POD_IP
+            failureThreshold: 6
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - exec pg_isready --host $POD_IP
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          ports:
+            - containerPort: 5432
+              name: postgres
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              subPath: postgres
+              name: postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: manual
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  type: NodePort
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app: postgres
