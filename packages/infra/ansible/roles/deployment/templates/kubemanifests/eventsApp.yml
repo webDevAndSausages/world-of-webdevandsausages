@@ -16,11 +16,11 @@ spec:
     spec:
       containers:
         - name: events
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           env:
             - name: DB_URL
               value: jdbc:postgresql://postgres:5432/wds_db
-          image: events:v1
+          image: localhost:30555/events:v1
           ports:
             - containerPort: 5000
 ---
@@ -31,9 +31,10 @@ metadata:
   labels:
     app: events
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - name: events
+      nodePort: 30100
       port: 5000
       protocol: TCP
       targetPort: 5000

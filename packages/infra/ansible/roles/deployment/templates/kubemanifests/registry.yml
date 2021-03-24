@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  serviceName: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+        - name: registry
+          image: registry:2
+          ports:
+            - containerPort: 5000
+              name: registry
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/registry
+              subPath: registry
+              name: registry
+  volumeClaimTemplates:
+    - metadata:
+        name: registry
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        volumeName: registry-pv-volume
+        storageClassName: manual
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  labels:
+    app: registry
+spec:
+  type: NodePort
+  ports:
+    - name: registry
+      nodePort: 30555
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    app: registry

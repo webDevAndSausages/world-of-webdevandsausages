@@ -26,10 +26,6 @@ services:
       - db
     ports:
       - "5000:5000"
-    volumes:
-      - type: bind
-        source: ./
-        target: /home/gradle/project
 
 networks:
   backend:

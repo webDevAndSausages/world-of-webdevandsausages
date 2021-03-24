@@ -39,17 +39,6 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - exec pg_isready --host $POD_IP
-            failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 5
-            successThreshold: 1
-            timeoutSeconds: 3
           ports:
             - containerPort: 5432
               name: postgres
@@ -64,6 +53,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
+        volumeName: postgres-pv-volume
         storageClassName: manual
         resources:
           requests:

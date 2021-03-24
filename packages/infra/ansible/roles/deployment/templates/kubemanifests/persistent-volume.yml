@@ -18,8 +18,32 @@ spec:
     storage: 5Gi
   accessModes:
     - ReadWriteOnce
-  local:
-    path: /tmp/postgres-kube-volume
+  hostPath:
+    path: /private/tmp/docker-desktop-volume/postgres
+  persistentVolumeReclaimPolicy: Retain
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - docker-desktop
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: registry-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /private/tmp/docker-desktop-volume/registry
   persistentVolumeReclaimPolicy: Retain
   nodeAffinity:
     required:
