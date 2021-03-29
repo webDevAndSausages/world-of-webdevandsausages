@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  become: yes
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+    pip_version: 21.0.1
+    pip_install_packages:
+      - name: docker
+  roles:
+    - kubernetes

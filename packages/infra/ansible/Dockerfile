@@ -1,5 +1,7 @@
 FROM williamyeh/ansible:ubuntu18.04
 
+RUN apt update -y && apt install software-properties-common -y && apt-add-repository ppa:ansible/ansible -y && apt update -y && apt install ansible -y
+
 ARG ssh_prv_key
 ARG ssh_pub_key
 

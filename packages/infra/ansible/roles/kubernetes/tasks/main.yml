@@ -1,0 +1,54 @@
+---
+- name: update apt repository
+  apt:
+    update_cache: true
+    upgrade: full
+    cache_valid_time: 3600
+
+- name: Download get-pip.py
+  get_url:
+      url: 'https://bootstrap.pypa.io/get-pip.py'
+      dest: /tmp/get-pip.py
+
+- name: Install pip
+  command: "{{ ansible_python_interpreter if ansible_python_interpreter is defined else 'python' }} get-pip.py pip=={{ pip_version }}"
+  args:
+    chdir: /tmp
+
+- name: Install openshift
+  pip:
+    name: openshift
+    executable: pip
+
+- name: Install pyyaml
+  pip:
+    name: pyyaml
+    executable: pip
+
+- name: Install Docker CE
+  include_role:
+    name: geerlingguy.docker
+  vars:
+    docker_install_compose: false
+    docker_package_state: latest
+    docker_service_state: started
+    docker_service_enabled: true
+    docker_restart_handler_state: restarted
+
+- name: Install K3S
+  ansible.builtin.shell: curl -sfL https://get.k3s.io | sh -s - --docker
+  args:
+    warn: no
+
+- name: Make sure a K3S cluster is running
+  ansible.builtin.systemd:
+    state: started
+    name: k3s
+
+- name: Create a k8s namespace
+  community.kubernetes.k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    name: wds-staging
+    api_version: v1
+    kind: Namespace
+    state: present
