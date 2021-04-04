@@ -1,5 +1,5 @@
 [kube-staging]
-default ansible_host=134.122.95.241 ansible_connection=ssh
+default ansible_host=kubemaster.webdevandsausages.org ansible_connection=ssh
 
 [kube-staging:vars]
-nginx_ssl_domain=134.122.95.241
+nginx_ssl_domain=kubemaster.webdevandsausages.org

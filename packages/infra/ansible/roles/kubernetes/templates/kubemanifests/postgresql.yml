@@ -54,7 +54,7 @@ spec:
         accessModes:
           - ReadWriteOnce
         volumeName: postgres-pv-volume
-        storageClassName: manual
+        storageClassName: local-path
         resources:
           requests:
             storage: 1Gi

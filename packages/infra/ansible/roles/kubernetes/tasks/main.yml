@@ -52,3 +52,47 @@
     api_version: v1
     kind: Namespace
     state: present
+
+#- name: Deploy flannel network
+#  community.kubernetes.k8s:
+#    kubeconfig: /etc/rancher/k3s/k3s.yaml
+#    state: present
+#    definition: "{{ lookup('file', 'templates/kubemanifests/kube-flannel.yml') | from_yaml }}"
+#  tags:
+#    - flannel
+
+- name: Copy files
+  copy:
+    src:  "{{ role_path }}/templates/kubemanifests"
+    dest: /opt
+  tags:
+    - repository
+
+- name: Create a directory for registry persistent volume
+  ansible.builtin.file:
+    path: /opt/k3s-volumes/registry
+    state: directory
+    mode: '0755'
+
+- name: Create a directory for postgres persistent volume
+  ansible.builtin.file:
+    path: /opt/k3s-volumes/postgres
+    state: directory
+    mode: '0755'
+
+- name: Deploy persistent volumes
+  community.kubernetes.k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    state: present
+    src: /opt/kubemanifests/persistent-volume.yml
+  tags:
+    - repository
+
+- name: Deploy repository
+  community.kubernetes.k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    state: present
+    namespace: kube-public
+    src: /opt/kubemanifests/registry.yml
+  tags:
+    - repository
