@@ -31,6 +31,10 @@
 		{
 			"name": "mylab",
 			"href": "https://mylab.fi"
+		},
+		{
+			"name": "thriv",
+			"href": "https://thriv.dev"
 		}
 	]
 }
