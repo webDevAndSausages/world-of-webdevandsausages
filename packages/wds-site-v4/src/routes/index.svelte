@@ -9,7 +9,6 @@
 </script>
 
 <script>
-	import {onMount} from 'svelte'
 	import Terminal from './_terminal.svelte'
 	import Sponsors from './_sponsors.svelte'
 	import About from './_about.svelte'
@@ -48,6 +47,10 @@
 		padding: 20px;
 	}
 
+	:global(.sponsor-logo) {
+		padding-top: 20px;
+	}
+
 	@media (max-width: 650px) {
 		:global(.terminal-wrapper) {
 			margin: 0;
@@ -76,10 +79,11 @@
 </aside>
 
 <Section title="sponsored by" class="centered pb-0">
-	<a href="http://thriv.dev"><Image
-		src="/sponsors/thriv-logo.svg"
-		alt="Thriv logo"
-		width="250" /></a>
+	<a href="https://monad.fi/"><Image
+		src="/sponsors/monad-logo.svg"
+		class="sponsor-logo"
+		alt="Monad logo"
+		width="200" /></a>
 </Section>
 
 <Section class="terminal-wrapper mr-auto">
