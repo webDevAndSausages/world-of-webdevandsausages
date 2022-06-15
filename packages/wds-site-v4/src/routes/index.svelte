@@ -78,11 +78,12 @@
 	{/if}
 </aside>
 
+<!-- Sponsor logo when event is open -->
 <Section title="sponsored by" class="centered pb-0">
-	<a href="https://monad.fi/"><Image
-		src="/sponsors/monad-logo.svg"
+	<a href="https://www.thriv.dev/"><Image
+		src="/sponsors/thriv-logo.svg"
 		class="sponsor-logo"
-		alt="Monad logo"
+		alt="Thriv logo"
 		width="200" /></a>
 </Section>
 
