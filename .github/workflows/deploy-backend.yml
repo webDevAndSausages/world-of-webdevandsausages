@@ -12,9 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - id: commit
-      uses: pr-mpt/actions-commit-hash@v2
     - uses: actions/checkout@v3
     - name: Build the image
-      run: docker build . --tag wds-backend:$(steps.commit.outputs.short)
+      run: docker build . --tag wds-backend:$(git rev-parse --short "$GITHUB_SHA")
       working-directory: packages/wds-event-tool
