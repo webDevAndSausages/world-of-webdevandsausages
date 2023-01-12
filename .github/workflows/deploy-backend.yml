@@ -10,9 +10,17 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
     steps:
     - uses: actions/checkout@v3
     - name: Build the image
       run: docker build . --tag wds-backend:$(git rev-parse --short "$GITHUB_SHA")
       working-directory: packages/wds-event-tool
+    - name: Install flyctl
+      run: sudo curl -L https://fly.io/install.sh | sh
+    - name: Authenticate docker to push to fly.io
+      run: flyctl auth docker
+    - name: Push docker image
+      run: docker push registry.fly.io/wds-backend-staging:$(git rev-parse --short "$GITHUB_SHA")
+    
