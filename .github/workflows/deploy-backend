@@ -1,0 +1,21 @@
+name: Deploy staging
+
+on:
+  push:
+    branches: [ "staging" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - id: commit
+      uses: pr-mpt/actions-commit-hash@v2
+    - uses: actions/checkout@v3
+    - name: Build the image
+      run: docker build . --tag wds-backend:$(steps.commit.outputs.short)
+      working-directory: packages/wds-event-tool
