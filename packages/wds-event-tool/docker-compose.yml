@@ -7,9 +7,6 @@ services:
       - "45433:5432"
     networks:
       - backend
-    volumes:
-      - /opt/postgresql:/var/lib/postgresql
-      - /opt/postgresql/data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: wds
@@ -26,10 +23,6 @@ services:
       - db
     ports:
       - "5000:5000"
-    volumes:
-      - type: bind
-        source: ./
-        target: /home/gradle/project
 
 networks:
   backend:
