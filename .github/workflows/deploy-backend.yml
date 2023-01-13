@@ -23,4 +23,6 @@ jobs:
       run: /home/runner/.fly/bin/flyctl auth docker
     - name: Push docker image
       run: docker push registry.fly.io/wds-backend-staging:$(git rev-parse --short "$GITHUB_SHA")
+    - name: Apply new image to fly machine
+      run: /home/runner/.fly/bin/flyctl update --image registry.fly.io/wds-backend-staging:$(git rev-parse --short "$GITHUB_SHA")
     
