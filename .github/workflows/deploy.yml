@@ -27,7 +27,7 @@ jobs:
       run: docker push registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
     - name: Set machine id to env
       run: |
-          echo "MACHINE_ID=$(flyctl machine list --app wds-backend-staging --json | jq '[.[]|.id][0]')"
+          echo "MACHINE_ID=$(flyctl machine list --app wds-backend-staging --json | jq '[.[]|.id][0]')"  >> $GITHUB_ENV
     - name: Apply new image to fly machine
       run: /home/runner/.fly/bin/flyctl machine update ${{ env.MACHINE_ID }} --image registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA --app wds-backend-$WORKSPACE -y
     
