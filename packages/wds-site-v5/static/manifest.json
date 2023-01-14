@@ -1,0 +1,9 @@
+{
+	"background_color": "#000",
+	"theme_color": "#00bcdd",
+	"name": "Web Dev & Sausages",
+	"short_name": "WD&S",
+	"display": "minimal-ui",
+	"start_url": "/",
+	"icons": []
+}
