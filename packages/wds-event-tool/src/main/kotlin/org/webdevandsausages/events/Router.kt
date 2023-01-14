@@ -84,7 +84,8 @@ class Router(
                     CorsPolicy(
                         listOf("*"),
                         listOf("wds-key"),
-                        listOf(Method.OPTIONS, GET, POST, DELETE, PUT)
+                        listOf(Method.OPTIONS, GET, POST, DELETE, PUT),
+                        true
                     )
                 )
             )
