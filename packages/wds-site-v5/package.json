@@ -38,6 +38,7 @@
 	"dependencies": {
 		"@sindresorhus/slugify": "^0.9.1",
 		"@webdevandsausages/mailing-list-widget": "^0.1.0",
+		"animate-css-grid": "^1.4.1",
 		"classcat": "4.0.2",
 		"daggy": "1.4.0",
 		"date-fns": "2.9.0",

@@ -7,17 +7,17 @@ const createSlug = name => slugify(name, {lowercase: true, separator: '_'})
 /** @type {import('./$types').PageLoad} */
 export async function load({setHeaders, fetch}) {
 	let event = null
-	try {
-		const response = await fetch('https://www.webdevandsausages.org/api/1.0/events/current', {
+	/*try {
+		const response = await fetch('http://localhost:5000/api/1.0/events/current', {
 			headers: {
 				Accept: 'application/json',
 				'wds-key': 'WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27'
 			}
 		})
-		event = await response.json()
-	} catch (error) {
-		console.log(error)
-	}
+		if (response.ok) {
+			event = await response.json()
+		}
+	} catch (error) {} */
 
 	const speakersWithSlugs = speakers.data.map(speaker => ({
 		...speaker,
@@ -31,7 +31,7 @@ export async function load({setHeaders, fetch}) {
 
   return {
     speakers: speakersWithSlugs,
-    event,
+    currentEvent: null,
     sponsors
   }
 }

@@ -1,11 +1,17 @@
-<script lang="ts">
-	import type { LayoutData } from './$types';
+<script>
 	import Meta from '$lib/Meta.svelte';
 	import Image from '$lib/Image.svelte';
 	import Section from '$lib/Section.svelte';
-	import Terminal from './terminal.svelte';
+	import Terminal from './Terminal.svelte';
+	import Sponsors from './Sponsors.svelte';
+	import About from './About.svelte';
+	import SpeakerModal from './SpeakerModal.svelte';
+	// import { JoinMailingList } from '@webdevandsausages/mailing-list-widget';
+	import SpeakerAlumni from './SpeakerAlumni.svelte';
+	import SwagModal from './SwagModal.svelte';
 
-	export let data: LayoutData;
+	export let data;
+	const { currentEvent, speakers, events, sponsors } = data;
 </script>
 
 <Meta title="Web Dev &amp; Sausages Registration" />
@@ -13,10 +19,6 @@
 <Section class="pb-0">
 	<Image src="/images/wds-logo-rgb.png" alt="Wed Dev & Sausages logo" class="wds-logo" />
 </Section>
-
-<pre>
-	{JSON.stringify(data, null, 2)}
-</pre>
 
 <!-- Sponsor logo when event is open -->
 <!-- <Section title="sponsored by" class="centered pb-0">
@@ -27,9 +29,10 @@
 		width="200" /></a>
 </Section> -->
 
-<Section class="terminal-wrapper mr-auto">geyt</Section>
+<Section class="terminal-wrapper mr-auto">
+	<Terminal event={currentEvent} />
+</Section>
 
-<!--
 <Section title="About">
 	<About />
 </Section>
@@ -49,5 +52,3 @@
 </Section>
 
 <SpeakerModal {speakers} />
-
--->
