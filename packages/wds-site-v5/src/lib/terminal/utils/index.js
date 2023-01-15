@@ -1,5 +1,6 @@
 import { has, is, both, propOr, compose, includes, lte, length, always, ifElse } from 'ramda';
-import { zonedTimeToUtc, utcToZonedTime, format } from 'date-fns-tz';
+import pkg from 'date-fns-tz';
+const { zonedTimeToUtc, utcToZonedTime, format } = pkg;
 import add from 'date-fns/add';
 import produce from 'immer';
 
