@@ -1,11 +1,18 @@
 <script>
-	import Facebook from './social-links/Facebook.svelte'
-	import Twitter from './social-links/Twitter.svelte'
-	import Github from './social-links/Github.svelte'
-	import Youtube from './social-links/Youtube.svelte'
-
-	export let segment
+	import Facebook from './social-links/Facebook.svelte';
+	import Twitter from './social-links/Twitter.svelte';
+	import Github from './social-links/Github.svelte';
+	import Youtube from './social-links/Youtube.svelte';
 </script>
+
+<nav>
+	<ul>
+		<Facebook />
+		<Twitter />
+		<Youtube />
+		<Github />
+	</ul>
+</nav>
 
 <style>
 	nav {
@@ -29,12 +36,3 @@
 		clear: both;
 	}
 </style>
-
-<nav>
-	<ul>
-		<Facebook />
-		<Twitter />
-		<Youtube />
-		<Github />
-	</ul>
-</nav>

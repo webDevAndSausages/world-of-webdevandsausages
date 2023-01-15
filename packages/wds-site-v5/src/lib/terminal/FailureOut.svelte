@@ -1,6 +1,6 @@
 <script>
-	export let status
-	export let message
+	export let status;
+	export let message;
 </script>
 
 <div class="flex text-white">

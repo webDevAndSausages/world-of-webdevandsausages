@@ -1,48 +1,48 @@
-import config from '../config'
-import ky from 'ky'
-import {Result} from '../models/Result'
+import config from '$config';
+import ky from 'ky';
+import { Result } from '../models/Result';
 
-const createRequest = method => async (url, payload) => {
+const createRequest = (method) => async (url, payload) => {
 	const requestConfig = {
 		method,
 		headers: config.headers,
-		throwHttpErrors: false,
-	}
+		throwHttpErrors: false
+	};
 
 	if (payload) {
-		requestConfig.body = JSON.stringify(payload)
+		requestConfig.body = JSON.stringify(payload);
 	}
 
-	const response = await ky(url, requestConfig)
+	const response = await ky(url, requestConfig);
 
 	let error = {
-		message: 'A mysterious error occurred on the server.',
-	}
+		message: 'A mysterious error occurred on the server.'
+	};
 
 	if (!response.ok) {
 		try {
-			error = await response.json()
+			error = await response.json();
 		} catch (e) {
-			console.log('Failed to parse error response')
+			console.log('Failed to parse error response');
 		}
 		if (response.status === 404) {
-			error.message = 'Resource not found.'
+			error.message = 'Resource not found.';
 		}
 		return Result.Failure({
 			...error,
-			status: response.status,
-		})
+			status: response.status
+		});
 	}
 
 	try {
-		const parsed = await response.json()
-		return Result.Ok(parsed)
+		const parsed = await response.json();
+		return Result.Ok(parsed);
 	} catch (e) {
-		console.log('Failed to parse response')
-		return Result.Failure({status: 500, ...error})
+		console.log('Failed to parse response');
+		return Result.Failure({ status: 500, ...error });
 	}
-}
+};
 
-export const apiGet = createRequest('GET')
-export const apiPost = createRequest('POST')
-export const apiDelete = createRequest('DELETE')
+export const apiGet = createRequest('GET');
+export const apiPost = createRequest('POST');
+export const apiDelete = createRequest('DELETE');

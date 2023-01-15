@@ -1,7 +1,7 @@
 <script>
-	export let title = ''
-	export let detail = '-'
-	export let html = false
+	export let title = '';
+	export let detail = '-';
+	export let html = false;
 </script>
 
 <div class="terminal-out">

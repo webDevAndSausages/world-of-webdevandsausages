@@ -1,4 +1,4 @@
-import {timeZone} from '.'
+import { timeZone } from '.';
 
 /*
  * ICalendar specs & validatior:
@@ -6,23 +6,21 @@ import {timeZone} from '.'
  *   https://icalendar.org/
  **/
 
-const IMAGE_URI = 'http://bit.ly/31E542n'
+const IMAGE_URI = 'http://bit.ly/31E542n';
 // for 'https://pbs.twimg.com/profile_images/1183450866675863559/j6pBwE1y_400x400.jpg'
-const CONTACT = 'richard.vancamp@gmail.com'
+const CONTACT = 'richard.vancamp@gmail.com';
 
-const sufficientData = ({volume, start, description}) =>
-	volume && start && description
+const sufficientData = ({ volume, start, description }) => volume && start && description;
 
 // TODO: Add validation
 export function createIcs(data) {
-	if (!sufficientData(data)) return undefined
+	if (!sufficientData(data)) return undefined;
 
-	const SEPARATOR =
-		!navigator || navigator.appVersion.indexOf('Win') !== -1 ? '\r\n' : '\n'
+	const SEPARATOR = !navigator || navigator.appVersion.indexOf('Win') !== -1 ? '\r\n' : '\n';
 
-	const {volume, now, start, end, description, location = 'Tampere'} = data
+	const { volume, now, start, end, description, location = 'Tampere' } = data;
 
-	const subject = `Web Dev & Sausages Meetup Volume ${volume}`
+	const subject = `Web Dev & Sausages Meetup Volume ${volume}`;
 	return [
 		'BEGIN:VCALENDAR',
 		'PRODID:Calendar',
@@ -59,6 +57,6 @@ export function createIcs(data) {
 		`IMAGE;VALUE=URI;DISPLAY=BADGE;FMTTYPE=image/png:${IMAGE_URI}`,
 		'TRANSP:TRANSPARENT',
 		'END:VEVENT',
-		'END:VCALENDAR',
-	].join(SEPARATOR)
+		'END:VCALENDAR'
+	].join(SEPARATOR);
 }

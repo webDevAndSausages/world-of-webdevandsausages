@@ -1,30 +1,40 @@
 <script>
-	import {setContext, tick} from 'svelte'
-	import Controls from './Controls.svelte'
-	import {controlsStore as store} from './stores/controlsStore'
-	import {terminalStore} from './stores/terminalStore'
-	let containerClass = 'centered'
+	import { setContext, tick } from 'svelte';
+	import Controls from './Controls.svelte';
+	import { controlsStore as store } from './stores/controlsStore';
+	import { terminalStore } from './stores/terminalStore';
+	let containerClass = 'centered';
 
 	async function scroll() {
-		await tick()
-		const lastId = `history-${$terminalStore.history.length - 1}`
-		const elem = document.getElementById(lastId)
+		await tick();
+		const lastId = `history-${$terminalStore.history.length - 1}`;
+		const elem = document.getElementById(lastId);
 		if (elem) {
 			elem.scrollIntoView({
 				block: 'nearest',
-				bahavior: 'smooth',
-			})
+				bahavior: 'smooth'
+			});
 		}
 	}
 
-	$: $terminalStore.history.length &&
-		$terminalStore.history.length > 1 &&
-		scroll()
+	$: $terminalStore.history.length && $terminalStore.history.length > 1 && scroll();
 
-	setContext('controlsStore', store)
+	setContext('controlsStore', store);
 
-	$: containerClass = $store.open ? 'full' : 'centered terminal-centered-return'
+	$: containerClass = $store.open ? 'full' : 'centered terminal-centered-return';
 </script>
+
+<span class="terminal-wrapper-{containerClass}">
+	<div class="terminal terminal-{containerClass}" data-simplebar data-simplebar-auto-hide="true">
+		<div class="controls-container absolute">
+			<Controls />
+		</div>
+		<div id="term" class="screen p-6 text-term-text bg-term-background">
+			<slot name="details">No current event</slot>
+			<slot name="output" class="block" />
+		</div>
+	</div>
+</span>
 
 <style>
 	@keyframes expand {
@@ -107,18 +117,3 @@
 		left: 7px;
 	}
 </style>
-
-<span class="terminal-wrapper-{containerClass}">
-	<div
-		class="terminal terminal-{containerClass}"
-		data-simplebar
-		data-simplebar-auto-hide="true">
-		<div class="controls-container absolute">
-			<Controls />
-		</div>
-		<div id="term" class="screen p-6 text-term-text bg-term-background">
-			<slot name="details">No current event</slot>
-			<slot name="output" class="block" />
-		</div>
-	</div>
-</span>

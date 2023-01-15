@@ -10,7 +10,8 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$content: './src/content',
+			$config: './src/config',
+			$content: './src/content'
 		}
 	}
 };

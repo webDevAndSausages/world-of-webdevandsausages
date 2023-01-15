@@ -1,4 +1,5 @@
 <script>
+	import { browser } from '$app/environment';
 	import Blurb from '$lib/Blurb.svelte';
 	import Image from '$lib/Image.svelte';
 </script>
@@ -6,7 +7,7 @@
 <Blurb>
 	<h2 slot="sponsoring-title">$ Sponsoring</h2>
 	<div slot="sponsoring-blurb">
-		{#if process.browser}
+		{#if browser}
 			<div class="tint">
 				<Image class="blurb-image full" src="/images/wds-sponsoring.jpg" alt="meetup speaker" />
 			</div>
@@ -43,7 +44,7 @@
 	<h2 slot="speaking-title">$ Speaking</h2>
 	<div slot="speaking-blurb">
 		<div class="mt-2 mb-2">
-			{#if process.browser}
+			{#if browser}
 				<div class="tint">
 					<Image class="blurb-image full" src="/images/wds-speaker.jpg" alt="meetup speaker" />
 				</div>

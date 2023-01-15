@@ -1,5 +1,5 @@
 <script>
-	export let slug
+	export let slug;
 </script>
 
 <a class="speaker text-term-brand-1 cursor-pointer text-xl" href={`/#${slug}`}>
@@ -15,7 +15,8 @@
 			stroke="currentColor"
 			stroke-width="2"
 			stroke-linecap="round"
-			stroke-linejoin="round">
+			stroke-linejoin="round"
+		>
 			<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
 			<line x1="7" y1="2" x2="7" y2="22" />
 			<line x1="17" y1="2" x2="17" y2="22" />

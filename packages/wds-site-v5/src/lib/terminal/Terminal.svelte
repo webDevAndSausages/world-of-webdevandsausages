@@ -1,33 +1,30 @@
 <script>
-	import smoothscroll from 'smoothscroll-polyfill'
-	smoothscroll.polyfill()
-	import {setContext} from 'svelte'
-	import 'simplebar'
-	import 'simplebar/dist/simplebar.css'
-	import EventDetails from './EventDetails.svelte'
-	import TerminalContainer from './TerminalContainer.svelte'
-	import Commands from './Commands.svelte'
-	import {createEventStore} from './stores/eventStore.js'
-	import {terminalStore} from './stores/terminalStore.js'
-	import {showForStatusOf} from './utils'
+	import smoothscroll from 'smoothscroll-polyfill';
+	smoothscroll.polyfill();
+	import { setContext } from 'svelte';
+	import 'simplebar';
+	import 'simplebar/dist/simplebar.css';
+	import EventDetails from './EventDetails.svelte';
+	import TerminalContainer from './TerminalContainer.svelte';
+	import { createEventStore } from './stores/eventStore.js';
+	import { terminalStore } from './stores/terminalStore.js';
+	import { showForStatusOf } from './utils';
 
 	// if the event is not passed a prop
 	// the store will fetch it
-	export let event = null
-	const eventStore = createEventStore(event)
-	let components = []
+	export let event = null;
+	const eventStore = createEventStore(event);
+	let components = [];
 
 	$: showInteractiveTerminal =
 		$eventStore.okOrNull($eventStore) &&
-		showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL')(
-			$eventStore.okOrNull($eventStore)
-		)
+		showForStatusOf('OPEN', 'OPEN_WITH_WAITLIST', 'OPEN_FULL')($eventStore.okOrNull($eventStore));
 	// this ensures an update when the array size does not change but an item is switched
 	// ie for reseting a component
-	$: components = [...$terminalStore.history]
+	$: components = [...$terminalStore.history];
 
-	setContext('eventStore', eventStore)
-	setContext('terminalStore', terminalStore)
+	setContext('eventStore', eventStore);
+	setContext('terminalStore', terminalStore);
 </script>
 
 <TerminalContainer>
@@ -42,7 +39,8 @@
 					this={h}
 					active={$terminalStore.currentIdx === i}
 					index={i}
-					id={`history-${i}`} />
+					id={`history-${i}`}
+				/>
 			{/each}
 		{/if}
 	</div>

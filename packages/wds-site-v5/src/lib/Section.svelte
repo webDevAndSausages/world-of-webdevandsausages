@@ -3,7 +3,11 @@
 	let className = '';
 	export let style = '';
 	export { className as class };
-	let classNames = 'pt-16 pb-16 text-center ' + className;
+	export let centerText = true;
+	let classNames = 'pt-16 pb-16' + className;
+	if (centerText) {
+		classNames += ' text-center';
+	}
 </script>
 
 <section class={classNames} {style}>

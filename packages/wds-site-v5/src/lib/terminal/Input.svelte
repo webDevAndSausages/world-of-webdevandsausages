@@ -1,74 +1,105 @@
 <script>
-	import {tick, onMount, createEventDispatcher} from 'svelte'
-	import {crossfade, scale} from 'svelte/transition'
-	import {fly} from 'svelte/transition'
-	import {quadOut} from 'svelte/easing'
-	import cc from 'classcat'
+	import { tick, onMount, createEventDispatcher } from 'svelte';
+	import { crossfade, scale } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
+	import { quadOut } from 'svelte/easing';
+	import cc from 'classcat';
 
-	const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher();
 
 	const [send, receive] = crossfade({
 		duration: 200,
-		fallback: scale,
-	})
+		fallback: scale
+	});
 
 	// input props
-	export let value = ''
-	export let label = ''
-	export let id = ''
-	export let error = null
-	export let type = 'text'
+	export let value = '';
+	export let label = '';
+	export let id = '';
+	export let error = null;
+	export let type = 'text';
 	// export let loading = false
-	export let maxChars = null
-	export let disabled = false
+	export let maxChars = null;
+	export let disabled = false;
 
-	let _id
-	export let focused = false
-	let focusChange = 0
-	let labelClasses = ''
-	let inputClasses = ''
-	let inputEl
-	let showError = false
-	let resetting
+	let _id;
+	export let focused = false;
+	let focusChange = 0;
+	let labelClasses = '';
+	let inputClasses = '';
+	let inputEl;
+	let showError = false;
+	let resetting;
 
 	onMount(() => {
-		value = ''
-		focused = false
-		focusChange = 0
-		inputEl.blur()
-	})
+		value = '';
+		focused = false;
+		focusChange = 0;
+		inputEl.blur();
+	});
 
-	$: labelOnTop = focused || value
+	$: labelOnTop = focused || value;
 	$: labelClasses = cc([
 		{
 			'ml-6 p-1 pt-0 text-term-brand-2 text-xs label-top bg-black h-3 z-30': labelOnTop,
-			'pb-2 px-4 pt-2': !labelOnTop,
+			'pb-2 px-4 pt-2': !labelOnTop
 		},
-		'absolute top-0 label-transition block pointer-events-none cursor-text text-term-brand-1 block',
-	])
+		'absolute top-0 label-transition block pointer-events-none cursor-text text-term-brand-1 block'
+	]);
 	$: inputClasses = cc([
 		{},
-		'outline-none px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 bg-black text-white bg-transparent',
-	])
+		'outline-none px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 bg-black text-white bg-transparent'
+	]);
 
 	onMount(() => {
-		_id = !id && label ? label.split(' ').join('-') : id
+		_id = !id && label ? label.split(' ').join('-') : id;
 
-		if (maxChars != null) inputEl.setAttribute('maxlength', maxChars)
-	})
+		if (maxChars != null) inputEl.setAttribute('maxlength', maxChars);
+	});
 
-	$: showError = focusChange >= 2 && !disabled
+	$: showError = focusChange >= 2 && !disabled;
 
 	function toggleFocused() {
-		focused = !focused
-		focusChange++
-		dispatch('focused', focused)
+		focused = !focused;
+		focusChange++;
+		dispatch('focused', focused);
 	}
 
 	function onInput(ev) {
-		value = ev.target.value
+		value = ev.target.value;
 	}
 </script>
+
+<div class="mt-1 relative pb-4">
+	<div class="relative" class:text-error-500={error}>
+		{#if labelOnTop}
+			<label class={labelClasses} for={_id} in:receive={{ key: _id }} out:send={{ key: _id }}>
+				<div>$ {label}</div>
+			</label>
+		{:else}
+			<label class={labelClasses} for={_id} in:receive={{ key: _id }} out:send={{ key: _id }}>
+				{label}
+			</label>
+		{/if}
+		<input
+			id={_id}
+			bind:this={inputEl}
+			aria-label={label}
+			class={inputClasses}
+			on:focus={toggleFocused}
+			on:blur={toggleFocused}
+			{type}
+			{value}
+			on:input={onInput}
+			class:active={labelOnTop}
+			class:disabled
+			{disabled}
+		/>
+	</div>
+	{#if showError && error}
+		<span class="text-term-error text-sm">{error}</span>
+	{/if}
+</div>
 
 <style>
 	.label-transition {
@@ -111,41 +142,3 @@
 		cursor: not-allowed !important;
 	}
 </style>
-
-<div class="mt-1 relative pb-4">
-	<div class="relative" class:text-error-500={error}>
-		{#if labelOnTop}
-			<label
-				class={labelClasses}
-				for={_id}
-				in:receive={{key: _id}}
-				out:send={{key: _id}}>
-				<div>$ {label}</div>
-			</label>
-		{:else}
-			<label
-				class={labelClasses}
-				for={_id}
-				in:receive={{key: _id}}
-				out:send={{key: _id}}>
-				{label}
-			</label>
-		{/if}
-		<input
-			id={_id}
-			bind:this={inputEl}
-			aria-label={label}
-			class={inputClasses}
-			on:focus={toggleFocused}
-			on:blur={toggleFocused}
-			{type}
-			{value}
-			on:input={onInput}
-			class:active={labelOnTop}
-			class:disabled
-			{disabled} />
-	</div>
-	{#if showError && error}
-		<span class="text-term-error text-sm">{error}</span>
-	{/if}
-</div>

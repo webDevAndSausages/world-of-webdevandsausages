@@ -1,13 +1,26 @@
 <script>
-	import {createEventDispatcher} from 'svelte'
-	import {pick} from 'ramda'
-	export let cmd
-	export let disabled = false
+	import { createEventDispatcher } from 'svelte';
+	import { pick } from 'ramda';
+	export let cmd;
+	export let disabled = false;
 	// export let style = ''
-	export let type = 'button'
+	export let type = 'button';
 
-	const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher();
 </script>
+
+<button
+	class="term text-md text-term-brand-2"
+	on:click|preventDefault={() => dispatch('cmd', cmd)}
+	class:disabled
+	class:active={!disabled}
+	{type}
+>
+	[
+	<span class="text-term-brand-1">{cmd}</span>
+	]
+	<slot />
+</button>
 
 <style>
 	button.term {
@@ -43,11 +56,7 @@
 	}
 
 	button.term:before {
-		border-image: linear-gradient(
-			45deg,
-			var(--term-brand-primary) 0%,
-			#0097dd 100%
-		);
+		border-image: linear-gradient(45deg, var(--term-brand-primary) 0%, #0097dd 100%);
 		border-image-slice: 1 1 1 1;
 		left: -0.28em;
 		top: 0.094em;
@@ -89,11 +98,7 @@
 
 	button.term.active:hover::before {
 		background-size: 100%;
-		background-image: linear-gradient(
-			45deg,
-			var(--term-brand-primary) 0%,
-			#0097dd 102%
-		);
+		background-image: linear-gradient(45deg, var(--term-brand-primary) 0%, #0097dd 102%);
 		height: 102%;
 		border-image-slice: 1;
 	}
@@ -103,15 +108,3 @@
 		opacity: 0.6;
 	}
 </style>
-
-<button
-	class="term text-md text-term-brand-2"
-	on:click|preventDefault={() => dispatch('cmd', cmd)}
-	class:disabled
-	class:active={!disabled}
-	{type}>
-	[
-	<span class="text-term-brand-1">{cmd}</span>
-	]
-	<slot />
-</button>

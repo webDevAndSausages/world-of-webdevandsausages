@@ -1,8 +1,18 @@
 <script>
-	import {getContext} from 'svelte'
+	import { getContext } from 'svelte';
 
-	const store = getContext('controlsStore')
+	const store = getContext('controlsStore');
 </script>
+
+<div class="term-controls p-1">
+	<div class="term-expander" on:click={store.actions.toggleExpander}>
+		<div class="circle" />
+		<div class="h-line" />
+		{#if $store.open}
+			<div class="v-line" />
+		{/if}
+	</div>
+</div>
 
 <style>
 	.term-expander {
@@ -42,13 +52,3 @@
 		border-radius: 50px;
 	}
 </style>
-
-<div class="term-controls p-1">
-	<div class="term-expander" on:click={store.actions.toggleExpander}>
-		<div class="circle" />
-		<div class="h-line" />
-		{#if $store.open}
-			<div class="v-line" />
-		{/if}
-	</div>
-</div>

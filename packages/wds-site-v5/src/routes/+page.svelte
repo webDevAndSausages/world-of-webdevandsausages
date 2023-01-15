@@ -1,12 +1,13 @@
 <script>
+	import { browser } from '$app/environment';
 	import Meta from '$lib/Meta.svelte';
 	import Image from '$lib/Image.svelte';
 	import Section from '$lib/Section.svelte';
+	import { JoinMailingList } from '$lib/mailing-list-form';
 	import Terminal from './Terminal.svelte';
 	import Sponsors from './Sponsors.svelte';
 	import About from './About.svelte';
 	import SpeakerModal from './SpeakerModal.svelte';
-	// import { JoinMailingList } from '@webdevandsausages/mailing-list-widget';
 	import SpeakerAlumni from './SpeakerAlumni.svelte';
 	import SwagModal from './SwagModal.svelte';
 
@@ -20,6 +21,12 @@
 	<Image src="/images/wds-logo-rgb.png" alt="Wed Dev & Sausages logo" class="wds-logo" />
 </Section>
 
+<aside class="mailing-list-join-wrapper m-auto pt-10 pb-10">
+	{#if browser}
+		<JoinMailingList />
+	{/if}
+</aside>
+
 <!-- Sponsor logo when event is open -->
 <!-- <Section title="sponsored by" class="centered pb-0">
 	<a href="https://www.thriv.dev/"><Image
@@ -29,7 +36,7 @@
 		width="200" /></a>
 </Section> -->
 
-<Section class="terminal-wrapper mr-auto">
+<Section class="terminal-wrapper mr-auto" centerText={false}>
 	<Terminal event={currentEvent} />
 </Section>
 
@@ -52,3 +59,40 @@
 </Section>
 
 <SpeakerModal {speakers} />
+
+<style>
+	:global(h1) {
+		font-size: 2em;
+	}
+
+	@media (min-width: 580px) {
+		:global(h1) {
+			font-size: 3em;
+		}
+	}
+
+	:global(.terminal-wrapper) {
+		text-align: left;
+	}
+
+	.mailing-list-join-wrapper {
+		width: 400px;
+		margin: auto;
+		background: var(--mailing-list-join-background);
+		border-radius: 5px;
+		padding: 20px;
+	}
+
+	:global(.sponsor-logo) {
+		padding-top: 20px;
+	}
+
+	@media (max-width: 650px) {
+		:global(.terminal-wrapper) {
+			margin: 0;
+		}
+		.mailing-list-join-wrapper {
+			width: 100%;
+		}
+	}
+</style>

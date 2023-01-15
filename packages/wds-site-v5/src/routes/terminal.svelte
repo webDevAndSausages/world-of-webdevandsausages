@@ -8,7 +8,7 @@
 	{#if browser}
 		<Terminal {event} />
 		<!-- TODO: handle no event placeholder ssr -->
-	{:else if event && event.volume}
+	{:else}
 		<SsrTerminal {event} />
 	{/if}
 </div>

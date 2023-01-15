@@ -1,40 +1,38 @@
 <script>
-	import {getContext} from 'svelte'
-	import Spinner from './Spinner.svelte'
-	import TerminalOut from './TerminalOut.svelte'
-	import TerminalTitle from './TerminalTitle.svelte'
-	import CmdInput from './CmdInput.svelte'
-	import MailTo from './MailTo.svelte'
-	import EventDownload from './EventDownload.svelte'
-	import {showForStatusOf} from './utils'
+	import { getContext } from 'svelte';
+	import Spinner from './Spinner.svelte';
+	import TerminalOut from './TerminalOut.svelte';
+	import TerminalTitle from './TerminalTitle.svelte';
+	import CmdInput from './CmdInput.svelte';
+	import MailTo from './MailTo.svelte';
+	import EventDownload from './EventDownload.svelte';
+	import { showForStatusOf } from './utils';
 
-	let result
-	let error
-	let loading
-	let showNoEvent
-	let showVisibleStatusCmdInput = false
+	let result;
+	let error;
+	let loading;
+	let showNoEvent;
+	let showVisibleStatusCmdInput = false;
 
-	const event = getContext('eventStore')
+	const event = getContext('eventStore');
 
 	$: $event.cata({
 		None: () => {
-			loading = false
-			showNoEvent = true
+			loading = false;
+			showNoEvent = true;
 		},
 		Pending: () => (loading = true),
-		Ok: data => {
-			result = data
-			loading = false
+		Ok: (data) => {
+			result = data;
+			loading = false;
 		},
-		Failure: err => {
-			error = err
-			loading = false
-		},
-	})
+		Failure: (err) => {
+			error = err;
+			loading = false;
+		}
+	});
 
-	$: showVisibleStatusCmdInput = showForStatusOf('VISIBLE')(
-		$event.okOrNull($event)
-	)
+	$: showVisibleStatusCmdInput = showForStatusOf('VISIBLE')($event.okOrNull($event));
 </script>
 
 <div class="font-term">
@@ -57,7 +55,8 @@
 					on:cmd={null}
 					active={false}
 					index={0}
-					showReadOnlyCursor />
+					showReadOnlyCursor
+				/>
 			</div>
 		{/if}
 	{:else if showNoEvent || error}
@@ -78,7 +77,8 @@
 				on:cmd={null}
 				active={false}
 				index={0}
-				showReadOnlyCursor />
+				showReadOnlyCursor
+			/>
 		</div>
 	{/if}
 </div>

@@ -1,10 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [],
-  theme: {
+	content: ['./src/**/*.{html,js,svelte,ts}'],
+	theme: {
 		extend: {
 			fontFamily: {
-				term: ['var(--term-font-family)', 'monospace'],
+				term: ['var(--term-font-family)', 'monospace']
 			},
 			colors: {
 				background: 'var(--background)',
@@ -16,13 +16,13 @@ module.exports = {
 					success: 'var(--term-success)',
 					error: 'var(--term-error)',
 					background: 'var(--term-background-color)',
-					output: 'var(--term-output-text-color)',
-				},
-			},
-		},
+					output: 'var(--term-output-text-color)'
+				}
+			}
+		}
 	},
-  variants: {
-		opacity: ['responsive', 'hover'],
+	variants: {
+		opacity: ['responsive', 'hover']
 	},
-  plugins: [],
-}
+	plugins: []
+};

@@ -39,7 +39,7 @@
 				}
 			]
 		},
-		{"name": "Mikko Ahlroth", "talks": []},
+		{ "name": "Mikko Ahlroth", "talks": [] },
 		{
 			"name": "Johannes Feig",
 			"talks": [

@@ -1,6 +1,6 @@
 <script>
-	export let cmd
-	export let help
+	export let cmd;
+	export let help;
 </script>
 
 <div class="flex text-white p-2">

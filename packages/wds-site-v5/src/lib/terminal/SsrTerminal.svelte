@@ -1,12 +1,27 @@
 <script>
-	import TerminalTitle from './TerminalTitle.svelte'
-	import TerminalOut from './TerminalOut.svelte'
-	import {formatDate} from './utils'
+	import TerminalTitle from './TerminalTitle.svelte';
+	import TerminalOut from './TerminalOut.svelte';
+	import { formatDate } from './utils';
 
-	export let event = null
-	let formattedDate = ''
-	$: formattedDate = event && event.date ? formatDate(event.date) : ''
+	export let event = null;
+	let formattedDate = '';
+	$: formattedDate = event && event.date ? formatDate(event.date) : '';
+	$: loginDate = new Date().toDateString();
 </script>
+
+<div class="terminal-centered">
+	<div id="term" class="screen p-6 text-term-text bg-term-background">
+		{#if event}
+			<TerminalTitle>VOLUME {event.volume || '?'}</TerminalTitle>
+			<TerminalOut title="When" detail={formattedDate} />
+			<TerminalOut title="What" detail={event.details} html />
+			<TerminalOut title="Where" detail={event.location} />
+			<TerminalOut title="Contact" detail={event.contact} html />
+		{:else}
+			<TerminalOut>Last login: {loginDate} on wds1</TerminalOut>
+		{/if}
+	</div>
+</div>
 
 <style>
 	.terminal-centered {
@@ -21,15 +36,3 @@
 		height: 450px;
 	}
 </style>
-
-{#if event}
-	<div class="terminal-centered">
-		<div id="term" class="screen p-6 text-term-text bg-term-background">
-			<TerminalTitle>VOLUME {event.volume || '?'}</TerminalTitle>
-			<TerminalOut title="When" detail={formattedDate} />
-			<TerminalOut title="What" detail={event.details} html />
-			<TerminalOut title="Where" detail={event.location} />
-			<TerminalOut title="Contact" detail={event.contact} html />
-		</div>
-	</div>
-{/if}

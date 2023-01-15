@@ -1,37 +1,38 @@
-import speakers from '../content/speakers.json'
-import sponsors from '../content/sponsors.json'
-import slugify from '@sindresorhus/slugify'
+import speakers from '../content/speakers.json';
+import sponsors from '../content/sponsors.json';
+import slugify from '@sindresorhus/slugify';
+import { PUBLIC_WDS_API_URL, PUBLIC_WDS_API_KEY } from '$env/static/public';
 
-const createSlug = name => slugify(name, {lowercase: true, separator: '_'})
+const createSlug = (name) => slugify(name, { lowercase: true, separator: '_' });
 
 /** @type {import('./$types').PageLoad} */
-export async function load({setHeaders, fetch}) {
-	let event = null
-	/*try {
-		const response = await fetch('http://localhost:5000/api/1.0/events/current', {
+export async function load({ setHeaders, fetch }) {
+	let event = null;
+	try {
+		const response = await fetch(PUBLIC_WDS_API_URL + '/events/current', {
 			headers: {
 				Accept: 'application/json',
-				'wds-key': 'WDSb8bd5dbf-be5a-4cde-876a-cdc04524fd27'
+				'wds-key': PUBLIC_WDS_API_KEY
 			}
-		})
+		});
 		if (response.ok) {
-			event = await response.json()
+			event = await response.json();
 		}
-	} catch (error) {} */
+	} catch (error) {}
 
-	const speakersWithSlugs = speakers.data.map(speaker => ({
+	const speakersWithSlugs = speakers.data.map((speaker) => ({
 		...speaker,
-		talks: speaker.talks.filter(t => !!t.show),
-		slug: createSlug(speaker.name),
-	}))
+		talks: speaker.talks.filter((t) => !!t.show),
+		slug: createSlug(speaker.name)
+	}));
 
-  setHeaders({
-    'cache-control': 'public, max-age=600, s-maxage=1200'
-  })
+	setHeaders({
+		'cache-control': 'public, max-age=600, s-maxage=1200'
+	});
 
-  return {
-    speakers: speakersWithSlugs,
-    currentEvent: null,
-    sponsors
-  }
+	return {
+		speakers: speakersWithSlugs,
+		currentEvent: event,
+		sponsors
+	};
 }

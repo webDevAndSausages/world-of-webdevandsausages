@@ -1,30 +1,28 @@
 <script>
-	import {onMount, onDestroy} from 'svelte'
-	import DownloadIcon from './DownloadIcon.svelte'
-	import {ElementObserver} from 'viewprt'
-	import {createIcs} from './utils/ics'
+	import { onMount, onDestroy } from 'svelte';
+	import DownloadIcon from './DownloadIcon.svelte';
+	import { ElementObserver } from 'viewprt';
+	import { createIcs } from './utils/ics';
 
-	export let event
+	export let event;
 
-	let className = ''
+	let className = '';
 	// string
-	let ics = undefined
+	let ics = undefined;
 	// Blob object
-	let blob = undefined
+	let blob = undefined;
 	// handle to ObjectURL for cleanup
-	let href = undefined
-	let fileNamePrefix = 'webdevandsausages_volume_'
+	let href = undefined;
+	let fileNamePrefix = 'webdevandsausages_volume_';
 
-	let isUnsupportedBrowser = /edge|msie\s|trident\//i.test(
-		window.navigator.userAgent
-	)
+	let isUnsupportedBrowser = /edge|msie\s|trident\//i.test(window.navigator.userAgent);
 
 	onMount(() => {
 		ElementObserver(document.getElementById('event-download-link'), {
 			onEnter: () => (className = 'shake-animation'),
-			onExit: () => (className = ''),
-		})
-	})
+			onExit: () => (className = '')
+		});
+	});
 
 	$: ics =
 		event &&
@@ -34,21 +32,33 @@
 			start: event.icsStart,
 			end: event.icsEnd,
 			description: event.details,
-			location: event.location,
-		})
+			location: event.location
+		});
 
-	$: blob = ics && event && new Blob([ics], {type: 'text/calendar'})
+	$: blob = ics && event && new Blob([ics], { type: 'text/calendar' });
 
 	function createHref() {
-		blob.name = 'myblob'
-		href = URL.createObjectURL(blob)
-		return href
+		blob.name = 'myblob';
+		href = URL.createObjectURL(blob);
+		return href;
 	}
 
 	onDestroy(() => {
-		href && URL.revokeObjectURL(href)
-	})
+		href && URL.revokeObjectURL(href);
+	});
 </script>
+
+{#if !isUnsupportedBrowser && blob}
+	<a
+		id="event-download-link"
+		class={className}
+		href={createHref()}
+		download={fileNamePrefix + event.volume}
+	>
+		<span>Save the date (.ics)</span>
+		<DownloadIcon />
+	</a>
+{/if}
 
 <style>
 	@keyframes shake {
@@ -89,14 +99,3 @@
 		transform: translate3d(0, 0, 0);
 	}
 </style>
-
-{#if !isUnsupportedBrowser && blob}
-	<a
-		id="event-download-link"
-		class={className}
-		href={createHref()}
-		download={fileNamePrefix + event.volume}>
-		<span>Save the date (.ics)</span>
-		<DownloadIcon />
-	</a>
-{/if}
