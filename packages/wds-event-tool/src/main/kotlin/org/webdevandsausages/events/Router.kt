@@ -8,7 +8,6 @@ import org.http4k.contract.openapi.v3.OpenApi3
 import org.http4k.contract.security.ApiKeySecurity
 import org.http4k.contract.security.NoSecurity
 import org.http4k.core.Body
-import org.http4k.core.Method
 import org.http4k.core.Method.DELETE
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.OPTIONS
@@ -82,10 +81,9 @@ class Router(
             .then(
                 ServerFilters.Cors(
                     CorsPolicy(
-                        listOf("*"),
-                        listOf("wds-key"),
-                        listOf(Method.OPTIONS, GET, POST, DELETE, PUT),
-                        true
+                        origins = listOf("*"),
+                        headers = listOf("wds-key", "content-type"),
+                        methods = listOf(OPTIONS, GET, POST, DELETE, PUT)
                     )
                 )
             )
