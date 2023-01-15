@@ -1,13 +1,14 @@
+import type {Event, PageData} from '$types/data';
 import speakers from '../content/speakers.json';
 import sponsors from '../content/sponsors.json';
 import slugify from '@sindresorhus/slugify';
 import { PUBLIC_WDS_API_URL, PUBLIC_WDS_API_KEY } from '$env/static/public';
 
-const createSlug = (name) => slugify(name, { lowercase: true, separator: '_' });
+const createSlug = (name: string) => slugify(name, { lowercase: true, separator: '_' });
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ setHeaders, fetch }) {
-	let event = null;
+	let event: Event | null = null;
 	try {
 		const response = await fetch(PUBLIC_WDS_API_URL + '/events/current', {
 			headers: {
@@ -16,7 +17,7 @@ export async function load({ setHeaders, fetch }) {
 			}
 		});
 		if (response.ok) {
-			event = await response.json();
+			event = await response.json() satisfies Event;
 		}
 	} catch (error) {}
 
@@ -34,5 +35,7 @@ export async function load({ setHeaders, fetch }) {
 		speakers: speakersWithSlugs,
 		currentEvent: event,
 		sponsors
-	};
+	} satisfies PageData;
 }
+
+export const prerender = true;

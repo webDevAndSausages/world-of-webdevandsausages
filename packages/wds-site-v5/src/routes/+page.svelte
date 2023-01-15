@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+	import type { PageData } from '$types/data';
 	import { browser } from '$app/environment';
 	import Meta from '$lib/Meta.svelte';
 	import Image from '$lib/Image.svelte';
@@ -11,7 +12,7 @@
 	import SpeakerAlumni from './home/SpeakerAlumni.svelte';
 	import SwagModal from './home/SwagModal.svelte';
 
-	export let data;
+	export let data: PageData;
 	const { currentEvent, speakers, events, sponsors } = data;
 </script>
 

@@ -11,8 +11,13 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			$config: './src/config',
-			$content: './src/content'
+			$content: './src/content',
+			$types: './src/types'
 		},
+		prerender: {
+			crawl: true,
+			handleMissingId: 'ignore'
+		}
 	}
 };
 
