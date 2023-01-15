@@ -1,12 +1,12 @@
 <script>
 	import { onMount } from 'svelte';
+	import { wrapGrid } from 'animate-css-grid';
 	import { blurbStore, isWideGrid, SPEAKING, SPONSORING } from './stores/blurb-store';
 	let blurbs_classes = 'blurbs';
 
 	onMount(async () => {
-		const { default: animate } = await import('animate-css-grid');
 		const blurbs = document.querySelector('.blurbs');
-		animate.wrapGrid(blurbs);
+		wrapGrid(blurbs);
 	});
 
 	$: blurbs_classes = $isWideGrid ? 'blurbs blurbs-expanded' : 'blurbs';

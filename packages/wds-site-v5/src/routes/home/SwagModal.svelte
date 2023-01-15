@@ -37,7 +37,7 @@
 		<div class="swag-grid bg-white p-2">
 			{#each items as item}
 				<div class="cell">
-					<img src={`/swag/${item}.jpg`} alt={item} className="swag" />
+					<img src={`/swag/${item}.jpg`} alt={item} class="swag" />
 				</div>
 			{/each}
 		</div>

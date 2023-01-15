@@ -4,12 +4,12 @@
 	import Image from '$lib/Image.svelte';
 	import Section from '$lib/Section.svelte';
 	import { JoinMailingList } from '$lib/mailing-list-form';
-	import Terminal from './Terminal.svelte';
-	import Sponsors from './Sponsors.svelte';
-	import About from './About.svelte';
-	import SpeakerModal from './SpeakerModal.svelte';
-	import SpeakerAlumni from './SpeakerAlumni.svelte';
-	import SwagModal from './SwagModal.svelte';
+	import Terminal from './home/Terminal.svelte';
+	import Sponsors from './home/Sponsors.svelte';
+	import About from './home/About.svelte';
+	import SpeakerModal from './home/SpeakerModal.svelte';
+	import SpeakerAlumni from './home/SpeakerAlumni.svelte';
+	import SwagModal from './home/SwagModal.svelte';
 
 	export let data;
 	const { currentEvent, speakers, events, sponsors } = data;
