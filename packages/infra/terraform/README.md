@@ -9,8 +9,6 @@ export AWS_ACCESS_KEY_ID="<AWS_ACCESS>"
 # FLY.IO
 export FLY_API_TOKEN="<FLY_TOKEN>"
 
-# COCKROACH DB
-export COCKROACH_API_KEY="<API_KEY>"
 ```
 
 2. Source the requested environment `source .env.staging`

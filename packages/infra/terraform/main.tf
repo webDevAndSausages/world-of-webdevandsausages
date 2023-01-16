@@ -44,7 +44,7 @@ resource "fly_machine" "backend_machine" {
   services = [
     {
       protocol      = "tcp"
-      internal_port = 80
+      internal_port = 5000
       ports         = [
         {
           port     = 443

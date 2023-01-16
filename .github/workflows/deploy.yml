@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "staging" ]
   workflow_dispatch:
-  
+
 jobs:
 
   build:
@@ -30,4 +30,5 @@ jobs:
           echo "MACHINE_ID=$(/home/runner/.fly/bin/flyctl machine list --app wds-backend-$WORKSPACE --json | jq '[.[]|.id][0]')"  >> $GITHUB_ENV
     - name: Apply new image to fly machine
       run: /home/runner/.fly/bin/flyctl machine update ${{ env.MACHINE_ID }} --image registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA --app wds-backend-$WORKSPACE -y
-    
+    - name: Restart the machine
+      run: /home/runner/.fly/bin/flyctl machine restart ${{ env.MACHINE_ID }} --app wds-backend-$WORKSPACE
