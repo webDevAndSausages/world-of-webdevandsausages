@@ -1,11 +1,12 @@
 resource "fly_app" "db" {
   name = "wds-db-${terraform.workspace}"
+  org = "wds"
 }
 
 resource "fly_machine" "db_machine" {
   app    = fly_app.db.id
   image  = "postgres:10.6"
-  name   = "wds-backend-${terraform.workspace}"
+  name   = "wds-db-${terraform.workspace}"
   region = "fra"
   env    = {
     POSTGRES_PASSWORD = "password"
@@ -38,6 +39,7 @@ resource "fly_volume" "db_storage" {
 resource "fly_app" "backend" {
   name       = "wds-backend-${terraform.workspace}"
   depends_on = [fly_app.db]
+  org = "wds"
 }
 
 resource "fly_ip" "backend_ip" {
@@ -50,6 +52,10 @@ resource "fly_machine" "backend_machine" {
   image  = "nginx" # initial image for testing purposes
   name   = "wds-backend-${terraform.workspace}"
   region = "fra"
+
+  env = {
+    DB_URL = "jdbc:postgresql://wds-db-${terraform.workspace}.internal:5432/wds_db"
+  }
 
   services = [
     {
