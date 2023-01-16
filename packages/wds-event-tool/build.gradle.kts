@@ -24,21 +24,20 @@ val mockkVersion = "1.9.2"
 val KGraphQLVersion = "0.6.4"
 
 plugins {
-    kotlin("jvm") version "1.3.20"
+    kotlin("jvm") version "1.3.61"
     id("org.flywaydb.flyway") version "6.2.1"
     id("org.gradle.idea")
     id("com.rohanprabhu.kotlin-dsl-jooq") version "0.3.1"
-    // id("org.jmailen.kotlinter") version "1.20.1"
     java
+    application
+}
+
+application {
+    mainClassName = "org.webdevandsausages.events.AppKt"
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
-task("execute", JavaExec::class) {
-    main = "org.webdevandsausages.events.AppKt"
-    classpath = java.sourceSets["main"].runtimeClasspath
 }
 
 repositories {
@@ -51,7 +50,7 @@ dependencies {
 }
 
 buildscript {
-    val kotlinVersion = "1.3.11"
+    val kotlinVersion = "1.3.61"
     val flywayCoreVersion = "5.2.4"
 
     repositories {
@@ -166,7 +165,7 @@ val jooqConfig = Configuration()
 
 
 jooqGenerator {
-    configuration("meta", project.java.sourceSets.getByName("main")) {
+    configuration("meta", sourceSets["main"]) {
         configuration = jooqConfig
     }
 }
