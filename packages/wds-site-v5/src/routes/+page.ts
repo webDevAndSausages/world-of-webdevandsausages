@@ -10,7 +10,7 @@ const createSlug = (name: string) => slugify(name, { lowercase: true, separator:
 export async function load({ setHeaders, fetch }) {
 	let event: Event | null = null;
 	try {
-		const response = await fetch(PUBLIC_WDS_API_URL + '/events/current', {
+		const response = await fetch(PUBLIC_WDS_API_URL + 'events/current', {
 			headers: {
 				Accept: 'application/json',
 				'wds-key': PUBLIC_WDS_API_KEY
