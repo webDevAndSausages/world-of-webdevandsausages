@@ -1,5 +1,4 @@
 .idea
 *.iml
 .terraform
-.env.prod
-.env.staging
+.env
