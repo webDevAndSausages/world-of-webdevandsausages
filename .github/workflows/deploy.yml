@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the image
-      run: docker build --build-arg FIREBASE_SERVICEACCOUNT_KEY=<<END "${{ secrets.FIREBASE_SERVICEACCOUNT_KEY }}" END --build-arg SECRETS_YAML=<<END "${{ secrets.SECRETS_YAML }}" END . --tag registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
+      run: docker build --build-arg FIREBASE_SERVICEACCOUNT_KEY=<<END ${{ secrets.FIREBASE_SERVICEACCOUNT_KEY }} END --build-arg SECRETS_YAML=<<END ${{ secrets.SECRETS_YAML }} END . --tag registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
       working-directory: packages/wds-event-tool
     - name: Install flyctl
       run: sudo curl -L https://fly.io/install.sh | sh
