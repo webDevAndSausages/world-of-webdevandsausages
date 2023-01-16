@@ -6,28 +6,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    env:
-      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      WORKSPACE: ${{ github.ref_name }}
-      COMMIT_SHA: ${{ github.sha }}
-      FIREBASE_SERVICEACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICEACCOUNT_KEY }}
-      SECRETS_YAML: ${{ secrets.SECRETS_YAML }}
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build the image
-      run: docker build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
-      working-directory: packages/wds-event-tool
-    - name: Install flyctl
-      run: sudo curl -L https://fly.io/install.sh | sh
-    - name: Authenticate docker to push to fly.io
-      run: /home/runner/.fly/bin/flyctl auth docker
-    - name: Push docker image
-      run: docker push registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
-    - name: Set machine id to env
-      run: |
-          echo "MACHINE_ID=$(/home/runner/.fly/bin/flyctl machine list --app wds-backend-$WORKSPACE --json | jq '[.[]|.id][0]')"  >> $GITHUB_ENV
-    - name: Apply new image to fly machine
-      run: /home/runner/.fly/bin/flyctl machine update ${{ env.MACHINE_ID }} --image registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA --app wds-backend-$WORKSPACE -y
+  runs-on: ubuntu-latest
+  env:
+    FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+    WORKSPACE: ${{ github.ref_name }}
+    COMMIT_SHA: ${{ github.sha }}
+    FIREBASE_SERVICEACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICEACCOUNT_KEY }}
+    SECRETS_YAML: ${{ secrets.SECRETS_YAML }}
+  steps:
+  - uses: actions/checkout@v3
+  - name: Build the image
+    run: docker build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
+    working-directory: packages/wds-event-tool
+  - name: Install flyctl
+    run: sudo curl -L https://fly.io/install.sh | sh
+  - name: Authenticate docker to push to fly.io
+    run: /home/runner/.fly/bin/flyctl auth docker
+  - name: Push docker image
+    run: docker push registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
+  - name: Set machine id to env
+    run: |
+        echo "MACHINE_ID=$(/home/runner/.fly/bin/flyctl machine list --app wds-backend-$WORKSPACE --json | jq '[.[]|.id][0]')"  >> $GITHUB_ENV
+  - name: Apply new image to fly machine
+    run: /home/runner/.fly/bin/flyctl machine update ${{ env.MACHINE_ID }} --image registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA --app wds-backend-$WORKSPACE -y
