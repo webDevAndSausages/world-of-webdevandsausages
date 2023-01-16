@@ -1,34 +1,43 @@
-resource "cockroach_cluster" "database" {
-  cloud_provider = "GCP"
-  name           = "wds-db-${terraform.workspace}"
-  create_spec    = {
-    serverless = {
-      regions     = ["europe-west1"]
-      spend_limit = 100000 #Amount in cents 100,000 = 100 USD
+resource "fly_app" "db" {
+  name = "wds-db-${terraform.workspace}"
+}
+
+resource "fly_machine" "db_machine" {
+  app    = fly_app.db.id
+  image  = "postgres:10.6"
+  name   = "wds-backend-${terraform.workspace}"
+  region = "fra"
+  env    = {
+    POSTGRES_PASSWORD = "password"
+    POSTGRES_USER     = "wds"
+    POSTGRES_DB       = "wds_db"
+  }
+  services = []
+
+  mounts = [
+    {
+      volume = fly_volume.db_storage.id
+      path = "/var/lib/postgresql"
     }
+  ]
+
+  lifecycle {
+    ignore_changes = [
+      image
+    ]
   }
 }
 
-resource "aws_s3_bucket" "frontend" {
-  bucket = "wds-frontend-${terraform.workspace}"
+resource "fly_volume" "db_storage" {
+  name   = "wds_db_volume_${terraform.workspace}"
+  app    = fly_app.db.id
+  size   = 2
+  region = "fra"
 }
-
-resource "aws_s3_bucket_acl" "frontent_acl" {
-  bucket = aws_s3_bucket.frontend.id
-  acl    = "public-read"
-}
-
-resource "aws_s3_bucket_website_configuration" "frontend_website_config" {
-  bucket = aws_s3_bucket.frontend.id
-
-  index_document {
-    suffix = "index.html"
-  }
-}
-
 
 resource "fly_app" "backend" {
-  name = "wds-backend-${terraform.workspace}"
+  name       = "wds-backend-${terraform.workspace}"
+  depends_on = [fly_app.db]
 }
 
 resource "fly_ip" "backend_ip" {
@@ -37,10 +46,11 @@ resource "fly_ip" "backend_ip" {
 }
 
 resource "fly_machine" "backend_machine" {
-  app      = fly_app.backend.id
-  image    = "nginx" # initial image for testing purposes
-  name     = "wds-backend-${terraform.workspace}"
-  region   = "ord"
+  app    = fly_app.backend.id
+  image  = "nginx" # initial image for testing purposes
+  name   = "wds-backend-${terraform.workspace}"
+  region = "fra"
+
   services = [
     {
       protocol      = "tcp"
