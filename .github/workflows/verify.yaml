@@ -32,11 +32,13 @@ jobs:
           docker run --rm --name wds-backend-test --entrypoint=tail -d --env DB_URL=jdbc:postgresql://test_db:5432/wds_db wds-backend-test -f > /dev/null
           docker exec wds-backend-test gradle test -x jooq-codegen-meta
           docker cp wds-backend-test:"/home/gradle/project/build/test-results/test/." "./test-results/"
+      - name: Check files in test-results
+        run: ls -la ./test-results
       - name: Test Report
         uses: phoenix-actions/test-reporting@v8
         id: test-report
         if: success() || failure()
         with:
           name: JUNIT Tests
-          path: ./test-results/*.xml
+          path: test-results/*.xml
           reporter: java-junit
