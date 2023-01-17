@@ -29,7 +29,7 @@ jobs:
           docker build --target=build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag wds-backend-test
       - name: Run tests
         run: |
-          docker run --entrypoint=tail -d --env DB_URL=jdbc:postgresql://test_db:5432/wds_db wds-backend-test -f > /dev/null
+          docker run --rm --name wds-backend-test --entrypoint=tail -d --env DB_URL=jdbc:postgresql://test_db:5432/wds_db wds-backend-test -f > /dev/null
           docker exec wds-backend-test gradle test -x jooq-codegen-meta
           mkdir test-results
           docker cp wds-backend-test:build/test-results/test ./test-results/
