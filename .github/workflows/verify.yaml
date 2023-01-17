@@ -20,17 +20,12 @@ jobs:
       - name: Build the image
         run: docker build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag wds-backend-test-$WORKSPACE:$COMMIT_SHA
         working-directory: packages/wds-event-tool
-      - name: Create docker network
-        run: docker network create backend-testing
-      - name: Run postgres container
-        run: docker run --rm -d --network backend-testing postgres:10.6 --name test_db
-      - name: Wait until postgres is ready
+      - name: Run postgres and tests
         run: |
+          docker run --rm -d postgres:10.6 --name test_db
           timeout 90s sh -c "until docker exec test_db pg_isready ; do sleep 5 ; done"
-      - name: Make directory for build results
-        run: mkdir /build
-      - name: Run tests
-        run: docker run --entrypoint=gradle -v /build:/home/gradle/project/build --env DB_URL=jdbc:postgresql://test_db:5432/wds_db --network backend-testing docker-test:1 test -i -x jooq-codegen-meta
+          mkdir /build
+          docker run --entrypoint=gradle -v /build:/home/gradle/project/build --env DB_URL=jdbc:postgresql://test_db:5432/wds_db docker-test:1 test -i -x jooq-codegen-meta
       - name: Test Report
         uses: phoenix-actions/test-reporting@v8
         id: test-report
