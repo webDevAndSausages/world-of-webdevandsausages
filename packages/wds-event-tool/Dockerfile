@@ -1,7 +1,9 @@
 FROM gradle:5.6.4-jdk8 AS build
 USER root
+ARG DB_URL
 ARG FIREBASE_SERVICEACCOUNT_KEY
 ARG SECRETS_YAML
+ENV DB_URL=$DB_URL
 COPY --chown=gradle:gradle . /home/gradle/project
 WORKDIR /home/gradle/project
 RUN echo "$FIREBASE_SERVICEACCOUNT_KEY" > ./src/main/resources/firebaseServiceAccountKey.json
