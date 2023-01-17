@@ -20,7 +20,7 @@ jobs:
       - name: Run postgres and tests
         working-directory: packages/wds-event-tool
         run: |
-          docker run --rm -d postgres:10.6 --name test_db
+          docker run --rm --name test_db -d postgres:10.6
           timeout 90s sh -c "until docker exec test_db pg_isready ; do sleep 5 ; done"
           mkdir /build
           docker build --target=build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag wds-backend-test-$WORKSPACE:$COMMIT_SHA
