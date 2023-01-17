@@ -23,7 +23,8 @@ jobs:
           docker run --rm --name test_db -d postgres:10.6
           timeout 90s sh -c "until docker exec test_db pg_isready ; do sleep 5 ; done"
           mkdir ./build
-          docker build --build-arg DB_URL=jdbc:postgresql://test_db:5432/wds_db -v $PWD/build:/home/gradle/project/build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag wds-backend-test-$WORKSPACE:$COMMIT_SHA
+          docker build --target=build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag wds-backend-test-$WORKSPACE:$COMMIT_SHA
+          docker run --entrypoint=gradle -v $PWD/build:/home/gradle/project/build --env DB_URL=jdbc:postgresql://test_db:5432/wds_db wds-backend-test-$WORKSPACE:$COMMIT_SHA test -i -x jooq-codegen-meta
       - name: Test Report
         uses: phoenix-actions/test-reporting@v8
         id: test-report
