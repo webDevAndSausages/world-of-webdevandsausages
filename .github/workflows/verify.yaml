@@ -20,13 +20,21 @@ jobs:
       SECRETS_YAML: ${{ secrets.SECRETS_YAML }}
     steps:
       - uses: actions/checkout@v3
-      - name: Run postgres and tests
+      - name: Run postgres db for testing
         run: |
           docker run --rm --name test_db -d postgres:10.6
           timeout 90s sh -c "until docker exec test_db pg_isready ; do sleep 5 ; done"
+      - name: Build app container for testing
+        run: |
           mkdir ./build
           docker build --target=build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag wds-backend-test-$WORKSPACE:$COMMIT_SHA
+      - name: Run tests
+        run: |
           docker run --entrypoint=gradle -v $PWD/build:/home/gradle/project/build --env DB_URL=jdbc:postgresql://test_db:5432/wds_db wds-backend-test-$WORKSPACE:$COMMIT_SHA test -i -x jooq-codegen-meta
+      - name: Check files in folders
+        run: |
+          ls -la
+          ls -la $pwd/build/test-results/test
       - name: Test Report
         uses: phoenix-actions/test-reporting@v8
         id: test-report
