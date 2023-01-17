@@ -26,10 +26,11 @@ jobs:
           docker build --target=build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" . --tag wds-backend-test-$WORKSPACE:$COMMIT_SHA
           docker run --entrypoint=gradle -v $PWD/build:/home/gradle/project/build --env DB_URL=jdbc:postgresql://test_db:5432/wds_db wds-backend-test-$WORKSPACE:$COMMIT_SHA test -i -x jooq-codegen-meta
       - name: Test Report
+        working-directory: packages/wds-event-tool
         uses: phoenix-actions/test-reporting@v8
         id: test-report
         if: success() || failure()
         with:
           name: JUNIT Tests
-          path: /build/test-results/test#/*.xml
+          path: ./build/test-results/test#/*.xml
           reporter: java-junit
