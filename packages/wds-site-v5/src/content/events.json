@@ -1,0 +1,177 @@
+{
+	"talks": [
+		{
+			"title": "Music generators: actually listenable original music in your browser?",
+			"details": "Antti-Pekka Vilkko - Vol 12. Reaktor, 2019-10-25",
+			"youtubeId": "n-wEEVrVId0",
+			"startFrom": "1h05m40s"
+		},
+		{
+			"title": "WebGL in the demoscene: demos and intros",
+			"details": "Petri and Henri Sarasvirta - Vol 12. Reaktor, 2019-10-25",
+			"youtubeId": "n-wEEVrVId0",
+			"startFrom": "1h50m24s"
+		},
+		{
+			"title": "Music generators: actually listenable original music in your browser?",
+			"details": "Eero Pitkänen - Vol 12. Reaktor, 2019-10-25",
+			"youtubeId": "n-wEEVrVId0",
+			"startFrom": "2h43m15s"
+		},
+		{
+			"title": "What Does GraphQL Solve And Will It Replace REST?",
+			"details": "Suresh Gupta - Vol 11. Digia, 2019-05-23",
+			"youtubeId": "rCWoU4updlg"
+		},
+		{
+			"title": "Webbidevaus.fi CSSNuggets™ 8 kpl",
+			"details": "Riku Rouvila & Antti Mattila - Vol 11. Digia, 2019-05-23",
+			"youtubeId": "aaWsv0h4lOg"
+		},
+		{
+			"title": "What Is Rust? And Why Should I Care?",
+			"details": "Teemu Erkkola - Vol 11. Digia, 2019-05-23",
+			"youtubeId": "7fMMSSrw9ko"
+		},
+		{
+			"title": "Ends Unite",
+			"details": "Richard Van Camp - Vol 10. Gofore, 2019-03-07",
+			"youtubeId": "BbLXaYdBDTI",
+			"startFrom": "2h01m30s"
+		},
+		{
+			"title": "How Easy Hacking a Website Can Be",
+			"details": "Akseli Piilola - Vol 10. Gofore, 2019-03-07",
+			"youtubeId": "BbLXaYdBDTI",
+			"startFrom": "1h20m45s"
+		},
+		{
+			"title": "Planetary Scale 3D Optimization",
+			"details": "Tapio Rautonen - Vol 10. Gofore, 2019-03-07",
+			"youtubeId": "BbLXaYdBDTI",
+			"startFrom": "32m32s"
+		},
+		{
+			"title": "The unknown unknown",
+			"details": "Asta Suokas - Vol 9. Futurice, 2018-10-08",
+			"youtubeId": "BTHX3Gw_3sw",
+			"startFrom": "23m26s"
+		},
+		{
+			"title": "Intro to rich text editing in React with Draft.js",
+			"details": "Tuomo Kankaanpää - Vol 9. Futurice, 2018-10-08",
+			"youtubeId": "BTHX3Gw_3sw",
+			"startFrom": "1h05m25s"
+		},
+		{
+			"title": "Crowdfunding as a Service",
+			"details": "Anna Ruokonen - Vol 9. Futurice, 2018-10-08",
+			"youtubeId": "BTHX3Gw_3sw",
+			"startFrom": "1h46m54s"
+		},
+		{
+			"title": "We built our own UI component library and it was totally fine",
+			"details": "Riku Rouvila - Vol. 8. HappyOrNot, 2018-08-23",
+			"youtubeId": "3pe7aWDU5DY",
+			"startFrom": "1m00s"
+		},
+		{
+			"title": "Would you say that CSS is awesome",
+			"details": "Joonas Kallunki - Vol. 8. HappyOrNot, 2018-08-23",
+			"youtubeId": "xnAmrv95C10"
+		},
+		{
+			"title": "Our new front-end stack",
+			"details": "Lauri Fjällström - Vol. 8. HappyOrNot, 2018-08-23",
+			"youtubeId": "pFfOx4FQDhE"
+		},
+		{
+			"title": "Connecting with Music Through AI and Magenta.js",
+			"details": "Tero Parviainen - Vol 7. Vincit, 2018-05-17",
+			"youtubeId": "VIk9Pf2md0c",
+			"startFrom": "12m22s"
+		},
+		{
+			"title": "Deep Learning Lyrics",
+			"details": "Antti Simonen - Vol 7. Vincit, 2018-05-17",
+			"youtubeId": "VIk9Pf2md0c",
+			"startFrom": "1h33m18s"
+		},
+		{
+			"title": "Intro to Kotlin",
+			"details": "Roope Hakulinen - Vol. 6, Solita, 2018-2-22",
+			"youtubeId": "tIhRR8ldf6U"
+		},
+		{
+			"title": "Intro to ReasonML",
+			"details": "Aki Haapamäki - Vol. 6, Solita, 2018-2-22",
+			"youtubeId": "QaI_Ojn_IJI"
+		},
+		{
+			"title": "Intro to D3js v4",
+			"details": "Johannes Feig - Vol. 6, Solita, 2018-2-22",
+			"youtubeId": "lkWnW-DR88g"
+		},
+		{
+			"title": "The Micro-Christmas Hackathon",
+			"titleLink": "https://battle3.site/",
+			"details": "Leo Melin, Richard Van Camp, Teemu Erkkola - Vol. 5, Gofore, 2017-24-11",
+			"youtubeId": "pPxpUJyg1ss"
+		},
+		{
+			"title": "WB&S Coders' quiz",
+			"titleLink": "https://github.com/webDevAndSausages/archivedMeetupStuff/blob/master/2017-08-17%20%40%20Wapice%20Oy%20-%20Kampusklubi/Quiz/quiz.pdf",
+			"details": "Richard Van Camp, Mikko Matilainen & Leo Melin - Vol. 4, Wapice, 2017-08-17",
+			"youtubeId": "1n4BbAfbt5w"
+		},
+		{
+			"title": "Why some API's suck",
+			"titleLink": "https://github.com/anttiviljami/why-some-apis-suck",
+			"details": "Viljami Kuosmanen - Vol. 4, Wapice, 2017-08-17",
+			"youtubeId": "i78KpYX9ooc"
+		},
+		{
+			"title": "Uh...Yeah...Let's talk about Polymer, then...",
+			"titleLink": "https://github.com/webDevAndSausages/archivedMeetupStuff/blob/master/2017-08-17%20%40%20Wapice%20Oy%20-%20Kampusklubi/Uh...Yeah...Let's%20talk%20about%20Polymer%2C%20then...%20-%20Fabiano%20Brito%20%26%20Andr%C3%A9%20Valgrande/Polymer1.x.pdf",
+			"details": "Fabiano Brito & André Valgrande - Vol. 4, Wapice, 2017-08-17",
+			"youtubeId": "4YKilvpDOFI"
+		},
+		{
+			"title": "One microservice success story",
+			"details": "Jaakko Takaluoma - Vol. 4, Wapice, 2017-08-17",
+			"youtubeId": "QOz3mdlSr5k"
+		},
+		{
+			"title": "The Web Assembly Challenge",
+			"details": "Teemu Erkkola, Jaakko Huuso, & Rick VC - Vol. 3, Vincit, 2017-01-11",
+			"youtubeId": "JXKIaZRJAS0",
+			"startFrom": "2h17m36s"
+		},
+		{
+			"title": "Skip the backend completely using Nginx + embedded Lua",
+			"details": "Onni Hakala - Vol. 3, Vincit, 2017-01-11",
+			"youtubeId": "JXKIaZRJAS0",
+			"startFrom": "55m21s"
+		},
+		{
+			"title": "Web Audio",
+			"details": "Tero Parviainen - Vol 1., Gofore, 2016-08-18",
+			"youtubeId": "dlJLDoJ0OqQ"
+		},
+		{
+			"title": "CSS Modules",
+			"details": "Riku Ruovila - Vol 1., Gofore, 2016-08-18",
+			"youtubeId": "iu0w96wKJEk"
+		},
+		{
+			"title": "React API design: Case Rectabular",
+			"details": "Juho Vepsäläinen - Vol 1., Gofore, 2016-08-18",
+			"youtubeId": "nEn5k_HXeNc"
+		},
+		{
+			"title": "A sneak peek at WebAssembly",
+			"details": "Leo Melin - Vol 1., Gofore, 2016-08-18",
+			"youtubeId": "R_Ac8l4BifI"
+		}
+	]
+}

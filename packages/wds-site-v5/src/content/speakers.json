@@ -1,0 +1,443 @@
+{
+	"data": [
+		{
+			"name": "Antti-Pekka Vilkko",
+			"talks": [
+				{
+					"title": "Music generators: actually listenable original music in your browser?",
+					"details": "Vol 12. Reaktor, 2019-10-25",
+					"youtubeId": "n-wEEVrVId0",
+					"startTime": "1h05m40s",
+					"startSeconds": 3940,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Petri & Henri Sarasvirta",
+			"talks": [
+				{
+					"title": "WebGL in the demoscene: demos and intros",
+					"details": "Vol 12. Reaktor, 2019-10-25",
+					"youtubeId": "n-wEEVrVId0",
+					"startTime": "1h50m24s",
+					"startSeconds": 6624,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Eero Pitkänen",
+			"talks": [
+				{
+					"title": "WebGL in the demoscene: demos and intros",
+					"details": "Vol 12. Reaktor, 2019-10-25",
+					"youtubeId": "n-wEEVrVId0",
+					"startTime": "2h43m15s",
+					"startSeconds": 9795,
+					"show": true
+				}
+			]
+		},
+		{ "name": "Mikko Ahlroth", "talks": [] },
+		{
+			"name": "Johannes Feig",
+			"talks": [
+				{
+					"title": "Intro to D3js v4",
+					"details": "Vol. 6, Solita, 2018-2-22",
+					"youtubeId": "lkWnW-DR88g",
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Fabiano Brito",
+			"talks": [
+				{
+					"title": "Uh...Yeah...Let's talk about Polymer, then...",
+					"titleLink": "https://github.com/webDevAndSausages/archivedMeetupStuff/blob/master/2017-08-17%20%40%20Wapice%20Oy%20-%20Kampusklubi/Uh...Yeah...Let's%20talk%20about%20Polymer%2C%20then...%20-%20Fabiano%20Brito%20%26%20Andr%C3%A9%20Valgrande/Polymer1.x.pdf",
+					"details": "Vol. 4, Wapice, 2017-08-17",
+					"with": "André Valgrande",
+					"youtubeId": "4YKilvpDOFI",
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Teemu Erkkola",
+			"talks": [
+				{
+					"title": "What Is Rust? And Why Should I Care?",
+					"details": "Vol 11. Digia, 2019-05-23",
+					"youtubeId": "7fMMSSrw9ko",
+					"show": true
+				},
+				{
+					"title": "The Web Assembly Challenge",
+					"details": "Vol. 3, Vincit, 2017-01-11",
+					"with": "Jaakko Huuso & Rick Van Camp",
+					"youtubeId": "JXKIaZRJAS0",
+					"startTime": "2h17m36s",
+					"startSeconds": 8256,
+					"show": true
+				},
+				{
+					"title": "The Micro-Christmas Hackathon",
+					"titleLink": "https://battle3.site/",
+					"details": "Vol. 5, Gofore, 2017-24-11",
+					"with": "Jaakko Huuso & Rick Van Camp",
+					"youtubeId": "pPxpUJyg1ss",
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Lauri Fjällström",
+			"talks": [
+				{
+					"title": "Our new front-end stack",
+					"details": "Vol. 8., HappyOrNot, 2018-08-23",
+					"youtubeId": "pFfOx4FQDhE",
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Aki Haapamäki",
+			"talks": [
+				{
+					"title": "Intro to ReasonML",
+					"details": "Vol. 6, Solita, 2018-2-22",
+					"youtubeId": "QaI_Ojn_IJI",
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Onni Hakala",
+			"talks": [
+				{
+					"title": "Skip the backend completely using Nginx + embedded Lua",
+					"details": "Vol. 3, Vincit, 2017-01-11",
+					"youtubeId": "JXKIaZRJAS0",
+					"startTime": "55m21s",
+					"startSeconds": 3321,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Roope Hakulinen",
+			"talks": [
+				{
+					"title": "Intro to Kotlin",
+					"details": "Vol. 6, Solita, 2018-2-22",
+					"youtubeId": "tIhRR8ldf6U",
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Jaakko Huuso",
+			"talks": [
+				{
+					"title": "The Web Assembly Challenge",
+					"details": "Vol. 3, Vincit, 2017-01-11",
+					"with": "Teemu Erkkola & Rick Van Camp",
+					"youtubeId": "JXKIaZRJAS0",
+					"startTime": "2h17m36s",
+					"startSeconds": 8259,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Joonas Kallunki",
+			"talks": [
+				{
+					"title": "Would you say that CSS is awesome",
+					"details": "Vol. 8., HappyOrNot, 2018-08-23",
+					"youtubeId": "xnAmrv95C10",
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Tuomo Kankaanpää",
+			"talks": [
+				{
+					"title": "Intro to rich text editing in React with Draft.js",
+					"details": "Vol 9. Futurice, 2018-10-08",
+					"youtubeId": "BTHX3Gw_3sw",
+					"startTime": "1h05m25s",
+					"startSeconds": 3925,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Viljami Kuosmanen",
+			"talks": [
+				{
+					"title": "Why some API's suck",
+					"titleLink": "https://github.com/anttiviljami/why-some-apis-suck",
+					"details": "Vol. 4, Wapice, 2017-08-17",
+					"youtubeId": "i78KpYX9ooc",
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Joonas Lehtonen",
+			"talks": []
+		},
+		{
+			"name": "Timo Lehtonen",
+			"talks": []
+		},
+		{
+			"name": "Leo Melin",
+			"talks": [
+				{
+					"title": "A sneak peek at WebAssembly",
+					"details": "Vol 1., Gofore, 2016-08-18",
+					"youtubeId": "R_Ac8l4BifI",
+					"show": true
+				},
+				{
+					"title": "WB&S Coders' quiz",
+					"titleLink": "https://github.com/webDevAndSausages/archivedMeetupStuff/blob/master/2017-08-17%20%40%20Wapice%20Oy%20-%20Kampusklubi/Quiz/quiz.pdf",
+					"details": "with Richard Van Camp & Mikko Matilainen - Vol. 4, Wapice, 2017-08-17",
+					"youtubeId": "1n4BbAfbt5w",
+					"show": false
+				},
+				{
+					"title": "The Micro-Christmas Hackathon",
+					"titleLink": "https://battle3.site/",
+					"details": "with Richard Van Camp & Teemu Erkkola - Vol. 5, Gofore, 2017-24-11",
+					"youtubeId": "pPxpUJyg1ss",
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Antti Niemenpää",
+			"talks": []
+		},
+		{
+			"name": "Juha Nurmi",
+			"talks": []
+		},
+		{
+			"name": "Tero Parviainen",
+			"talks": [
+				{
+					"title": "Web Audio",
+					"details": "Vol 1., Gofore, 2016-08-18",
+					"youtubeId": "dlJLDoJ0OqQ",
+					"show": true
+				},
+				{
+					"title": "Connecting with Music Through AI and Magenta.js",
+					"details": "Vol 7. Vincit, 2018-05-17",
+					"youtubeId": "VIk9Pf2md0c",
+					"startTime": "12m22s",
+					"startSeconds": 740,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Akseli Piilola",
+			"talks": [
+				{
+					"title": "How Easy Hacking a Website Can Be",
+					"details": "Vol 10. Gofore, 2019-03-07",
+					"youtubeId": "BbLXaYdBDTI",
+					"startTime": "1h20m45s",
+					"startSeconds": 4845,
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Asta Suokas",
+			"talks": [
+				{
+					"title": "The unknown unknown",
+					"details": "Vol 9. Futurice, 2018-10-08",
+					"youtubeId": "BTHX3Gw_3sw",
+					"startTime": "23m26s",
+					"startSeconds": 1406,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Jaakko Takaluoma",
+			"talks": [
+				{
+					"title": "One microservice success story",
+					"details": "Vol. 4, Wapice, 2017-08-17",
+					"youtubeId": "QOz3mdlSr5k",
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Tapio Rautonen",
+			"talks": [
+				{
+					"title": "Planetary Scale 3D Optimization",
+					"details": "Vol 10. Gofore, 2019-03-07",
+					"youtubeId": "BbLXaYdBDTI",
+					"startTime": "32m32s",
+					"startSeconds": 1952,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Riku Rouvila",
+			"talks": [
+				{
+					"title": "CSS Modules",
+					"details": "Vol 1., Gofore, 2016-08-18",
+					"youtubeId": "iu0w96wKJEk",
+					"show": true
+				},
+				{
+					"title": "We built our own UI component library and it was totally fine",
+					"details": "Vol. 8., HappyOrNot, 2018-08-23",
+					"youtubeId": "3pe7aWDU5DY",
+					"startTime": "1m00s",
+					"startSeconds": 60,
+					"show": true
+				},
+				{
+					"title": "Webbidevaus.fi CSSNuggets™ 8 kpl",
+					"details": "Vol 11. Digia, 2019-05-23",
+					"with": "Antti Mattila",
+					"youtubeId": "aaWsv0h4lOg",
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Anna Ruokonen",
+			"talks": [
+				{
+					"title": "Crowdfunding as a Service",
+					"details": "Vol 9. Futurice, 2018-10-08",
+					"youtubeId": "BTHX3Gw_3sw",
+					"startTime": "1h46m54s",
+					"startSeconds": 5814,
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Antti Simonen",
+			"talks": [
+				{
+					"title": "Deep Learning Lyrics",
+					"details": "Vol 7. Vincit, 2018-05-17",
+					"youtubeId": "VIk9Pf2md0c",
+					"startTime": "1h33m18s",
+					"startSeconds": 4998,
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "André Valgrande",
+			"talks": [
+				{
+					"title": "Uh...Yeah...Let's talk about Polymer, then...",
+					"titleLink": "https://github.com/webDevAndSausages/archivedMeetupStuff/blob/master/2017-08-17%20%40%20Wapice%20Oy%20-%20Kampusklubi/Uh...Yeah...Let's%20talk%20about%20Polymer%2C%20then...%20-%20Fabiano%20Brito%20%26%20Andr%C3%A9%20Valgrande/Polymer1.x.pdf",
+					"details": "Vol. 4, Wapice, 2017-08-17",
+					"with": "Fabiano Brito",
+					"youtubeId": "4YKilvpDOFI",
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Richard Van Camp",
+			"talks": [
+				{
+					"title": "The Web Assembly Challenge",
+					"details": "with Teemu Erkkola & Jaakko Huuso - Vol. 3, Vincit, 2017-01-11",
+					"youtubeId": "JXKIaZRJAS0",
+					"startTime": "2h17m36s",
+					"startSeconds": 8259,
+					"show": false
+				},
+				{
+					"title": "WB&S Coders' quiz",
+					"titleLink": "https://github.com/webDevAndSausages/archivedMeetupStuff/blob/master/2017-08-17%20%40%20Wapice%20Oy%20-%20Kampusklubi/Quiz/quiz.pdf",
+					"details": "with Mikko Matilainen & Leo Melin - Vol. 4, Wapice, 2017-08-17",
+					"youtubeId": "1n4BbAfbt5w",
+					"show": false
+				},
+				{
+					"title": "Ends Unite",
+					"details": "Vol 10. Gofore, 2019-03-07",
+					"youtubeId": "BbLXaYdBDTI",
+					"startTime": "2h01m30s",
+					"startSeconds": 7295,
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Juho Vepsäläinen",
+			"talks": [
+				{
+					"title": "React API design: Case Rectabular",
+					"details": "Vol 1., Gofore, 2016-08-18",
+					"youtubeId": "nEn5k_HXeNc",
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Mikael von Bonsdorff",
+			"talks": [
+				{
+					"title": "Magical code generation with OpenApi",
+					"details": "Vol 13., Gofore, 2016-08-18",
+					"show": false
+				}
+			]
+		},
+		{
+			"name": "Justin Woo",
+			"talks": []
+		},
+		{
+			"name": "Suresh Gupta",
+			"talks": [
+				{
+					"title": "What Does GraphQL Solve And Will It Replace REST?",
+					"details": "Vol 11. Digia, 2019-05-23",
+					"youtubeId": "rCWoU4updlg",
+					"show": true
+				}
+			]
+		},
+		{
+			"name": "Antti Mattila",
+			"talks": [
+				{
+					"title": "Webbidevaus.fi CSSNuggets™ 8 kpl",
+					"details": "Vol 11. Digia, 2019-05-23",
+					"with": "Riku Rouvila",
+					"youtubeId": "aaWsv0h4lOg",
+					"show": true
+				}
+			]
+		}
+	]
+}
