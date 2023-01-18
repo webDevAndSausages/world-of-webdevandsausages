@@ -36,8 +36,7 @@ class CreateRegistrationServiceTest : StringSpec() {
                emailService = mockk(relaxed = true),
                eventCRUD = mockk(relaxed = true),
                randomWordsUtil = mockk(relaxed = true),
-               participantCRUD = mockk(relaxed = true),
-               firebaseService = mockk(relaxed = true)
+               participantCRUD = mockk(relaxed = true)
                )
         every { unit.eventCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))
         every { unit.participantCRUD.db } returns DSL.using(mockkClass(Configuration::class, relaxed = true))

@@ -1,6 +1,6 @@
 package org.webdevandsausages.events.utils
 
-import org.webdevandsausages.events.service.asResourceStream
+
 import java.util.Random
 
 object RandomWordsUtil {
