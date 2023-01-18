@@ -2,7 +2,7 @@ import ky from 'ky';
 import daggy from 'daggy';
 import config from '$config';
 
-const url = `${config.API_ROOT}contacts`;
+const url = `${config.API_ROOT}/api/1.0/contacts`;
 
 export const Result = daggy.taggedSum('Result', {
 	None: [],
