@@ -1,6 +1,0 @@
-{
-  "projects": {
-    "default": "wds-event-tool",
-    "test": "wds-event-dev"
-  }
-}
