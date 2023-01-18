@@ -18,5 +18,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build the image
-        run: docker build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" .
+        run: docker build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" --target=build .
         working-directory: packages/wds-event-tool
