@@ -28,7 +28,7 @@
     "http-errors": "^1.6.2",
     "joi": "^13.5.2",
     "moment": "^2.20.0",
-    "moment-timezone": "^0.5.14",
+    "moment-timezone": "^0.5.35",
     "nexmo": "^2.1.1",
     "ramda": "^0.25.0",
     "random-word": "^2.0.0",
