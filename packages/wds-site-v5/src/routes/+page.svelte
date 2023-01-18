@@ -13,7 +13,7 @@
 	import SwagModal from './home/SwagModal.svelte';
 
 	export let data: PageData;
-	const { currentEvent, speakers, events, sponsors } = data;
+	const { speakers, sponsors } = data;
 </script>
 
 <Meta title="Web Dev &amp; Sausages Registration" />
@@ -38,7 +38,7 @@
 </Section> -->
 
 <Section class="terminal-wrapper mr-auto" centerText={false}>
-	<Terminal event={currentEvent} />
+	<Terminal event={null} />
 </Section>
 
 <Section title="About">

@@ -16,16 +16,17 @@ export type Event = {
 
 export type Talk = {
     title: string;
-    details: string;
-    youtubeId: string;
-    startTime: string;
-    startSeconds: number;
+    details?: string;
+    youtubeId?: string;
+    startTime?: string;
+    startSeconds?: number;
     show: boolean;
 }
 
 export type Speaker = {
   name: string;
   talks: Talk[];
+  slug: string;
 }
 
 export type Sponsor = {
@@ -35,7 +36,6 @@ export type Sponsor = {
 
 export type PageData = {
   speakers: Speaker[];
-  currentEvent: Event | null;
   sponsors: {
     data: Sponsor[]
   };
