@@ -42,11 +42,6 @@ resource "fly_app" "backend" {
   org = "wds"
 }
 
-resource "fly_ip" "backend_ip" {
-  app  = fly_app.backend.id
-  type = "v4"
-}
-
 resource "fly_machine" "backend_machine" {
   app    = fly_app.backend.id
   image  = "nginx" # initial image for testing purposes
@@ -57,26 +52,37 @@ resource "fly_machine" "backend_machine" {
     DB_URL = "jdbc:postgresql://wds-db-${terraform.workspace}.internal:5432/wds_db"
   }
 
-  services = [
-    {
-      protocol      = "tcp"
-      internal_port = 5000
-      ports         = [
-        {
-          port     = 443
-          handlers = ["tls", "http"]
-        },
-        {
-          port     = 80
-          handlers = ["http"]
-        }
-      ]
-    }
-  ]
+  services = []
 
   lifecycle {
     ignore_changes = [
       image
     ]
   }
+}
+
+resource "fly_app" "frontend" {
+  name       = "wds-frontend-${terraform.workspace}"
+  depends_on = [fly_app.db]
+  org = "wds"
+}
+
+resource "fly_machine" "frontend_machine" {
+  app    = fly_app.frontend.id
+  image  = "nginx" # initial image for testing purposes
+  name   = "wds-frontend-${terraform.workspace}"
+  region = "fra"
+
+  services = []
+
+  lifecycle {
+    ignore_changes = [
+      image
+    ]
+  }
+}
+
+resource "fly_ip" "frontend_ip" {
+  app  = fly_app.frontend.id
+  type = "v4"
 }
