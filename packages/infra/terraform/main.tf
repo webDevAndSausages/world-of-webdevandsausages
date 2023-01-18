@@ -1,6 +1,6 @@
 resource "fly_app" "db" {
   name = "wds-db-${terraform.workspace}"
-  org = "wds"
+  org  = "wds"
 }
 
 resource "fly_machine" "db_machine" {
@@ -18,7 +18,7 @@ resource "fly_machine" "db_machine" {
   mounts = [
     {
       volume = fly_volume.db_storage.id
-      path = "/var/lib/postgresql"
+      path   = "/var/lib/postgresql"
     }
   ]
 
@@ -39,7 +39,7 @@ resource "fly_volume" "db_storage" {
 resource "fly_app" "backend" {
   name       = "wds-backend-${terraform.workspace}"
   depends_on = [fly_app.db]
-  org = "wds"
+  org        = "wds"
 }
 
 resource "fly_machine" "backend_machine" {
@@ -64,7 +64,7 @@ resource "fly_machine" "backend_machine" {
 resource "fly_app" "frontend" {
   name       = "wds-frontend-${terraform.workspace}"
   depends_on = [fly_app.db]
-  org = "wds"
+  org        = "wds"
 }
 
 resource "fly_machine" "frontend_machine" {
@@ -73,7 +73,22 @@ resource "fly_machine" "frontend_machine" {
   name   = "wds-frontend-${terraform.workspace}"
   region = "fra"
 
-  services = []
+  services = [
+    {
+      protocol      = "tcp"
+      internal_port = 80
+      ports         = [
+        {
+          port     = 443
+          handlers = ["tls", "http"]
+        },
+        {
+          port     = 80
+          handlers = ["http"]
+        }
+      ]
+    }
+  ]
 
   lifecycle {
     ignore_changes = [
@@ -85,4 +100,9 @@ resource "fly_machine" "frontend_machine" {
 resource "fly_ip" "frontend_ip" {
   app  = fly_app.frontend.id
   type = "v4"
+}
+
+resource "fly_cert" "frontend_cert" {
+  app      = fly_app.frontend.id
+  hostname = "webdevandsausages.org"
 }
