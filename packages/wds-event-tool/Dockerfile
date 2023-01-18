@@ -7,7 +7,7 @@ WORKDIR /home/gradle/project
 RUN echo "$FIREBASE_SERVICEACCOUNT_KEY" > ./src/main/resources/firebaseServiceAccountKey.json
 RUN echo "$SECRETS_YAML" > ./src/main/resources/secrets.yaml
 
-RUN gradle build -x jooq-codegen-meta
+RUN gradle build -i -x jooq-codegen-meta
 
 FROM adoptopenjdk/openjdk8-openj9:jdk8u192-b12-alpine-slim
 EXPOSE 5000
