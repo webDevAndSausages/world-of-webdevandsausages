@@ -5,8 +5,9 @@
 
 
 <head>
-    <title>Web Dev & Sausages Registration Cancellation</title>
+    <title>Web Dev & Sausages Registration Update</title>
     <meta charset="utf-8">
+
 
     <meta name="viewport" content="width=device-width">
 
@@ -173,6 +174,7 @@
     <!-- CONTAINER TABLE -->
 
     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed; background-color: #52bdf6">
+
         <tbody>
 
             <tr>
@@ -182,6 +184,7 @@
 
                     <table border="0" cellpadding="0" cellspacing="0" width="600" class="wrapper">
                         <!-- LOGO/PREHEADER TEXT -->
+
                         <tbody>
 
                             <tr>
@@ -189,6 +192,7 @@
                                 <td>
 
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
+
                                         <tbody>
 
                                             <tr>
@@ -213,6 +217,7 @@
     <!-- CONTAINER TABLE -->
 
     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed; background-color: #4b4b4b;">
+
         <tbody>
 
             <tr>
@@ -221,6 +226,7 @@
                     <!-- WRAPPER TABLE -->
 
                     <table border="0" cellpadding="0" cellspacing="0" width="600" class="wrapper">
+
                         <tbody>
 
                             <tr>
@@ -228,28 +234,73 @@
                                 <td>
 
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
+
                                         <tbody>
 
                                             <tr>
 
                                                 <td align="center" style="color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;"
-                                                    class="mobile-title-pad">
-                                                    REGISTRATION CANCELLATION CONFIRMATION
+                                                    class="mobile-text-pad">
+                                                    REGISTRATION UPDATE - YOU ARE NOW REGISTERED
                                                 </td>
                                             </tr>
 
                                             <tr>
 
-                                                <td align="center" class="mobile-title-pad" style="padding: 20px 0 20px 0; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;">
-                                                    Your registration for the event at
-                                                    <span class="no-link" style="font-family:Arial, sans-serif; font-weight: normal; color:#52BDF6 !important; text-decoration: underline !important; border-bottom: none;">
-                                                        {{location}}
-                                                    </span>
-                                                    on
-                                                    <span class="no-link" style="font-family:Arial, sans-serif; font-weight: normal; color:#52BDF6 !important; text-decoration: underline !important; border-bottom: none;">
-                                                        {{datetime}}
-                                                    </span>
-                                                    has been cancelled. We hope to see you at a future event!
+                                                <td align="center" style="padding: 20px 0 20px 0; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;"
+                                                    class="mobile-text-pad">
+                                                    A space has opened up and you have been moved from the waiting list to the registered participants for the event at
+
+                                                    <span class="no-link" style="font-family:Arial, sans-serif; font-weight: normal; color:#52BDF6 !important; text-decoration: underline !important; border-bottom: none;">{{location}}
+                                                    </span>on
+
+                                                    <span class="no-link" style="font-family:Arial, sans-serif; font-weight: normal; color:#52BDF6 !important; text-decoration: underline !important; border-bottom: none;">{{datetime}}
+                                                    </span>. To cancel or check your registration, use the following personal
+                                                    verification token below.
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+
+                                                <td align="center" style="padding: 10px 0 0 0; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;">
+                                                    YOUR VERIFICATION TOKEN:
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+
+                                                <td align="center" style="padding: 20px 0 30px 0;">
+
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="50%" align="center">
+
+                                                        <tbody>
+
+                                                            <tr>
+
+                                                                <td align="center" style="padding: 20px 0 20px 0; background-color: #fff; border-radius: 3px; font-family:Arial, sans-serif; font-weight: bold; font-size: 18px; line-height: 26px;">
+                                                                    {{token}}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+
+                                                <td align="center" style="padding: 20px 0 20px 0;" class="mobile-button">
+
+                                                    <a href="https://www.webdevandsausages.org/registration?tab=verify" target="_blank" style="font-size: 16px; font-family: Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; background-color:  #52BDF6; border-top: 12px solid  #52BDF6; border-bottom: 12px solid  #52BDF6; border-right: 16px solid  #52BDF6; border-left: 18px solid  #52BDF6; display: inline-block;">CHECK REGISTRATION →
+                                                    </a>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+
+                                                <td align="center" style="padding: 20px 0 20px 0;" class="mobile-button">
+
+                                                    <a href="https://www.webdevandsausages.org/registration?tab=cancel" target="_blank" style="font-size: 16px; font-family: Arial, sans-serif; font-weight: normal; color: #333; text-decoration: none; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; background-color: #EEA309; border-top: 12px solid #EEA309; border-bottom: 12px solid #EEA309; border-right: 16px solid #EEA309; border-left: 18px solid #EEA309; display: inline-block;">CANCEL REGISTRATION →
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -265,6 +316,7 @@
     <!-- FOOTER -->
 
     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed; background-color: #52bdf6;">
+
         <tbody>
 
             <tr>
@@ -273,6 +325,7 @@
                     <!-- WRAPPER TABLE -->
 
                     <table border="0" cellpadding="0" cellspacing="0" width="600" align="center" class="wrapper">
+
                         <tbody>
 
                             <tr>

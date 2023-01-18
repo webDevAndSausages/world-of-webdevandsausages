@@ -5,9 +5,8 @@
 
 
 <head>
-    <title>Web Dev & Sausages Invitation</title>
+    <title>Web Dev & Sausages Registration Login</title>
     <meta charset="utf-8">
-
 
     <meta name="viewport" content="width=device-width">
 
@@ -115,14 +114,6 @@
             text-decoration: underline !important;
         }
 
-        .no-link {
-            font-family: Arial, sans-serif !important;
-            font-weight: normal !important;
-            color: #52BDF6 !important;
-            text-decoration: underline !important;
-            border-bottom: none !important;
-        }
-
         /* MOBILE STYLES */
 
         @media screen and (max-width: 600px) {
@@ -166,9 +157,6 @@
             td[class='mobile-button'] a {
                 font-size: 24px !important;
             }
-            td[class='footer'] {
-                padding: 0 !important;
-            }
         }
     </style>
 </head>
@@ -177,34 +165,30 @@
     <!-- CONTAINER TABLE -->
 
     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed; background-color: #52bdf6">
-
         <tbody>
 
             <tr>
 
-                <td align="center" style="padding: 0 0 20px 0;">
+                <td align="center" style="padding: 0;">
                     <!-- WRAPPER TABLE -->
 
                     <table border="0" cellpadding="0" cellspacing="0" width="600" class="wrapper">
                         <!-- LOGO/PREHEADER TEXT -->
-
                         <tbody>
 
                             <tr>
 
-                                <td align="center" style="padding: 0;">
+                                <td>
 
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-
                                         <tbody>
 
                                             <tr>
 
-                                                <td align="center" style="padding: 0;">
+                                                <td align="center">
 
-                                                    <img class="logo" src="https://storage.googleapis.com/wds-event-tool.appspot.com/wds_logo.png"
-                                                        alt="Web Dev & Sausages - The meetup with more mustard" width="200"
-                                                        border="0" style="display: block; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 50px;">
+                                                    <img class="logo" src="https://storage.googleapis.com/wds-event-tool.appspot.com/wds_logo.png" alt="Web Dev & Sausages" width="200"
+                                                        border="0" style="display: block; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;">
 
                                                 </td>
                                             </tr>
@@ -221,7 +205,6 @@
     <!-- CONTAINER TABLE -->
 
     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed; background-color: #4b4b4b;">
-
         <tbody>
 
             <tr>
@@ -230,65 +213,51 @@
                     <!-- WRAPPER TABLE -->
 
                     <table border="0" cellpadding="0" cellspacing="0" width="600" class="wrapper">
-
                         <tbody>
 
                             <tr>
 
-                                <td align="center" style="padding: 0;">
+                                <td>
 
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-
                                         <tbody>
 
                                             <tr>
 
-                                                <td align="center" style="color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;"
-                                                    class="mobile-title-pad">Volume 9: Our November 8th meetup with be
-                                                    scarily good!
+                                                <td align="center" style="color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;">
+                                                    LOGIN
                                                 </td>
                                             </tr>
 
                                             <tr>
 
-                                                <td align="center" style="padding: 20px 0 20px 0; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;"
-                                                    class="mobile-title-pad">Celebrate Halloween with WD&S. Lots of
-                                                    treats compliments of Futurice followed by web dev tricks by Asta
-                                                    Suokas, Tuomo Kankaanpää, and Anna Ruokonen.
+                                                <td align="center" style="padding: 10px 0 0 0; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;">
+                                                    YOUR VERIFICATION TOKEN:
                                                 </td>
                                             </tr>
 
                                             <tr>
 
-                                                <td align="center" style="padding: 20px 0 20px 0; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;"
-                                                    class="mobile-title-pad">We are returning to Futurice's cozy
+                                                <td align="center" style="padding: 20px 0 30px 0;">
 
-                                                    <span class="no-link" style="font-family:Arial, sans-serif; font-weight: normal; color:#52BDF6 !important; text-decoration: underline !important; border-bottom: none;">Tammerforce</span>,
-                                                    Kelloportinkatu 1 D, 33100 Tampere.
-                                                    We start eating at 18.00 and start talking at 18.30. Space will be
-                                                    limited. So register now.
+                                                    <table border="0" cellpadding="0" cellspacing="0" width="50%" align="center">
+                                                        <tbody>
+
+                                                            <tr>
+
+                                                                <td align="center" style="padding: 20px 0 20px 0; background-color: #fff; border-radius: 3px; font-family:Arial, sans-serif; font-weight: bold; font-size: 18px; line-height: 26px;">
+                                                                    {{token}}
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </td>
                                             </tr>
 
                                             <tr>
 
                                                 <td align="center" style="padding: 20px 0 20px 0;" class="mobile-button">
-
-                                                    <a href="https://www.webdevandsausages.org/registration?tab=register"
-                                                        target="_blank" style="font-size: 16px; font-family: Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; background-color:  #52BDF6; border-top: 12px solid  #52BDF6; border-bottom: 12px solid  #52BDF6; border-right: 16px solid  #52BDF6; border-left: 18px solid  #52BDF6; display: inline-block;">REGISTER
-                                                        →
-                                                    </a>
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-
-                                                <td align="center" style="padding: 20px 0 20px 0;" class="mobile-title-pad"
-                                                    class="mobile-button">
-
-                                                    <a href="https://www.webdevandsausages.org/about" target="_blank"
-                                                        style="font-size: 16px; font-family: Arial, sans-serif; font-weight: normal; color: #333; text-decoration: none; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; background-color: #EEA309; border-top: 12px solid #EEA309; border-bottom: 12px solid #EEA309; border-right: 16px solid #EEA309; border-left: 18px solid #EEA309; display: inline-block;">CHECK
-                                                        US OUT →
+                                                    <a href="https://www.webdevandsausages.org/__admin__?user={{user}}&token={{token}}" target="_blank" style="font-size: 16px; font-family: Arial, sans-serif; font-weight: normal; color: #333; text-decoration: none; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; background-color: #EEA309; border-top: 12px solid #EEA309; border-bottom: 12px solid #EEA309; border-right: 16px solid #EEA309; border-left: 18px solid #EEA309; display: inline-block;">LOGIN WITH TOKEN →
                                                     </a>
                                                 </td>
                                             </tr>
@@ -305,7 +274,6 @@
     <!-- FOOTER -->
 
     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed; background-color: #52bdf6;">
-
         <tbody>
 
             <tr>
@@ -314,34 +282,12 @@
                     <!-- WRAPPER TABLE -->
 
                     <table border="0" cellpadding="0" cellspacing="0" width="600" align="center" class="wrapper">
-
                         <tbody>
+
                             <tr>
 
-                                <td align="center" style="padding: 20px 0 0 0; color: #fff; font-family:Arial, sans-serif; font-weight: bold; font-size: 20px;"
-                                    class="footer">Sponsored by
-
-                                </td>
-                            </tr>
-                            <tr>
-
-                                <td align="center" style="padding: 0px 0 20px 0; color: #fff; font-family:Arial, sans-serif; font-weight: bold; font-size: 20px;"
-                                    class="footer">
-
-                                    <a href="https://www.futurice.com/" style="font-size: 20px; font-family: Arial, sans-serif; font-weight: normal; color: #fff; display: inline-block;">
-                                        <img src="https://storage.googleapis.com/wds-event-tool.appspot.com/logowall-box-futurice.png"
-                                            border="0" alt="Futurice" style="height: 100px; display: block; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;">
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-
-                                <td align="center" style="padding: 0; margin: 0; color: #fff; font-family:Arial, sans-serif; font-weight: bold; font-size: 20px;"
-                                    class="footer">
-
-                                    <a href="<%asm_group_unsubscribe_raw_url%>" style="font-size: 14px; font-family: Arial, sans-serif; font-weight: normal; color: #fff; display: inline-block;">
-                                        Unsubscribe from WD&S event mailing list
-                                    </a>
+                                <td align="center" style="padding: 20px 0 20px 0; color: #4b4b4b; font-family:Arial, sans-serif; font-weight: bold; font-size: 20px; line-height: 60px;">
+                                    Web dev & Sausages
                                 </td>
                             </tr>
                         </tbody>

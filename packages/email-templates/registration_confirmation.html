@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width" />
 
     <style type="text/css">
+      @import url("https://fonts.googleapis.com/css?family=Quicksand&display=swap");
       /* CLIENT-SPECIFIC STYLES */
 
       #outlook a {
@@ -173,7 +174,7 @@
       cellpadding="0"
       cellspacing="0"
       width="100%"
-      style="table-layout: fixed; background-color: #52bdf6"
+      style="table-layout: fixed; background-color: #000"
     >
       <tbody>
         <tr>
@@ -202,11 +203,11 @@
                           <td align="center">
                             <img
                               class="logo"
-                              src="https://storage.googleapis.com/wds-event-tool.appspot.com/wds_logo.png"
+                              src="https://storage.googleapis.com/wds-event-tool.appspot.com/wds-logo-rgb.png"
                               alt="Web Dev & Sausages"
-                              width="200"
+                              width="600"
                               border="0"
-                              style="display: block; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;"
+                              style="display: block; color: #fff; font-family:Helvetica, Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 30px; max-width:100%!important; width:100%; height:auto!important"
                             />
                           </td>
                         </tr>
@@ -227,11 +228,11 @@
       cellpadding="0"
       cellspacing="0"
       width="100%"
-      style="table-layout: fixed; background-color: #4b4b4b;"
+      style="table-layout: fixed; background-color: #000;"
     >
       <tbody>
         <tr>
-          <td align="center" style="padding: 40px 0 40px 0;">
+          <td align="center" style="padding: 0 0 40px 0;">
             <!-- WRAPPER TABLE -->
 
             <table
@@ -254,7 +255,7 @@
                         <tr>
                           <td
                             align="center"
-                            style="color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;"
+                            style="color: #00bcdd; font-family:quicksand,geneva,sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;"
                             class="mobile-text-pad"
                           >
                             EVENT REGISTRATION CONFIRMATION
@@ -264,19 +265,19 @@
                         <tr>
                           <td
                             align="center"
-                            style="padding: 20px 0 20px 0; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;"
+                            style="padding: 20px 0 20px 0; color: #fff; letter-spacing:1.1px; font-family:open sans,sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;"
                             class="mobile-text-pad"
                           >
                             You have been {{ action }} for the event at
                             <span
                               class="no-link"
-                              style="font-family:Arial, sans-serif; font-weight: normal; color:#52BDF6 !important; text-decoration: underline !important; border-bottom: none;"
-                              >{{ location }} </span
-                            >on
+                              style="font-family:open sans,sans-serif; font-weight: normal; color:#ff00ff !important; text-decoration: underline !important; border-bottom: none;"
+                              >{{ location }}</span
+                            > on
                             <span
                               class="no-link"
-                              style="font-family:Arial, sans-serif; font-weight: normal; color:#52BDF6 !important; text-decoration: underline !important; border-bottom: none;"
-                              >{{ datetime }} </span
+                              style="font-family:open sans,sans-serif; font-weight: normal; color:#ff00ff !important; text-decoration: underline !important; border-bottom: none;"
+                              >{{ datetime }}</span
                             >. To cancel or check your registration (including
                             your current position if you are wait-listed), use
                             the following personal verification token below.
@@ -286,7 +287,7 @@
                         <tr>
                           <td
                             align="center"
-                            style="padding: 10px 0 0 0; color: #fff; font-family:Arial, sans-serif; font-weight: normal; font-size: 18px; line-height: 28px;"
+                            style="padding: 10px 0 0 0; color: #00bcdd; font-family:quicksand,geneva,sans-serif; font-weight: normal; font-size: 24px; line-height: 30px;"
                           >
                             YOUR VERIFICATION TOKEN:
                           </td>
@@ -305,7 +306,7 @@
                                 <tr>
                                   <td
                                     align="center"
-                                    style="padding: 20px 0 20px 0; background-color: #fff; border-radius: 3px; font-family:Arial, sans-serif; font-weight: bold; font-size: 18px; line-height: 26px;"
+                                    style="padding: 20px 0 20px 0; background-color: #fff; border-radius: 0; font-family:open sans, sans-serif; font-weight: bold; font-size: 18px; line-height: 26px;"
                                   >
                                     {{ token }}
                                   </td>
@@ -322,29 +323,10 @@
                             class="mobile-button"
                           >
                             <a
-                              href="https://www.webdevandsausages.org/?check={{
-                                token
-                              }}"
+                              href="https://www.webdevandsausages.org"
                               target="_blank"
-                              style="font-size: 16px; font-family: Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; background-color:  #52BDF6; border-top: 12px solid  #52BDF6; border-bottom: 12px solid  #52BDF6; border-right: 16px solid  #52BDF6; border-left: 18px solid  #52BDF6; display: inline-block;"
-                              >CHECK REGISTRATION →
-                            </a>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td
-                            align="center"
-                            style="padding: 20px 0 20px 0;"
-                            class="mobile-button"
-                          >
-                            <a
-                              href="https://www.webdevandsausages.org/?cancel={{
-                                token
-                              }}"
-                              target="_blank"
-                              style="font-size: 16px; font-family: Arial, sans-serif; font-weight: normal; color: #333; text-decoration: none; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; background-color: #EEA309; border-top: 12px solid #EEA309; border-bottom: 12px solid #EEA309; border-right: 16px solid #EEA309; border-left: 18px solid #EEA309; display: inline-block;"
-                              >CANCEL REGISTRATION →
+                              style="background-color:#ff00ff; border-radius:0px;  color:#fff; display:inline-block; font-family:Lucida Console, Monaco, monospace; font-size:16px; font-weight:bold; font-weight:600; line-height:30px; padding:8px 30px; text-align:center; text-decoration:none"
+                              >CHECK / CANCEL REGISTRATION
                             </a>
                           </td>
                         </tr>
@@ -365,7 +347,7 @@
       cellpadding="0"
       cellspacing="0"
       width="100%"
-      style="table-layout: fixed; background-color: #52bdf6;"
+      style="table-layout: fixed; background-color: #000;"
     >
       <tbody>
         <tr>
@@ -384,7 +366,7 @@
                 <tr>
                   <td
                     align="center"
-                    style="padding: 20px 0 20px 0; color: #4b4b4b; font-family:Arial, sans-serif; font-weight: bold; font-size: 20px; line-height: 60px;"
+                    style="padding: 20px 0 20px 0; color: #fff; letter-spacing:1.1px; font-family:open sans,sans-serif; font-weight: normal; font-size: 20px; line-height: 28px;"
                   >
                     This event is sponsored by {{ sponsor }}
                   </td>
