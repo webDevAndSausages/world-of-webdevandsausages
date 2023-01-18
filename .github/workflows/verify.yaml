@@ -1,0 +1,22 @@
+name: Verify
+
+on:
+  pull_request:
+    branches: [ "staging", "master" ]
+  workflow_dispatch:
+
+jobs:
+  backend-tests:
+    name: Run backend tests
+    runs-on: ubuntu-latest
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      WORKSPACE: ${{ github.ref_name == 'master' && 'prod' || github.ref_name }}
+      COMMIT_SHA: ${{ github.sha }}
+      FIREBASE_SERVICEACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICEACCOUNT_KEY }}
+      SECRETS_YAML: ${{ secrets.SECRETS_YAML }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the image
+        run: docker build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" .
+        working-directory: packages/wds-event-tool
