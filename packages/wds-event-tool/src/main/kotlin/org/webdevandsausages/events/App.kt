@@ -47,7 +47,7 @@ fun startApp(config: AppConfig): Http4kServer {
 
     val app = Router(
         GetEventsService(eventCRUD),
-        GetCurrentEventService(eventCRUD),
+        GetCurrentEventService(eventCRUD, emailService),
         GetEventByIdService(eventCRUD),
         GetRegistrationService(eventCRUD, participantCRUD),
         CreateRegistrationService(

@@ -1,13 +1,13 @@
 package org.webdevandsausages.events.service
 
-import com.github.michaelbull.result.runCatching
+import com.amazonaws.regions.Regions
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder
+import com.amazonaws.services.simpleemail.model.*
+import com.amazonaws.services.simpleemail.model.Content
 import com.github.michaelbull.result.getOr
-import com.sendgrid.Email
-import com.sendgrid.Mail
-import com.sendgrid.Method
-import com.sendgrid.Personalization
-import com.sendgrid.Request
-import com.sendgrid.SendGrid
+import com.github.michaelbull.result.runCatching
+import com.sendgrid.*
+import io.pebbletemplates.pebble.PebbleEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,10 +20,12 @@ import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.service.registration.toText
 import org.webdevandsausages.events.utils.createLogger
 import org.webdevandsausages.events.utils.prettified
+import java.io.StringWriter
+
 
 val SUBJECT_INTRO = "Web Dev and Sausages:"
 
-val WAIT_LISTED_SUBJECT  = "$SUBJECT_INTRO You are currently on the waiting list."
+val WAIT_LISTED_SUBJECT = "$SUBJECT_INTRO You are currently on the waiting list."
 val REGISTERED_SUBJECT = "$SUBJECT_INTRO You are successfully registered!"
 
 class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineScope(Dispatchers.Default) {
@@ -38,7 +40,28 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
         }
     }
 
-    fun sendMail(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) = launch {
+    fun sendMail2(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) =
+        launch {
+            val engine = PebbleEngine.Builder().build()
+            val compiledTemplate = engine.getTemplate("email-templates/event_invitation.html")
+            val writer = StringWriter()
+            compiledTemplate.evaluate(writer, emailData)
+
+            val output = writer.toString()
+
+            val client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_WEST_1).build()
+            val request = SendEmailRequest().withDestination(Destination().withToAddresses(email)).withMessage(
+                Message().withBody(
+                    Body().withHtml(Content().withCharset("UTF-8").withData(output))
+                        .withText(Content().withCharset("UTF-8").withData("Hello plain text"))
+                ).withSubject(Content().withCharset("UTF-8").withData(subject))
+            ).withSource("noreply@webdevandsausages.org")
+            client.sendEmail(request)
+            logger.info("Email sent to ${email}")
+        }
+
+    fun sendMail(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) =
+        launch {
             // this uses the new version 3 api for Sendgrid
             // we need to copy over our old templates in Sendgrid to work in new api
             if (sg != null) {

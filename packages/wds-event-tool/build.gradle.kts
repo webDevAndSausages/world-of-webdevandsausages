@@ -108,6 +108,12 @@ dependencies {
     implementation("io.arrow-kt:arrow-mtl:$arrowVersion")
     implementation("io.arrow-kt:arrow-syntax:$arrowVersion")
 
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ses
+    implementation("com.amazonaws:aws-java-sdk-ses:1.12.385")
+
+    // https://mvnrepository.com/artifact/io.pebbletemplates/pebble
+    implementation("io.pebbletemplates:pebble:3.2.0")
+
     /* Validation */
     compile("com.markodevcic.kvalidation:KValidation:1.0.0")
     /* tests */

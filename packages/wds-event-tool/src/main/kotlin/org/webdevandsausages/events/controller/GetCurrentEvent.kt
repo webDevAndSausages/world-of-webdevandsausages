@@ -11,6 +11,7 @@ import org.http4k.core.Status
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.domain.toResponse
+import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.event.GetCurrentEventService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
