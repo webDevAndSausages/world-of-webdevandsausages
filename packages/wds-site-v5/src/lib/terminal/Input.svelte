@@ -48,7 +48,7 @@
 	]);
 	$: inputClasses = cc([
 		{},
-		'outline-none px-2 pb-2 pt-2 text-black w-full border border-term-brand-2 bg-black text-white bg-transparent'
+		'outline-none px-2 pb-2 pt-2 w-full border border-term-brand-2 bg-black text-white bg-transparent'
 	]);
 
 	onMount(() => {
