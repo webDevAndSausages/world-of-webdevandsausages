@@ -3,7 +3,6 @@ COPY . /opt/app
 ARG WDS_API_KEY
 WORKDIR /opt/app
 RUN touch .env
-RUN echo "PUBLIC_WDS_API_URL=http://host.docker.internal:5000/api/1.0/" >> .env
 RUN echo "PUBLIC_WDS_API_KEY=$WDS_API_KEY" >> .env
 RUN npm ci
 RUN npm run build
