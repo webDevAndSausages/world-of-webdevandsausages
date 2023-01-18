@@ -16,7 +16,6 @@ import org.webdevandsausages.events.dto.RegistrationInDto
 import org.webdevandsausages.events.dto.getNextOrderNumber
 import org.webdevandsausages.events.dto.getNextOrderNumberInStatusGroup
 import org.webdevandsausages.events.service.EmailService
-import org.webdevandsausages.events.service.FirebaseService
 import org.webdevandsausages.events.service.event.canRegister
 import org.webdevandsausages.events.utils.RandomWordsUtil
 import org.webdevandsausages.events.utils.createLogger
@@ -25,8 +24,7 @@ class CreateRegistrationService(
     val eventCRUD: EventCRUD,
     val participantCRUD: ParticipantCRUD,
     val randomWordsUtil: RandomWordsUtil,
-    val emailService: EmailService,
-    val firebaseService: FirebaseService
+    val emailService: EmailService
 ) : CoroutineScope by CoroutineScope(Dispatchers.Default) {
     operator fun invoke(registration: RegistrationInDto): Either<EventError, ParticipantDto?> {
         val eventData: Option<EventDto> = eventCRUD.findByIdOrLatest(registration.eventId)
@@ -56,7 +54,6 @@ class CreateRegistrationService(
                     if (result is Some) {
                         launch(IODispatchers.CommonPool) {
                             emailService.sendRegistrationEmail(event, status, result.t)
-                            firebaseService.upsertParticipantToMailingList(result.t)
                         }
                     }
 

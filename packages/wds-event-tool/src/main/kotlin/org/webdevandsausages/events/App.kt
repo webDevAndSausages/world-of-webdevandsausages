@@ -14,7 +14,6 @@ import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.ParticipantCRUD
 import org.webdevandsausages.events.service.CreateContactService
 import org.webdevandsausages.events.service.EmailService
-import org.webdevandsausages.events.service.FirebaseService
 import org.webdevandsausages.events.service.event.CreateEventService
 import org.webdevandsausages.events.service.event.GetCurrentEventService
 import org.webdevandsausages.events.service.event.GetEventByIdService
@@ -45,7 +44,6 @@ fun startApp(config: AppConfig): Http4kServer {
     val participantCRUD = ParticipantCRUD(local.jooqConfiguration)
     val contactCRUD = ContactCRUD(local.jooqConfiguration)
     val emailService = EmailService(config.secrets)
-    val firebaseService = FirebaseService()
 
     val app = Router(
         GetEventsService(eventCRUD),
@@ -56,8 +54,7 @@ fun startApp(config: AppConfig): Http4kServer {
             eventCRUD,
             participantCRUD,
             RandomWordsUtil,
-            emailService,
-            firebaseService
+            emailService
         ),
         CancelRegistrationService(eventCRUD, participantCRUD, emailService),
         CreateEventService(eventCRUD),
