@@ -4,7 +4,7 @@ ARG WDS_API_KEY
 WORKDIR /opt/app
 RUN touch .env
 RUN echo 'PUBLIC_WDS_API_URL=""' >> .env
-RUN echo "PUBLIC_WDS_API_KEY=$WDS_API_KEY" >> .env
+RUN echo 'PUBLIC_WDS_API_KEY="not-the-key-you-are-looking-for"' >> .env
 RUN npm ci
 RUN npm run build
 
@@ -15,3 +15,4 @@ COPY --from=build /opt/app/build /opt/frontend
 RUN rm /etc/nginx/conf.d/default.conf
 COPY --from=build /opt/app/wds-nginx.conf /etc/nginx/conf.d/default.conf
 RUN sed -i "s/\$WORKSPACE/$WORKSPACE/g" /etc/nginx/conf.d/default.conf
+RUN sed -i "s/\$WDS_API_KEY/$WDS_API_KEY/g" /etc/nginx/conf.d/default.conf
