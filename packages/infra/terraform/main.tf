@@ -102,3 +102,9 @@ resource "fly_cert" "frontend_cert" {
   app      = fly_app.frontend.id
   hostname = "${terraform.workspace == "prod" ? "*" : terraform.workspace}.webdevandsausages.org"
 }
+
+resource "fly_cert" "frontend_cert_2" {
+  count = terraform.workspace == "prod" ? 1 : 0
+  app      = fly_app.frontend.id
+  hostname = "webdevandsausages.org"
+}
