@@ -104,5 +104,5 @@ resource "fly_ip" "frontend_ip" {
 
 resource "fly_cert" "frontend_cert" {
   app      = fly_app.frontend.id
-  hostname = "webdevandsausages.org"
+  hostname = "*.webdevandsausages.org"
 }
