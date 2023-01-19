@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      WORKSPACE: ${{ github.ref_name == 'master' && 'prod' || github.ref_name }}
+      WORKSPACE: ${{ github.ref_name == 'master' && 'staging' || 'prod' }}
       COMMIT_SHA: ${{ github.sha }}
       FIREBASE_SERVICEACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICEACCOUNT_KEY }}
       SECRETS_YAML: ${{ secrets.SECRETS_YAML }}
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-      WORKSPACE: ${{ github.ref_name == 'master' && 'prod' || github.ref_name }}
+      WORKSPACE: ${{ github.ref_name == 'master' && 'staging' || 'prod' }}
       COMMIT_SHA: ${{ github.sha }}
       PUBLIC_WDS_API_KEY: ${{ secrets.PUBLIC_WDS_API_KEY }}
     steps:
