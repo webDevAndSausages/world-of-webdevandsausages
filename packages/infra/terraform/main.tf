@@ -81,10 +81,6 @@ resource "fly_machine" "frontend_machine" {
         {
           port     = 443
           handlers = ["tls", "http"]
-        },
-        {
-          port     = 80
-          handlers = ["http"]
         }
       ]
     }
