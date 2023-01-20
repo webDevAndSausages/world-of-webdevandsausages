@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
+import org.jsoup.Jsoup
 import org.webdevandsausages.events.config.Secrets
 import org.webdevandsausages.events.dto.ContactDto
 import org.webdevandsausages.events.dto.EventDto
@@ -40,68 +41,25 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
         }
     }
 
-    fun sendMail2(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) =
+    fun sendMail(email: String, subject: String, templateName: String, emailData: Map<String, String>) =
         launch {
             val engine = PebbleEngine.Builder().build()
-            val compiledTemplate = engine.getTemplate("email-templates/event_invitation.html")
+            val compiledTemplate = engine.getTemplate("email-templates/${templateName}.html")
             val writer = StringWriter()
             compiledTemplate.evaluate(writer, emailData)
 
             val output = writer.toString()
+            val plainTextOutput = Jsoup.parse(output).wholeText()
 
             val client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_WEST_1).build()
             val request = SendEmailRequest().withDestination(Destination().withToAddresses(email)).withMessage(
                 Message().withBody(
                     Body().withHtml(Content().withCharset("UTF-8").withData(output))
-                        .withText(Content().withCharset("UTF-8").withData("Hello plain text"))
+                        .withText(Content().withCharset("UTF-8").withData(plainTextOutput))
                 ).withSubject(Content().withCharset("UTF-8").withData(subject))
             ).withSource("noreply@webdevandsausages.org")
             client.sendEmail(request)
             logger.info("Email sent to ${email}")
-        }
-
-    fun sendMail(email: String, name: String, subject: String, templateId: String, emailData: Map<String, String>) =
-        launch {
-            // this uses the new version 3 api for Sendgrid
-            // we need to copy over our old templates in Sendgrid to work in new api
-            if (sg != null) {
-                val to = Email().apply {
-                    setName(name)
-                    setEmail(email)
-                }
-
-                val from = Email().apply {
-                    setName("Richard Van Camp")
-                    setEmail("richard.vancamp@gmail.com")
-                }
-
-                val personalization = Personalization().apply {
-                    addTo(to)
-                    emailData.forEach {
-                        addDynamicTemplateData(it.key, it.value)
-                    }
-                }
-
-                val mail = Mail().apply {
-                    setSubject(subject)
-                    setFrom(from)
-                    setTemplateId(templateId)
-                    addPersonalization(personalization)
-                }
-
-                val request = Request().apply {
-                    method = Method.POST
-                    endpoint = "mail/send"
-                    body = mail.build()
-                }
-
-                try {
-                    val res = sg?.api(request)
-                    logger.info("Sendgrid api response ${res?.statusCode}")
-                } catch (e: Exception) {
-                    logger.error("Sending of email to sendgrid api failed: ${e.message}")
-                }
-            }
         }
 
     fun sendRegistrationEmail(event: Event, status: ParticipantStatus, participantDto: ParticipantDto) {
@@ -119,9 +77,8 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
         logger.info("Dispatching registration email to ${participantDto.email}")
         sendMail(
             participantDto.email,
-            participantDto.name,
             "Web Dev & Sausages Registration",
-            "d-91e5bf696190444d94f13e564fee4426",
+            "registration_confirmation",
             emailData
         )
 
@@ -141,9 +98,8 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
         logger.info("Dispatching cancellation email to ${participantDto.email}")
         sendMail(
             participantDto.email,
-            participantDto.name,
             "Web Dev & Sausages Registration",
-            "d-831c9bf56bcf4401893121910f177f0a",
+            "cancellation_confirmation",
             emailData
         )
     }
@@ -164,9 +120,8 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
 
         sendMail(
             participantDto.email,
-            participantDto.name,
             "Web Dev & Sausages Registration",
-            "d-f7fd0df79d1e49d39e177d599b0411e7",
+            "registration_update",
             emailData
         )
     }
@@ -177,9 +132,8 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
 
         sendMail(
             contact.email,
-            "",
             "Wed dev & sausage's mailing list confirmation",
-            "487d4c85-5cd0-4602-80e2-5120d2483f76",
+            "mailing_list_join_confirmation",
             emptyMap()
         )
     }

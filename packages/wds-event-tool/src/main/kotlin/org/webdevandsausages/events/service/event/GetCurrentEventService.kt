@@ -7,10 +7,7 @@ import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.domain.EventError
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.EventUpdateInDto
-import org.webdevandsausages.events.service.EmailService
-import org.webdevandsausages.events.service.registration.toText
 import org.webdevandsausages.events.utils.createLogger
-import org.webdevandsausages.events.utils.prettified
 
 /**
  * GetCurrentEventService should handle following updates
@@ -19,7 +16,7 @@ import org.webdevandsausages.events.utils.prettified
  *  3. If the event happened three days ago, close feedback
  */
 
-class GetCurrentEventService(val eventCRUD: EventCRUD, val emailService: EmailService) {
+class GetCurrentEventService(val eventCRUD: EventCRUD) {
     val logger = createLogger()
 
     @Suppress("UNCHECKED_CAST")
@@ -62,15 +59,6 @@ class GetCurrentEventService(val eventCRUD: EventCRUD, val emailService: EmailSe
     private fun getLatest(): Either<EventError, EventDto> = eventCRUD.findByIdOrLatest().fold({
         Either.Left(EventError.NotFound)
     }, {
-        val emailData = mapOf(
-            "action" to "REGISTERED",
-            "datetime" to "2022-12-01",
-            "location" to "ERIKOISMESTA",
-            "token" to "fake token",
-            "sponsor" to "gofore",
-            "subject" to "Moro!"
-        )
-        emailService.sendMail2("leo@leomelin.com", "", "Koe subject", "", emailData)
         Either.Right(it)
     })
 
