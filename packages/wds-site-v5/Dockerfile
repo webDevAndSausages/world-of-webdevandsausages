@@ -4,12 +4,13 @@ ARG WDS_API_KEY
 WORKDIR /opt/app
 RUN touch .env
 RUN echo 'PUBLIC_WDS_API_URL=""' >> .env
-RUN echo "PUBLIC_WDS_API_KEY=$WDS_API_KEY" >> .env
+RUN echo 'PUBLIC_WDS_API_KEY=""' >> .env
 RUN npm ci
 RUN npm run build
 
-FROM nginx:1.23.3
+FROM nginx:1.23.3-alpine-slim
 ARG WORKSPACE
+ARG WDS_API_KEY
 RUN mkdir /opt/frontend
 COPY --from=build /opt/app/build /opt/frontend
 RUN rm /etc/nginx/conf.d/default.conf
