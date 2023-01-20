@@ -15,3 +15,4 @@ COPY --from=build /opt/app/build /opt/frontend
 RUN rm /etc/nginx/conf.d/default.conf
 COPY --from=build /opt/app/wds-nginx.conf /etc/nginx/conf.d/default.conf
 RUN sed -i "s/\$WORKSPACE/$WORKSPACE/g" /etc/nginx/conf.d/default.conf
+RUN sed -i "s/\$WDS_KEY/$WDS_API_KEY/g" /etc/nginx/conf.d/default.conf

@@ -12,11 +12,21 @@ resource "fly_machine" "frontend_machine" {
   services = [
     {
       protocol      = "tcp"
-      internal_port = 80
+      internal_port = 443
       ports         = [
         {
           port     = 443
           handlers = ["tls", "http"]
+        }
+      ]
+    },
+    {
+      protocol      = "tcp"
+      internal_port = 80
+      ports         = [
+        {
+          port     = 80
+          handlers = ["http"]
         }
       ]
     }
