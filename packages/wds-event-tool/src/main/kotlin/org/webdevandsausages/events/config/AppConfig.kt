@@ -30,9 +30,8 @@ data class AppConfig(
             .set(ThreadLocalTransactionProvider(cp, true))
         val mapper = ObjectMapper(YAMLFactory()) // Enable YAML parsing
         mapper.registerModule(KotlinModule())
-        secrets = "secrets.yaml".asResourceStream()?.use { mapper.readValue(it, Secrets::class.java) }
+        secrets = Secrets(WDSApiKey = System.getenv("PUBLIC_WDS_API_KEY"))
         println("loading secrets")
-        println(secrets)
     }
 }
 
