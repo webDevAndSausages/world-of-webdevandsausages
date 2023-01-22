@@ -20,4 +20,4 @@ RUN rm ./events.tar
 RUN wget https://www.amazontrust.com/repository/SFSRootCAG2.pem && \
     keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -alias Root -import -noprompt -file SFSRootCAG2.pem && \
     rm SFSRootCAG2.pem
-ENTRYPOINT ["./events/bin/events", "-Dcom.amazonaws.sdk.disableCertChecking=true"]
+ENTRYPOINT ["./events/bin/events"]
