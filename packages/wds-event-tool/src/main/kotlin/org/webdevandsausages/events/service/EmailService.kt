@@ -6,7 +6,6 @@ import com.amazonaws.services.simpleemail.model.*
 import com.amazonaws.services.simpleemail.model.Content
 import com.github.michaelbull.result.getOr
 import com.github.michaelbull.result.runCatching
-import com.sendgrid.*
 import io.pebbletemplates.pebble.PebbleEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,11 +31,11 @@ val REGISTERED_SUBJECT = "$SUBJECT_INTRO You are successfully registered!"
 class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineScope(Dispatchers.Default) {
     private val logger = createLogger()
 
-    private val sg by lazy {
+    private val client by lazy {
         runCatching {
-            SendGrid(this.secrets?.sendgridApiKey)
+             AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_WEST_1).build()
         }.getOr {
-            logger.error("Could not initialize sendgrid")
+            logger.error("Could not initialize ses")
             null
         }
     }
@@ -51,15 +50,19 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
             val output = writer.toString()
             val plainTextOutput = Jsoup.parse(output).wholeText()
 
-            val client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_WEST_1).build()
             val request = SendEmailRequest().withDestination(Destination().withToAddresses(email)).withMessage(
                 Message().withBody(
                     Body().withHtml(Content().withCharset("UTF-8").withData(output))
                         .withText(Content().withCharset("UTF-8").withData(plainTextOutput))
                 ).withSubject(Content().withCharset("UTF-8").withData(subject))
             ).withSource("noreply@webdevandsausages.org")
-            client.sendEmail(request)
-            logger.info("Email sent to ${email}")
+            if (client != null) {
+                client?.sendEmail(request)
+                logger.info("Email sent to ${email}")
+            } else {
+                logger.error("Email client not initialized.. Cannot send email to ${email}")
+            }
+
         }
 
     fun sendRegistrationEmail(event: Event, status: ParticipantStatus, participantDto: ParticipantDto) {

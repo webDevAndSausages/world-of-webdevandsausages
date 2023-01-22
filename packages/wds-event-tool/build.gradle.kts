@@ -15,7 +15,6 @@ val coroutinesVersion = "1.3.3"
 val http4kVersion = "3.235.0"
 val log4jVersion = "2.13.0"
 val jacksonVersion = "2.10.1"
-val firebaseVersion = "6.6.0"
 val flywayCoreVersion = "5.2.4"
 val postgresqlDriverVersion = "42.2.5"
 val jooqVersion = "3.10.1"
@@ -88,11 +87,6 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-    /* firebase */
-    implementation("com.google.firebase:firebase-admin:$firebaseVersion")
-    implementation("com.google.firebase:firebase-admin:$firebaseVersion")
-    /* sendgrid */
-    implementation("com.sendgrid:sendgrid-java:4.3.0")
     /* db & jooq */
     implementation("org.flywaydb:flyway-core:$flywayCoreVersion")
     implementation("org.postgresql:postgresql:$postgresqlDriverVersion")

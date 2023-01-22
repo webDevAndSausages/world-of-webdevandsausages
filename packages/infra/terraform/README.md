@@ -10,6 +10,9 @@ export AWS_REGION="<AWS_REGION>"
 # FLY.IO
 export FLY_API_TOKEN="<FLY_TOKEN>"
 
+# GITHUB
+export GITHUB_TOKEN="<GITHUB_TOKEN>"
+
 ```
 
 2. Source the requested environment `source .env`

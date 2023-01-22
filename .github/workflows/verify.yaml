@@ -13,10 +13,10 @@ jobs:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       WORKSPACE: ${{ github.ref_name == 'master' && 'staging' || 'prod' }}
       COMMIT_SHA: ${{ github.sha }}
-      FIREBASE_SERVICEACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICEACCOUNT_KEY }}
-      SECRETS_YAML: ${{ secrets.SECRETS_YAML }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
     steps:
       - uses: actions/checkout@v3
       - name: Build the image
-        run: docker build --build-arg SECRETS_YAML="$SECRETS_YAML" --build-arg FIREBASE_SERVICEACCOUNT_KEY="$FIREBASE_SERVICEACCOUNT_KEY" .
+        run: docker build --build-arg AWS_SECRET_KEY="$AWS_SECRET_KEY" --build-arg AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --build-arg PUBLIC_WDS_API_KEY="$PUBLIC_WDS_API_KEY" .
         working-directory: packages/wds-event-tool
