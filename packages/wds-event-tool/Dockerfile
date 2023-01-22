@@ -16,4 +16,4 @@ WORKDIR /app
 COPY --from=build /home/gradle/project/build/distributions/events.tar .
 RUN tar -xf ./events.tar
 RUN rm ./events.tar
-ENTRYPOINT ["./events/bin/events"]
+ENTRYPOINT ["./events/bin/events", "-Dcom.amazonaws.sdk.disableCertChecking=true"]
