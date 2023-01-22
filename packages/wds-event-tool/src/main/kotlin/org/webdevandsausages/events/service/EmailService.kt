@@ -89,7 +89,7 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
             "Web Dev & Sausages Registration",
             "registration_confirmation",
             emailData
-        )
+        ).start()
 
     }
 
@@ -110,7 +110,7 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
             "Web Dev & Sausages Registration",
             "cancellation_confirmation",
             emailData
-        )
+        ).start()
     }
 
     /**
@@ -132,7 +132,7 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
             "Web Dev & Sausages Registration",
             "registration_update",
             emailData
-        )
+        ).start()
     }
 
     fun sendMailingListJoinConfirmation(contact: ContactDto) {
@@ -144,6 +144,6 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
             "Wed dev & sausage's mailing list confirmation",
             "mailing_list_join_confirmation",
             emptyMap()
-        )
+        ).start()
     }
 }
