@@ -42,6 +42,8 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
 
     fun sendMail(email: String, subject: String, templateName: String, emailData: Map<String, String>) =
         launch {
+            logger.info("Starting email sending process")
+
             val engine = PebbleEngine.Builder().build()
             val compiledTemplate = engine.getTemplate("email-templates/${templateName}.html")
             val writer = StringWriter()
@@ -49,6 +51,7 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
 
             val output = writer.toString()
             val plainTextOutput = Jsoup.parse(output).wholeText()
+            logger.info("Email templates compiled")
 
             val request = SendEmailRequest().withDestination(Destination().withToAddresses(email)).withMessage(
                 Message().withBody(
@@ -56,7 +59,10 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
                         .withText(Content().withCharset("UTF-8").withData(plainTextOutput))
                 ).withSubject(Content().withCharset("UTF-8").withData(subject))
             ).withSource("noreply@webdevandsausages.org")
+            logger.info("Email request built")
+
             if (client != null) {
+                logger.info("Send the email...")
                 client?.sendEmail(request)
                 logger.info("Email sent to ${email}")
             } else {
