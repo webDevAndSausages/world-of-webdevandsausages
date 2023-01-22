@@ -87,6 +87,10 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation("com.google.guava:guava:20.0")
+
     /* db & jooq */
     implementation("org.flywaydb:flyway-core:$flywayCoreVersion")
     implementation("org.postgresql:postgresql:$postgresqlDriverVersion")
