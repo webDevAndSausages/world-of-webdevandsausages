@@ -16,4 +16,8 @@ WORKDIR /app
 COPY --from=build /home/gradle/project/build/distributions/events.tar .
 RUN tar -xf ./events.tar
 RUN rm ./events.tar
+# Add missing AWS root cert to trust store
+RUN wget https://www.amazontrust.com/repository/SFSRootCAG2.pem && \
+    keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -alias Root -import -noprompt -file SFSRootCAG2.pem && \
+    rm SFSRootCAG2.pem
 ENTRYPOINT ["./events/bin/events", "-Dcom.amazonaws.sdk.disableCertChecking=true"]
