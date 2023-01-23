@@ -3,304 +3,510 @@
 
 <html lang="en">
 <head>
-<title>Web Dev & Sausages Reminder</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width">
+    <title>Web Dev & Sausages Reminder</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
 </head>
 <body>
-  <div><style type="text/css">
- <!--
- @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
- .rps_1aaa body, .rps_1aaa p, .rps_1aaa div
- {font-family:helvetica,arial,sans-serif;
-  font-size:14px}
-  .rps_1aaa body
-  {color:#000}
-  .rps_1aaa body a
-  {color:#000;
-   text-decoration:none}
-   .rps_1aaa p
-   {margin:0;
-    padding:0}
-    .rps_1aaa table.x_wrapper
-    {width:100%!important;
-     table-layout:fixed}
-     .rps_1aaa img.x_max-width
-     {max-width:100%!important}
-     .rps_1aaa .x_column.of-2
-     {width:50%}
-     .rps_1aaa .x_column.of-3
-     {width:33.333%}
-     .rps_1aaa .x_column.of-4
-     {width:25%}
-     @media screen and (max-width: 480px) {
-      .rps_1aaa .x_preheader .x_rightColumnContent, .rps_1aaa .x_footer .x_rightColumnContent
-      {text-align:left!important}
-      .rps_1aaa .x_preheader .x_rightColumnContent div, .rps_1aaa .x_preheader .x_rightColumnContent span, .rps_1aaa .x_footer .x_rightColumnContent div, .rps_1aaa .x_footer .x_rightColumnContent span
-      {text-align:left!important}
-      .rps_1aaa .x_preheader .x_rightColumnContent, .rps_1aaa .x_preheader .x_leftColumnContent
-      {font-size:80%!important;
-       padding:5px 0}
-       .rps_1aaa table.x_wrapper-mobile
-       {width:100%!important;
-        table-layout:fixed}
-        .rps_1aaa img.x_max-width
-        {height:auto!important;
-         max-width:480px!important}
-         .rps_1aaa a.x_bulletproof-button
-         {display:block!important;
-          width:auto!important;
-          font-size:80%;
-          padding-left:0!important;
-          padding-right:0!important}
-          .rps_1aaa .x_columns
-          {width:100%!important}
-          .rps_1aaa .x_column
-          {display:block!important;
-           width:100%!important;
-           padding-left:0!important;
-           padding-right:0!important;
-           margin-left:0!important;
-           margin-right:0!important}
+<div>
+    <style type="text/css">
+        <!--
+        @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
 
-          }
-          .rps_1aaa p
-          {padding-bottom:10px!important}
-          -->
-         </style>
-         <div class="rps_1aaa">
-          <div>
-           <center class="x_wrapper">
-            <div class="x_webkit">
-             <table cellpadding="0" cellspacing="0" border="0" width="100%" class="x_wrapper" bgcolor="#000">
-              <tbody>
-               <tr>
-                <td valign="top" bgcolor="#000" width="100%">
-                 <table width="100%" role="content-container" class="x_outer" align="center" cellpadding="0" cellspacing="0" border="0">
-                  <tbody>
-                   <tr>
-                    <td width="100%">
-                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                      <tbody>
-                       <tr>
-                        <td>
-                         <table width="100%" cellpadding="0" cellspacing="0" border="0" align="center" style="width:100%; max-width:800px">
-                          <tbody>
-                           <tr>
-                            <td role="modules-container" bgcolor="#000" width="100%" align="left" style="padding:0px 0px 0px 0px; color:#000; text-align:left">
-                             <table class="x_wrapper" role="module" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed">
-                              <tbody>
-                               <tr>
-                                <td valign="top" align="center" style="font-size:6px; line-height:10px; padding:0px 0px 0px 0px">
-                                 <a href="https://www.webdevandsausages.org/" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable"><img data-imagetype="External" src="https://storage.googleapis.com/wds-event-tool.appspot.com/wds-logo-rgb.png" class="x_max-width" border="0" alt="Web Dev &amp; Sausages" width="800" style="display:block; color:#000000; text-decoration:none; font-family:Helvetica,arial,sans-serif; font-size:16px; max-width:100%!important; width:100%; height:auto!important"></a>
-                                </td>
-                               </tr>
-                              </tbody>
-                             </table>
-                             <table class="x_module x_preheader x_preheader-hide" role="module" border="0" cellpadding="0" cellspacing="0" width="100%" style="display:none!important; visibility:hidden; opacity:0; color:transparent; height:0; width:0">
-                              <tbody>
-                               <tr>
-                                <td role="module-content">
-                                 <p>Web Dev &amp; Sausages Volume 15</p>
-                                </td>
-                               </tr>
-                              </tbody>
-                             </table>
-                             <table class="x_module" role="module" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed">
-                              <tbody>
-                               <tr>
-                                <td role="module-content" bgcolor="" style="padding:0px 0px 0px 0px"></td>
-                               </tr>
-                              </tbody>
-                             </table>
-                             <table class="x_module" role="module" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed">
-                              <tbody>
-                               <tr>
-                                <td height="100%" valign="top" bgcolor="#000" style="background-color:#000; padding:0px 20px 0px 20px; text-align:justify">
-                                 <h1 style="text-align:center;margin:0 0 24px 0; font-size: 24px;text-transform: uppercase;"><span style="color:#00bcdd"><span style="font-family:quicksand,geneva,sans-serif">Volume 15</span></span>
-                                 </h1>
-                                </td>
-                               </tr>
-                              </tbody>
-                             </table>
-                             <table class="x_module" role="module" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed">
-                              <tbody>
-                               <tr>
-                                <td height="100%" valign="top" bgcolor="#000" style="background-color:#000; padding:0 40px 40px 40px; line-height:22px; text-align:center">
-                                 <style type="text/css">
-                                  <!--
-                                  .rps_1aaa .x_sg-campaigns p.x_p1
-                                  {margin:0px 0px 11px 0px;
-                                   text-align:center;
-                                   line-height:30px;
-                                   font:18px Verdana;
-                                   color:#fff}
-                                   .rps_1aaa .x_sg-campaigns p.x_p2
-                                   {margin:0px 0px 11px 0px;
-                                    text-align:center;
-                                    line-height:7px;
-                                    font:18px Verdana;
-                                    color:#000000;
-                                    min-height:22px}
-                                    .rps_1aaa .x_sg-campaigns span.x_s1
-                                    {font-kerning:none}
-                                    -->
-                                   </style>
+        .rps_1aaa body, .rps_1aaa p, .rps_1aaa div {
+            font-family: helvetica, arial, sans-serif;
+            font-size: 14px
+        }
 
-                                   <p class="x_p1" style="line-height: 1.5;"><span style="font-family:open sans,sans-serif"><span style="font-size:18px"><span style="letter-spacing:1.1px; color:#fff">
-                                    WD&S is happening. Thursday, 18.08.2022, has come. Thrive is hosting at <a href="https://goo.gl/maps/Z9AFv7NdXv1vLXL3A" target="_blank"  style="text-decoration:none!important;"><span style="font-family:open sans,sans-serif"><span style="font-size:18px"><span style="letter-spacing:1.1px; color:#ff00ff; text-decoration:none!important;">Kelloportinkatu 1 D, Tampere (Futurice office Tampere)</span></span></span></a>.</span></span></span>
-                                   </p>
+        .rps_1aaa body {
+            color: #000
+        }
 
-                                   <p class="x_p1" style="margin: 16px 0 0 0;"><span style="font-family:open sans,sans-serif"><span style="font-size:18px"><span style="letter-spacing:1.1px; color:#fff">
+        .rps_1aaa body a {
+            color: #000;
+            text-decoration: none
+        }
+
+        .rps_1aaa p {
+            margin: 0;
+            padding: 0
+        }
+
+        .rps_1aaa table.x_wrapper {
+            width: 100% !important;
+            table-layout: fixed
+        }
+
+        .rps_1aaa img.x_max-width {
+            max-width: 100% !important
+        }
+
+        .rps_1aaa .x_column.of-2 {
+            width: 50%
+        }
+
+        .rps_1aaa .x_column.of-3 {
+            width: 33.333%
+        }
+
+        .rps_1aaa .x_column.of-4 {
+            width: 25%
+        }
+
+        @media screen and (max-width: 480px) {
+            .rps_1aaa .x_preheader .x_rightColumnContent, .rps_1aaa .x_footer .x_rightColumnContent {
+                text-align: left !important
+            }
+
+            .rps_1aaa .x_preheader .x_rightColumnContent div, .rps_1aaa .x_preheader .x_rightColumnContent span, .rps_1aaa .x_footer .x_rightColumnContent div, .rps_1aaa .x_footer .x_rightColumnContent span {
+                text-align: left !important
+            }
+
+            .rps_1aaa .x_preheader .x_rightColumnContent, .rps_1aaa .x_preheader .x_leftColumnContent {
+                font-size: 80% !important;
+                padding: 5px 0
+            }
+
+            .rps_1aaa table.x_wrapper-mobile {
+                width: 100% !important;
+                table-layout: fixed
+            }
+
+            .rps_1aaa img.x_max-width {
+                height: auto !important;
+                max-width: 480px !important
+            }
+
+            .rps_1aaa a.x_bulletproof-button {
+                display: block !important;
+                width: auto !important;
+                font-size: 80%;
+                padding-left: 0 !important;
+                padding-right: 0 !important
+            }
+
+            .rps_1aaa .x_columns {
+                width: 100% !important
+            }
+
+            .rps_1aaa .x_column {
+                display: block !important;
+                width: 100% !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important
+            }
+
+        }
+
+        .rps_1aaa p {
+            padding-bottom: 10px !important
+        }
+
+        -->
+    </style>
+    <div class="rps_1aaa">
+        <div>
+            <center class="x_wrapper">
+                <div class="x_webkit">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%" class="x_wrapper" bgcolor="#000">
+                        <tbody>
+                        <tr>
+                            <td valign="top" bgcolor="#000" width="100%">
+                                <table width="100%" role="content-container" class="x_outer" align="center"
+                                       cellpadding="0" cellspacing="0" border="0">
+                                    <tbody>
+                                    <tr>
+                                        <td width="100%">
+                                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                                               align="center" style="width:100%; max-width:800px">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td role="modules-container" bgcolor="#000" width="100%"
+                                                                    align="left"
+                                                                    style="padding:0px 0px 0px 0px; color:#000; text-align:left">
+                                                                    <table class="x_wrapper" role="module" border="0"
+                                                                           cellpadding="0" cellspacing="0" width="100%"
+                                                                           style="table-layout:fixed">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td valign="top" align="center"
+                                                                                style="font-size:6px; line-height:10px; padding:0px 0px 0px 0px">
+                                                                                <a href="https://www.webdevandsausages.org/"
+                                                                                   target="_blank"
+                                                                                   rel="noopener noreferrer"
+                                                                                   data-auth="NotApplicable"><img
+                                                                                        data-imagetype="External"
+                                                                                        src="https://storage.googleapis.com/wds-event-tool.appspot.com/wds-logo-rgb.png"
+                                                                                        class="x_max-width" border="0"
+                                                                                        alt="Web Dev &amp; Sausages"
+                                                                                        width="800"
+                                                                                        style="display:block; color:#000000; text-decoration:none; font-family:Helvetica,arial,sans-serif; font-size:16px; max-width:100%!important; width:100%; height:auto!important"></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <table class="x_module x_preheader x_preheader-hide"
+                                                                           role="module" border="0" cellpadding="0"
+                                                                           cellspacing="0" width="100%"
+                                                                           style="display:none!important; visibility:hidden; opacity:0; color:transparent; height:0; width:0">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td role="module-content">
+                                                                                <p>Web Dev &amp; Sausages Volume 15</p>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <table class="x_module" role="module" border="0"
+                                                                           cellpadding="0" cellspacing="0" width="100%"
+                                                                           style="table-layout:fixed">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td role="module-content" bgcolor=""
+                                                                                style="padding:0px 0px 0px 0px"></td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <table class="x_module" role="module" border="0"
+                                                                           cellpadding="0" cellspacing="0" width="100%"
+                                                                           style="table-layout:fixed">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td height="100%" valign="top"
+                                                                                bgcolor="#000"
+                                                                                style="background-color:#000; padding:0px 20px 0px 20px; text-align:justify">
+                                                                                <h1 style="text-align:center;margin:0 0 24px 0; font-size: 24px;text-transform: uppercase;">
+                                                                                    <span style="color:#00bcdd"><span
+                                                                                            style="font-family:quicksand,geneva,sans-serif">Volume 15</span></span>
+                                                                                </h1>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <table class="x_module" role="module" border="0"
+                                                                           cellpadding="0" cellspacing="0" width="100%"
+                                                                           style="table-layout:fixed">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td height="100%" valign="top"
+                                                                                bgcolor="#000"
+                                                                                style="background-color:#000; padding:0 40px 40px 40px; line-height:22px; text-align:center">
+                                                                                <style type="text/css">
+                                                                                    <!--
+                                                                                    .rps_1aaa .x_sg-campaigns p.x_p1 {
+                                                                                        margin: 0px 0px 11px 0px;
+                                                                                        text-align: center;
+                                                                                        line-height: 30px;
+                                                                                        font: 18px Verdana;
+                                                                                        color: #fff
+                                                                                    }
+
+                                                                                    .rps_1aaa .x_sg-campaigns p.x_p2 {
+                                                                                        margin: 0px 0px 11px 0px;
+                                                                                        text-align: center;
+                                                                                        line-height: 7px;
+                                                                                        font: 18px Verdana;
+                                                                                        color: #000000;
+                                                                                        min-height: 22px
+                                                                                    }
+
+                                                                                    .rps_1aaa .x_sg-campaigns span.x_s1 {
+                                                                                        font-kerning: none
+                                                                                    }
+
+                                                                                    -->
+                                                                                </style>
+
+                                                                                <p class="x_p1"
+                                                                                   style="line-height: 1.5;"><span
+                                                                                        style="font-family:open sans,sans-serif"><span
+                                                                                        style="font-size:18px"><span
+                                                                                        style="letter-spacing:1.1px; color:#fff">
+                                    WD&S is happening. Thursday, 18.08.2022, has come. Thrive is hosting at <a
+                                                                                        href="https://goo.gl/maps/Z9AFv7NdXv1vLXL3A"
+                                                                                        target="_blank"
+                                                                                        style="text-decoration:none!important;"><span
+                                                                                        style="font-family:open sans,sans-serif"><span
+                                                                                        style="font-size:18px"><span
+                                                                                        style="letter-spacing:1.1px; color:#ff00ff; text-decoration:none!important;">Kelloportinkatu 1 D, Tampere (Futurice office Tampere)</span></span></span></a>.</span></span></span>
+                                                                                </p>
+
+                                                                                <p class="x_p1"
+                                                                                   style="margin: 16px 0 0 0;"><span
+                                                                                        style="font-family:open sans,sans-serif"><span
+                                                                                        style="font-size:18px"><span
+                                                                                        style="letter-spacing:1.1px; color:#fff">
                                    Here is the evening's schedule, maybe -- times are approximate.
                                    </span></span></span>
-                                   </p>
+                                                                                </p>
 
-                                  <table style="padding:6px 0 32px;" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff"><span style="font-weight:bold;color:#00bcdd;">18:00</span></span></td>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff">Enjoy delicious food and drinks, including as always some excellent beers. Please bring back the empty cans/bottles before you take the next one!</span></td>
-                                    </tr>
+                                                                                <table style="padding:6px 0 32px;"
+                                                                                       cellpadding="0" cellspacing="0"
+                                                                                       border="0">
+                                                                                    <tr>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff"><span
+                                                                                                    style="font-weight:bold;color:#00bcdd;">18:00</span></span>
+                                                                                        </td>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff">Enjoy delicious food and drinks, including as always some excellent beers. Please bring back the empty cans/bottles before you take the next one!</span>
+                                                                                        </td>
+                                                                                    </tr>
 
-                                    <tr>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff"><span style="font-weight:bold;color:#00bcdd;">18:30</span></span></td>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff">Welcome words from our sponsor, Thriv.</span></td>
-                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff"><span
+                                                                                                    style="font-weight:bold;color:#00bcdd;">18:30</span></span>
+                                                                                        </td>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff">Welcome words from our sponsor, Thriv.</span>
+                                                                                        </td>
+                                                                                    </tr>
 
-                                    <tr>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff"><span style="font-weight:bold;color:#00bcdd;">18:50</span></span></td>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff">Aatu Hiekkalinna - <span style="font-style: italic;">Corporate Hacking Expeditions
+                                                                                    <tr>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff"><span
+                                                                                                    style="font-weight:bold;color:#00bcdd;">18:50</span></span>
+                                                                                        </td>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                       <span style="letter-spacing:1.1px; color:#fff">Aatu Hiekkalinna - <span
+                                               style="font-style: italic;">Corporate Hacking Expeditions
 </span></span></td>
-                                    </tr>
+                                                                                    </tr>
 
-                                    <tr>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff"><span style="font-weight:bold;color:#00bcdd;">19:30</span></span></td>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff">Robert Siipola - <span style="font-style: italic;">Better search with machine learning: Sentence transformers and vector search</span></span></td>
-                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff"><span
+                                                                                                    style="font-weight:bold;color:#00bcdd;">19:30</span></span>
+                                                                                        </td>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff">Robert Siipola - <span
+                                                                                                    style="font-style: italic;">Better search with machine learning: Sentence transformers and vector search</span></span>
+                                                                                        </td>
+                                                                                    </tr>
 
-                                    <tr>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff"><span style="font-weight:bold;color:#00bcdd;">20:10</span></span></td>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff">Farzad Yousefzadeh - <span style="font-style: italic;">Visual Programming and Executable Models</span></span></td>
-                                    </tr>
+                                                                                    <tr>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff"><span
+                                                                                                    style="font-weight:bold;color:#00bcdd;">20:10</span></span>
+                                                                                        </td>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff">Farzad Yousefzadeh - <span
+                                                                                                    style="font-style: italic;">Visual Programming and Executable Models</span></span>
+                                                                                        </td>
+                                                                                    </tr>
 
-                                    <tr>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff"><span style="font-weight:bold;color:#00bcdd;">20:50</span></span></td>
-                                      <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
-                                       <span style="letter-spacing:1.1px; color:#fff">Be friendly and meet people!</span></td>
-                                    </tr>
-                                  </table>
+                                                                                    <tr>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff"><span
+                                                                                                    style="font-weight:bold;color:#00bcdd;">20:50</span></span>
+                                                                                        </td>
+                                                                                        <td style="padding:12px 6px 0 0;font-size:18px;vertical-align: top; text-align:left;">
+                                                                                            <span style="letter-spacing:1.1px; color:#fff">Be friendly and meet people!</span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
 
-                                   <h2 class="x_p1" style="text-align:center;margin:16px 0 24px 0; font-size: 24px;text-transform: uppercase;"><span style="font-family:quicksand,geneva,sans-serif; color:#00bcdd; padding-bottom:10px"><span style="color:#00bcdd"><span style="letter-spacing:1.1px">Important</span></span></span>
-                                   </h2>
+                                                                                <h2 class="x_p1"
+                                                                                    style="text-align:center;margin:16px 0 24px 0; font-size: 24px;text-transform: uppercase;">
+                                                                                    <span style="font-family:quicksand,geneva,sans-serif; color:#00bcdd; padding-bottom:10px"><span
+                                                                                            style="color:#00bcdd"><span
+                                                                                            style="letter-spacing:1.1px">Important</span></span></span>
+                                                                                </h2>
 
-                                   <p class="x_p1" style="line-height: 1.5;margin:0 0 16px 0;"><span style="font-family:open sans,sans-serif"><span style="font-size:18px"><span style="letter-spacing:1.1px; color:#fff">
+                                                                                <p class="x_p1"
+                                                                                   style="line-height: 1.5;margin:0 0 16px 0;"><span
+                                                                                        style="font-family:open sans,sans-serif"><span
+                                                                                        style="font-size:18px"><span
+                                                                                        style="letter-spacing:1.1px; color:#fff">
                                     If you need help, e.g. you are locked out, call Leo 0445176923 or Rick 040776133.</span></span></span>
-                                   </p>
+                                                                                </p>
 
-                                   <p class="x_p1" style="line-height: 1.5;margin:0 0 16px 0;"><span style="font-family:open sans,sans-serif"><span style="font-size:18px"><span style="letter-spacing:1.1px; color:#fff">
-                                     If you can't make it, <a href="https://www.webdevandsausages.org/" target="_blank"  style="text-decoration:none!important;"><span style="font-family:open sans,sans-serif"><span style="font-size:18px"><span style="letter-spacing:1.1px; color:#ff00ff; text-decoration:none!important;">please cancel your registration</span></span></span></a>. To do so, click "cancel" on our website and enter the token you received by email when registering. If you have lost the token, email richard.vancamp at gmail dot com.</span></span></span>
-                                   </p>
+                                                                                <p class="x_p1"
+                                                                                   style="line-height: 1.5;margin:0 0 16px 0;"><span
+                                                                                        style="font-family:open sans,sans-serif"><span
+                                                                                        style="font-size:18px"><span
+                                                                                        style="letter-spacing:1.1px; color:#fff">
+                                     If you can't make it, <a href="https://www.webdevandsausages.org/" target="_blank"
+                                                              style="text-decoration:none!important;"><span
+                                                                                        style="font-family:open sans,sans-serif"><span
+                                                                                        style="font-size:18px"><span
+                                                                                        style="letter-spacing:1.1px; color:#ff00ff; text-decoration:none!important;">please cancel your registration</span></span></span></a>. To do so, click "cancel" on our website and enter the token you received by email when registering. If you have lost the token, email richard.vancamp at gmail dot com.</span></span></span>
+                                                                                </p>
 
-                                   <p class="x_p1" style="line-height: 1.5;"><span style="font-family:open sans,sans-serif"><span style="font-size:18px"><span style="letter-spacing:1.1px; color:#fff">
+                                                                                <p class="x_p1"
+                                                                                   style="line-height: 1.5;"><span
+                                                                                        style="font-family:open sans,sans-serif"><span
+                                                                                        style="font-size:18px"><span
+                                                                                        style="letter-spacing:1.1px; color:#fff">
                                      See you there!</span></span></span>
-                                   </p>
-                                  </td>
-                                 </tr>
-                                </tbody>
-                               </table>
+                                                                                </p>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
 
-                               <table border="0" cellpadding="0" cellspacing="0" class="x_module" role="module" width="100%" style="table-layout:fixed">
-                                <tbody>
-                                 <tr>
-                                  <td align="center" bgcolor="#000" class="x_outer-td" style="padding:0px; background-color:#000">
-                                   <table border="0" cellpadding="0" cellspacing="0" class="x_button-css__deep-table___2OZyb x_wrapper-mobile" style="text-align:center">
-                                    <tbody>
-                                     <tr>
-                                      <td align="center" bgcolor="#52BDF6" class="x_inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit">
-                                       <a href="https://www.webdevandsausages.org/" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" style="background-color:#ff00ff; border-radius:0px;  color:#fff; display:inline-block; font-family:Lucida Console, Monaco, monospace; font-size:16px; font-weight:bold; font-weight:600; width:280px; line-height:30px; padding:8px 0; text-align:center; text-decoration:none">CHECK US OUT</a> </td>
-                                      </tr>
-                                     </tbody>
-                                    </table>
-                                   </td>
-                                  </tr>
-                                 </tbody>
+                                                                    <table border="0" cellpadding="0" cellspacing="0"
+                                                                           class="x_module" role="module" width="100%"
+                                                                           style="table-layout:fixed">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td align="center" bgcolor="#000"
+                                                                                class="x_outer-td"
+                                                                                style="padding:0px; background-color:#000">
+                                                                                <table border="0" cellpadding="0"
+                                                                                       cellspacing="0"
+                                                                                       class="x_button-css__deep-table___2OZyb x_wrapper-mobile"
+                                                                                       style="text-align:center">
+                                                                                    <tbody>
+                                                                                    <tr>
+                                                                                        <td align="center"
+                                                                                            bgcolor="#52BDF6"
+                                                                                            class="x_inner-td"
+                                                                                            style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit">
+                                                                                            <a href="https://www.webdevandsausages.org/"
+                                                                                               target="_blank"
+                                                                                               rel="noopener noreferrer"
+                                                                                               data-auth="NotApplicable"
+                                                                                               style="background-color:#ff00ff; border-radius:0px;  color:#fff; display:inline-block; font-family:Lucida Console, Monaco, monospace; font-size:16px; font-weight:bold; font-weight:600; width:280px; line-height:30px; padding:8px 0; text-align:center; text-decoration:none">CHECK
+                                                                                                US OUT</a></td>
+                                                                                    </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+
+                                                                    <table class="x_module" role="module" align="center"
+                                                                           border="0" cellpadding="0" cellspacing="0"
+                                                                           width="100%" style="table-layout:fixed">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td valign="top"
+                                                                                style="padding:0px 0px 0px 0px; font-size:6px; line-height:10px; background-color:#000">
+                                                                                <table align="center">
+                                                                                    <tbody>
+                                                                                    <tr>
+                                                                                        <td style="padding:0 5px; margin:0">
+                                                                                            <a href="https://www.facebook.com/webDevAndSausages/"
+                                                                                               target="_blank"
+                                                                                               rel="noopener noreferrer"
+                                                                                               data-auth="NotApplicable"
+                                                                                               role="social-icon-link"
+                                                                                               alt="Facebook"
+                                                                                               title="Facebook "
+                                                                                               style="-webkit-border-radius:0px; -moz-border-radius:0px; border-radius:0px; display:inline-block; background-color:#3C5A99; margin-top:20px"><img
+                                                                                                    data-imagetype="External"
+                                                                                                    src="https://marketing-image-production.s3.amazonaws.com/social/white/facebook.png"
+                                                                                                    role="social-icon"
+                                                                                                    alt="Facebook"
+                                                                                                    title="Facebook "
+                                                                                                    height="30"
+                                                                                                    width="30" style="">
+                                                                                            </a></td>
+                                                                                        <td style="padding:0px 5px"><a
+                                                                                                href="https://twitter.com/webdevnsausages/"
+                                                                                                target="_blank"
+                                                                                                rel="noopener noreferrer"
+                                                                                                data-auth="NotApplicable"
+                                                                                                role="social-icon-link"
+                                                                                                alt="Twitter"
+                                                                                                title="Twitter "
+                                                                                                style="-webkit-border-radius:0px; -moz-border-radius:0px; border-radius:0px; display:inline-block; background-color:#1DA1F2; margin-top:20px"><img
+                                                                                                data-imagetype="External"
+                                                                                                src="https://marketing-image-production.s3.amazonaws.com/social/white/twitter.png"
+                                                                                                role="social-icon"
+                                                                                                alt="Twitter"
+                                                                                                title="Twitter "
+                                                                                                height="30" width="30"
+                                                                                                style="">
+                                                                                        </a></td>
+                                                                                    </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                    <table class="x_wrapper" role="module" border="0"
+                                                                           cellpadding="0" cellspacing="0" width="100%"
+                                                                           style="table-layout:fixed">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td valign="top" align="center"
+                                                                                style="font-size:6px; line-height:10px; padding:64px 0px 64px 0px">
+                                                                                <a href="https://www.thriv.dev/"
+                                                                                   target="_blank"
+                                                                                   rel="noopener noreferrer"
+                                                                                   data-auth="NotApplicable"><img
+                                                                                        data-imagetype="External"
+                                                                                        src="https://storage.googleapis.com/webdevandsausages.appspot.com/thriv.png"
+                                                                                        class="x_max-width" border="0"
+                                                                                        alt="MyLab" width="15000"
+                                                                                        style="display:block; color:#000000; text-decoration:none; font-family:Helvetica,arial,sans-serif; font-size:16px; max-width:33%!important; width:33%; height:auto!important"></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+
+                                                                    <div class="x_module x_unsubscribe-css__unsubscribe___2CDlR"
+                                                                         role="module"
+                                                                         style="background-color:#000; color:#ffffff; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:center">
+                                                                        <p style="font-family:verdana,geneva,sans-serif; font-size:12px; line-height:20px">
+                                                                            <a href="<%asm_group_unsubscribe_raw_url%>"
+                                                                               target="_blank" rel="noopener noreferrer"
+                                                                               data-auth="NotApplicable"
+                                                                               class="x_Unsubscribe--unsubscribeLink"
+                                                                               style="color:#ff00ff; text-decoration:none!important;">Unsubscribe</a>
+                                                                            - <a href="<%asm_preferences_raw_url%>"
+                                                                                 target="_blank"
+                                                                                 rel="noopener noreferrer"
+                                                                                 data-auth="NotApplicable"
+                                                                                 class="x_Unsubscribe--unsubscribePreferences"
+                                                                                 style="color:#ff00ff; text-decoration:none!important;">
+                                                                            Subscription Preferences</a></p>
+                                                                    </div>
+                                                                    <table class="x_module" role="module" border="0"
+                                                                           cellpadding="0" cellspacing="0" width="100%"
+                                                                           style="table-layout:fixed">
+                                                                        <tbody>
+                                                                        <tr>
+                                                                            <td role="module-content" bgcolor=""
+                                                                                style="padding:0px 0px 30px 0px"></td>
+                                                                        </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    </tbody>
                                 </table>
-
-
-                                <table class="x_module" role="module" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed">
-                                 <tbody>
-                                  <tr>
-                                   <td valign="top" style="padding:0px 0px 0px 0px; font-size:6px; line-height:10px; background-color:#000">
-                                    <table align="center">
-                                     <tbody>
-                                      <tr>
-                                       <td style="padding:0 5px; margin:0"><a href="https://www.facebook.com/webDevAndSausages/" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" role="social-icon-link" alt="Facebook" title="Facebook " style="-webkit-border-radius:0px; -moz-border-radius:0px; border-radius:0px; display:inline-block; background-color:#3C5A99; margin-top:20px"><img data-imagetype="External" src="https://marketing-image-production.s3.amazonaws.com/social/white/facebook.png" role="social-icon" alt="Facebook" title="Facebook " height="30" width="30" style="">
-                                       </a></td>
-                                       <td style="padding:0px 5px"><a href="https://twitter.com/webdevnsausages/" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" role="social-icon-link" alt="Twitter" title="Twitter " style="-webkit-border-radius:0px; -moz-border-radius:0px; border-radius:0px; display:inline-block; background-color:#1DA1F2; margin-top:20px"><img data-imagetype="External" src="https://marketing-image-production.s3.amazonaws.com/social/white/twitter.png" role="social-icon" alt="Twitter" title="Twitter " height="30" width="30" style="">
-                                       </a></td>
-                                      </tr>
-                                     </tbody>
-                                    </table>
-                                   </td>
-                                  </tr>
-                                 </tbody>
-                                </table>
-
-                                <table class="x_wrapper" role="module" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed">
-																																		<tbody>
-																																			<tr>
-																																				<td valign="top" align="center" style="font-size:6px; line-height:10px; padding:64px 0px 64px 0px">
-																																					<a href="https://www.thriv.dev/" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable"><img data-imagetype="External" src="https://storage.googleapis.com/webdevandsausages.appspot.com/thriv.png" class="x_max-width" border="0" alt="MyLab" width="15000" style="display:block; color:#000000; text-decoration:none; font-family:Helvetica,arial,sans-serif; font-size:16px; max-width:33%!important; width:33%; height:auto!important"></a>
-																																				</td>
-																																			</tr>
-																																		</tbody>
-																																	</table>
-                                
-                                <div class="x_module x_unsubscribe-css__unsubscribe___2CDlR" role="module" style="background-color:#000; color:#ffffff; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:center">
-                                 <p style="font-family:verdana,geneva,sans-serif; font-size:12px; line-height:20px">
-                                  <a href="<%asm_group_unsubscribe_raw_url%>" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" class="x_Unsubscribe--unsubscribeLink" style="color:#ff00ff; text-decoration:none!important;">Unsubscribe</a>
-                                  - <a href="<%asm_preferences_raw_url%>" target="_blank" rel="noopener noreferrer" data-auth="NotApplicable" class="x_Unsubscribe--unsubscribePreferences" style="color:#ff00ff; text-decoration:none!important;">
-                                  Subscription Preferences</a> </p>
-                                 </div>
-                                 <table class="x_module" role="module" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout:fixed">
-                                  <tbody>
-                                   <tr>
-                                    <td role="module-content" bgcolor="" style="padding:0px 0px 30px 0px"></td>
-                                   </tr>
-                                  </tbody>
-                                 </table>
-                                </td>
-                               </tr>
-                              </tbody>
-                             </table>
                             </td>
-                           </tr>
-                          </tbody>
-                         </table>
-                        </td>
-                       </tr>
-                      </tbody>
-                     </table>
-                    </td>
-                   </tr>
-                  </tbody>
-                 </table>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-               </center>
-              </div>
-             </div>
-            </div>
+            </center>
+        </div>
+    </div>
+</div>
 </body>
 </html>
-  
