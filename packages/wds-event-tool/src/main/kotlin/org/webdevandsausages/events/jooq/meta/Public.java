@@ -11,6 +11,7 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import meta.tables.Contact;
+import meta.tables.EmailBlacklist;
 import meta.tables.Event;
 import meta.tables.FlywaySchemaHistory;
 import meta.tables.Participant;
@@ -34,7 +35,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 422590914;
+    private static final long serialVersionUID = 2096345894;
 
     /**
      * The reference instance of <code>public</code>
@@ -45,6 +46,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.contact</code>.
      */
     public final Contact CONTACT = meta.tables.Contact.CONTACT;
+
+    /**
+     * The table <code>public.email_blacklist</code>.
+     */
+    public final EmailBlacklist EMAIL_BLACKLIST = meta.tables.EmailBlacklist.EMAIL_BLACKLIST;
 
     /**
      * The table <code>public.event</code>.
@@ -102,6 +108,7 @@ public class Public extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             Contact.CONTACT,
+            EmailBlacklist.EMAIL_BLACKLIST,
             Event.EVENT,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Participant.PARTICIPANT);

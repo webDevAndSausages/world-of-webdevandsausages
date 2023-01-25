@@ -7,6 +7,7 @@ package meta;
 import javax.annotation.Generated;
 
 import meta.tables.Contact;
+import meta.tables.EmailBlacklist;
 import meta.tables.Event;
 import meta.tables.FlywaySchemaHistory;
 import meta.tables.Participant;
@@ -29,6 +30,11 @@ public class Tables {
      * The table <code>public.contact</code>.
      */
     public static final Contact CONTACT = meta.tables.Contact.CONTACT;
+
+    /**
+     * The table <code>public.email_blacklist</code>.
+     */
+    public static final EmailBlacklist EMAIL_BLACKLIST = meta.tables.EmailBlacklist.EMAIL_BLACKLIST;
 
     /**
      * The table <code>public.event</code>.

@@ -9,6 +9,7 @@ import org.jooq.util.jaxb.Generator
 import org.jooq.util.jaxb.Jdbc
 import org.jooq.util.jaxb.Strategy
 import org.jooq.util.jaxb.Target
+import com.rohanprabhu.gradle.plugins.kdjooq.JooqCodeGenerationTask
 
 val kotlinVersion = "1.3.61"
 val coroutinesVersion = "1.3.3"
@@ -186,3 +187,15 @@ compileKotlin.kotlinOptions.jvmTarget = "1.8"
 
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions.jvmTarget = "1.8"
+
+
+tasks.getByName<JooqCodeGenerationTask>("jooq-codegen-meta") {
+    outputs.upToDateWhen {
+        false
+    }
+    dependsOn("flywayMigrate")
+}
+
+tasks.getByName<JavaExec>("run") {
+    exclude('jooq-codege-meta')
+}
