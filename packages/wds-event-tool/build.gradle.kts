@@ -190,12 +190,9 @@ compileTestKotlin.kotlinOptions.jvmTarget = "1.8"
 
 
 tasks.getByName<JooqCodeGenerationTask>("jooq-codegen-meta") {
+    enabled = gradle.startParameter.taskNames.contains("jooq-codegen-meta")
     outputs.upToDateWhen {
         false
     }
     dependsOn("flywayMigrate")
-}
-
-tasks.getByName<JavaExec>("run") {
-    exclude('jooq-codege-meta')
 }
