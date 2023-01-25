@@ -14,6 +14,7 @@ import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
 import org.jsoup.Jsoup
 import org.webdevandsausages.events.config.Secrets
+import org.webdevandsausages.events.dao.ContactCRUD
 import org.webdevandsausages.events.dto.ContactDto
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
@@ -28,12 +29,13 @@ val SUBJECT_INTRO = "Web Dev and Sausages:"
 val WAIT_LISTED_SUBJECT = "$SUBJECT_INTRO You are currently on the waiting list."
 val REGISTERED_SUBJECT = "$SUBJECT_INTRO You are successfully registered!"
 
-class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineScope(Dispatchers.Default) {
+class EmailService(private val secrets: Secrets?, private val contactCRUD: ContactCRUD) :
+    CoroutineScope by CoroutineScope(Dispatchers.Default) {
     private val logger = createLogger()
 
     private val client by lazy {
         runCatching {
-             AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_WEST_1).build()
+            AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_WEST_1).build()
         }.getOr {
             logger.error("Could not initialize ses")
             null
@@ -42,33 +44,36 @@ class EmailService(private val secrets: Secrets?) : CoroutineScope by CoroutineS
 
     fun sendMail(email: String, subject: String, templateName: String, emailData: Map<String, String>) =
         launch {
-            logger.info("Starting email sending process")
+            if (!contactCRUD.isEmailBlacklisted(email)) {
+                logger.info("Starting email sending process")
 
-            val engine = PebbleEngine.Builder().build()
-            val compiledTemplate = engine.getTemplate("email-templates/${templateName}.html")
-            val writer = StringWriter()
-            compiledTemplate.evaluate(writer, emailData)
+                val engine = PebbleEngine.Builder().build()
+                val compiledTemplate = engine.getTemplate("email-templates/${templateName}.html")
+                val writer = StringWriter()
+                compiledTemplate.evaluate(writer, emailData)
 
-            val output = writer.toString()
-            val plainTextOutput = Jsoup.parse(output).wholeText()
-            logger.info("Email templates compiled")
+                val output = writer.toString()
+                val plainTextOutput = Jsoup.parse(output).wholeText()
+                logger.info("Email templates compiled")
 
-            val request = SendEmailRequest().withDestination(Destination().withToAddresses(email)).withMessage(
-                Message().withBody(
-                    Body().withHtml(Content().withCharset("UTF-8").withData(output))
-                        .withText(Content().withCharset("UTF-8").withData(plainTextOutput))
-                ).withSubject(Content().withCharset("UTF-8").withData(subject))
-            ).withSource("noreply@webdevandsausages.org")
-            logger.info("Email request built")
+                val request = SendEmailRequest().withDestination(Destination().withToAddresses(email)).withMessage(
+                    Message().withBody(
+                        Body().withHtml(Content().withCharset("UTF-8").withData(output))
+                            .withText(Content().withCharset("UTF-8").withData(plainTextOutput))
+                    ).withSubject(Content().withCharset("UTF-8").withData(subject))
+                ).withSource("noreply@webdevandsausages.org")
+                logger.info("Email request built")
 
-            if (client != null) {
-                logger.info("Send the email...")
-                client?.sendEmail(request)
-                logger.info("Email sent to ${email}")
+                if (client != null) {
+                    logger.info("Send the email...")
+                    client?.sendEmail(request)
+                    logger.info("Email sent to ${email}")
+                } else {
+                    logger.error("Email client not initialized.. Cannot send email to ${email}")
+                }
             } else {
-                logger.error("Email client not initialized.. Cannot send email to ${email}")
+                logger.info("Email address ${email} was blacklisted. Not proceeding with sending email.")
             }
-
         }
 
     fun sendRegistrationEmail(event: Event, status: ParticipantStatus, participantDto: ParticipantDto) {

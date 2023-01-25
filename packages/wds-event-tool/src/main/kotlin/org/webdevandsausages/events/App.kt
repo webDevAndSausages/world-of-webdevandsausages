@@ -43,7 +43,7 @@ fun startApp(config: AppConfig): Http4kServer {
     val eventCRUD = EventCRUD(local.jooqConfiguration)
     val participantCRUD = ParticipantCRUD(local.jooqConfiguration)
     val contactCRUD = ContactCRUD(local.jooqConfiguration)
-    val emailService = EmailService(config.secrets)
+    val emailService = EmailService(config.secrets, contactCRUD)
 
     val app = Router(
         GetEventsService(eventCRUD),
