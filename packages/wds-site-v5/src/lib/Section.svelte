@@ -4,7 +4,7 @@
 	export let style = '';
 	export { className as class };
 	export let centerText = true;
-	let classNames = 'pt-16 pb-16' + className;
+	let classNames = 'pt-16 pb-16 ' + className;
 	if (centerText) {
 		classNames += ' text-center';
 	}

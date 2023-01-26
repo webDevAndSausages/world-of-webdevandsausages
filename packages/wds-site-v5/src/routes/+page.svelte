@@ -29,13 +29,13 @@
 </aside>
 
 <!-- Sponsor logo when event is open -->
-<!-- <Section title="sponsored by" class="centered pb-0">
-	<a href="https://www.thriv.dev/"><Image
-		src="/sponsors/thriv-logo.svg"
+<Section title="sponsored by" class="centered pb-0">
+	<a href="https://www.gofore.com/"><Image
+		src="/sponsors/gofore-logo.svg"
 		class="sponsor-logo"
-		alt="Thriv logo"
+		alt="Gofore logo"
 		width="200" /></a>
-</Section> -->
+</Section>
 
 <Section class="terminal-wrapper mr-auto" centerText={false}>
 	<Terminal event={null} />
