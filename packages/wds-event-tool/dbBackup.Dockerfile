@@ -50,4 +50,4 @@ RUN apk --no-cache add \
     && rm -rf /var/cache/apk/*
 
 CMD ["pg_dump", "-h", "wds-db-$WORKSPACE.internal", "-p", "5432", "-d", "wds_db", "-U", "wds", ">", "dump.sql"]
-ENTRYPOINT ["aws", "s3", "cp", "./dump.sql", "s3://wds-production/wds_db_dump_$WORKSPACE.sql"]
+CMD ["aws", "s3", "cp", "./dump.sql", "s3://wds-production/wds_db_dump_$WORKSPACE.sql"]
