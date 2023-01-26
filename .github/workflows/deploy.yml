@@ -22,7 +22,7 @@ jobs:
       run: docker build --build-arg AWS_SECRET_KEY="$AWS_SECRET_KEY" --build-arg AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --build-arg PUBLIC_WDS_API_KEY="$PUBLIC_WDS_API_KEY" . --tag registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
       working-directory: packages/wds-event-tool
     - name: Build db backup image
-      run: docker build --build-arg AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --build-arg AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY" --build-arg WORKSPACE="$WORKSPACE" --tag registry.fly.io/wds-db-$WORKSPACE:backup-$COMMIT_SHA -f ./dbBackup.Dockerfile .
+      run: docker build --build-arg AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --build-arg AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY" --build-arg WORKSPACE="$WORKSPACE" --tag registry.fly.io/wds-db-backup-$WORKSPACE:$COMMIT_SHA -f ./dbBackup.Dockerfile .
       working-directory: packages/wds-event-tool
     - name: Install flyctl
       run: sudo curl -L https://fly.io/install.sh | sh
@@ -31,15 +31,15 @@ jobs:
     - name: Push docker image
       run: |
           docker push registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
-          docker push registry.fly.io/wds-db-$WORKSPACE:backup-$COMMIT_SHA
+          docker push registry.fly.io/wds-db-backup-$WORKSPACE:$COMMIT_SHA
     - name: Set machine id to env
       run: |
           echo "MACHINE_ID=$(/home/runner/.fly/bin/flyctl machine list --app wds-backend-$WORKSPACE --json | jq '[.[]|.id][0]')" >> $GITHUB_ENV
-          echo "BACKUP_MACHINE_ID=$(/home/runner/.fly/bin/flyctl machine list --app wds-db-$WORKSPACE --json | jq '[.[]|.id][1]')" >> $GITHUB_ENV
+          echo "BACKUP_MACHINE_ID=$(/home/runner/.fly/bin/flyctl machine list --app wds-db-backup-$WORKSPACE --json | jq '[.[]|.id][0]')" >> $GITHUB_ENV
     - name: Apply new image to fly machine
       run: |
           /home/runner/.fly/bin/flyctl machine update ${{ env.MACHINE_ID }} --image registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA --app wds-backend-$WORKSPACE -y
-          /home/runner/.fly/bin/flyctl machine update ${{ env.BACKUP_MACHINE_ID }} --image registry.fly.io/wds-db-$WORKSPACE:backup-$COMMIT_SHA --app wds-db-$WORKSPACE -y
+          /home/runner/.fly/bin/flyctl machine update ${{ env.BACKUP_MACHINE_ID }} --image registry.fly.io/wds-db-backup-$WORKSPACE:$COMMIT_SHA --app wds-db-backup-$WORKSPACE -y
   frontend:
     name: Build and deploy frontend
     runs-on: ubuntu-latest

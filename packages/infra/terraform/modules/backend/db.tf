@@ -36,9 +36,14 @@ resource "fly_volume" "db_storage" {
   region = "fra"
 }
 
+resource "fly_app" "db_backup" {
+  name = "wds-db-backup-${terraform.workspace}"
+  org  = "wds"
+}
+
 
 resource "fly_machine" "db_backup_scheduler" {
-  app    = fly_app.db.id
+  app    = fly_app.db_backup.id
   image  = "nginx" # initial image for testing purposes
   name   = "wds-db-backup-${terraform.workspace}"
   region = "fra"
