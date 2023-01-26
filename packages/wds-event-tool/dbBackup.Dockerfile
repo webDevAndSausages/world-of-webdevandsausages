@@ -49,5 +49,4 @@ RUN apk --no-cache add \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/*
 
-CMD ["pg_dump", "-h", "wds-db-$WORKSPACE.internal", "-p", "5432", "-d", "wds_db", "-U", "wds", ">", "/opt/dump.sql"]
-CMD ["aws", "s3", "cp", "/opt/dump.sql", "s3://wds-production/wds_db_dump_$WORKSPACE.sql"]
+CMD ["/bin/sh", "-c", "pg_dump -h wds-db-$WORKSPACE.internal -p 5432 -d wds_db -U wds > /opt/dump.sql;aws s3 cp /opt/dump.sql s3://wds-production/wds_db_dump_$WORKSPACE.sql"]
