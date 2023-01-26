@@ -1,6 +1,7 @@
 FROM postgres:10.6-alpine
 ARG AWS_ACCESS_KEY_ID
 ARG AWS_SECRET_ACCESS_KEY
+ARG WORKSPACE
 ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
@@ -8,6 +9,8 @@ ENV AWSCDK_VERSION=2.61.1
 ENV GLIBC_VER=2.34-r0
 # override aws-cli v2 default pager
 ENV AWS_PAGER=""
+ENV PGPASSWORD="password"
+ENV WORKSPACE=$WORKSPACE
 
 # RUN apk update && apk upgrade
 RUN apk add --no-cache --update python3 python3-dev git jq
@@ -45,3 +48,6 @@ RUN apk --no-cache add \
     && rm glibc-${GLIBC_VER}.apk \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/*
+
+CMD ["pg_dump", "-h", "wds-db-$WORKSPACE.internal", "-p", "5432", "-d", "wds_db", "-U", "wds", ">", "dump.sql"]
+ENTRYPOINT ["aws", "s3", "cp", "./dump.sql", "s3://wds-production/wds_db_dump_$WORKSPACE.sql"]

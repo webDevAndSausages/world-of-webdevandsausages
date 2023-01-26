@@ -35,3 +35,19 @@ resource "fly_volume" "db_storage" {
   size   = 2
   region = "fra"
 }
+
+
+resource "fly_machine" "db_backup_scheduler" {
+  app    = fly_app.db.id
+  image  = "nginx" # initial image for testing purposes
+  name   = "wds-db-backup-${terraform.workspace}"
+  region = "fra"
+
+  services = []
+
+  lifecycle {
+    ignore_changes = [
+      image
+    ]
+  }
+}
