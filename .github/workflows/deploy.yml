@@ -8,6 +8,7 @@ on:
 jobs:
   # JOB to run change detection
   changes:
+    name: Check what has changed
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -43,11 +44,6 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
     steps:
-    - id: modified
-      uses: pheel/path-watcher-action@v1
-      with:
-        paths: 'packages/wds-event-tool/**/*,.github/workflows/**/*'
-        return_files: false
     - uses: actions/checkout@v3
     - name: Build the backend image
       run: docker build --build-arg AWS_SECRET_KEY="$AWS_SECRET_KEY" --build-arg AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --build-arg PUBLIC_WDS_API_KEY="$PUBLIC_WDS_API_KEY" . --tag registry.fly.io/wds-backend-$WORKSPACE:$COMMIT_SHA
@@ -77,11 +73,6 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
     steps:
-      - id: modified
-        uses: pheel/path-watcher-action@v1
-        with:
-          paths: 'packages/wds-event-tool/dbBackup.Dockerfile,.github/workflows/**/*'
-          return_files: false
       - uses: actions/checkout@v3
       - name: Build db backup image
         run: docker build --build-arg AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" --build-arg AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY" --build-arg WORKSPACE="$WORKSPACE" --tag registry.fly.io/wds-db-backup-$WORKSPACE:$COMMIT_SHA -f ./dbBackup.Dockerfile .
@@ -111,11 +102,6 @@ jobs:
       COMMIT_SHA: ${{ github.sha }}
       PUBLIC_WDS_API_KEY: ${{ secrets.PUBLIC_WDS_API_KEY }}
     steps:
-      - id: modified
-        uses: pheel/path-watcher-action@v1
-        with:
-          paths: 'packages/wds-event-tool/**/*,.github/workflows/**/*'
-          return_files: false
       - uses: actions/checkout@v3
       - name: Build the image
         run: docker build --build-arg WORKSPACE="$WORKSPACE" --build-arg WDS_API_KEY="$PUBLIC_WDS_API_KEY" . --tag registry.fly.io/wds-frontend-$WORKSPACE:$COMMIT_SHA
