@@ -16,6 +16,7 @@ jobs:
       frontend: ${{ steps.filter.outputs.frontend }}
       dbBackupService: ${{ steps.filter.outputs.dbBackupService }}
     steps:
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: filter
         with:
