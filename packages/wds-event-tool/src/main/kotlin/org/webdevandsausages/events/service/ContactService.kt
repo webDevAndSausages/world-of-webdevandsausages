@@ -37,3 +37,17 @@ class CreateContactService(private val contactCRUD: ContactCRUD, private val ema
 
 
 }
+
+class GetContactEmailsService(private val contactCRUD: ContactCRUD) : CoroutineScope by CoroutineScope(
+    Dispatchers.Default) {
+    private val log = createLogger()
+
+    operator fun invoke(): Result<List<String>, DomainError> {
+        log.info("adding contact to mailing list")
+
+        return contactCRUD.findAllEmails().mapBoth(
+            { Ok(it) },
+            { Err(DomainError.DatabaseError) }
+        )
+    }
+}

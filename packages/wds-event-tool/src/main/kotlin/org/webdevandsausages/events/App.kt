@@ -14,6 +14,7 @@ import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.ParticipantCRUD
 import org.webdevandsausages.events.service.CreateContactService
 import org.webdevandsausages.events.service.EmailService
+import org.webdevandsausages.events.service.GetContactEmailsService
 import org.webdevandsausages.events.service.event.CreateEventService
 import org.webdevandsausages.events.service.event.GetCurrentEventService
 import org.webdevandsausages.events.service.event.GetEventByIdService
@@ -60,6 +61,7 @@ fun startApp(config: AppConfig): Http4kServer {
         CreateEventService(eventCRUD),
         UpdateEventService(eventCRUD),
         CreateContactService(contactCRUD, emailService),
+        GetContactEmailsService(contactCRUD),
         emailService
     )(config.secrets)
 

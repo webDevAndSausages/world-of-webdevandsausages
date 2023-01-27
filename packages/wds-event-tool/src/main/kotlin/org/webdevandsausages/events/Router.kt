@@ -43,6 +43,7 @@ import org.webdevandsausages.events.graphql.GraphqlRouter
 import org.webdevandsausages.events.graphql.createSchema
 import org.webdevandsausages.events.service.CreateContactService
 import org.webdevandsausages.events.service.EmailService
+import org.webdevandsausages.events.service.GetContactEmailsService
 import org.webdevandsausages.events.service.event.CreateEventService
 import org.webdevandsausages.events.service.event.GetCurrentEventService
 import org.webdevandsausages.events.service.event.GetEventByIdService
@@ -64,6 +65,7 @@ class Router(
     val createEvent: CreateEventService,
     val updateEvent: UpdateEventService,
     val createContact: CreateContactService,
+    val getContactEmails: GetContactEmailsService,
     val emailService: EmailService
 ) {
 
@@ -132,7 +134,7 @@ class Router(
         PatchEvent.route(updateEvent, getEventById),
         GetEvents(getEvents).route,
         GetCurrentEvent(getCurrentEvent).route,
-        PostSpam(emailService).route
+        PostSpam(emailService, getContactEmails).route
     )
 
     private fun getApiRoutes() = listOf(

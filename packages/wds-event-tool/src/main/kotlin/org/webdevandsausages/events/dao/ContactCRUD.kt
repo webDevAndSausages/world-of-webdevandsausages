@@ -33,6 +33,12 @@ class ContactCRUD(configuration: Configuration) {
         }
     }
 
+    fun findAllEmails(ctx: DSLContext = db): Result<List<String>, Throwable> {
+        return runCatching {
+            ctx.selectFrom(Contact.CONTACT).fetch(Contact.CONTACT.EMAIL)
+        }
+    }
+
     fun isEmailBlacklisted(email: String, context: DSLContext = db): Boolean {
         val record = context.use { ctx ->
             ctx.selectFrom(EMAIL_BLACKLIST)
