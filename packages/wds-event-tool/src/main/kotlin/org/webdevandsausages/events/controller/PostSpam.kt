@@ -7,26 +7,17 @@ import kotlinx.coroutines.runBlocking
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.meta
 import org.http4k.core.*
-import org.http4k.lens.Query
-import org.http4k.lens.composite
-import org.http4k.lens.string
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
-import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.GetContactEmailsService
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
-data class SpamParams(val template: String, val subject: String)
+data class SpamInDto(val template: String, val subject: String)
 
 object PostSpam : ApiRouteWithGraphqlConfig {
     private var emailService: EmailService? = null
     private var contacts: GetContactEmailsService? = null
-    private val SpamLens = Query.composite {
-        SpamParams(
-            string().defaulted("template", "")(it),
-            string().defaulted("subject", "")(it)
-        )
-    }
+    private val SpamLens = Body.auto<SpamInDto>().toLens()
 
     operator fun invoke(emailService: EmailService, contacts: GetContactEmailsService): PostSpam {
         this.emailService = emailService
