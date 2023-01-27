@@ -6,18 +6,27 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.meta
-import org.http4k.core.HttpHandler
-import org.http4k.core.Method
-import org.http4k.core.Request
-import org.http4k.core.Response
-import org.http4k.core.Status
+import org.http4k.core.*
+import org.http4k.lens.Query
+import org.http4k.lens.composite
+import org.http4k.lens.string
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
+import org.webdevandsausages.events.dto.EventOutDto
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.GetContactEmailsService
+import org.webdevandsausages.events.utils.WDSJackson.auto
+
+data class SpamParams(val template: String, val subject: String)
 
 object PostSpam : ApiRouteWithGraphqlConfig {
     private var emailService: EmailService? = null
     private var contacts: GetContactEmailsService? = null
+    private val SpamLens = Query.composite {
+        SpamParams(
+            string().defaulted("template", "")(it),
+            string().defaulted("subject", "")(it)
+        )
+    }
 
     operator fun invoke(emailService: EmailService, contacts: GetContactEmailsService): PostSpam {
         this.emailService = emailService
@@ -26,17 +35,20 @@ object PostSpam : ApiRouteWithGraphqlConfig {
     }
 
     private fun handleSpamming(): HttpHandler = { req: Request ->
-        this.contacts!!.invoke().fold({
-            it.forEach {
-                runBlocking {
-                    delay(100)
-                    println(it)
+        SpamLens(req).let { (template, subject) ->
+            this.contacts!!.invoke().fold({
+                it.forEach {
+                    runBlocking {
+                        delay(100)
+                        emailService!!.sendMail(it, subject, template, mapOf())
+                    }
                 }
-            }
-            Response(Status.OK)
-        }, {
-            Response(Status.INTERNAL_SERVER_ERROR)
-        })
+                Response(Status.OK)
+            }, {
+                Response(Status.INTERNAL_SERVER_ERROR)
+            })
+        }
+
     }
 
     override val route: ContractRoute = "/spam" meta {
