@@ -61,7 +61,7 @@ jobs:
       - name: Apply new image to fly machine
         run: |
           /home/runner/.fly/bin/flyctl machine lease clear ${{ env.MACHINE_ID }} --verbose --app wds-db-backup-$WORKSPACE
-          timeout -s 0 10 /home/runner/.fly/bin/flyctl machine update ${{ env.MACHINE_ID }} --verbose --image registry.fly.io/wds-db-backup-$WORKSPACE:$COMMIT_SHA ${{ github.ref_name == 'prod' && '--schedule hourly' || '' }} --skip-health-checks --app wds-db-backup-$WORKSPACE -y
+          timeout 10 /home/runner/.fly/bin/flyctl machine update ${{ env.MACHINE_ID }} --verbose --image registry.fly.io/wds-db-backup-$WORKSPACE:$COMMIT_SHA ${{ github.ref_name == 'prod' && '--schedule hourly' || '' }} --skip-health-checks --app wds-db-backup-$WORKSPACE -y &
   frontend:
     name: Build and deploy frontend
     runs-on: ubuntu-latest
