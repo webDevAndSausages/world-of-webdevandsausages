@@ -33,17 +33,7 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
 import org.webdevandsausages.events.config.Secrets
-import org.webdevandsausages.events.controller.AdminGetEventInfo
-import org.webdevandsausages.events.controller.DeleteRegistration
-import org.webdevandsausages.events.controller.GetCurrentEvent
-import org.webdevandsausages.events.controller.GetEvent
-import org.webdevandsausages.events.controller.GetEvents
-import org.webdevandsausages.events.controller.GetRegistration
-import org.webdevandsausages.events.controller.GetUser
-import org.webdevandsausages.events.controller.PatchEvent
-import org.webdevandsausages.events.controller.PostContact
-import org.webdevandsausages.events.controller.PostEvent
-import org.webdevandsausages.events.controller.PostRegistration
+import org.webdevandsausages.events.controller.*
 import org.webdevandsausages.events.dto.ErrorCode
 import org.webdevandsausages.events.dto.ErrorOutDto
 import org.webdevandsausages.events.dto.EventDto
@@ -52,6 +42,7 @@ import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.graphql.GraphqlRouter
 import org.webdevandsausages.events.graphql.createSchema
 import org.webdevandsausages.events.service.CreateContactService
+import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.event.CreateEventService
 import org.webdevandsausages.events.service.event.GetCurrentEventService
 import org.webdevandsausages.events.service.event.GetEventByIdService
@@ -72,7 +63,8 @@ class Router(
     val cancelRegistration: CancelRegistrationService,
     val createEvent: CreateEventService,
     val updateEvent: UpdateEventService,
-    val createContact: CreateContactService
+    val createContact: CreateContactService,
+    val emailService: EmailService
 ) {
 
     operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
@@ -139,7 +131,8 @@ class Router(
         AdminGetEventInfo.route(getEventById),
         PatchEvent.route(updateEvent, getEventById),
         GetEvents(getEvents).route,
-        GetCurrentEvent(getCurrentEvent).route
+        GetCurrentEvent(getCurrentEvent).route,
+        PostSpam(emailService).route
     )
 
     private fun getApiRoutes() = listOf(
