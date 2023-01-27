@@ -60,8 +60,10 @@ jobs:
           echo "MACHINE_ID=$(/home/runner/.fly/bin/flyctl machine list --app wds-db-backup-$WORKSPACE --json | jq '[.[]|.id][0]')" >> $GITHUB_ENV
       - name: Apply new image to fly machine
         run: |
-          /home/runner/.fly/bin/flyctl machine lease clear ${{ env.MACHINE_ID }} --verbose --app wds-db-backup-$WORKSPACE
-          /home/runner/.fly/bin/flyctl machine update ${{ env.MACHINE_ID }} --verbose --image registry.fly.io/wds-db-backup-$WORKSPACE:$COMMIT_SHA ${{ github.ref_name == 'prod' && '--schedule hourly' || '' }} --skip-health-checks --app wds-db-backup-$WORKSPACE -y
+          /home/runner/.fly/bin/flyctl machine clone ${{ env.MACHINE_ID }} --app wds-db-backup-$WORKSPACE --name wds-db-backup-$WORKSPACE-2
+          /home/runner/.fly/bin/flyctl machine update $(/home/runner/.fly/bin/flyctl machine list --app wds-db-backup-$WORKSPACE --json | jq '[.[]|.id][1]') --verbose --image registry.fly.io/wds-db-backup-$WORKSPACE:$COMMIT_SHA ${{ github.ref_name == 'prod' && '--schedule hourly' || '' }} --skip-health-checks --app wds-db-backup-$WORKSPACE -y
+          /home/runner/.fly/bin/flyctl machine destroy ${{ env.MACHINE_ID }}
+          /home/runner/.fly/bin/flyctl machine clone $(/home/runner/.fly/bin/flyctl machine list --app wds-db-backup-$WORKSPACE --json | jq '[.[]|.id][0]') --app wds-db-backup-$WORKSPACE --name wds-db-backup-$WORKSPACE
   frontend:
     name: Build and deploy frontend
     runs-on: ubuntu-latest
