@@ -25,7 +25,7 @@ jobs:
               - 'packages/wds-event-tool/**'
               - '.github/workflows/**'
             frontend:
-              - 'packages/wds-event-tool/**/*'
+              - 'packages/wds-site-v5/**'
               - '.github/workflows/**'
             dbBackupService:
               - 'packages/wds-event-tool/dbBackup.Dockerfile'
