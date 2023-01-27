@@ -12,6 +12,7 @@ import org.webdevandsausages.events.config.local
 import org.webdevandsausages.events.dao.ContactCRUD
 import org.webdevandsausages.events.dao.EventCRUD
 import org.webdevandsausages.events.dao.ParticipantCRUD
+import org.webdevandsausages.events.service.CreateBlacklistService
 import org.webdevandsausages.events.service.CreateContactService
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.GetContactEmailsService
@@ -62,7 +63,8 @@ fun startApp(config: AppConfig): Http4kServer {
         UpdateEventService(eventCRUD),
         CreateContactService(contactCRUD, emailService),
         GetContactEmailsService(contactCRUD),
-        emailService
+        emailService,
+        CreateBlacklistService(contactCRUD)
     )(config.secrets)
 
     val server = app.asServer(Jetty(config.port)).start()

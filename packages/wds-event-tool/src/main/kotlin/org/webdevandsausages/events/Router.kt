@@ -41,6 +41,7 @@ import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.graphql.GraphqlRouter
 import org.webdevandsausages.events.graphql.createSchema
+import org.webdevandsausages.events.service.CreateBlacklistService
 import org.webdevandsausages.events.service.CreateContactService
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.GetContactEmailsService
@@ -66,7 +67,8 @@ class Router(
     val updateEvent: UpdateEventService,
     val createContact: CreateContactService,
     val getContactEmails: GetContactEmailsService,
-    val emailService: EmailService
+    val emailService: EmailService,
+    val createBlacklist: CreateBlacklistService
 ) {
 
     operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
@@ -146,7 +148,8 @@ class Router(
         PostRegistration(createRegistration).route,
         DeleteRegistration(cancelRegistration).route,
         GetUser(getRegistration).route,
-        PostContact(createContact).route
+        PostContact(createContact).route,
+        PostBlacklist(createBlacklist).route
     )
 
     private fun ok() = { _: Request -> Response(OK) }

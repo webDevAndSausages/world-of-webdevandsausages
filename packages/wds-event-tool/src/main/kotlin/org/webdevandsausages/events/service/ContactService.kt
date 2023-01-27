@@ -51,3 +51,17 @@ class GetContactEmailsService(private val contactCRUD: ContactCRUD) : CoroutineS
         )
     }
 }
+
+class CreateBlacklistService(private val contactCRUD: ContactCRUD) : CoroutineScope by CoroutineScope(
+    Dispatchers.Default) {
+    private val log = createLogger()
+
+    operator fun invoke(email: String): Result<DomainSuccess, DomainError> {
+        log.info("adding email to blacklist")
+
+        return contactCRUD.addEmailToBlacklist(email).mapBoth(
+            { Ok(DomainSuccess.Created) },
+            { Err(DomainError.DatabaseError) }
+        )
+    }
+}

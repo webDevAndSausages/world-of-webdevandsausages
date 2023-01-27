@@ -48,4 +48,10 @@ class ContactCRUD(configuration: Configuration) {
 
         return record != null
     }
+
+    fun addEmailToBlacklist(email: String, context: DSLContext = db): Result<Int, Throwable> {
+       return runCatching {
+           context.insertInto(EMAIL_BLACKLIST, EMAIL_BLACKLIST.EMAIL).values(email).onConflictDoNothing().execute()
+       }
+    }
 }
