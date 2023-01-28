@@ -9,6 +9,7 @@ import com.github.michaelbull.result.onSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.webdevandsausages.events.controller.BounceComplaintInDto
 import org.webdevandsausages.events.dao.ContactCRUD
 import org.webdevandsausages.events.domain.DomainError
 import org.webdevandsausages.events.domain.DomainSuccess
@@ -56,10 +57,10 @@ class CreateBlacklistService(private val contactCRUD: ContactCRUD) : CoroutineSc
     Dispatchers.Default) {
     private val log = createLogger()
 
-    operator fun invoke(email: String): Result<DomainSuccess, DomainError> {
-        log.info("adding email to blacklist")
-
-        return contactCRUD.addEmailToBlacklist(email).mapBoth(
+    operator fun invoke(bounceOrComplaint: BounceComplaintInDto): Result<DomainSuccess, DomainError> {
+        log.info("Got a ${bounceOrComplaint.notificationType} notification")
+        log.info("Adding emails to blacklist")
+        return contactCRUD.addEmailsToBlacklist(bounceOrComplaint.info.recipients.map { it.emailAddress }).mapBoth(
             { Ok(DomainSuccess.Created) },
             { Err(DomainError.DatabaseError) }
         )
