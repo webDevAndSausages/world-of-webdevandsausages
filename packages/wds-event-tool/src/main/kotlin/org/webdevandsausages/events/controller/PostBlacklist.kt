@@ -10,12 +10,15 @@ import org.http4k.core.*
 import org.http4k.format.Jackson.auto
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.service.CreateBlacklistService
+import org.webdevandsausages.events.utils.createLogger
 
 data class Recipient(val emailAddress: String)
 data class BounceComplaintInfo(
     @JsonProperty("complainedRecipients")
     @JsonAlias("bouncedRecipients")
-    val recipients: List<Recipient>)
+    val recipients: List<Recipient>
+)
+
 data class BounceComplaintInDto(
     val notificationType: String,
     @JsonProperty("complaint")
@@ -23,9 +26,16 @@ data class BounceComplaintInDto(
     val info: BounceComplaintInfo
 )
 
+data class SNSEndpointConfirmationInDto(
+    @JsonProperty("Type") val type: String,
+    @JsonProperty("SubscribeURL") val subscribeUrl: String
+)
+
 object PostBlacklist : ApiRouteWithGraphqlConfig {
     private var createBlacklist: CreateBlacklistService? = null
     private val BounceComplaintLens = Body.auto<BounceComplaintInDto>().toLens()
+    private val SNSEndpointConfirmationLens = Body.auto<SNSEndpointConfirmationInDto>().toLens()
+    private val logger = createLogger()
 
     operator fun invoke(createBlacklist: CreateBlacklistService): PostBlacklist {
         this.createBlacklist = createBlacklist
@@ -33,11 +43,23 @@ object PostBlacklist : ApiRouteWithGraphqlConfig {
     }
 
     private fun handleAddToBlacklist(): HttpHandler = { req: Request ->
-        val bounceOrComplaint = BounceComplaintLens(req)
-        this.createBlacklist!!.invoke(bounceOrComplaint).fold(
-            { Response(Status.OK) },
-            { Response(Status.INTERNAL_SERVER_ERROR) }
-        )
+        val confirmation = try {
+            SNSEndpointConfirmationLens(req)
+        } catch (e: Exception) {
+            null
+        }
+
+        if (confirmation != null) {
+            logger.info("Received AWS SNS Topic Subscription confirmation message")
+            logger.info("${confirmation.type}: ${confirmation.subscribeUrl}")
+            Response(Status.OK)
+        } else {
+            val bounceOrComplaint = BounceComplaintLens(req)
+            this.createBlacklist!!.invoke(bounceOrComplaint).fold(
+                { Response(Status.OK) },
+                { Response(Status.INTERNAL_SERVER_ERROR) }
+            )
+        }
     }
 
     override val route: ContractRoute = "/blacklist" meta {
