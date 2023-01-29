@@ -58,7 +58,7 @@ class CreateBlacklistService(private val contactCRUD: ContactCRUD) : CoroutineSc
     private val log = createLogger()
 
     operator fun invoke(bounceOrComplaint: BounceComplaintInDto): Result<DomainSuccess, DomainError> {
-        log.info("Got a ${bounceOrComplaint.notificationType} notification")
+        log.info("Got a ${bounceOrComplaint.eventType} notification")
         log.info("Adding emails to blacklist")
         return contactCRUD.addEmailsToBlacklist(bounceOrComplaint.info.recipients.map { it.emailAddress }).mapBoth(
             { Ok(DomainSuccess.Created) },
