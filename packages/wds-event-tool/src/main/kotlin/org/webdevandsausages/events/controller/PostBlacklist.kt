@@ -52,6 +52,7 @@ object PostBlacklist : ApiRouteWithGraphqlConfig {
             logger.info("${SNSMessage.type}: ${SNSMessage.subscribeUrl}")
             Response(Status.OK)
         } else if (SNSMessage.type == "Notification") {
+            logger.info("Received SNS Notification")
             kotlin.runCatching {
                 Jackson.mapper.readValue<BounceComplaintInDto>(SNSMessage.message)
             }.fold({
