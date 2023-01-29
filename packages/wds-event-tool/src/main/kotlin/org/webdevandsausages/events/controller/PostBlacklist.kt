@@ -32,12 +32,17 @@ data class BounceComplaintInDto(
 
 data class SNSEndpointConfirmationInDto(
     @JsonProperty("Type") val type: String,
-    @JsonProperty("SubscribeURL") val subscribeUrl: String
+    @JsonProperty("SubscribeURL") val subscribeUrl: String?
+)
+
+data class SNSMessage(
+    @JsonProperty("Type") val type: String,
+    @JsonProperty("Message") val message: BounceComplaintInDto
 )
 
 object PostBlacklist : ApiRouteWithGraphqlConfig {
     private var createBlacklist: CreateBlacklistService? = null
-    private val BounceComplaintLens = Body.auto<BounceComplaintInDto>().toLens()
+    private val BounceComplaintLens = Body.auto<SNSMessage>().toLens()
     private val SNSEndpointConfirmationLens = Body.auto<SNSEndpointConfirmationInDto>().toLens()
     private val logger = createLogger()
 
@@ -64,7 +69,7 @@ object PostBlacklist : ApiRouteWithGraphqlConfig {
             Response(Status.OK)
         } else {
             val bounceOrComplaint = BounceComplaintLens(req)
-            this.createBlacklist!!.invoke(bounceOrComplaint).fold(
+            this.createBlacklist!!.invoke(bounceOrComplaint.message).fold(
                 { Response(Status.OK) },
                 { Response(Status.INTERNAL_SERVER_ERROR) }
             )
