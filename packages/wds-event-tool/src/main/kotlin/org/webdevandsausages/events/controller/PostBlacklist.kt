@@ -3,14 +3,18 @@ package org.webdevandsausages.events.controller
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.github.michaelbull.result.fold
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.meta
 import org.http4k.core.*
 import org.http4k.format.Jackson.auto
+import org.http4k.format.Jackson.json
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.service.CreateBlacklistService
 import org.webdevandsausages.events.utils.createLogger
+import org.webdevandsausages.events.utils.toJson
 
 data class Recipient(val emailAddress: String)
 data class BounceComplaintInfo(
@@ -48,6 +52,11 @@ object PostBlacklist : ApiRouteWithGraphqlConfig {
         } catch (e: Exception) {
             null
         }
+
+        val jsonMessage = Body.json().toLens()(req)
+        val objectMapper = ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
+        val jsonString = objectMapper.writeValueAsString(jsonMessage)
+        logger.info(jsonString)
 
         if (confirmation != null) {
             logger.info("Received AWS SNS Topic Subscription confirmation message")
