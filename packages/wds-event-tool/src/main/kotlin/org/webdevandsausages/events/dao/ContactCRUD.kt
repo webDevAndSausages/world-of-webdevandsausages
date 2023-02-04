@@ -29,7 +29,7 @@ class ContactCRUD(configuration: Configuration) {
 
     fun findAllEmails(ctx: DSLContext = db): Result<List<String>, Throwable> {
         return runCatching {
-            ctx.selectFrom(Contact.CONTACT).fetch(Contact.CONTACT.EMAIL)
+            ctx.selectFrom(Contact.CONTACT).where(Contact.CONTACT.SUBSCRIBE.isTrue()).fetch(Contact.CONTACT.EMAIL)
         }
     }
 
