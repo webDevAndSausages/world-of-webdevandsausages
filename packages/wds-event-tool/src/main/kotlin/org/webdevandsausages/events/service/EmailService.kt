@@ -12,14 +12,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import meta.enums.ParticipantStatus
 import meta.tables.pojos.Event
+import org.http4k.urlEncoded
 import org.jsoup.Jsoup
 import org.webdevandsausages.events.config.Secrets
+import org.webdevandsausages.events.controller.PostSpam
 import org.webdevandsausages.events.dao.ContactCRUD
 import org.webdevandsausages.events.dto.ContactDto
 import org.webdevandsausages.events.dto.EventDto
 import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.service.registration.toText
 import org.webdevandsausages.events.utils.createLogger
+import org.webdevandsausages.events.utils.encrypt
 import org.webdevandsausages.events.utils.prettified
 import java.io.StringWriter
 
@@ -144,11 +147,16 @@ class EmailService(private val secrets: Secrets?, private val contactCRUD: Conta
 
         logger.info("Dispatching mailing list join confirmation email to ${contact.email}")
 
-        sendMail(
-            contact.email,
-            "Wed dev & sausage's mailing list confirmation",
-            "mailing_list_join_confirmation",
-            emptyMap()
-        )
+        encrypt(contact.email, System.getenv("PUBLIC_WDS_API_KEY")).map { hashedEmail ->
+            sendMail(
+                contact.email,
+                "Wed dev & sausage's mailing list confirmation",
+                "mailing_list_join_confirmation",
+                mapOf(
+                    "unsubscribe_link" to "http://webdevandsausages.org/api/1.0/unsubscribe?hash=${hashedEmail.urlEncoded()}"
+                )
+            )
+        }
+
     }
 }

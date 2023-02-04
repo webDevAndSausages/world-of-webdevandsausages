@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.meta
 import org.http4k.core.*
+import org.http4k.urlEncoded
 import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.GetContactEmailsService
@@ -35,7 +36,7 @@ object PostSpam : ApiRouteWithGraphqlConfig {
                         delay(100)
                         encrypt(email, System.getenv("PUBLIC_WDS_API_KEY")).map { hashedEmail ->
                             emailService!!.sendMail(email, subject, template, mapOf(
-                                "unsubscribe_link" to "http://webdevandsausages.org/api/1.0/unsubscribe?hash=${hashedEmail}"
+                                "unsubscribe_link" to "http://webdevandsausages.org/api/1.0/unsubscribe?hash=${hashedEmail.urlEncoded()}"
                             ))
                         }
 
