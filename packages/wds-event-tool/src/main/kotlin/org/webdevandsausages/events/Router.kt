@@ -41,10 +41,7 @@ import org.webdevandsausages.events.dto.ParticipantDto
 import org.webdevandsausages.events.dto.RegistrationOutDto
 import org.webdevandsausages.events.graphql.GraphqlRouter
 import org.webdevandsausages.events.graphql.createSchema
-import org.webdevandsausages.events.service.CreateBlacklistService
-import org.webdevandsausages.events.service.CreateContactService
-import org.webdevandsausages.events.service.EmailService
-import org.webdevandsausages.events.service.GetContactEmailsService
+import org.webdevandsausages.events.service.*
 import org.webdevandsausages.events.service.event.CreateEventService
 import org.webdevandsausages.events.service.event.GetCurrentEventService
 import org.webdevandsausages.events.service.event.GetEventByIdService
@@ -52,6 +49,7 @@ import org.webdevandsausages.events.service.event.GetEventsService
 import org.webdevandsausages.events.service.event.UpdateEventService
 import org.webdevandsausages.events.service.registration.CancelRegistrationService
 import org.webdevandsausages.events.service.registration.GetRegistrationService
+import org.webdevandsausages.events.utils.GetEvents
 import org.webdevandsausages.events.utils.WDSJackson.auto
 
 typealias handleErrorResponse = (message: String, code: ErrorCode, status: Status) -> Response
@@ -68,7 +66,8 @@ class Router(
     val createContact: CreateContactService,
     val getContactEmails: GetContactEmailsService,
     val emailService: EmailService,
-    val createBlacklist: CreateBlacklistService
+    val createBlacklist: CreateBlacklistService,
+    val unsubscribe: UnsubscribeEmailService
 ) {
 
     operator fun invoke(secrets: Secrets?): RoutingHttpHandler {
@@ -149,7 +148,8 @@ class Router(
         DeleteRegistration(cancelRegistration).route,
         GetUser(getRegistration).route,
         PostContact(createContact).route,
-        PostBlacklist(createBlacklist).route
+        PostBlacklist(createBlacklist).route,
+        GetUnsubscribe(unsubscribe).route
     )
 
     private fun ok() = { _: Request -> Response(OK) }

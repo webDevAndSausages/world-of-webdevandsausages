@@ -1,5 +1,6 @@
 package org.webdevandsausages.events.dao
 
+import com.apurebase.kgraphql.context
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.runCatching
 import meta.tables.Contact
@@ -48,6 +49,13 @@ class ContactCRUD(configuration: Configuration) {
             emails.map{
                 context.insertInto(EMAIL_BLACKLIST, EMAIL_BLACKLIST.EMAIL).values(it).onDuplicateKeyIgnore().execute()
             }
+        }
+    }
+
+    fun unsubscribeEmail(email: String, context: DSLContext = db): Result<Int, Throwable> {
+        return runCatching {
+            context.update(Contact.CONTACT).set(Contact.CONTACT.SUBSCRIBE, false)
+                .where(Contact.CONTACT.EMAIL.eq(email)).execute()
         }
     }
 }

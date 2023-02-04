@@ -1,5 +1,6 @@
 package org.webdevandsausages.events.controller
 
+import arrow.core.rightIfNotNull
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import com.github.michaelbull.result.fold
 import kotlinx.coroutines.delay
@@ -11,6 +12,7 @@ import org.webdevandsausages.events.ApiRouteWithGraphqlConfig
 import org.webdevandsausages.events.service.EmailService
 import org.webdevandsausages.events.service.GetContactEmailsService
 import org.webdevandsausages.events.utils.WDSJackson.auto
+import org.webdevandsausages.events.utils.encrypt
 
 data class SpamInDto(val template: String, val subject: String)
 
@@ -28,10 +30,16 @@ object PostSpam : ApiRouteWithGraphqlConfig {
     private fun handleSpamming(): HttpHandler = { req: Request ->
         SpamLens(req).let { (template, subject) ->
             this.contacts!!.invoke().fold({
-                it.forEach {
+                it.forEach { email ->
                     runBlocking {
                         delay(100)
-                        emailService!!.sendMail(it, subject, template, mapOf())
+                        encrypt(email, System.getenv("PUBLIC_WDS_API_KEY")).map { hashedEmail ->
+                            emailService!!.sendMail(email, subject, template, mapOf(
+                                "unsubscribe_link" to "http://webdevandsausages.org/api/1.0/unsubscribe?hash=${hashedEmail}"
+                            ))
+                        }
+
+
                     }
                 }
                 Response(Status.OK)

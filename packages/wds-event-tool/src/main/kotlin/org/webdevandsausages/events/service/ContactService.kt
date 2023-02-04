@@ -66,3 +66,16 @@ class CreateBlacklistService(private val contactCRUD: ContactCRUD) : CoroutineSc
         )
     }
 }
+
+class UnsubscribeEmailService(private val contactCRUD: ContactCRUD) : CoroutineScope by CoroutineScope(
+    Dispatchers.Default) {
+    private val log = createLogger()
+
+    operator fun invoke(email: String): Result<DomainSuccess, DomainError> {
+        log.info("Unsubscribing email ${email}")
+        return contactCRUD.unsubscribeEmail(email).mapBoth(
+            { Ok(DomainSuccess.Updated) },
+            { Err(DomainError.DatabaseError) }
+        )
+    }
+}

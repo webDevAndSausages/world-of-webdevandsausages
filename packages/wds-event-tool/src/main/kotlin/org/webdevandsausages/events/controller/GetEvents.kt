@@ -1,4 +1,4 @@
-package org.webdevandsausages.events.controller
+package org.webdevandsausages.events.utils
 
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import meta.enums.EventStatus
