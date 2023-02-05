@@ -44,8 +44,6 @@ class GetContactEmailsService(private val contactCRUD: ContactCRUD) : CoroutineS
     private val log = createLogger()
 
     operator fun invoke(): Result<List<String>, DomainError> {
-        log.info("adding contact to mailing list")
-
         return contactCRUD.findAllEmails().mapBoth(
             { Ok(it) },
             { Err(DomainError.DatabaseError) }
