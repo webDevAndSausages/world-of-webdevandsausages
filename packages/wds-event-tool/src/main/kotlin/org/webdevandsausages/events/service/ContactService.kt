@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.webdevandsausages.events.controller.BounceComplaintInDto
 import org.webdevandsausages.events.dao.ContactCRUD
+import org.webdevandsausages.events.dao.ParticipantCRUD
 import org.webdevandsausages.events.domain.DomainError
 import org.webdevandsausages.events.domain.DomainSuccess
 import org.webdevandsausages.events.dto.ContactDto
@@ -39,12 +40,24 @@ class CreateContactService(private val contactCRUD: ContactCRUD, private val ema
 
 }
 
-class GetContactEmailsService(private val contactCRUD: ContactCRUD) : CoroutineScope by CoroutineScope(
+class GetMailingListContactEmailsService(private val contactCRUD: ContactCRUD) : CoroutineScope by CoroutineScope(
     Dispatchers.Default) {
     private val log = createLogger()
 
     operator fun invoke(): Result<List<String>, DomainError> {
         return contactCRUD.findAllEmails().mapBoth(
+            { Ok(it) },
+            { Err(DomainError.DatabaseError) }
+        )
+    }
+}
+
+class GetEventParticipantEmailsService(private val participantCRUD: ParticipantCRUD) : CoroutineScope by CoroutineScope(
+    Dispatchers.Default) {
+    private val log = createLogger()
+
+    operator fun invoke(eventId: Long): Result<List<String>, DomainError> {
+        return participantCRUD.findEventParticipantEmails(eventId).mapBoth(
             { Ok(it) },
             { Err(DomainError.DatabaseError) }
         )

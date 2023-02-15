@@ -59,7 +59,8 @@ fun startApp(config: AppConfig): Http4kServer {
         CreateEventService(eventCRUD),
         UpdateEventService(eventCRUD),
         CreateContactService(contactCRUD, emailService),
-        GetContactEmailsService(contactCRUD),
+        GetMailingListContactEmailsService(contactCRUD),
+        GetEventParticipantEmailsService(participantCRUD),
         emailService,
         CreateBlacklistService(contactCRUD),
         UnsubscribeEmailService(contactCRUD)

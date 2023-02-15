@@ -2,6 +2,8 @@ package org.webdevandsausages.events.dao
 
 import arrow.core.Option
 import arrow.core.toOption
+import com.github.michaelbull.result.get
+import com.github.michaelbull.result.runCatching
 import meta.enums.ParticipantStatus
 import meta.tables.Participant
 import meta.tables.records.ParticipantRecord
@@ -45,7 +47,17 @@ class ParticipantCRUD(configuration: Configuration) {
                     )
                 }
             }
-        }.getOrNull().toOption()
+        }.get().toOption()
+    }
+
+    fun findEventParticipantEmails(
+        eventId: Long,
+        ctx: DSLContext = db
+    ): com.github.michaelbull.result.Result<List<String>, Throwable> {
+        return runCatching {
+            ctx.selectFrom(Participant.PARTICIPANT).where(Participant.PARTICIPANT.EVENT_ID.eq(eventId))
+                .fetch(Participant.PARTICIPANT.EMAIL)
+        }
     }
 
     fun updateStatus(

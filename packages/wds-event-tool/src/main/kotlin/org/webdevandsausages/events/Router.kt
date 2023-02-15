@@ -64,7 +64,8 @@ class Router(
     val createEvent: CreateEventService,
     val updateEvent: UpdateEventService,
     val createContact: CreateContactService,
-    val getContactEmails: GetContactEmailsService,
+    val getContactEmails: GetMailingListContactEmailsService,
+    val getEventParticipants: GetEventParticipantEmailsService,
     val emailService: EmailService,
     val createBlacklist: CreateBlacklistService,
     val unsubscribe: UnsubscribeEmailService
@@ -135,7 +136,7 @@ class Router(
         PatchEvent.route(updateEvent, getEventById),
         GetEvents(getEvents).route,
         GetCurrentEvent(getCurrentEvent).route,
-        PostSpam(emailService, getContactEmails).route
+        PostSpam(emailService, getContactEmails, getEventParticipants).route
     )
 
     private fun getApiRoutes() = listOf(
