@@ -56,6 +56,7 @@ class ParticipantCRUD(configuration: Configuration) {
     ): com.github.michaelbull.result.Result<List<String>, Throwable> {
         return runCatching {
             ctx.selectFrom(Participant.PARTICIPANT).where(Participant.PARTICIPANT.EVENT_ID.eq(eventId))
+                .and(Participant.PARTICIPANT.STATUS.ne(ParticipantStatus.CANCELLED))
                 .fetch(Participant.PARTICIPANT.EMAIL)
         }
     }
